@@ -1,0 +1,35 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>%%title%%</title>
+        <link rel="stylesheet" href="css/androidstudio.min.css">
+        <script src="js/cloudflare/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+        <script src="js/yandex/highlight.min.js"></script>
+        <link rel="stylesheet" href="css/default.min.css">
+        <script>hljs.initHighlightingOnLoad();</script>
+    </head>
+<body>
+    <div class="header"><h1>%%title%%</h1><hr /></div>
+    %%content%%
+    <li><font color="#000080" size="2">Update Time: %%time%%</font></li>
+    <li><font color="#000080" size="2">Original File: %%src_path%%</font></li>
+    <li><font color="#000080" size="2">%%mark_name%% - %%mark_copy%% - %%owner_mail%%</font></li>
+    <script language="javascript">
+        function toggleView(element1){
+            element1 = document.getElementById(element1);             
+            if (element1.style.display == 'block' || element1.style.display == '')
+            {
+                element1.style.display = 'none';
+            } else {
+                element1.style.display = 'block';	
+            }	
+        }
+    
+        function openUniView(element1){
+            element1 = document.getElementById(element1);             
+            element1.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
