@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="https://to0d.github.io/stylesheets/github-light.css" media="screen">
+    </head>
+<body style="word-wrap:break-word">
+    <section class="page-header">
+        <h1 class="project-name">Leetcode</h1>
+        <div></div>                 
+    </section>
+    
+        <div>
+        <h2><a name="ToC">Table of Contents</a></h2>
+        <b><a name="TOC_HEAD_0" href="#HEAD_0">Chapter 1. Leetcode</a></b><br>
+        <menu>
+            <li><a name="TOC_HEAD_1" href="#HEAD_1">1.1 009 Palindrome Number</a></li>
+            <menu>
+            </menu>
+        </menu>
+    </div><hr/>
+        <H1><a name="HEAD_0" href="#TOC_HEAD_0">Chapter 1. Leetcode</a></H1>
+        <H2><a name="HEAD_1" href="#TOC_HEAD_1">1.1 009 Palindrome Number</a></H2>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br>
+<menu>
+    <li><a name="TOC_HEAD_2" href="#HEAD_2">1.1.1 [Question Description &ndash; Click Link](https://leetcode.com/problems/palindrome&ndash;number/</a></li>
+    <li><a name="TOC_HEAD_3" href="#HEAD_3">1.1.2 Solution&ndash;2016&ndash;06&ndash;19: 72 ms &ndash; beats 85%</a></li>
+</menu>
+
+</div>
+        <H3><a name="HEAD_2" href="#TOC_HEAD_2">1.1.1 [Question Description &ndash; Click Link](https://leetcode.com/problems/palindrome&ndash;number/</a></H3>
+    <p>
+        Determine whether an integer is a palindrome. Do this without extra space.
+    </p>
+    <p>
+        <a href="#" target="_blank">click to show spoilers.</a>
+    </p>
+    <p>
+        <strong>Some hints:</strong>
+    </p>
+    <p>
+        Could negative integers be palindromes? (ie, &ndash;1)
+    </p>
+    <p>
+        If you are thinking of converting the integer to string, note the restriction of using extra space.
+    </p>
+    <p>
+        You could also try reversing an integer. However, if you have solved the problem &quot;Reverse Integer&quot;, you know that the reversed integer might overflow. How would you handle such case?
+    </p>
+    <p>
+        There is a more generic way of solving this problem.
+    </p>
+        <H3><a name="HEAD_3" href="#TOC_HEAD_3">1.1.2 Solution&ndash;2016&ndash;06&ndash;19: 72 ms &ndash; beats 85%</a></H3>
+    <pre><code>
+        class Solution {
+        public:
+            bool isPalindrome(int x) {
+
+                if( x < 0 ) return false;
+
+                int y = 0;
+                int z = x;
+                for(; z > 0; z/= 10 )
+                {
+                    y = y * 10 + z % 10;
+                    if( y < 0 )
+                        return false;
+                }
+
+                return x == y;
+            }
+        };
+    </code></pre>
+  
+    
+    <hr>
+    <li><font color="#000080" size="2">Update Time: Wed Mar 22 13:51:04 CST 2017</font></li>
+    <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
+    <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
+</body>
+</html>
