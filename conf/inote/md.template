@@ -7,11 +7,13 @@
         <link rel="stylesheet" type="text/css" href="https://to0d.github.io/stylesheets/github-light.css" media="screen">
     </head>
 <body style="word-wrap:break-word">
-    <section class="page-header">
-        <h1 class="project-name">%%title%%</h1>
-        <div>%%mark_list%%</div>                 
-    </section>
-    
+    <div class="header">
+        <h1>%%title%%</h1>
+        <div>
+            %%mark_list%%
+        </div>
+        <hr/>
+    </div>
     %%content%%  
     
     <hr>
