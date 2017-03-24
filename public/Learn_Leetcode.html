@@ -4,13 +4,20 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Leetcode</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" href="https://to0d.github.io/stylesheets/github-light.css" media="screen">
+        <!-- <link rel="stylesheet" type="text/css" href="https://to0d.github.io/stylesheets/github-light.css" media="screen"> -->
+        <link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/solarized_dark.min.css">
+        <script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
     </head>
 <body style="word-wrap:break-word">
     <div class="header">
         <h1>Leetcode</h1>
         <div>
-            
+                <ul>
+        <li><a name="TOC_MARK_1" href="#HEAD_2"><strong><font size="2" color="red">@TODO - 019 Remove Nth Node From End of List - Easy - Support <sup>th</sup> in MD </font></strong></a></li>
+        <li><a name="TOC_MARK_2" href="#HEAD_4"><strong><font size="2" color="red">@TODO - 179 Largest Number - Medium - TC000087 </font></strong></a></li>
+    </ul>
+
         </div>
         <hr/>
     </div>
@@ -19,74 +26,349 @@
     <span style="float:left">Table of Contents</span>
 </p>
 <br> -->
-        <b><a name="TOC_HEAD_0" href="#HEAD_0">Chapter 1. Leetcode</a></b><br>
-        <menu>
-            <li><a name="TOC_HEAD_1" href="#HEAD_1">1.1 009 Palindrome Number</a></li>
-            <menu>
-            </menu>
-        </menu>
+        <b><a name="TOC_HEAD_0" href="#HEAD_0">009 Palindrome Number &ndash; Easy</a></b><br>
+        <b><a name="TOC_HEAD_1" href="#HEAD_1">014 Longest Common Prefix &ndash; Easy</a></b><br>
+        <b><a name="TOC_HEAD_2" href="#HEAD_2">019 Remove Nth Node From End of List &ndash; Easy &ndash; Support &lt;sup&gt;th&lt;/sup&gt; in MD <font color="red">@TODO</font></a></b><br>
+        <b><a name="TOC_HEAD_3" href="#HEAD_3">020 Valid Parentheses &ndash; Easy</a></b><br>
+        <b><a name="TOC_HEAD_4" href="#HEAD_4">179 Largest Number &ndash; Medium &ndash; TC000087 <font color="red">@TODO</font></a></b><br>
 
 </div>
-        <H1><a name="HEAD_0" href="#TOC_HEAD_0">Chapter 1. Leetcode</a></H1>
-        <H2><a name="HEAD_1" href="#TOC_HEAD_1">1.1 009 Palindrome Number</a></H2>
-﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
-<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
-    <span style="float:left">Table of Contents</span>
-</p>
-<br> -->
-<menu>
-    <li><a name="TOC_HEAD_2" href="#HEAD_2">1.1.1 [Question Description &ndash; Click Link](https://leetcode.com/problems/palindrome&ndash;number/</a></li>
-    <li><a name="TOC_HEAD_3" href="#HEAD_3">1.1.2 Solution&ndash;2016&ndash;06&ndash;19: 72 ms &ndash; beats 85%</a></li>
-</menu>
+        <H2><a name="HEAD_0" href="#TOC_HEAD_0">009 Palindrome Number &ndash; Easy</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/palindrome-number/" target="_blank">Description &ndash; LeetCode OJ </a></li>
+        <p>
+            Determine whether an integer is a palindrome. Do this without extra space.
+        </p>
+        <p>
+            <strong>Some hints:</strong>
+        </p>
+        <p>
+            Could negative integers be palindromes? (ie, &ndash;1)
+        </p>
+        <p>
+            If you are thinking of converting the integer to string, note the restriction of using extra space.
+        </p>
+        <p>
+            You could also try reversing an integer. However, if you have solved the problem &quot;Reverse Integer&quot;, you know that the reversed integer might overflow. How would you handle such case?
+        </p>
+        <p>
+            There is a more generic way of solving this problem.
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/97852740/" target="_blank">Solution&ndash;2017&ndash;03&ndash;24 C: 205 ms &ndash; beats 30%</a></li>
+        <pre><code>
+    #include <stdio.h>
+    #include <stdbool.h>
+    #include <limits.h>
+    #include <assert.h>
 
-</div>
-        <H3><a name="HEAD_2" href="#TOC_HEAD_2">1.1.1 [Question Description &ndash; Click Link](https://leetcode.com/problems/palindrome&ndash;number/</a></H3>
-    <p>
-        Determine whether an integer is a palindrome. Do this without extra space.
-    </p>
-    <p>
-        <a href="#" target="_blank">click to show spoilers.</a>
-    </p>
-    <p>
-        <strong>Some hints:</strong>
-    </p>
-    <p>
-        Could negative integers be palindromes? (ie, &ndash;1)
-    </p>
-    <p>
-        If you are thinking of converting the integer to string, note the restriction of using extra space.
-    </p>
-    <p>
-        You could also try reversing an integer. However, if you have solved the problem &quot;Reverse Integer&quot;, you know that the reversed integer might overflow. How would you handle such case?
-    </p>
-    <p>
-        There is a more generic way of solving this problem.
-    </p>
-        <H3><a name="HEAD_3" href="#TOC_HEAD_3">1.1.2 Solution&ndash;2016&ndash;06&ndash;19: 72 ms &ndash; beats 85%</a></H3>
-    <pre><code>
-        class Solution {
-        public:
-            bool isPalindrome(int x) {
+    #define  Test_Palindrome(x)     \
+        printf("%d", (x));          \
+        isPalindrome((x))           \
+            ? printf("\tYes\n")     \
+            : printf("\tNo\n");
 
-                if( x < 0 ) return false;
+    // INT_MAX 2147483647  
+    // INT_MIN -2147483648
 
-                int y = 0;
-                int z = x;
-                for(; z > 0; z/= 10 )
+    bool isPalindrome(int x);
+
+    int main(void)
+    {
+        printf("Test Palindrome:\n");
+        Test_Palindrome(0);
+        Test_Palindrome(10);
+        Test_Palindrome(101);
+        Test_Palindrome(70507);
+    }
+
+    bool isPalindrome(int x) 
+    {
+        if( x < 0 ) return false;
+
+        int y = 0, z = x;
+        for( ; z > 0 && y >= 0; z/=10 )
+        {   y = y*10 + z%10;
+        }
+
+        return x == y;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;06&ndash;19 C++: 72 ms &ndash; beats 85%</li>
+        <pre><code>
+    class Solution {
+    public:
+        bool isPalindrome(int x) {
+
+            if( x < 0 ) return false;
+
+            int y = 0;
+            int z = x;
+            for(; z > 0; z/= 10 )
+            {
+                y = y * 10 + z % 10;
+                if( y < 0 )
+                    return false;
+            }
+
+            return x == y;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_1" href="#TOC_HEAD_1">014 Longest Common Prefix &ndash; Easy</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/longest-common-prefix/ " target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Write a function to find the longest common prefix string amongst an array of strings.
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/97855217/" target="_blank">Solution&ndash;2017&ndash;03&ndash;24 C: 03 ms &ndash; beats 39%</a></li>
+        <pre><code>
+    char* longestCommonPrefix(char** strs, int strsSize) 
+    {
+        if( strsSize <= 0 ) 
+            return "";
+        if( strsSize == 1)
+            return strs[0];
+
+        int  preLen = strlen(strs[0]);
+        char* preStr = strs[0];
+        int i,j;
+        char c;
+
+        for( i = 1; preLen > 0 && i < strsSize; ++i)
+        {   char* pstr = strs[i];
+            if( pstr == NULL ) 
+                return "";
+            j = 0;
+            while( (j < preLen) && ((c=pstr[j]) == preStr[j]))
+            {   ++j;
+            }
+            preLen = j;
+        }
+
+        preStr = malloc(preLen+1);
+        memcpy(preStr, strs[0], preLen);
+        preStr[preLen] = '\0';
+        return preStr;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;27 C++: 04 ms &ndash; beats 35%</li>
+        <pre><code>
+    class Solution {
+    public:
+        string longestCommonPrefix(vector<string>& strs) {
+
+            int row = strs.size();
+            if( row == 0 ) return "";
+            if( row == 1)  return strs[0];
+
+            int pos = 0;
+            string& first = strs[0];
+
+            for(; pos < first.size(); ++pos )
+            {
+                char c = first[pos];
+                bool match = true;
+                for( int r = 1 ; match && r < row ; ++ r)
                 {
-                    y = y * 10 + z % 10;
-                    if( y < 0 )
-                        return false;
+                    if( pos >= strs[r].size() || strs[r][pos] != c)
+                        match = false;
                 }
 
-                return x == y;
+                if( !match )
+                    break;
             }
-        };
-    </code></pre>
+
+            return first.substr(0, pos);
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_2" href="#TOC_HEAD_2">019 Remove Nth Node From End of List &ndash; Easy &ndash; Support &lt;sup&gt;th&lt;/sup&gt; in MD </a><a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/remove-nth-node-from-end-of-list/ " target="_blank">Question Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a linked list, remove the &lt;sup&gt;th&lt;/sup&gt; <em>n</em> node from the end of list and return its head.
+        </p>
+        <p>
+            For example,
+        </p>
+        <pre><code>
+   Given linked list: 1->2->3->4->5, and n = 2.
+   After removing the second node from the end, the linked list becomes 1->2->3->5.
+        </code></pre>
+        <p>
+            <strong>Note:</strong>
+        </p>
+        <p>
+            Given
+            <em>n</em> will always be valid.
+        </p>
+        <p>
+            Try to do this in one pass.
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/97857891/" target="_blank">Solution&ndash;2017&ndash;03&ndash;24 C: 06 ms &ndash; beats 19%</a></li>
+        <pre><code>
+    struct ListNode* removeNthFromEnd(struct ListNode* head, int n)
+    {    
+        if( head == NULL )
+            return head;
+
+        struct ListNode** array = malloc( (n+1)*sizeof(struct ListNode* ) );
+        memset(array, 0, (n+1)*sizeof(struct ListNode*));
+
+        int i = 0;
+        struct ListNode* node = head;
+        for( ;node != NULL; i %= n+1, node = node->next)
+        {   array[i++] = node;
+        } 
+
+        struct ListNode* previous = array[i%(n+1)];
+        struct ListNode* target = array[(i+1)%(n+1)];
+
+        if( previous == NULL )
+        {   head = target->next;
+        }
+        else
+        {   previous->next = target->next;
+        }
+
+        free(target);
+        return head;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;05&ndash;02 C++: 04 ms &ndash; beats 20%</li>
+        <pre><code>
+    class Solution {
+    public:
+        ListNode* removeNthFromEnd(ListNode* head, int n) {
+
+            ListNode* node = head;
+            while( n-- > 0 )
+                node = node->next;
+
+            if( node == NULL )
+                return head->next;
+
+            ListNode* previous = head;
+            while( node->next != NULL)
+            {
+                node = node->next;
+                previous = previous->next;
+            }
+
+            previous->next = previous->next->next;
+            return head;
+        }  
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_3" href="#TOC_HEAD_3">020 Valid Parentheses &ndash; Easy</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/valid-parentheses/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a string containing just the characters
+            <code>'('</code> ,
+            <code>')'</code> ,
+            <code>'{'</code> ,
+            <code>'}'</code> ,
+            <code>'['</code> and
+            <code>']'</code> , determine if the input string is valid.
+        </p>
+        <p>
+            The brackets must close in the correct order,
+            <code>"()"</code> and
+            <code>"()[]{}"</code> are all valid but
+            <code>"(]"</code> and
+            <code>"([)]"</code> are not.
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/97858412/" target="_blank">Solution&ndash;2017&ndash;03&ndash;24 C: 3 ms &ndash; beats 23%</a></li>
+        <pre><code>
+    bool isValid(char* s) 
+    {
+        if( s == NULL || *s == '\0' )
+            return true;
+
+        char stack[1024*64];
+        int pos = 0;
+        char c;
+
+        while( (c=*s++) != '\0' )
+        {
+            char c2;
+            switch(c)
+            {
+            case '(':
+            case '[':
+            case '{':
+                stack[pos++] = c;
+                continue; // continue while
+            case ')': c2 = '('; break;
+            case ']': c2 = '['; break;
+            case '}': c2 = '{'; break;
+            default:
+                return false;
+            }
+
+            if( pos == 0 || stack[pos-1] != c2 )
+                return false;
+            --pos;
+        }
+
+        return pos == 0;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;13 C++: 00 ms &ndash; beats 02%</li>
+        <pre><code>
+    class Solution {
+    public:
+
+        bool isValid(string s) {
+
+            stack<char> ms;
+            for( char c : s)
+            {
+                if( c == '(' || c == '{' || c == '[' )
+                    ms.push(c);
+                else if( ms.empty() || ms.top() != expect(c))
+                    return false;
+                else
+                    ms.pop();
+            }
+
+            return ms.empty();
+        }
+
+        char expect( char c)
+        {
+            switch(c)
+            {
+              case ')': return '(';
+              case '}': return '{';
+              case ']': return '[';
+              default : return 0;
+            }
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_4" href="#TOC_HEAD_4">179 Largest Number &ndash; Medium &ndash; TC000087 </a><a name="MARK_2" href="#TOC_MARK_2"><strong><font color="red">@TODO</font></strong></a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/largest-number/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a list of non negative integers, arrange them such that they form the largest number.
+        </p>
+        <p>
+            For example, given [3, 30, 34, 5, 9], the largest formed number is 9534330.
+        </p>
+        <p>
+            Note: The result may be very large, so you need to return a string instead of an integer.
+        </p>
+    </ul>
   
     
     <hr>
-    <li><font color="#000080" size="2">Update Time: Thu Mar 23 21:01:00 CST 2017</font></li>
+    <li><font color="#000080" size="2">Update Time: Fri Mar 24 18:28:28 CST 2017</font></li>
     <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
 </body>
