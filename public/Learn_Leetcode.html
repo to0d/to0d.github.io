@@ -14,8 +14,9 @@
         <h1>Leetcode</h1>
         <div>
                 <ul>
-        <li><a name="TOC_MARK_1" href="#HEAD_2"><strong><font size="2" color="red">@TODO - 019 Remove Nth Node From End of List - Easy - Support <sup>th</sup> in MD </font></strong></a></li>
-        <li><a name="TOC_MARK_2" href="#HEAD_4"><strong><font size="2" color="red">@TODO - 179 Largest Number - Medium - TC000087 </font></strong></a></li>
+        <li><a name="TOC_MARK_1" href="#MARK_1"><strong><font size="2" color="red">@TODO - <a href="https://leetcode.com/submissions/detail/97852740/" target="_blank">Solution&ndash;2017&ndash;03&ndash;24 C: 205 ms &ndash; beats 30%</a> &ndash; Fix &quot;include display&quot; in MD </font></strong></a></li>
+        <li><a name="TOC_MARK_2" href="#HEAD_2"><strong><font size="2" color="red">@TODO - 019 Remove Nth Node From End of List - Easy - Support <sup>th</sup> in MD </font></strong></a></li>
+        <li><a name="TOC_MARK_3" href="#HEAD_9"><strong><font size="2" color="red">@TODO - 179 Largest Number - Medium - TC000087 </font></strong></a></li>
     </ul>
 
         </div>
@@ -30,7 +31,12 @@
         <b><a name="TOC_HEAD_1" href="#HEAD_1">014 Longest Common Prefix &ndash; Easy</a></b><br>
         <b><a name="TOC_HEAD_2" href="#HEAD_2">019 Remove Nth Node From End of List &ndash; Easy &ndash; Support &lt;sup&gt;th&lt;/sup&gt; in MD <font color="red">@TODO</font></a></b><br>
         <b><a name="TOC_HEAD_3" href="#HEAD_3">020 Valid Parentheses &ndash; Easy</a></b><br>
-        <b><a name="TOC_HEAD_4" href="#HEAD_4">179 Largest Number &ndash; Medium &ndash; TC000087 <font color="red">@TODO</font></a></b><br>
+        <b><a name="TOC_HEAD_4" href="#HEAD_4">021 Merge Two Sorted Lists &ndash; Easy</a></b><br>
+        <b><a name="TOC_HEAD_5" href="#HEAD_5">024 Swap Nodes in Pairs &ndash; Easy</a></b><br>
+        <b><a name="TOC_HEAD_6" href="#HEAD_6">026 Remove Duplicates from Sorted Array &ndash; Easy</a></b><br>
+        <b><a name="TOC_HEAD_7" href="#HEAD_7">036 Valid Sudoku &ndash; Easy</a></b><br>
+        <b><a name="TOC_HEAD_8" href="#HEAD_8">038 Count and Say &ndash; Easy</a></b><br>
+        <b><a name="TOC_HEAD_9" href="#HEAD_9">179 Largest Number &ndash; Medium &ndash; TC000087 <font color="red">@TODO</font></a></b><br>
 
 </div>
         <H2><a name="HEAD_0" href="#TOC_HEAD_0">009 Palindrome Number &ndash; Easy</a></H2>
@@ -54,7 +60,7 @@
         <p>
             There is a more generic way of solving this problem.
         </p>
-        <li><a href="https://leetcode.com/submissions/detail/97852740/" target="_blank">Solution&ndash;2017&ndash;03&ndash;24 C: 205 ms &ndash; beats 30%</a></li>
+        <li><a href="https://leetcode.com/submissions/detail/97852740/" target="_blank">Solution&ndash;2017&ndash;03&ndash;24 C: 205 ms &ndash; beats 30%</a> &ndash; Fix &quot;include display&quot; in MD  <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></li>
         <pre><code>
     #include <stdio.h>
     #include <stdbool.h>
@@ -184,7 +190,7 @@
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_2" href="#TOC_HEAD_2">019 Remove Nth Node From End of List &ndash; Easy &ndash; Support &lt;sup&gt;th&lt;/sup&gt; in MD </a><a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_2" href="#TOC_HEAD_2">019 Remove Nth Node From End of List &ndash; Easy &ndash; Support &lt;sup&gt;th&lt;/sup&gt; in MD </a><a name="MARK_2" href="#TOC_MARK_2"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/remove-nth-node-from-end-of-list/ " target="_blank">Question Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -352,7 +358,434 @@
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_4" href="#TOC_HEAD_4">179 Largest Number &ndash; Medium &ndash; TC000087 </a><a name="MARK_2" href="#TOC_MARK_2"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_4" href="#TOC_HEAD_4">021 Merge Two Sorted Lists &ndash; Easy</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/merge-two-sorted-lists/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Merge two sorted linked lists and return it as a new list. The new list should be made by splicing together the nodes of the first two lists.
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/97866040/" target="_blank">Solution&ndash;2017&ndash;03&ndash;24 C: 6 ms &ndash; beats 31%</a></li>
+        <pre><code>
+    /**
+     * Definition for singly-linked list.
+     * struct ListNode {
+     *     int val;
+     *     struct ListNode *next;
+     * };
+     */
+    struct ListNode* mergeTwoLists(struct ListNode* l1, struct ListNode* l2) 
+    {
+        struct ListNode Temp;
+        struct ListNode* l3 = &Temp;
+        while( l1 != NULL && l2 != NULL )
+        {
+            if( l1->val > l2->val )
+            {   l3->next = l2;
+                l2 = l2->next;
+            }
+            else
+            {   l3->next = l1;
+                l1 = l1->next;
+            }
+
+            l3 = l3->next;
+        }
+
+        l3->next= (l1==NULL)? l2 : l1;
+        return Temp.next;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;02 C++: 08 ms &ndash; beats 68%</li>
+        <pre><code>
+    class Solution {
+    public:
+        ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+
+            ListNode tmp(0);
+            ListNode* pnode = &tmp;
+
+            while( l1 != NULL && l2 != NULL )
+            {
+                ListNode** pmin = (l1->val < l2->val) ? &l1 : &l2;
+
+                pnode->next = *pmin;
+                pnode = pnode->next;
+                *pmin =(*pmin)->next;
+            }
+
+            if( l1 != NULL )
+                pnode->next = l1;
+
+            if( l2 != NULL )
+                pnode->next = l2;
+
+            return tmp.next;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_5" href="#TOC_HEAD_5">024 Swap Nodes in Pairs &ndash; Easy</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/swap-nodes-in-pairs/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a linked list, swap every two adjacent nodes and return its head.
+        </p>
+        <p>
+            For example,
+        </p>
+        <p>
+            Given <code>1->2->3->4</code> , you should return the list as <code>2->1->4->3</code> Your algorithm should use only constant space. You may <strong>not</strong> modify the values in the list, only nodes itself can be changed.
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/97867121/" target="_blank">Solution&ndash;2017&ndash;03&ndash;24 C: 3 ms &ndash; beats 6%</a></li>
+        <pre><code>
+    /**
+     * Definition for singly-linked list.
+     * struct ListNode {
+     *     int val;
+     *     struct ListNode *next;
+     * };
+     */
+    struct ListNode* swapPairs(struct ListNode* head) 
+    {
+        if( head == NULL || head->next == NULL )
+        {   return head;
+        }
+
+        struct ListNode temp;
+        struct ListNode* p1 = head;
+        struct ListNode* p2 = NULL;
+        struct ListNode* pp = &temp;
+
+        while( p1 != NULL && p1->next != NULL )
+        {
+            p2 = p1->next;
+            p1->next = p2->next;
+            p2->next = p1;
+            pp->next = p2;
+            pp = p1;
+            p1 = p1->next;
+        }
+
+        return temp.next;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;24 C++: 04 ms &ndash; beats 01%</li>
+        <pre><code>
+    class Solution {
+    public:
+        ListNode* swapPairs(ListNode* head) {
+
+            if( head == NULL || head->next == NULL )
+                return head;
+
+            ListNode* next = head->next;
+            ListNode* tail = next->next;
+            next->next = head;
+            head->next = swapPairs(tail);
+            return next;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_6" href="#TOC_HEAD_6">026 Remove Duplicates from Sorted Array &ndash; Easy</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a sorted array, remove the duplicates in place such that each element appear only
+            <em>once</em> and return the new length.
+        </p>
+        <p>
+            Do not allocate extra space for another array, you must do this in place with constant memory.
+        </p>
+        <p>
+            For example,
+        </p>
+        <p>
+            Given input array
+            <em>nums</em> =
+            <code>[1,1,2]</code> ,
+        </p>
+        <p>
+            Your function should return length =
+            <code>2</code> , with the first two elements of
+            <em>nums</em> being
+            <code>1</code> and
+            <code>2</code> respectively. It doesn&#039;t matter what you leave beyond the new length.
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/97867795/" target="_blank">Solution&ndash;2017&ndash;03&ndash;24 C: 16 ms &ndash; beats 23%</a></li>
+        <pre><code>
+    int removeDuplicates(int* nums, int numsSize) {
+
+        if( nums == NULL || numsSize == 0 )
+        {   return 0;
+        }
+
+        int pos = 0;
+        while( pos < (numsSize-1) && nums[pos] != nums[pos+1])
+            ++pos;
+
+        int i = pos + 1;
+        for(; i < numsSize; ++i )
+        {   if( nums[pos] != nums[i] )
+            {  nums[++pos] = nums[i];
+            }
+        }
+
+        return pos + 1;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;10 C: 12 ms &ndash; beats 35%</li>
+        <pre><code>
+    int removeDuplicates(int* nums, int size) {
+
+            if( size == 0)
+                return 0;
+
+            int *pstart = nums + 1;
+            int *pend  = nums+size;
+            int *pLast = nums;
+            int  len = 1;
+            while( pstart < pend )
+            {
+                if( *pstart != *pLast )
+                {
+                    ++len;   
+
+                    if( ++pLast != pstart ) 
+                        *pLast = *pstart;
+                }
+
+                ++pstart;
+            }
+
+            return len;   
+    }
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_7" href="#TOC_HEAD_7">036 Valid Sudoku &ndash; Easy</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/valid-sudoku/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Determine if a Sudoku is valid, according to: <a href="http://sudoku.com.au/TheRules.aspx" target="_blank">Sudoku Puzzles &ndash; The Rules</a>.
+        </p>
+        <p>
+            The Sudoku board could be partially filled, where empty cells are filled with the character
+            <code>'.'</code> .<br />
+            <img src="http://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Sudoku-by-L2G-20050714.svg/250px-Sudoku-by-L2G-20050714.svg.png" />
+        </p>
+        <p>
+            A partially filled sudoku which is valid.
+        </p>
+        <p>
+            <strong>Note:</strong>
+        </p>
+        <p>
+            A valid Sudoku board (partially filled) is not necessarily solvable. Only the filled cells need to be validated.
+        </p>
+        <li>There are just 3 rules to Sudoku.</li>
+        <p>
+            Each row must have the numbers 1&ndash;9 occuring just once.
+            <img src="http://sudoku.com.au/Pics/horizontal.jpg" />
+        </p>
+        <p>
+            Each column must have the numbers 1&ndash;9 occuring just once.
+        </p>
+        <p>
+            <img src="http://sudoku.com.au/Pics/vertical.jpg" />
+        </p>
+        <p>
+            And the numbers 1&ndash;9 must occur just once in each of the 9 sub&ndash;boxes of the grid.
+        </p>
+        <p>
+            <img src="http://sudoku.com.au/Pics/square.jpg" />
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/97869368/" target="_blank">Solution&ndash;2017&ndash;03&ndash;24 C: 12 ms &ndash; beats 13%</a></li>
+        <pre><code>
+bool isValidSudoku(char** board, int boardRowSize, int boardColSize) 
+{
+    if( boardRowSize !=9 ||  boardColSize != 9 )
+    {   return false;
+    }
+
+    int count[3][9][9] = {0};
+    int v;
+
+    for( int r = 0; r < 9; ++r)
+    {   for( int c = 0; c < 9; ++c)
+        {   if( (v=board[r][c])=='.' )
+            {   continue;
+            }
+            int vi = v - '1';
+            if( vi < 0 
+             || vi >= 9 
+             || count[0][r][vi]++ != 0 
+             || count[1][c][vi]++ != 0
+             || count[2][r/3*3+c/3][vi]++ != 0 )
+            {   return false;
+            }
+        }
+    }
+    return true;
+}
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_8" href="#TOC_HEAD_8">038 Count and Say &ndash; Easy</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/count-and-say/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            The count&ndash;and&ndash;say sequence is the sequence of integers beginning as follows:
+        </p>
+        <p>
+            <code>1, 11, 21, 1211, 111221, ...</code>
+        </p>
+        <p>
+            <code>1</code> is read off as
+            <code>"one 1"</code> or
+            <code>11</code> .
+        </p>
+        <p>
+            <code>11</code> is read off as
+            <code>"two 1s"</code> or
+            <code>21</code> .
+        </p>
+        <p>
+            <code>21</code> is read off as
+            <code>"one 2</code> , then
+            <code>one 1"</code> or
+            <code>1211</code> .
+        </p>
+        <p>
+            Given an integer
+            <em>n</em> , generate the
+            &lt;sup&gt;th&lt;/sup&gt;
+            <em>n</em> sequence.
+        </p>
+        <p>
+            Note: The sequence of integers will be represented as a string.
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/97871504/" target="_blank">Solution&ndash;2017&ndash;03&ndash;24 C: 3 ms &ndash; beats 15%</a></li>
+        <pre><code>
+    char* countAndSay(int n) 
+    {
+    #define MAX_LEN_COUNT   1024*32
+
+        char temp[MAX_LEN_COUNT*2];
+        temp[0] = '1';
+        char* src = temp;
+        char* dst = temp + MAX_LEN_COUNT;
+        int len = 1;
+        int i;
+
+        while( --n >= 1 )
+        {   
+            char last = *src;
+            int count = 1;
+            int dst_len = 0;
+
+            for( i=1,count=1; i<len; ++i )
+            {   
+                if( last == *(src+i) )
+                {   ++count;
+                    continue;
+                }
+
+                dst_len+= sprintf(dst+dst_len,"%d",count);
+                dst[dst_len++] = last;
+                last = *(src+i);
+                count = 1;
+            }
+
+            dst_len+= sprintf(dst+dst_len,"%d",count);
+            dst[dst_len++] = last;
+            len = dst_len;
+
+            char* tmp = dst;
+            dst = src;
+            src = tmp;
+        }
+
+        char* result = malloc(len+1);
+        memcpy(result, src, len);
+        result[len] = '\0';
+
+        return result;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;05&ndash;07 C++: 04 ms &ndash; beats 20%</li>
+        <pre><code>
+    class Solution {  
+    public:
+
+        string countAndSay(int n) {
+
+             if( n == 1) return "1";
+
+             vector<pair<int,int>> v1,v2;  
+             vector<pair<int,int>>* pv1 = &v1;
+             vector<pair<int,int>>* pv2 = &v2;
+
+             push_vec(v1, 1);
+             for( int j = 0; j < n - 1 ; ++j )
+             {
+                 (*pv2).clear();
+                 for( auto& p : *pv1 )
+                 {
+                     push_vec(*pv2, p.second);
+                     push_vec(*pv2, p.first);
+                 }
+                 auto* pt = pv2;
+                 pv2 = pv1;
+                 pv1 = pt;
+             }
+
+             string str;
+             for( auto& p : *pv1 )
+             {
+                 int count = p.second;
+                 int val = p.first;
+                 for( int j = 0; j < count; ++j)
+                     str.push_back( '0'+ val);
+             }
+
+             return str;
+        }
+
+        void push_vec(vector<pair<int,int>>& vec, int v)
+        {
+            if( v >= 10 )
+            {
+                 string str = to_string(v);
+                 int i = 0;
+                 int m = 0;
+                 char c = str[0];
+
+                 while( i < str.size()){
+                     if( c == str[i] ){
+                         ++m;
+                         ++i;
+                     }
+                     else{
+                         push_vec(vec, m);
+                         push_vec(vec, c - '0');
+                         m = 0;
+                         c = str[i];
+                     }
+                 } 
+                 if( m > 0 )
+                 {
+                     push_vec(vec, m);
+                     push_vec(vec, c - '0');
+                 }
+            }
+            else if( vec.empty() || vec[vec.size() - 1].first != v )
+                vec.push_back(make_pair(v, 1));
+            else
+                vec[vec.size() - 1].second++;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_9" href="#TOC_HEAD_9">179 Largest Number &ndash; Medium &ndash; TC000087 </a><a name="MARK_3" href="#TOC_MARK_3"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/largest-number/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -368,7 +801,7 @@
   
     
     <hr>
-    <li><font color="#000080" size="2">Update Time: Fri Mar 24 18:28:28 CST 2017</font></li>
+    <li><font color="#000080" size="2">Update Time: Fri Mar 24 22:58:47 CST 2017</font></li>
     <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
 </body>
