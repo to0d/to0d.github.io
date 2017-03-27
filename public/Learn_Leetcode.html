@@ -20,7 +20,7 @@
         <li><a name="TOC_MARK_4" href="#MARK_4"><strong><font size="2" color="red">@TODO - Iteratively Solution ?? &ndash; 2017&ndash;03&ndash;25 </font></strong></a></li>
         <li><a name="TOC_MARK_5" href="#MARK_5"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;25 C &ndash; misaligned address error ? </font></strong></a></li>
         <li><a name="TOC_MARK_6" href="#MARK_6"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;25 C &ndash; misaligned address error ? </font></strong></a></li>
-        <li><a name="TOC_MARK_7" href="#HEAD_36"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
+        <li><a name="TOC_MARK_7" href="#HEAD_37"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
     </ul>
 
         </div>
@@ -67,10 +67,11 @@
             <li><a name="TOC_HEAD_32" href="#HEAD_32">202 Happy Number</a></li>
             <li><a name="TOC_HEAD_33" href="#HEAD_33">203 Remove Linked List Elements</a></li>
             <li><a name="TOC_HEAD_34" href="#HEAD_34">204 Count Primes</a></li>
+            <li><a name="TOC_HEAD_35" href="#HEAD_35">205 Isomorphic Strings</a></li>
         </menu>
-        <b><a name="TOC_HEAD_35" href="#HEAD_35">Medium</a></b><br>
+        <b><a name="TOC_HEAD_36" href="#HEAD_36">Medium</a></b><br>
         <menu>
-            <li><a name="TOC_HEAD_36" href="#HEAD_36">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_37" href="#HEAD_37">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
         </menu>
 
 </div>
@@ -993,16 +994,14 @@ bool isValidSudoku(char** board, int boardRowSize, int boardColSize)
         <p>
             Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
         </p>
-        <li>Tips</li>
-        <pre><code>
-    Fibonacci sequence
-    f(n) = f(n-1) + f(n-2)
-        f(1) = 1
-        f(2) = 2
-        </code></pre>
         <li>Better Solution?? &ndash; 2017&ndash;03&ndash;25  <a name="MARK_3" href="#TOC_MARK_3"><strong><font color="red">@TODO</font></strong></a></li>
         <li><a href="https://leetcode.com/submissions/detail/97926207/" target="_blank">Solution&ndash;2017&ndash;03&ndash;25 C: 3 ms &ndash; 0%</a></li>
         <pre><code>
+    // Fibonacci sequence
+    // f(n) = f(n-1) + f(n-2)
+    //     f(1) = 1
+    //     f(2) = 2
+
     int climbStairs(int n) {
 
         if( n == 1 ) return 1;
@@ -1970,6 +1969,38 @@ B:     b1 → b2 → b3
         </ul>
         <li><a href="https://leetcode.com/submissions/detail/97960492/" target="_blank">Solution&ndash;2017&ndash;03&ndash;25 C: 26 ms &ndash; 23%</a></li>
         <pre><code>
+     //           |<-- a -->|
+     //   A:          a1 → a2
+     //                      ↘ |<-- c -->|
+     //                        c1 → c2 → c3
+     //                      ↗            
+     //   B:     b1 → b2 → b3
+     //          |<-- b -->|
+     //          
+     //          
+     //   la = length(A) = a + c;
+     //   lb = length(B) = b + c;
+     //   
+     //   Reverse list b
+     //   
+     //           |<-- a -->|
+     //   A:          a1 → a2
+     //                      ↘ |<-- c -->|
+     //                        c1 ← c2 ← c3
+     //                      ↙           ↑ 
+     //   B:     b1 ← b2 ← b3             Tail
+     //          |<-- b -->| 
+     //
+     //   Now, iterate list A' 
+     //
+     //   lc = length(A') = a + b;
+     //   
+     //   So, you can get the value of "c":
+     //       
+     //      c = (la+lb-lc)/2;
+     //   
+     //   The intersect node should be at position c from tail. 
+
     /**
      * Definition for singly-linked list.
      * struct ListNode {
@@ -2041,42 +2072,6 @@ B:     b1 → b2 → b3
         return target;
     }
         </code></pre>
-        <ul>
-            <li>Tips</li>
-            <pre><code>
-            |<-- a -->|
-    A:          a1 → a2
-                       ↘ |<-- c -->|
-                         c1 → c2 → c3
-                       ↗            
-    B:     b1 → b2 → b3
-           |<-- b -->|
-
-
-    la = length(A) = a + c;
-    lb = length(B) = b + c;
-
-    Reverse list b
-
-            |<-- a -->|
-    A:          a1 → a2
-                       ↘ |<-- c -->|
-                         c1 ← c2 ← c3
-                       ↙           ↑ 
-    B:     b1 ← b2 ← b3             Tail
-           |<-- b -->| 
-
-    Now, iterate list A' 
-
-    lc = length(A') = a + b;
-
-    So, you can get the value of "c":
-
-       c = (la+lb-lc)/2;
-
-    The intersect node should be at position c from tail. 
-            </code></pre>
-        </ul>
     </ul>
         <H2><a name="HEAD_23" href="#TOC_HEAD_23">165 Compare Version Numbers</a></H2>
     <ul>
@@ -2625,7 +2620,6 @@ B:     b1 → b2 → b3
         <p>
             Given a list of non&ndash;negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight <strong>without alerting the police</strong> .
         </p>
-        <li>Tips</li>
         <li><a href="https://leetcode.com/submissions/detail/98057361/" target="_blank">Solution&ndash;2017&ndash;03&ndash;26 C: 0 ms &ndash; 57%</a></li>
         <pre><code>
     // f(n) = max( Vn+f(n-2), f(n-1))
@@ -3083,8 +3077,41 @@ public int countPrimes(int n) {
     };
         </code></pre>
     </ul>
-        <H1><a name="HEAD_35" href="#TOC_HEAD_35">Medium</a></H1>
-        <H2><a name="HEAD_36" href="#TOC_HEAD_36">179 Largest Number &ndash; TC000087 </a><a name="MARK_7" href="#TOC_MARK_7"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_35" href="#TOC_HEAD_35">205 Isomorphic Strings</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/isomorphic-strings/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given two strings <em>s</em> and <em>t</em> , determine if they are isomorphic.
+        </p>
+        <p>
+            Two strings are isomorphic if the characters in <em>s</em> can be replaced to get <em>t</em> .
+        </p>
+        <p>
+            All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character but a character may map to itself.
+        </p>
+        <p>
+            For example,
+        </p>
+        <p>
+            Given <code>"egg"</code> , <code>"add"</code> , return true.
+        </p>
+        <p>
+            Given <code>"foo"</code> , <code>"bar"</code> , return false.
+        </p>
+        <p>
+            Given <code>"paper"</code> , <code>"title"</code> , return true.
+        </p>
+        <p>
+            <strong>Note:</strong>
+        </p>
+        <p>
+            You may assume both
+            <em>s</em> and
+            <em>t</em> have the same length.
+        </p>
+    </ul>
+        <H1><a name="HEAD_36" href="#TOC_HEAD_36">Medium</a></H1>
+        <H2><a name="HEAD_37" href="#TOC_HEAD_37">179 Largest Number &ndash; TC000087 </a><a name="MARK_7" href="#TOC_MARK_7"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/largest-number/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -3100,7 +3127,7 @@ public int countPrimes(int n) {
   
     
     <hr>
-    <li><font color="#000080" size="2">Update Time: Sun Mar 26 18:09:53 CST 2017</font></li>
+    <li><font color="#000080" size="2">Update Time: Sun Mar 26 21:24:22 CST 2017</font></li>
     <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
 </body>
