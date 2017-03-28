@@ -20,7 +20,8 @@
         <li><a name="TOC_MARK_4" href="#MARK_4"><strong><font size="2" color="red">@TODO - Iteratively Solution ?? &ndash; 2017&ndash;03&ndash;25 </font></strong></a></li>
         <li><a name="TOC_MARK_5" href="#MARK_5"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;25 C &ndash; misaligned address error ? </font></strong></a></li>
         <li><a name="TOC_MARK_6" href="#MARK_6"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;25 C &ndash; misaligned address error ? </font></strong></a></li>
-        <li><a name="TOC_MARK_7" href="#HEAD_37"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
+        <li><a name="TOC_MARK_7" href="#MARK_7"><strong><font size="2" color="red">@TODO - Solution&ndash;2016&ndash;05&ndash;25: 48 ms &ndash; 48% &ndash; Better Solution ? </font></strong></a></li>
+        <li><a name="TOC_MARK_8" href="#HEAD_46"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
     </ul>
 
         </div>
@@ -68,10 +69,19 @@
             <li><a name="TOC_HEAD_33" href="#HEAD_33">203 Remove Linked List Elements</a></li>
             <li><a name="TOC_HEAD_34" href="#HEAD_34">204 Count Primes</a></li>
             <li><a name="TOC_HEAD_35" href="#HEAD_35">205 Isomorphic Strings</a></li>
+            <li><a name="TOC_HEAD_36" href="#HEAD_36">206 Reverse Linked List</a></li>
+            <li><a name="TOC_HEAD_37" href="#HEAD_37">217 Contains Duplicate</a></li>
+            <li><a name="TOC_HEAD_38" href="#HEAD_38">219 Contains Duplicate II</a></li>
+            <li><a name="TOC_HEAD_39" href="#HEAD_39">225 Implement Stack using Queues</a></li>
+            <li><a name="TOC_HEAD_40" href="#HEAD_40">226 Invert Binary Tree</a></li>
+            <li><a name="TOC_HEAD_41" href="#HEAD_41">231 Power of Two</a></li>
+            <li><a name="TOC_HEAD_42" href="#HEAD_42">232 Implement Queue using Stacks</a></li>
+            <li><a name="TOC_HEAD_43" href="#HEAD_43">234 Palindrome Linked List</a></li>
+            <li><a name="TOC_HEAD_44" href="#HEAD_44">235 Lowest Common Ancestor of a Binary Search Tree</a></li>
         </menu>
-        <b><a name="TOC_HEAD_36" href="#HEAD_36">Medium</a></b><br>
+        <b><a name="TOC_HEAD_45" href="#HEAD_45">Medium</a></b><br>
         <menu>
-            <li><a name="TOC_HEAD_37" href="#HEAD_37">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_46" href="#HEAD_46">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
         </menu>
 
 </div>
@@ -2349,7 +2359,7 @@ B:     b1 → b2 → b3
         return n == 0 ? 0 : n/5 + trailingZeroes(n/5);
     }
         </code></pre>
-        <li>Solution&ndash;2016&ndash;06&ndash;23 C++: 05 ms &ndash; beats 14%</li>
+        <li>Solution&ndash;2016&ndash;06&ndash;23 C++: 05 ms &ndash; 14%</li>
         <pre><code>
     class Solution {
     public:
@@ -3109,9 +3119,764 @@ public int countPrimes(int n) {
             <em>s</em> and
             <em>t</em> have the same length.
         </p>
+        <li><a href="https://leetcode.com/submissions/detail/98070110/" target="_blank">Solution&ndash;2017&ndash;03&ndash;26 C: 3 ms &ndash; 12%</a></li>
+        <pre><code>
+    bool isIsomorphic(char* s, char* t) {
+
+        if( s == NULL || t == NULL ) return false;
+
+        int slen = strlen(s);
+        int tlen = strlen(t);
+
+        if( slen == 0 ) return true;    
+        if( slen != tlen ) return false;
+
+        char smap[256] = {0};
+        char tmap[256] = {0};
+
+        int i;
+        char sc, tc, sv, tv;
+        for( i = 0; i < slen; ++i )
+        {
+            sv = smap[s[i]];
+            tv = tmap[t[i]];
+            if( sv == 0 )
+            {
+                if( tv !=0 )
+                    return false;
+                smap[s[i]] = t[i];
+                tmap[t[i]] = s[i];
+            }
+            else if( sv != t[i] || tv != s[i] )
+            {   return false;
+            }
+        }
+
+        return true;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;05&ndash;15 C++: 00 ms &ndash; 35%</li>
+        <pre><code>
+    bool isIsomorphic(char* s, char* t) {
+
+         if( s == NULL || t == NULL)
+             return false;
+
+         char stHeap [256] = {0};
+         char tsHeap [256] = {0};
+
+         int len = strlen(s);
+         for(int i = 0; i < len ; ++i)
+         {
+             char sc = s[i];
+             char tc = t[i];
+
+             char msc = stHeap[(int)sc];
+             char mtc = tsHeap[(int)tc];
+             if( msc == 0 )
+             {
+                 if( mtc == 0 )
+                 {
+                     stHeap[(int)sc] = tc;
+                     tsHeap[(int)tc] = sc;
+                 }
+                 else
+                    return false;
+             }
+             else if(msc != tc || mtc != sc)
+                return false;
+         }
+
+         return true;
+    }
+        </code></pre>
     </ul>
-        <H1><a name="HEAD_36" href="#TOC_HEAD_36">Medium</a></H1>
-        <H2><a name="HEAD_37" href="#TOC_HEAD_37">179 Largest Number &ndash; TC000087 </a><a name="MARK_7" href="#TOC_MARK_7"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_36" href="#TOC_HEAD_36">206 Reverse Linked List</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/reverse-linked-list/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Reverse a singly linked list.
+        </p>
+        <p>
+            <strong>Hint:</strong>
+        </p>
+        <p>
+            A linked list can be reversed either iteratively or recursively. Could you implement both?
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/98245903/" target="_blank">Solution&ndash;2017&ndash;03&ndash;28 C: 3 ms &ndash; 24%</a></li>
+        <pre><code>
+    /**
+     * Definition for singly-linked list.
+     * struct ListNode {
+     *     int val;
+     *     struct ListNode *next;
+     * };
+     */
+    struct ListNode* _reverseList(struct ListNode* head, struct ListNode** ppTail) {
+        if( head == NULL ) 
+            return NULL;
+
+        struct ListNode* tail = NULL;
+        struct ListNode* head2 = _reverseList(head->next, &tail);
+        if( head2 == NULL )
+        {   
+            *ppTail = head;
+            return head;
+        }
+
+        head->next = NULL;
+        tail->next = head;
+        *ppTail = head;
+        return head2;
+    }
+
+    struct ListNode* reverseList(struct ListNode* head) {
+        struct ListNode* tail = NULL;
+        return _reverseList(head, &tail);
+    }
+        </code></pre>
+        <li><a href="https://leetcode.com/submissions/detail/98246440/" target="_blank">Solution&ndash;2017&ndash;03&ndash;28 C: 3 ms &ndash; 24%</a></li>
+        <pre><code>
+    struct ListNode* reverseList(struct ListNode* head) {
+
+        if( head == NULL )
+            return NULL;
+
+        struct ListNode* previous = NULL;
+        struct ListNode* next = NULL;
+
+        while( head != NULL )
+        {
+            next = head->next;
+            head->next = previous;
+            previous = head;
+            head = next;
+        }
+
+        return previous;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;07&ndash;01: 08 ms &ndash; 13%</li>
+        <p>
+            <strong>iteratively</strong>
+        </p>
+        <pre><code>
+    class Solution {
+    public:
+        ListNode* reverseList(ListNode* head) {
+
+            ListNode* pnew = NULL;
+            ListNode* pnode = NULL;
+
+            while( ( pnode = head) != NULL )
+            {
+               head = head->next;       
+               pnode->next = pnew;
+               pnew = pnode;
+            }
+
+            return pnew;
+        }
+    };
+        </code></pre>
+        <p>
+            <strong>recursively</strong>
+        </p>
+        <pre><code>
+    class Solution {
+    public:
+        ListNode* reverseList(ListNode* head) {
+
+            if( head == NULL || head->next == NULL)
+                  return head;
+
+            ListNode* next = head->next;
+            ListNode* pnew = reverseList(next);
+
+            next->next = head;
+            head->next = NULL;   
+            return pnew;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_37" href="#TOC_HEAD_37">217 Contains Duplicate</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/contains-duplicate/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given an array of integers, find if the array contains any duplicates. Your function should return true if any value appears at least twice in the array, and it should return false if every element is distinct.
+        </p>
+        <li>Solution&ndash;2016&ndash;05&ndash;25: 48 ms &ndash; 48% &ndash; Better Solution ?  <a name="MARK_7" href="#TOC_MARK_7"><strong><font color="red">@TODO</font></strong></a></li>
+        <pre><code>
+    class Solution {
+    public:
+        bool containsDuplicate(vector<int>& nums) {
+
+            unordered_set<int> dupSet;
+
+            for( int n : nums )
+            {
+                if( dupSet.count(n) != 0) 
+                    return true;
+
+                dupSet.insert(n);
+            }
+
+            return false;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_38" href="#TOC_HEAD_38">219 Contains Duplicate II</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/contains-duplicate-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given an array of integers and an integer
+            <em>k</em> , find out whether there are two distinct indices
+            <em>i</em> and
+            <em>j</em> in the array such that <strong>nums[i] = nums[j]</strong>
+            and the difference between
+            <em>i</em> and
+            <em>j</em> is at most
+            <em>k</em> .
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/98249627/" target="_blank">Solution&ndash;2017&ndash;03&ndash;28 C: 26 ms &ndash; 74%</a></li>
+        <pre><code>
+    class Solution {
+    public:
+        bool containsNearbyDuplicate(vector<int>& nums, int k) {
+
+            if( k <= 0 ) return false;
+
+            unordered_map<int,int> dupMap;
+
+            for( int i = 0; i < nums.size(); ++i )
+            {
+                int n = nums[i];
+                auto iter = dupMap.find(n);
+
+                if( iter != dupMap.end() && ((i - iter->second)<=k) )
+                {   return true;
+                }
+
+                dupMap[n] = i;
+            }
+
+            return false;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_39" href="#TOC_HEAD_39">225 Implement Stack using Queues</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/implement-stack-using-queues/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Implement the following operations of a stack using queues.
+        </p>
+        <ul>
+            <li>push(x) &ndash;&ndash; Push element x onto stack.</li>
+            <li>pop() &ndash;&ndash; Removes the element on top of the stack.</li>
+            <li>top() &ndash;&ndash; Get the top element.</li>
+            <li>empty() &ndash;&ndash; Return whether the stack is empty.</li>
+        </ul>
+        <p>
+            <strong>Notes:</strong>
+        </p>
+        <ul>
+            <li><p>
+            You must use
+            <em>only</em> standard operations of a queue &ndash;&ndash; which means only
+            <code>push to back</code> ,
+            <code>peek/pop from front</code> ,
+            <code>size</code> , and
+            <code>is empty</code> operations are valid.
+            <p></li>
+            <li>Depending on your language, queue may not be supported natively. You may simulate a queue by using a list or deque (double&ndash;ended queue), as long as you use only standard operations of a queue.</li>
+            <li>You may assume that all operations are valid (for example, no pop or top operations will be called on an empty stack).<br /></li>
+        </ul>
+        <li>Solution&ndash;2016&ndash;05&ndash;14: 00 ms &ndash; 01%</li>
+        <p>
+            <strong>Two queues:</strong>
+        </p>
+        <pre><code>
+    class Stack {
+    public:
+        Stack() : mi(0){}; 
+
+        // Push element x onto stack.
+        void push(int x) {
+
+            queue<int>& a = mQueue[mi];
+            queue<int>& b = mQueue[ (mi+1)%2 ];
+
+            b.push(x);
+            while( !a.empty() )
+            { 
+                b.push(a.front());
+                a.pop();
+            }
+
+            mi = (mi+1)%2;
+        }
+
+        // Removes the element on top of the stack.
+        void pop() {
+            mQueue[mi].pop();
+        }
+
+        // Get the top element.
+        int top() {
+            return mQueue[mi].front();
+        }
+
+        // Return whether the stack is empty.
+        bool empty() {
+            return mQueue[mi].empty();
+        }
+
+        queue<int> mQueue[2];
+        int mi;
+    };
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;05&ndash;14: 00 ms &ndash; 01%</li>
+        <p>
+            <strong>One queue</strong>
+        </p>
+        <pre><code>
+    class Stack {
+    public:
+
+        // Push element x onto stack.
+        void push(int x) {
+
+            int size = mqueue.size();
+
+            mqueue.push(x);
+            while( size-- > 0 )
+            { 
+                mqueue.push(mqueue.front());
+                mqueue.pop();
+            }
+        }
+
+        // Removes the element on top of the stack.
+        void pop() {
+            mqueue.pop();
+        }
+
+        // Get the top element.
+        int top() {
+            return mqueue.front();
+        }
+
+        // Return whether the stack is empty.
+        bool empty() {
+            return mqueue.empty();
+        }
+
+        queue<int> mqueue;
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_40" href="#TOC_HEAD_40">226 Invert Binary Tree</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/implement-stack-using-queues/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Invert a binary tree.
+        </p>
+        <pre><code>
+     4
+   /   \
+  2     7
+ / \   / \
+1   3 6   9
+        </code></pre>
+        <p>
+            to
+        </p>
+        <pre><code>
+     4
+   /   \
+  7     2
+ / \   / \
+9   6 3   1
+        </code></pre>
+        <p>
+            <strong>Trivia:</strong>
+        </p>
+        <p>
+            This problem was inspired by
+            <a href="https://twitter.com/mxcl/status/608682016205344768" target="_blank">this original tweet</a>
+            by
+            <a href="https://twitter.com/mxcl" target="_blank">Max Howell</a>
+            :
+            Google: 90% of our engineers use the software you wrote (Homebrew), but you can&rsquo;t invert a binary tree on a whiteboard so fuck off.
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/98252145/" target="_blank">Solution&ndash;2017&ndash;03&ndash;28 C: 3 ms &ndash; 0%</a></li>
+        <pre><code>
+    /**
+     * Definition for a binary tree node.
+     * struct TreeNode {
+     *     int val;
+     *     struct TreeNode *left;
+     *     struct TreeNode *right;
+     * };
+     */
+    struct TreeNode* invertTree(struct TreeNode* root) {
+
+        if(root == NULL )
+            return NULL;
+
+        invertTree(root->right);
+        invertTree(root->left);
+
+        struct TreeNode* node = root->left;
+        root->left = root->right;
+        root->right = node;
+        return root;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;10 C++: 00 ms &ndash; 00%</li>
+        <pre><code>
+    class Solution {
+    public:
+        TreeNode* invertTree(TreeNode* root) {
+
+            std::stack<TreeNode*> nodeStack;
+            nodeStack.push(root);
+
+            while( !nodeStack.empty())
+            {
+                TreeNode* pnode = nodeStack.top();
+                nodeStack.pop();
+
+                if(pnode == NULL)
+                    continue;
+
+                nodeStack.push(pnode->left);
+                nodeStack.push(pnode->right);
+
+                TreeNode*temp = pnode->left;
+                pnode->left   = pnode->right;
+                pnode->right  = temp;
+            }
+
+            return root;
+        }
+    };
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;10&ndash;02: 00 ms &ndash; 00%</li>
+        <p>
+            <strong>recursion:</strong>
+        </p>
+        <pre><code>
+    class Solution {
+    public:
+
+        TreeNode* invertTree(TreeNode* root) {
+
+            if( root != NULL)
+            {
+                TreeNode* pnode = invertTree(root->left);
+                root->left      = invertTree(root->right);
+                root->right     = pnode;         
+            }
+
+            return root;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_41" href="#TOC_HEAD_41">231 Power of Two</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/power-of-two/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given an integer, write a function to determine if it is a power of two.
+        </p>
+        <li>Solution&ndash;2016&ndash;04&ndash;27 C++: 08 ms &ndash; 01%</li>
+        <pre><code>
+    // 2  ==> 00000010
+    // 4  ==> 00000100
+    // 8  ==> 00001000
+    // 16 ==> 00010000
+    // 
+    // 2^n ==> 0001000000000
+    //             |<- n ->|
+
+    bool isPowerOfTwo(int n) {
+        return n > 0 && ( (n&(n-1)) == 0 ); 
+    }
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_42" href="#TOC_HEAD_42">232 Implement Queue using Stacks</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/power-of-two/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Implement the following operations of a queue using stacks.
+        </p>
+        <ul>
+            <li>push(x) &ndash;&ndash; Push element x to the back of queue.</li>
+            <li>pop() &ndash;&ndash; Removes the element from in front of queue.</li>
+            <li>peek() &ndash;&ndash; Get the front element.</li>
+            <li>empty() &ndash;&ndash; Return whether the queue is empty.</li>
+        </ul>
+        <p>
+            <strong>Notes:</strong>
+        </p>
+        <ul>
+            <li><p>
+            You must use
+            <em>only</em> standard operations of a stack &ndash;&ndash; which means only
+            <code>push to top</code> ,
+            <code>peek/pop from top</code> ,
+            <code>size</code> , and
+            <code>is empty</code> operations are valid.
+            <p></li>
+            <li>Depending on your language, stack may not be supported natively. You may simulate a stack by using a list or deque (double&ndash;ended queue), as long as you use only standard operations of a stack.</li>
+            <li>You may assume that all operations are valid (for example, no pop or peek operations will be called on an empty queue).</li>
+        </ul>
+        <li>Solution&ndash;2016&ndash;05&ndash;14 C++: 00 ms &ndash; 02%</li>
+        <pre><code>
+    class Queue {
+    public:
+
+        // Push element x to the back of queue.
+        void push(int x) {
+            m_tailStack.push(x);
+        }
+
+        // Removes the element from in front of queue.
+        void pop(void) {
+
+            if(m_frontStack.empty())
+                move();
+
+            m_frontStack.pop();
+        }
+
+        // Get the front element.
+        int peek(void) {
+
+            if(m_frontStack.empty())
+                move();
+
+            return m_frontStack.top();
+        }
+
+        // Return whether the queue is empty.
+        bool empty(void) {     
+            return m_tailStack.empty() && m_frontStack.empty();
+        }
+
+    private:
+
+        void move()
+        {
+            while(!m_tailStack.empty())
+            {
+                m_frontStack.push( m_tailStack.top());
+                m_tailStack.pop();
+            }
+        }
+
+
+        stack<int> m_tailStack;
+        stack<int> m_frontStack;
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_43" href="#TOC_HEAD_43">234 Palindrome Linked List</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/palindrome-linked-list/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a singly linked list, determine if it is a palindrome.
+        </p>
+        <p>
+            <strong>Follow up:</strong>
+        </p>
+        <p>
+            Could you do it in O(n) time and O(1) space?
+        </p>
+        <li>Solution&ndash;2016&ndash;06&ndash;19 C++: 24 ms &ndash; 87%</li>
+        <pre><code>
+    /**
+     * Definition for singly-linked list.
+     * struct ListNode {
+     *     int val;
+     *     ListNode *next;
+     *     ListNode(int x) : val(x), next(NULL) {}
+     * };
+     */
+    class Solution {
+    public:
+        bool isPalindrome(ListNode* head) {
+
+            if( head == NULL || head->next == NULL ) return true;
+            if( head->next->next == NULL ) return head->val == head->next->val;
+
+            ListNode* fast = head;
+            ListNode* node = head;
+            ListNode* next = node->next;
+            while( fast->next != NULL && fast->next->next != NULL) 
+            {
+                fast = fast->next->next;
+                ListNode* temp = next->next;
+                next->next = node;
+                node = next;
+                next = temp;
+            }
+            head->next = NULL;
+
+            ListNode* h1 = node;
+            ListNode* h2 = next;
+
+            if( fast->next == NULL )  // odd list:
+                h1 = h1->next;
+
+            bool found = false;
+            for(; !found && h1 != NULL; h1 = h1->next, h2 = h2->next )
+            {
+                // cout << "h1=" << h1 << ", h2=" << h2 << endl;
+                if( h1->val != h2->val )
+                    found = true;
+            }
+
+            /*
+            // reverse list [head, node]
+            ListNode* last = next;
+            ListNode* next2 = node;
+            while( next2 != head )
+            {
+                ListNode* temp = next2->next;
+                next2->next = last;
+                last = next2;
+                next2 = temp;
+            }
+            */
+            return !found;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_44" href="#TOC_HEAD_44">235 Lowest Common Ancestor of a Binary Search Tree</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a binary search tree (BST), find the lowest common ancestor (LCA) of two given nodes in the BST.
+        </p>
+        <p>
+            According to the
+            <a href="https://en.wikipedia.org/wiki/Lowest_common_ancestor" target="_blank">definition of LCA on Wikipedia</a>
+            : &ldquo;The lowest common ancestor is defined between two nodes v and w as the lowest node in T that has both v and w as descendants (where we allow
+        </p>
+        <p>
+            <strong>a node to be a descendant of itself</strong>
+            ).&rdquo;
+        </p>
+        <pre><code>
+        _______6______
+       /              \
+    ___2__          ___8__
+   /      \        /      \
+   0      _4       7       9
+         /  \
+         3   5
+        </code></pre>
+        <p>
+            For example, the lowest common ancestor (LCA) of nodes
+            <code>2</code> and
+            <code>8</code> is
+            <code>6</code> . Another example is LCA of nodes
+            <code>2</code> and
+            <code>4</code> is
+            <code>2</code> , since a node can be a descendant of itself according to the LCA definition.
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/98257460/" target="_blank">Solution&ndash;2017&ndash;03&ndash;28 C: 25 ms &ndash; 25%</a></li>
+        <pre><code>
+    /**
+     * Definition for a binary tree node.
+     * struct TreeNode {
+     *     int val;
+     *     struct TreeNode *left;
+     *     struct TreeNode *right;
+     * };
+     */
+    struct TreeNode* lowestCommonAncestor(struct TreeNode* root, struct TreeNode* p, struct TreeNode* q) {
+
+        if( root == NULL || p == NULL || q == NULL ) return NULL;
+        if( p->val > q->val )       return lowestCommonAncestor(root, q, p);
+        if( root->val <  p->val )   return lowestCommonAncestor(root->right, p, q);
+        if( root->val >  q->val )   return lowestCommonAncestor(root->left, p, q);
+        return root;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;05&ndash;15 C++: 40 ms &ndash; 36%</li>
+        <pre><code>
+    /**
+     * Definition for a binary tree node.
+     * struct TreeNode {
+     *     int val;
+     *     TreeNode *left;
+     *     TreeNode *right;
+     *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+     * };
+     */
+    class Solution 
+    {
+    public:
+
+        TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) 
+        {
+
+            if( root == NULL || p == NULL || q == NULL)
+                return NULL;
+
+            if( p == q)
+                return p;
+
+            stack<TreeNode*> pPath;
+            stack<TreeNode*> qPath;
+
+            if( !findNodeInBST(pPath, p, root)|| !findNodeInBST(qPath, q, root))
+                return NULL;
+
+            // find common ancestor from root node
+            TreeNode* pLast = root;
+            while( !pPath.empty() 
+                && !qPath.empty() 
+                && pPath.top() == qPath.top() )
+            {
+                pLast = pPath.top();
+
+                pPath.pop();
+                qPath.pop();
+            }
+
+            return pLast;
+        }
+
+    private:
+
+        bool findNodeInBST( stack<TreeNode*>& path, TreeNode* pTarget, TreeNode* pNode)
+        {
+            if( pNode == NULL )
+                 return false;
+
+            if( pTarget == pNode 
+            || pTarget->val < pNode->val && findNodeInBST(path, pTarget, pNode->left) 
+            || pTarget->val > pNode->val && findNodeInBST(path, pTarget, pNode->right))
+            {
+                path.push(pNode); 
+                return true;
+            }
+
+            return false;
+        } 
+    };
+        </code></pre>
+    </ul>
+        <H1><a name="HEAD_45" href="#TOC_HEAD_45">Medium</a></H1>
+        <H2><a name="HEAD_46" href="#TOC_HEAD_46">179 Largest Number &ndash; TC000087 </a><a name="MARK_8" href="#TOC_MARK_8"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/largest-number/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -3127,7 +3892,7 @@ public int countPrimes(int n) {
   
     
     <hr>
-    <li><font color="#000080" size="2">Update Time: Sun Mar 26 21:24:22 CST 2017</font></li>
+    <li><font color="#000080" size="2">Update Time: Tue Mar 28 11:40:03 CST 2017</font></li>
     <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
 </body>
