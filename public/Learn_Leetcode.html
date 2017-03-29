@@ -23,7 +23,9 @@
         <li><a name="TOC_MARK_5" href="#MARK_5"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;25 C &ndash; misaligned address error ? </font></strong></a></li>
         <li><a name="TOC_MARK_6" href="#MARK_6"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;25 C &ndash; misaligned address error ? </font></strong></a></li>
         <li><a name="TOC_MARK_7" href="#MARK_7"><strong><font size="2" color="red">@TODO - Solution&ndash;2016&ndash;05&ndash;25: 48 ms &ndash; 48% &ndash; Better Solution ? </font></strong></a></li>
-        <li><a name="TOC_MARK_8" href="#HEAD_64"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
+        <li><a name="TOC_MARK_8" href="#HEAD_65"><strong><font size="2" color="red">@TODO - 016 3Sum Closest - solve it by 动态规划? - 2017-03-29 </font></strong></a></li>
+        <li><a name="TOC_MARK_9" href="#MARK_9"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;29 C: &ndash; <strong><font color="red">Runtime Error??</font></strong> </font></strong></a></li>
+        <li><a name="TOC_MARK_10" href="#HEAD_69"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
     </ul>
 
         </div>
@@ -101,7 +103,12 @@
         </menu>
         <b><a name="TOC_HEAD_63" href="#HEAD_63">Medium</a></b><br>
         <menu>
-            <li><a name="TOC_HEAD_64" href="#HEAD_64">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_64" href="#HEAD_64">002 Add Two Numbers</a></li>
+            <li><a name="TOC_HEAD_65" href="#HEAD_65">016 3Sum Closest &ndash; solve it by 动态规划? &ndash; 2017&ndash;03&ndash;29 <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_66" href="#HEAD_66">017 Letter Combinations of a Phone Number</a></li>
+            <li><a name="TOC_HEAD_67" href="#HEAD_67">031 Next Permutation</a></li>
+            <li><a name="TOC_HEAD_68" href="#HEAD_68">034 Search for a Range</a></li>
+            <li><a name="TOC_HEAD_69" href="#HEAD_69">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
         </menu>
 
 </div>
@@ -5022,7 +5029,752 @@ Return 6.
         </code></pre>
     </ul>
         <H1><a name="HEAD_63" href="#TOC_HEAD_63">Medium</a></H1>
-        <H2><a name="HEAD_64" href="#TOC_HEAD_64">179 Largest Number &ndash; TC000087 </a><a name="MARK_8" href="#TOC_MARK_8"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_64" href="#TOC_HEAD_64">002 Add Two Numbers</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/add-two-numbers/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            You are given two linked lists representing two non&ndash;negative numbers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
+        </p>
+        <p>
+            <strong>Input:</strong> (2 &ndash;&gt; 4 &ndash;&gt; 3) + (5 &ndash;&gt; 6 &ndash;&gt; 4)
+        </p>
+        <p>
+            <strong>Output:</strong> 7 &ndash;&gt; 0 &ndash;&gt; 8
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/98408289/" target="_blank">Solution&ndash;2017&ndash;03&ndash;29 C: 46 ms &ndash; 14%</a></li>
+        <pre><code>
+    /**
+     * Definition for singly-linked list.
+     * struct ListNode {
+     *     int val;
+     *     struct ListNode *next;
+     * };
+     */
+    struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
+        if( l1 == NULL ) return l2;
+        if( l2 == NULL ) return l1;
+
+        struct ListNode tmp;
+        struct ListNode* node = &tmp;
+        int add = 0;
+
+        while( l1 != NULL || l2 != NULL || add !=0 )
+        {
+            if( l1 != NULL ) 
+            {   add += l1->val;
+                l1  =l1->next;
+            }
+
+            if( l2 != NULL ) 
+            {
+                add += l2->val;
+                l2  =l2->next;
+            }
+
+            node->next = malloc(sizeof(struct ListNode));
+            node->next->val = add%10;
+            node = node->next;
+            add /= 10;
+        }
+        node->next = NULL;
+        return tmp.next;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;09&ndash;08 Python: 112 ms &ndash; 100%</li>
+        <pre><code>
+    # Definition for singly-linked list.
+    # class ListNode(object):
+    #     def __init__(self, x):
+    #         self.val = x
+    #         self.next = None
+
+    class Solution(object):
+        def addTwoNumbers(self, l1, l2):
+            """
+            :type l1: ListNode
+            :type l2: ListNode
+            :rtype: ListNode
+            """
+            return self.addTwoNumbers2(l1,l2,0)
+
+        def addTwoNumbers2(self, l1, l2, add):
+            if( (l1 == None) and (l2 == None )): 
+                if( add == 0 ) :
+                    return None
+                else :
+                    return ListNode(add)
+            if( l1 == None ) : 
+                return self.addTwoNumbers2(l2,l1,add)
+
+            n1 = l1.next
+            val = l1.val + add;
+
+            n2 = None
+            if( l2 != None ):
+                n2  = l2.next
+                val += l2.val
+
+            l3 = ListNode(val % 10)
+            l3.next = self.addTwoNumbers2(n1,n2,val/10)
+            return l3
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;09&ndash;06: 36 ms &ndash; 69%</li>
+        <pre><code>
+    /**
+     * Definition for singly-linked list.
+     * struct ListNode {
+     *     int val;
+     *     ListNode *next;
+     *     ListNode(int x) : val(x), next(NULL) {}
+     * };
+     */
+    class Solution {
+    public:
+        ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+            return addTwoNumbers(l1,l2,0);
+        }
+
+        ListNode* addTwoNumbers(ListNode* l1, ListNode* l2, int add) {
+
+            if( l1 == NULL && l2 == NULL )
+            {   return add == NULL ? NULL : new ListNode(add);
+            }
+
+            if( l1 == NULL )
+            {   return addTwoNumbers(l2,NULL, add);   
+            }
+
+            ListNode* n1 = l1->next;
+            ListNode* n2 = ( l2 == NULL ? NULL : l2->next );
+            int val = l1->val + add + (l2 == NULL ? 0 : l2->val);
+            l1->val = val % 10;
+            l1->next= addTwoNumbers(n1,n2,val/10);
+            return l1;
+        }
+    };
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;09: 32 ms &ndash; 99%</li>
+        <pre><code>
+    class Solution {
+    public:
+        ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+
+            if( l2 == NULL )
+                return l1;
+
+            ListNode tmp(0);
+            ListNode* pnode = &tmp;
+            int v = 0;
+
+            while( l1 != NULL || l2 != NULL  || v > 0)
+            {
+                if( l1 != NULL )
+                {
+                    v += l1->val;
+                    l1 = l1->next;
+                }
+
+                if( l2 != NULL )
+                {
+                    v += l2->val;
+                    l2 = l2->next;
+                }
+
+                pnode->next = new ListNode( v % 10);
+                pnode = pnode->next;
+                v /= 10;
+            }
+
+            return tmp.next;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_65" href="#TOC_HEAD_65">016 3Sum Closest &ndash; solve it by 动态规划? &ndash; 2017&ndash;03&ndash;29 </a><a name="MARK_8" href="#TOC_MARK_8"><strong><font color="red">@TODO</font></strong></a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/3sum-closest/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given an array
+            <em>S</em> of
+            <em>n</em> integers, find three integers in
+            <em>S</em> such that the sum is closest to a given number, target. Return the sum of the three integers. You may assume that each input would have exactly one solution.
+        </p>
+        <pre><code>
+For example, given array S = {-1 2 1 -4}, and target = 1.
+The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;06&ndash;15 C++: 16 ms &ndash; 37%</li>
+        <pre><code>
+    class Solution {
+    public:
+        int threeSumClosest(vector<int>& nums, int target) {
+
+            //cout << "threeSumClosest: " << target << endl;
+
+            sort(nums.begin(),nums.end());
+            int count = nums.size();
+            minDT = INT_MAX;
+            sumClosest = 0;
+            sumTarget = target;
+
+            for(int i = count - 1; i >= 2 && minDT > 0 ; --i )
+            {           
+                int a = nums[i];
+                //cout << "i: " << i << ", a=" << a << endl;
+                for(int j = i - 1; j >= 1 && minDT > 0 ; --j )
+                {
+                    int b = nums[j];
+                    int sum = a + b;
+                    int dt = target - sum;
+                    //cout << "j: " << j << ", b=" << b << ", sum=" << sum << ", dt=" << dt << endl;
+
+                    if( dt >= nums[j-1] )
+                        updateSumClosest(sum + nums[j-1]);
+                    else if( dt <= nums[0] )
+                        updateSumClosest(sum + nums[0]);
+                    else
+                    {
+                        int l = 0, h = j - 1;
+                        while( l <= h )
+                        {
+                            int m = (h+l)/2;
+                            int v = nums[m];
+                            if( v == dt )
+                               return target;
+                            else if( v < dt )
+                                l = m + 1;
+                            else 
+                                h = m - 1;
+                        }
+
+                        updateSumClosest(sum + nums[l]);
+                        updateSumClosest(sum + nums[h]);
+                    }
+                }
+            }
+
+            return sumClosest;
+        }
+
+        void updateSumClosest(int sum)
+        {        
+            int dt = abs( sum - sumTarget );
+
+            //cout << "updateSumClosest: " << sum << ",dt:" << dt << endl;
+            if( dt < minDT )
+            {
+                minDT = dt;
+                sumClosest = sum;
+            }
+        }
+
+        int minDT;
+        int sumClosest;
+        int sumTarget;
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_66" href="#TOC_HEAD_66">017 Letter Combinations of a Phone Number</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a digit string, return all possible letter combinations that the number could represent.
+        </p>
+        <p>
+            A mapping of digit to letters (just like on the telephone buttons) is given below.
+        </p>
+        <p>
+            <img src="http://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Telephone-keypad2.svg/200px-Telephone-keypad2.svg.png" />
+        </p>
+        <pre><code>
+Input : Digit string "23"
+Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+        </code></pre>
+        <p>
+            <strong>Note:</strong>
+        </p>
+        <p>
+            Although the above answer is in lexicographical order, your answer could be in any order you want.
+        </p>
+        <li>Solution&ndash;2017&ndash;03&ndash;29 C: &ndash; <strong><font color="red">Runtime Error??</font></strong>  <a name="MARK_9" href="#TOC_MARK_9"><strong><font color="red">@TODO</font></strong></a></li>
+        <p>
+            <strong><font color="red">corrupted double-linked list: 0x00000000009d2280 </font></strong>
+        </p>
+        <pre><code>
+    /**
+     * Return an array of size *returnSize.
+     * Note: The returned array must be malloced, assume caller calls free().
+     */
+                        //0   1     2     3     4     5     6      7     8        9
+    char* numChars[10] = {"","","abc","def","ghi","jkl","mno","pqrs","tuv", "wxyz" };
+    int   numCount[10] = {1 , 0,    3,    3,    3,    3,    3,     4,    3,       4};
+
+    char** letterCombinations(char* digits, int* returnSize) {
+
+        if( digits == NULL ) 
+        {   *returnSize = 0;
+            return NULL;
+        }
+
+        int size = 1;
+        int deep = 0;
+        int d,n,i;
+        char c;
+        char* p=digits; 
+        while( (c=*p++) != '\0')
+        {   if((n = numCount[c-'0']) != 0)
+            {   size *= n;
+                ++deep;
+            }
+        }
+
+        if( deep == 0 )
+        {   *returnSize = 0;
+            return NULL;
+        }
+
+
+        char** result = malloc( sizeof(char*) * size);
+        *returnSize = 0;
+        printf("deep=%d, size=%d\n", deep, size);
+
+        char** sp = malloc( sizeof(char*) * deep );
+        int* sn = malloc( sizeof(int) * deep );
+        char* pv;
+
+        d = 0;
+        p=digits;
+        while( (c=*p++) != '\0')
+        {   if((n = numCount[c-'0']) != 0)
+            {   sp[d] = numChars[c-'0'];
+                sn[d] = c-'0';
+                d++;
+            }
+        }
+        int j = 0;
+        while( d > 0 )
+        { 
+            printf("d=%d, c=%c\n", d, *(sp[d-1]));
+            if( ++j > 100)
+                break;
+            if( *(p=sp[d-1]) == '\0' )
+            {   --d;
+                (sp[d-1])++;
+                continue;
+            }
+
+            if( d < deep )
+            {   sp[d] = numChars[sn[d]];
+                ++d;
+                continue;
+            }
+
+            pv = malloc((d+1)*sizeof(char));
+            for( i = 0; i < d; ++i)
+                pv[i] = *(sp[i]);
+            pv[d] = '\0';
+            result[ (*returnSize)++ ] = pv;
+            (sp[d-1])++;
+            printf("size=%d, s=%s\n", *returnSize, pv);
+        }
+
+        // free(sp);  ???
+        // free(sn); 
+        printf("return, %d\n", *returnSize);
+        return result;
+    } 
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;05&ndash;10 C++: 02 ms &ndash; beats 07%</li>
+        <pre><code>
+    class Solution {
+    public:
+        vector<string> letterCombinations(string digits) {
+
+            vector<string> res;
+            string str;
+            find(res, digits, str, 0);     
+            return res;
+        }
+
+        void find(vector<string>& res, string& digits, string& str, int i)
+        {
+            if( i == (int) digits.size())
+            {
+                if(!str.empty())
+                    res.push_back(str);
+                return;
+            }
+
+            int digit = digits[i] - '0';
+            int numCount = numCharCount[digit];        
+            if( numCount == 0 )
+            {
+                find(res, digits, str, i + 1);
+                return;
+            }
+
+            const char* nchars = numChars[digit];      
+            for( int j = 0; j < numCount; ++j )
+            {
+                str.push_back( nchars[j]);
+                find(res, digits, str, i + 1);
+                str.pop_back();
+            }
+        }
+
+    static const char* numChars[10];
+    static int numCharCount[10];
+    };
+
+    const char* Solution::numChars[10] = 
+    {
+        " ",        //0
+        "",         //1
+        "abc",      //2
+        "def",      //3
+        "ghi",      //4
+        "jkl",      //5
+        "mno",      //6
+        "pqrs",     //7
+        "tuv",      //8
+        "wxyz",     //9
+    };
+
+    int Solution::numCharCount[10] = 
+    {
+        1,      //0
+        0,      //1
+        3,      //2
+        3,      //3
+        3,      //4
+        3,      //5
+        3,      //6
+        4,      //7
+        3,      //8
+        4,      //9
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_67" href="#TOC_HEAD_67">031 Next Permutation</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/next-permutation/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Implement next permutation, which rearranges numbers into the lexicographically next greater permutation of numbers.
+        </p>
+        <p>
+            If such arrangement is not possible, it must rearrange it as the lowest possible order (ie, sorted in ascending order).
+        </p>
+        <p>
+            The replacement must be in&ndash;place, do not allocate extra memory.
+        </p>
+        <p>
+            Here are some examples. Inputs are in the left&ndash;hand column and its corresponding outputs are in the right&ndash;hand column.
+        </p>
+        <p>
+            <code>1,2,3</code> &#8594;
+            <code>1,3,2</code>
+        </p>
+        <p>
+            <code>3,2,1</code> &#8594;
+            <code>1,2,3</code>
+        </p>
+        <p>
+            <code>1,1,5</code> &#8594;
+            <code>1,5,1</code>
+        </p>
+        <li>Solution&ndash;2016&ndash;04&ndash;12 C++: 18 ms &ndash; 02%</li>
+        <pre><code>
+    class Solution {
+    public:
+        void nextPermutation(vector<int>& nums) {
+
+            unordered_map<int,int> indexMap;
+            vector<int> numbers = nums;
+
+            {// build unique numbers and index map
+                std::sort(numbers.begin(), numbers.end(), std::less<int>());
+                numbers.erase(std::unique(numbers.begin(), numbers.end()), numbers.end());
+                int i = 0;
+                for( auto n : numbers)
+                    indexMap[ n ] = i++;
+            }
+
+            int max_index = numbers.size() - 1;
+            int max_pos   = nums.size() - 1;
+
+            vector<int> used(numbers.size(), 0);
+
+            int pos = max_pos;
+            bool find = false;
+
+            while (!find && pos >= 0)
+            {
+                int i = indexMap[nums[pos]];  
+                ++used[i];   
+
+                for(; !find && i < max_index; ++i)
+                {
+                    if( used[i+1] > 0 )
+                    {
+                        --used[i+1];
+                        nums[pos] = numbers[i+1];
+                        find = true;
+                    }        
+                }
+
+                if(!find) --pos;
+            }
+
+            for(++pos; pos <= max_pos; ++pos)
+            {
+                int i = 0;
+                while( i <= max_index && used[i] == 0 )
+                    ++i;
+
+                --used[i];
+                nums[pos] = numbers[i];
+            }  
+        }
+    };
+        </code></pre>
+        <li>Better solution from others</li>
+        <pre><code>
+    class Solution {
+    public:
+        void nextPermutation(vector<int>& nums) {
+            int n = nums.size();
+            if (n < 2)
+                return;
+
+            int i = n - 1, j = 0, left = 0;
+
+            while (i > 0 && nums[i-1] >= nums[i])
+                i--;
+
+            if (i != 0)
+            {
+                left = i;
+                j = n - 1;
+
+                while (nums[left-1] >= nums[j] )
+                    j--;
+
+                swap(nums[left-1], nums[j]);
+            }
+
+            reverse(nums.begin()+left, nums.end());
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_68" href="#TOC_HEAD_68">034 Search for a Range</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/search-for-a-range/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a sorted array of integers, find the starting and ending position of a given target value.
+            Your algorithm&#039;s runtime complexity must be in the order of
+            <em>O</em> (log
+            <em>n</em> ).
+            If the target is not found in the array, return
+            <code>[-1, -1]</code>
+            .
+            For example,
+        </p>
+        <p>
+            Given
+            <code>[5, 7, 7, 8, 8, 10]</code>
+            and target value 8,
+        </p>
+        <p>
+            return
+            <code>[3, 4]</code>
+            .
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/98446347/" target="_blank">Solution&ndash;2017&ndash;03&ndash;29 C: 6 ms &ndash; 26%</a></li>
+        <pre><code>
+    /**
+     * Return an array of size *returnSize.
+     * Note: The returned array must be malloced, assume caller calls free().
+     */
+    int* searchRange(int* nums, int n, int t, int* size) {
+
+        int l = 0;
+        int h = n-1;
+        int m, v, a, b;
+        int *r;
+
+        a = -1; 
+        b = -1;
+
+        if( nums != NULL && n != 0)
+        {
+            if( n == 1 )
+            {
+                if(*nums == t)
+                {
+                    a = 0;
+                    b = 0;
+                }
+            }
+            else
+            {
+                while( l <= h )
+                {
+                    m = (l+h)/2;
+                    if( (v=nums[m]) == t )
+                        break;
+                    else if( v < t )
+                        l = m + 1;
+                    else
+                        h = m - 1;
+                }
+
+                if( v == t) 
+                {     
+                    l = 0; h = m-1;
+                    while( l <= h )
+                    {   
+                        int m2 = (l+h)/2;
+                        if( (v=nums[m2]) >= t )
+                            h = m2 - 1;
+                        else
+                            l = m2 + 1;
+                    }
+                    a = h+1;
+
+                    l = m+1; h = n-1;
+                    while( l <= h )
+                    {   
+                        int m2 = (l+h)/2;
+                        if( (v=nums[m2]) <= t )
+                            l = m2 + 1;
+                        else
+                            h = m2 - 1;
+                    }
+                    b = l-1;
+                }
+            }
+        }
+
+        r = (int*)malloc(sizeof(int)*2);
+        r[0] = a; 
+        r[1] = b;
+        *size = 2;
+        return r;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;03 C++: 12 ms &ndash; 09%</li>
+        <p>
+            <strong>Binary Search</strong>: T <code>O(log2(n))</code>
+        </p>
+        <pre><code>
+    class Solution {
+
+    public:
+
+        vector<int> searchRange(vector<int>& nums, int target) {
+
+            int findHigh = -1;
+            int findLow = -1;
+
+            if( nums.size() > 0 
+                && target >= nums[0] 
+                && target <= nums[nums.size() - 1] )
+            {
+                find(nums, target, 0, nums.size() - 1, findLow, findHigh);
+            }
+
+            vector<int> r;
+            r.push_back(findLow);
+            r.push_back(findHigh);
+
+            return r;
+        }
+
+        void find(vector<int> &nums, 
+                  int          target, 
+                  int          low, 
+                  int          high, 
+                  int         &findLow, 
+                  int         &findHigh)
+        {   
+            while(low >=0 && low <= high && (findHigh == -1 || findLow == -1))
+            {
+                // printf("low=%d, high=%d\n", low, high);
+                if( findHigh == -1 && nums[high] == target)
+                {
+                    findHigh = high;
+                    continue;
+                }
+
+                if( findLow == -1 && nums[low] == target)
+                {
+                    findLow = low;
+                    continue;
+                }          
+
+                int m = ( high + low ) / 2;
+                int v = nums[m] ;
+
+                if( v > target )
+                    high = m - 1;
+                else if( v < target )
+                    low = m + 1;
+                else
+                {
+                     if( findHigh == -1)
+                     {
+                         int findLow2 = m;
+                         find(nums, target, m + 1, high, findLow2, findHigh);
+                         if( findHigh == -1 )
+                             findHigh = m;
+                     }
+
+                     if( findLow == -1)
+                     {
+                         int findHigh2 = m;
+                         find(nums, target, low, m - 1, findLow, findHigh2);
+                         if( findLow == -1 )
+                             findLow = m;
+                     }
+                }
+            }  
+        }
+    };
+
+    // Test code
+
+    void print(const vector<int>& v)
+    {
+        cout << "[" ;
+        for(size_t i = 0; i < v.size(); ++i)
+        {
+            cout << v[i] << ",";
+        }
+        cout << "] " << endl;
+    }
+
+    int  main(void)
+    {
+        {
+            int ns1[] = { 5, 7, 7, 8, 8, 10 };
+            vector<int> numbers(ns1, ns1 + sizeof(ns1)/sizeof(int));
+            Solution solution;   
+            print( solution.searchRange(numbers,8));
+        }
+
+        {
+            int ns1[] = { 5, 7, 7, 8, 8, 9, 9, 9, 9, 10 };
+            vector<int> numbers(ns1, ns1 + sizeof(ns1)/sizeof(int));
+            Solution solution;   
+            print( solution.searchRange(numbers,9));
+        }
+
+       return 0;
+    }
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_69" href="#TOC_HEAD_69">179 Largest Number &ndash; TC000087 </a><a name="MARK_10" href="#TOC_MARK_10"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/largest-number/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5038,7 +5790,7 @@ Return 6.
   
     
     <hr>
-    <li><font color="#000080" size="2">Update Time: Wed Mar 29 11:25:03 CST 2017</font></li>
+    <li><font color="#000080" size="2">Update Time: Thu Mar 30 00:58:35 CST 2017</font></li>
     <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
 </body>
