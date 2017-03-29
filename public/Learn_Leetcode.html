@@ -5,8 +5,11 @@
         <title>Leetcode</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- <link rel="stylesheet" type="text/css" href="https://to0d.github.io/stylesheets/github-light.css" media="screen"> -->
-        <link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/solarized_dark.min.css">
-        <script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>
+        <!-- <link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/solarized_dark.min.css">-->
+        <!-- <script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>-->
+        
+        <link rel="stylesheet" href="../stylesheets/solarized_dark.min.css">
+        <script src="../stylesheets/highlight.min.js"></script>
         <script>hljs.initHighlightingOnLoad();</script>
     </head>
 <body style="word-wrap:break-word">
@@ -21,7 +24,7 @@
         <li><a name="TOC_MARK_5" href="#MARK_5"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;25 C &ndash; misaligned address error ? </font></strong></a></li>
         <li><a name="TOC_MARK_6" href="#MARK_6"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;25 C &ndash; misaligned address error ? </font></strong></a></li>
         <li><a name="TOC_MARK_7" href="#MARK_7"><strong><font size="2" color="red">@TODO - Solution&ndash;2016&ndash;05&ndash;25: 48 ms &ndash; 48% &ndash; Better Solution ? </font></strong></a></li>
-        <li><a name="TOC_MARK_8" href="#HEAD_46"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
+        <li><a name="TOC_MARK_8" href="#HEAD_50"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
     </ul>
 
         </div>
@@ -78,10 +81,14 @@
             <li><a name="TOC_HEAD_42" href="#HEAD_42">232 Implement Queue using Stacks</a></li>
             <li><a name="TOC_HEAD_43" href="#HEAD_43">234 Palindrome Linked List</a></li>
             <li><a name="TOC_HEAD_44" href="#HEAD_44">235 Lowest Common Ancestor of a Binary Search Tree</a></li>
+            <li><a name="TOC_HEAD_45" href="#HEAD_45">237 Delete Node in a Linked List</a></li>
+            <li><a name="TOC_HEAD_46" href="#HEAD_46">242 Valid Anagram</a></li>
+            <li><a name="TOC_HEAD_47" href="#HEAD_47">257 Binary Tree Paths</a></li>
+            <li><a name="TOC_HEAD_48" href="#HEAD_48">258 Add Digits</a></li>
         </menu>
-        <b><a name="TOC_HEAD_45" href="#HEAD_45">Medium</a></b><br>
+        <b><a name="TOC_HEAD_49" href="#HEAD_49">Medium</a></b><br>
         <menu>
-            <li><a name="TOC_HEAD_46" href="#HEAD_46">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_50" href="#HEAD_50">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
         </menu>
 
 </div>
@@ -3875,8 +3882,238 @@ public int countPrimes(int n) {
     };
         </code></pre>
     </ul>
-        <H1><a name="HEAD_45" href="#TOC_HEAD_45">Medium</a></H1>
-        <H2><a name="HEAD_46" href="#TOC_HEAD_46">179 Largest Number &ndash; TC000087 </a><a name="MARK_8" href="#TOC_MARK_8"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_45" href="#TOC_HEAD_45">237 Delete Node in a Linked List</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/delete-node-in-a-linked-list/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Write a function to delete a node (except the tail) in a singly linked list, given only access to that node.
+        </p>
+        <p>
+            Supposed the linked list is
+            <code>1 -> 2 -> 3 -> 4</code> and you are given the third node with value
+            <code>3</code> , the linked list should become
+            <code>1 -> 2 -> 4</code> after calling your function.
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/98362446/" target="_blank">Solution&ndash;2017&ndash;03&ndash;28 C: 6 ms &ndash; 3%</a></li>
+        <pre><code>
+    /**
+     * Definition for singly-linked list.
+     * struct ListNode {
+     *     int val;
+     *     struct ListNode *next;
+     * };
+     */
+    void deleteNode(struct ListNode* node) {
+        struct ListNode* next = node->next->next;
+        node->val = node->next->val;
+        free(node->next);
+        node->next = next;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;06&ndash;16 C++: 16 ms &ndash; 13%</li>
+        <pre><code>
+    /**
+     * Definition for singly-linked list.
+     * struct ListNode {
+     *     int val;
+     *     ListNode *next;
+     *     ListNode(int x) : val(x), next(NULL) {}
+     * };
+     */
+    class Solution {
+    public:
+        void deleteNode(ListNode* node) {
+
+            ListNode* next = node->next;
+            node->val  = next->val;
+            node->next = next->next;
+
+            // delete next;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_46" href="#TOC_HEAD_46">242 Valid Anagram</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/valid-anagram/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given two strings
+            <em>s</em> and
+            <em>t</em> , write a function to determine if
+            <em>t</em> is an anagram of
+            <em>s</em> .
+        </p>
+        <p>
+            For example,
+        </p>
+        <p>
+            <em>s</em> = &quot;anagram&quot;,
+            <em>t</em> = &quot;nagaram&quot;, return true.
+        </p>
+        <p>
+            <em>s</em> = &quot;rat&quot;,
+            <em>t</em> = &quot;car&quot;, return false.
+        </p>
+        <p>
+            <strong>Note:</strong>
+        </p>
+        <p>
+            You may assume the string contains only lowercase alphabets.
+        </p>
+        <p>
+            <strong>Follow up:</strong>
+        </p>
+        <p>
+            What if the inputs contain unicode characters? How would you adapt your solution to such case?
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/98365619/" target="_blank">Solution&ndash;2017&ndash;03&ndash;28 C: 3 ms &ndash; 33%</a></li>
+        <pre><code>
+    bool isAnagram(char* s, char* t) {
+
+        if( s == NULL || t == NULL ) 
+            return false;
+
+        int heap[26] = {0};
+        char c;
+        int slen = 0;
+        int tlen = 0;
+
+        while( (c=*s++) != '\0' )
+        {   heap[c-'a']++;
+            slen++;
+        }
+
+        while( (c=*t++) != '\0' )
+        {   if( --(heap[c-'a']) < 0 )
+            {   return false;
+            }
+            ++tlen;
+        }
+        return slen == tlen;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;24&ndash;01: 48 ms &ndash; 42%</li>
+        <pre><code>
+    class Solution {
+    public:
+        bool isAnagram(string s, string t) {
+
+            if( s.size() != t.size()) 
+                return false;
+
+            char sx(0), tx(0);
+            for( char sc : s )
+                sx ^= sc;
+            for( char tc : t )
+                tx ^= tc;
+
+            if( sx != tx )
+                return false;
+
+            sort(s.begin(),s.end());
+            sort(t.begin(),t.end());
+
+            return s == t;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_47" href="#TOC_HEAD_47">257 Binary Tree Paths</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/binary-tree-paths/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a binary tree, return all root&ndash;to&ndash;leaf paths.
+        </p>
+        <p>
+            For example, given the following binary tree:
+        </p>
+        <pre><code>
+   1
+ /   \
+2     3
+ \
+  5
+        </code></pre>
+        <p>
+            All root&ndash;to&ndash;leaf paths are:
+        </p>
+        <pre><code>
+["1->2->5", "1->3"]
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;17&ndash;01: 04 ms &ndash; 10%</li>
+        <pre><code>
+    class Solution {
+    public:
+        vector<string> binaryTreePaths(TreeNode* root) {
+
+            static char buf[1024] = {0};
+            vector<string> res; 
+
+            if( root != NULL )
+                generate(root, buf, 0, res);
+
+            return res;
+        }
+
+        void generate(TreeNode* node, char* buf, int len, vector<string>& res)
+        {
+            if( len > 0 )
+            {
+                buf[len++] = '-';
+                buf[len++] = '>';
+            }
+
+            len += sprintf(buf+len, "%d", node->val);
+            if( node->left == NULL && node->right == NULL )
+            {
+                res.push_back(string(buf, buf+len));
+                return;
+            }
+
+            if( node->left != NULL )
+                generate(node->left, buf, len, res);
+
+            if( node->right != NULL )
+                generate(node->right, buf, len, res);
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_48" href="#TOC_HEAD_48">258 Add Digits</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/add-digits/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a non&ndash;negative integer
+            <code>num</code> , repeatedly add all its digits until the result has only one digit.
+        </p>
+        <p>
+            For example:
+        </p>
+        <p>
+            Given
+            <code>num = 38</code> , the process is like:
+            <code>3 + 8 = 11</code> ,
+            <code>1 + 1 = 2</code> . Since
+            <code>2</code> has only one digit, return it.
+        </p>
+        <p>
+            <strong>Follow up:</strong>
+        </p>
+        <p>
+            Could you do it without any loop/recursion in O(1) runtime?
+        </p>
+        <p>
+            <strong>Hint:</strong>
+        </p>
+        <ul>
+            <li>A naive implementation of the above process is trivial. Could you come up with other methods?</li>
+            <li>What are all the possible results?</li>
+            <li>How do they occur, periodically or randomly?</li>
+            <li>You may find this Wikipedia article useful.</li>
+        </ul>
+    </ul>
+        <H1><a name="HEAD_49" href="#TOC_HEAD_49">Medium</a></H1>
+        <H2><a name="HEAD_50" href="#TOC_HEAD_50">179 Largest Number &ndash; TC000087 </a><a name="MARK_8" href="#TOC_MARK_8"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/largest-number/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -3892,7 +4129,7 @@ public int countPrimes(int n) {
   
     
     <hr>
-    <li><font color="#000080" size="2">Update Time: Tue Mar 28 11:40:03 CST 2017</font></li>
+    <li><font color="#000080" size="2">Update Time: Wed Mar 29 09:31:31 CST 2017</font></li>
     <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
 </body>
