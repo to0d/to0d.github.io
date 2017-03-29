@@ -7,7 +7,6 @@
         <!-- <link rel="stylesheet" type="text/css" href="https://to0d.github.io/stylesheets/github-light.css" media="screen"> -->
         <!-- <link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/solarized_dark.min.css">-->
         <!-- <script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>-->
-        
         <link rel="stylesheet" href="../stylesheets/solarized_dark.min.css">
         <script src="../stylesheets/highlight.min.js"></script>
         <script>hljs.initHighlightingOnLoad();</script>
@@ -24,7 +23,7 @@
         <li><a name="TOC_MARK_5" href="#MARK_5"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;25 C &ndash; misaligned address error ? </font></strong></a></li>
         <li><a name="TOC_MARK_6" href="#MARK_6"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;25 C &ndash; misaligned address error ? </font></strong></a></li>
         <li><a name="TOC_MARK_7" href="#MARK_7"><strong><font size="2" color="red">@TODO - Solution&ndash;2016&ndash;05&ndash;25: 48 ms &ndash; 48% &ndash; Better Solution ? </font></strong></a></li>
-        <li><a name="TOC_MARK_8" href="#HEAD_50"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
+        <li><a name="TOC_MARK_8" href="#HEAD_64"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
     </ul>
 
         </div>
@@ -85,10 +84,24 @@
             <li><a name="TOC_HEAD_46" href="#HEAD_46">242 Valid Anagram</a></li>
             <li><a name="TOC_HEAD_47" href="#HEAD_47">257 Binary Tree Paths</a></li>
             <li><a name="TOC_HEAD_48" href="#HEAD_48">258 Add Digits</a></li>
+            <li><a name="TOC_HEAD_49" href="#HEAD_49">263 Ugly Number</a></li>
+            <li><a name="TOC_HEAD_50" href="#HEAD_50">278 First Bad Version</a></li>
+            <li><a name="TOC_HEAD_51" href="#HEAD_51">283 Move Zeroes</a></li>
+            <li><a name="TOC_HEAD_52" href="#HEAD_52">290 Word Pattern</a></li>
+            <li><a name="TOC_HEAD_53" href="#HEAD_53">292 Nim Game</a></li>
+            <li><a name="TOC_HEAD_54" href="#HEAD_54">299 Bulls and Cows</a></li>
+            <li><a name="TOC_HEAD_55" href="#HEAD_55">303 Range Sum Query &ndash; Immutable</a></li>
+            <li><a name="TOC_HEAD_56" href="#HEAD_56">342 Power of Four</a></li>
+            <li><a name="TOC_HEAD_57" href="#HEAD_57">344 Reverse String</a></li>
+            <li><a name="TOC_HEAD_58" href="#HEAD_58">345 Reverse Vowels of a String</a></li>
+            <li><a name="TOC_HEAD_59" href="#HEAD_59">349 Intersection of Two Arrays</a></li>
+            <li><a name="TOC_HEAD_60" href="#HEAD_60">350 Intersection of Two Arrays II</a></li>
+            <li><a name="TOC_HEAD_61" href="#HEAD_61">371 Sum of Two Integers</a></li>
+            <li><a name="TOC_HEAD_62" href="#HEAD_62">374 Guess Number Higher or Lower</a></li>
         </menu>
-        <b><a name="TOC_HEAD_49" href="#HEAD_49">Medium</a></b><br>
+        <b><a name="TOC_HEAD_63" href="#HEAD_63">Medium</a></b><br>
         <menu>
-            <li><a name="TOC_HEAD_50" href="#HEAD_50">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_64" href="#HEAD_64">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
         </menu>
 
 </div>
@@ -3894,7 +3907,7 @@ public int countPrimes(int n) {
             <code>3</code> , the linked list should become
             <code>1 -> 2 -> 4</code> after calling your function.
         </p>
-        <li><a href="https://leetcode.com/submissions/detail/98362446/" target="_blank">Solution&ndash;2017&ndash;03&ndash;28 C: 6 ms &ndash; 3%</a></li>
+        <li><a href="https://leetcode.com/submissions/detail/98362446/" target="_blank">Solution&ndash;2017&ndash;03&ndash;29 C: 6 ms &ndash; 3%</a></li>
         <pre><code>
     /**
      * Definition for singly-linked list.
@@ -3966,7 +3979,7 @@ public int countPrimes(int n) {
         <p>
             What if the inputs contain unicode characters? How would you adapt your solution to such case?
         </p>
-        <li><a href="https://leetcode.com/submissions/detail/98365619/" target="_blank">Solution&ndash;2017&ndash;03&ndash;28 C: 3 ms &ndash; 33%</a></li>
+        <li><a href="https://leetcode.com/submissions/detail/98365619/" target="_blank">Solution&ndash;2017&ndash;03&ndash;29 C: 3 ms &ndash; 33%</a></li>
         <pre><code>
     bool isAnagram(char* s, char* t) {
 
@@ -3992,7 +4005,7 @@ public int countPrimes(int n) {
         return slen == tlen;
     }
         </code></pre>
-        <li>Solution&ndash;2016&ndash;04&ndash;24&ndash;01: 48 ms &ndash; 42%</li>
+        <li>Solution&ndash;2016&ndash;04&ndash;24 C++: 48 ms &ndash; 42%</li>
         <pre><code>
     class Solution {
     public:
@@ -4111,9 +4124,905 @@ public int countPrimes(int n) {
             <li>How do they occur, periodically or randomly?</li>
             <li>You may find this Wikipedia article useful.</li>
         </ul>
+        <li><a href="https://leetcode.com/submissions/detail/98367643/" target="_blank">Solution&ndash;2017&ndash;03&ndash;29 C: 3 ms &ndash; 36%</a></li>
+        <pre><code>
+    int addDigits(int num) {
+        return (num-1)%9+1;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;11 C++: 11 ms &ndash; 38%</li>
+        <pre><code>
+    class Solution {
+    public:
+        int addDigits(int num) {
+            return (num-1) %9 + 1;   
+        }
+    };
+        </code></pre>
     </ul>
-        <H1><a name="HEAD_49" href="#TOC_HEAD_49">Medium</a></H1>
-        <H2><a name="HEAD_50" href="#TOC_HEAD_50">179 Largest Number &ndash; TC000087 </a><a name="MARK_8" href="#TOC_MARK_8"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_49" href="#TOC_HEAD_49">263 Ugly Number</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/ugly-number/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Write a program to check whether a given number is an ugly number.
+        </p>
+        <p>
+            Ugly numbers are positive numbers whose prime factors only include
+            <code>2, 3, 5</code> . For example,
+            <code>6, 8</code> are ugly while
+            <code>14</code> is not ugly since it includes another prime factor
+            <code>7</code> .
+        </p>
+        <p>
+            Note that
+            <code>1</code> is typically treated as an ugly number.
+        </p>
+        <li>Solution&ndash;2016&ndash;04&ndash;15 C++: 08 ms &ndash; 05%</li>
+        <pre><code>
+    class Solution {
+    public:
+
+        bool isUgly(int num) {
+
+            if( num == 0 ) return false;
+            if( num == 1 ) return true;
+            if( num % 2 == 0 ) return isUgly( num / 2);
+            if( num % 3 == 0 ) return isUgly( num / 3);
+            if( num % 5 == 0 ) return isUgly( num / 5);
+
+            return false;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_50" href="#TOC_HEAD_50">278 First Bad Version</a></H2>
+    <ul>
+        <li><a href=" https://leetcode.com/problems/first-bad-version/ " target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            You are a product manager and currently leading a team to develop a new product. Unfortunately, the latest version of your product fails the quality check. Since each version is developed based on the previous version, all the versions after a bad version are also bad.
+        </p>
+        <p>
+            Suppose you have
+            <code>n</code> versions
+            <code>[1, 2, ..., n]</code> and you want to find out the first bad one, which causes all the following ones to be bad.
+        </p>
+        <p>
+            You are given an API
+            <code>bool isBadVersion(version)</code> which will return whether
+            <code>version</code> is bad. Implement a function to find the first bad version. You should minimize the number of calls to the API.
+        </p>
+        <li>Solution&ndash;2016&ndash;05&ndash;07 C++: 00 ms &ndash; 40%</li>
+        <pre><code>
+    // Forward declaration of isBadVersion API.
+    bool isBadVersion(int version);
+
+    class Solution {
+    public:
+        int firstBadVersion(int n) 
+        {        
+            int h = n;
+            int l = 1;
+            while( l <= h )
+            {
+                // int m = (h+l)/2;
+                int m = (h-l)/2+l;
+                if( isBadVersion(m) )
+                    h = m - 1;
+                else
+                    l = m + 1;
+            }
+            return l;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_51" href="#TOC_HEAD_51">283 Move Zeroes</a></H2>
+    <ul>
+        <li><a href=" https://leetcode.com/problems/move-zeroes/ " target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given an array
+            <code>nums</code> , write a function to move all
+            <code>0</code> &#039;s to the end of it while maintaining the relative order of the non&ndash;zero elements.
+        </p>
+        <p>
+            For example, given
+            <code>nums  = [0, 1, 0, 3, 12]</code> , after calling your function,
+            <code>nums</code> should be
+            <code>[1, 3, 12, 0, 0]</code> .
+        </p>
+        <p>
+            <strong>Note</strong> :
+        </p>
+        <ol>
+            <li><p>
+            You must do this <strong>in-place</strong>
+            without making a copy of the array.
+            <p></li>
+            <li>Minimize the total number of operations.</li>
+        </ol>
+        <li><a href="https://leetcode.com/submissions/detail/98369977/" target="_blank">Solution&ndash;2017&ndash;03&ndash;29 C: 9 ms &ndash; 43%</a></li>
+        <pre><code>
+    void moveZeroes(int* nums, int n) {
+        int i,j,v;
+        if( n <= 1 ) return;
+        for( i = 0; i < n && nums[i] !=0; ++i);
+        j = i+1;
+        while( j < n ) if( (v=nums[j++]) != 0 ) nums[i++] = v;
+        while( i<n ) nums[i++] = 0;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;27 C++: 08 ms &ndash; 35%</li>
+        <pre><code>
+    // shrink numsSize firstly to avoid copy too much 'zero'
+    // for example: 
+    // 	[1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,]
+
+    void moveZeroes(int* nums, int numsSize) {
+
+        int i = 0; 
+        int k = numsSize - 1;
+        while( k >=0 && nums[k] == 0 )
+            --k;
+
+        while( i <= k && nums[i] != 0)
+            ++i;
+
+        int j = i++;    
+        for(; i <= k; ++i )
+        {
+            if( nums[i] != 0 )
+                nums[j++] = nums[i];
+        }
+
+        while( j <= k )
+            nums[j++] = 0;
+    }
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_52" href="#TOC_HEAD_52">290 Word Pattern</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/word-pattern/ " target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a
+            <code>pattern</code> and a string
+            <code>str</code> , find if
+            <code>str</code> follows the same pattern.
+        </p>
+        <p>
+            Here
+        </p>
+        <p>
+            <strong>follow</strong>
+            means a full match, such that there is a bijection between a letter in
+            <code>pattern</code> and a
+        </p>
+        <p>
+            <strong>non-empty</strong> word in <code>str</code> .
+        </p>
+        <p>
+            <strong>Examples:</strong>
+        </p>
+        <ol>
+            <li><p>
+            pattern =
+            <code>"abba"</code> , str =
+            <code>"dog cat cat dog"</code> should return true.
+            <p></li>
+            <li><p>
+            pattern =
+            <code>"abba"</code> , str =
+            <code>"dog cat cat fish"</code> should return false.
+            <p></li>
+            <li><p>
+            pattern =
+            <code>"aaaa"</code> , str =
+            <code>"dog cat cat dog"</code> should return false.
+            <p></li>
+            <li><p>
+            pattern =
+            <code>"abba"</code> , str =
+            <code>"dog dog dog dog"</code> should return false.
+            <p></li>
+        </ol>
+        <p>
+            <strong>Notes:</strong>
+        </p>
+        <p>
+            You may assume
+            <code>pattern</code> contains only lowercase letters, and
+            <code>str</code> contains lowercase letters separated by a single space.
+        </p>
+        <li>Solution&ndash;2016&ndash;05&ndash;15 C++: 00 ms &ndash; 10%</li>
+        <pre><code>
+    class Solution {
+    public:
+
+        string m_pattern;
+        string m_str;
+        string m_aString;
+
+        int    m_posOfPattern;
+        int    m_posOfString;
+
+        char nextPattern()
+        {
+             while( m_posOfPattern < m_pattern.size() && m_pattern[m_posOfPattern] == ' ')
+                ++m_posOfPattern;
+
+             char c = m_posOfPattern < m_pattern.size() ? m_pattern[m_posOfPattern] : 0 ;
+
+             ++m_posOfPattern;
+             return c;
+        }
+
+        string* nextString()
+        {
+            while( m_posOfString < m_str.size() && m_str[m_posOfString] == ' ')
+                ++m_posOfString;  
+
+            if( m_posOfString >= m_str.size() )
+                return NULL;
+
+            int pEnd = m_posOfString+1;
+            while( pEnd < m_str.size() && m_str[pEnd] != ' ')
+               ++pEnd;
+
+            int len = pEnd - m_posOfString;
+
+            m_aString = string(m_str.c_str() + m_posOfString, len);
+            m_posOfString = pEnd + 1;
+            return &m_aString;
+        }
+
+        bool wordPattern(const string& pattern, const string& str) 
+        {
+            unordered_map<char,string> psMap;
+            unordered_map<string,char> spMap;
+
+            m_posOfPattern = 0;
+            m_posOfString  = 0;
+            m_pattern = pattern;
+            m_str = str;
+
+            char c;
+            string* s;
+
+            while( (c = nextPattern()) != 0 )
+            {
+                if( (s = nextString()) == NULL )
+                    return false;
+
+                auto psIter = psMap.find(c);
+                auto spIter = spMap.find(*s);
+
+                if( psIter == psMap.end() )
+                {
+                    if( spIter == spMap.end() )
+                    {
+                        psMap.insert(std::make_pair(c,*s));
+                        spMap.insert(std::make_pair(*s,c));
+                    }
+                    else
+                        return false;
+                }
+                else
+                {
+                    if( spIter == spMap.end() )
+                        return false;
+                    else
+                    {
+                        if( psIter->second != *s || spIter->second != c)
+                            return false;
+                    }
+                }
+            }
+
+            return c != 0 || nextString() == NULL;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_53" href="#TOC_HEAD_53">292 Nim Game</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/nim-game/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            You are playing the following Nim Game with your friend: There is a heap of stones on the table, each time one of you take turns to remove 1 to 3 stones. The one who removes the last stone will be the winner. You will take the first turn to remove the stones.
+        </p>
+        <p>
+            Both of you are very clever and have optimal strategies for the game. Write a function to determine whether you can win the game given the number of stones in the heap.
+        </p>
+        <p>
+            For example, if there are 4 stones in the heap, then you will never win the game: no matter 1, 2, or 3 stones you remove, the last stone will always be removed by your friend.
+        </p>
+        <p>
+            <strong>Hint:</strong>
+        </p>
+        <ol>
+            <li>If there are 5 stones in the heap, could you figure out a way to remove the stones such that you will always be the winner?</li>
+        </ol>
+        <li>Solution&ndash;2016&ndash;05&ndash;15 C++: 02 ms &ndash; 01%</li>
+        <pre><code>
+    // f(n) =  max( 1-f(n-1), 1-f(n-2), 1-f(n-3))     ; when n > 3
+    //         1                                      ; when 1<= n <= 3
+    // 
+    // n :=  1 2 3 4 5 6 7 8 9 10..   4m 4m+1 4m+2 4m+3  4m+4 
+    // r  =  1 1 1 0 1 1 1 0 1         0  1    1    1     0 
+
+    class Solution {
+    public:
+        bool canWinNim(int n) {
+             return n % 4 != 0;   
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_54" href="#TOC_HEAD_54">299 Bulls and Cows</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/bulls-and-cows/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            You are playing the following
+            <a href="https://en.wikipedia.org/wiki/Bulls_and_Cows" target="_blank">Bulls and Cows</a>
+            game with your friend: You write down a number and ask your friend to guess what the number is. Each time your friend makes a guess, you provide a hint that indicates how many digits in said guess match your secret number exactly in both digit and position (called &quot;bulls&quot;) and how many digits match the secret number but locate in the wrong position (called &quot;cows&quot;). Your friend will use successive guesses and hints to eventually derive the secret number.
+        </p>
+        <p>
+            For example:
+        </p>
+        <pre><code>
+Secret number:  "1807"
+Friend's guess: "7810"
+        </code></pre>
+        <p>
+            Hint:
+            <code>1</code> bull and
+            <code>3</code> cows. (The bull is
+            <code>8</code> , the cows are
+            <code>0</code> ,
+            <code>1</code> and
+            <code>7</code> .)
+        </p>
+        <p>
+            Write a function to return a hint according to the secret number and friend&#039;s guess, use
+            <code>A</code> to indicate the bulls and
+            <code>B</code> to indicate the cows. In the above example, your function should return
+            <code>"1A3B"</code> .
+        </p>
+        <p>
+            Please note that both secret number and friend&#039;s guess may contain duplicate digits, for example:
+        </p>
+        <pre><code>
+Secret number:  "1123"
+Friend's guess: "0111"
+        </code></pre>
+        <p>
+            In this case, the 1st
+            <code>1</code> in friend&#039;s guess is a bull, the 2nd or 3rd
+            <code>1</code> is a cow, and your function should return
+            <code>"1A1B"</code> .
+        </p>
+        <p>
+            You may assume that the secret number and your friend&#039;s guess only contain digits, and their lengths are always equal.
+        </p>
+        <li>Solution&ndash;2016&ndash;05&ndash;15 C++: 04 ms &ndash; 54%</li>
+        <pre><code>
+    class Solution {
+    public:
+        string getHint(string secret, string guess) 
+        {
+            int bull(0), cows(0), len(secret.size());
+
+            int secHeap [10] = {0};
+            int gueHeap [10] = {0};  
+
+            for(int i = 0;i < len ; ++i)
+            {
+                char s = secret[i];
+                char g = guess[i];
+
+                if( s == g)
+                    ++bull;
+                else
+                {
+                   secHeap[ (int)(s - '0') ]++; 
+                   gueHeap[ (int)(g - '0') ]++; 
+                }
+            }
+
+            for(int i = 0; i < 10 ; ++i)
+                cows += min(secHeap[i], gueHeap[i]);
+
+            return to_string(bull) + "A" + to_string(cows) + "B";
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_55" href="#TOC_HEAD_55">303 Range Sum Query &ndash; Immutable</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/range-sum-query-immutable/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given an integer array
+            <em>nums</em> , find the sum of the elements between indices
+            <em>i</em> and
+            <em>j</em> (
+            <em>i</em> &le;
+            <em>j</em> ), inclusive.
+        </p>
+        <p>
+            <strong>Example:</strong>
+        </p>
+        <pre><code>
+Given nums = [-2, 0, 3, -5, 2, -1]
+
+sumRange(0, 2) -> 1
+sumRange(2, 5) -> -1
+sumRange(0, 5) -> -3
+        </code></pre>
+        <p>
+            <strong>Note:</strong>
+        </p>
+        <ol>
+            <li>You may assume that the array does not change.</li>
+            <li><p>
+            There are many calls to
+            <em>sumRange</em> function.
+            <p></li>
+        </ol>
+        <li>Solution&ndash;2016&ndash;04&ndash;24 C++: 206 ms &ndash; 31%</li>
+        <pre><code>
+    class NumArray {
+    public:
+        NumArray(vector<int> nums) {
+            for( int i = 0, sum = 0;i < nums.size() ; ++i)
+            {
+                sum += nums[i];
+                sumArray.push_back(sum);
+            }
+        }
+
+        int sumRange(int i, int j) { return getSum(j) - getSum(i-1); }
+        int getSum(int i) { return i < 0 ? 0 : sumArray[i]; }
+
+        vector<int> sumArray;
+    };
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;05&ndash;15 C++: 32 ms &ndash; 100%</li>
+        <pre><code>
+    class NumArray {
+    public:
+
+        NumArray(vector<int> &nums) 
+        {
+            mp_nums  = &nums;
+
+            if(nums.size() > 0 )
+            {
+                m_maxPos = 0;
+                m_sum.push_back( nums[0] );         
+            }
+        }
+
+        int getSum(int pos)
+        {
+            if( pos < 0 || pos >= (int)(*mp_nums).size() )
+                return 0;
+
+            if( pos <= (int)m_maxPos)
+                return m_sum[pos];
+
+            int sum = m_sum[m_maxPos];
+            for( int i = m_maxPos + 1; i <= pos; ++i )
+            {
+                sum += (*mp_nums)[i];
+                m_sum.push_back(sum);
+
+                ++m_maxPos;
+            }
+
+            return sum;
+        }
+
+        int sumRange(int i, int j) 
+        {
+            return getSum(j) - getSum( i - 1); 
+        }
+
+    private:
+
+        vector<int>* mp_nums;
+        vector<int>  m_sum;
+        size_t       m_maxPos;
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_56" href="#TOC_HEAD_56">342 Power of Four</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/power-of-four/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given an integer (signed 32 bits), write a function to check whether it is a power of 4.
+        </p>
+        <p>
+            <strong>Example:</strong>
+        </p>
+        <p>
+            Given num = 16, return true.
+            Given num = 5, return false.
+        </p>
+        <p>
+            <strong>Follow up</strong>
+            : Could you solve it without loops/recursion?
+        </p>
+        <li>Solution&ndash;2016&ndash;06&ndash;05 C++: 08 ms &ndash; 11%</li>
+        <pre><code>
+    class Solution {
+    public:
+
+    #define FOUR_MASK 0x55555555
+
+        bool isPowerOfFour(int num) {
+            return isPowerOfTwo(num) && ((num | FOUR_MASK) == FOUR_MASK);
+        }
+
+        bool isPowerOfTwo(int n) {
+            return n > 0 && ( (n&(n-1)) == 0 ); 
+        }
+    };
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;27 C++: 00 ms &ndash; 00%**</li>
+        <pre><code>
+    // 1)  4^n ==> (2)^2n
+    // 2)  right move 2 per time until 1
+
+    class Solution {
+    public:
+        bool isPowerOfFour(int num) {
+
+            if( num <=0 || (num&(num-1)) != 0)
+                return false;
+
+            while( num > 3 )
+                  num = num >> 2;
+
+            return num == 1;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_57" href="#TOC_HEAD_57">344 Reverse String</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/reverse-string/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Write a function that takes a string as input and returns the string reversed.
+        </p>
+        <p>
+            <strong>Example:</strong>
+        </p>
+        <p>
+            Given s = &quot;hello&quot;, return &quot;olleh&quot;.
+        </p>
+        <li>Solution&ndash;2016&ndash;05&ndash;03 C++: 12 ms &ndash; 00%</li>
+        <pre><code>
+    class Solution {
+    public:
+        string reverseString(string s) {
+
+            int l = 0; 
+            int h = s.size() - 1;
+            for( ; l < h; ++l, --h )
+            {
+                char c = s[l];
+                s[l] = s[h];
+                s[h] = c;
+            }
+
+            return s;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_58" href="#TOC_HEAD_58">345 Reverse Vowels of a String</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/reverse-vowels-of-a-string/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Write a function that takes a string as input and reverse only the vowels of a string.
+        </p>
+        <p>
+            <strong>Example 1:</strong>
+        </p>
+        <p>
+            Given s = &quot;hello&quot;, return &quot;holle&quot;.
+        </p>
+        <p>
+            <strong>Example 2:</strong>
+        </p>
+        <p>
+            Given s = &quot;leetcode&quot;, return &quot;leotcede&quot;.
+        </p>
+        <li>Solution&ndash;2016&ndash;06&ndash;28 C++: 12 ms &ndash; 74%</li>
+        <pre><code>
+    class Solution {
+    public:
+        string reverseVowels(string s) {
+            int i = 0; 
+            int j = s.size() - 1 ;
+            while( i < j )
+            {
+                while( i < j && !isVowel(s[i]))
+                    ++i;
+                while( i < j && !isVowel(s[j]))
+                    --j;
+
+                if( i < j )
+                {
+                    char c = s[j];
+                    s[j] = s[i];
+                    s[i] = c;
+                    ++i;
+                    --j;
+                }
+            }
+
+            return s;
+        }
+
+        bool isVowel(char c)
+        {
+             static char vchar [256] = {0};
+             static bool init = false;
+             if( !init )
+             {
+                 vchar['a'] = true;
+                 vchar['e'] = true;
+                 vchar['i'] = true;
+                 vchar['o'] = true;
+                 vchar['u'] = true;
+                 vchar['A'] = true;
+                 vchar['E'] = true;
+                 vchar['I'] = true;
+                 vchar['O'] = true;
+                 vchar['U'] = true;
+                 init =  true;
+             }
+             return vchar[c];
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_59" href="#TOC_HEAD_59">349 Intersection of Two Arrays</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/intersection-of-two-arrays/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given two arrays, write a function to compute their intersection.
+        </p>
+        <p>
+            <strong>Example:</strong>
+        </p>
+        <p>
+            Given
+            <em>nums1</em> =
+            <code>[1, 2, 2, 1]</code> ,
+            <em>nums2</em> =
+            <code>[2, 2]</code> , return
+            <code>[2]</code> .
+        </p>
+        <p>
+            <strong>Note:</strong>
+        </p>
+        <ul>
+            <li>Each element in the result must be unique.</li>
+            <li>The result can be in any order.</li>
+        </ul>
+        <li>Solution&ndash;2016&ndash;05&ndash;27 C++: 12 ms &ndash; 00%</li>
+        <pre><code>
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+
+      vector<int> res; 
+
+      sort( nums1.begin(), nums1.end());
+      auto pos1 = unique(nums1.begin(), nums1.end());
+      nums1.erase(pos1, nums1.end());
+
+      sort( nums2.begin(), nums2.end());
+      auto pos2 = unique(nums2.begin(), nums2.end());
+      nums2.erase(pos2, nums2.end());
+
+      int i = 0;
+      int j = 0;
+
+      while( i < nums1.size() && j < nums2.size() )
+      {
+          int a = nums1[i];
+          int b = nums2[j];
+
+          if( a < b )
+            i++;
+          else if( a > b )
+            j++;
+          else 
+          { 
+             res.push_back(a);
+             ++i;
+             ++j;
+          }                  
+      }
+
+      return res;
+    }
+};
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_60" href="#TOC_HEAD_60">350 Intersection of Two Arrays II</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/intersection-of-two-arrays-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given two arrays, write a function to compute their intersection.
+        </p>
+        <p>
+            <strong>Example:</strong>
+        </p>
+        <p>
+            Given
+            <em>nums1</em> =
+            <code>[1, 2, 2, 1]</code> ,
+            <em>nums2</em> =
+            <code>[2, 2]</code> , return
+            <code>[2, 2]</code> .
+        </p>
+        <p>
+            <strong>Note:</strong>
+        </p>
+        <ul>
+            <li>Each element in the result should appear as many times as it shows in both arrays.</li>
+            <li>The result can be in any order.</li>
+        </ul>
+        <p>
+            <strong>Follow up:</strong>
+        </p>
+        <ul>
+            <li>What if the given array is already sorted? How would you optimize your algorithm?</li>
+            <li><p>
+            What if
+            <em>nums1</em> &#039;s size is small compared to
+            <em>num2</em> &#039;s size? Which algorithm is better?
+            <p></li>
+            <li><p>
+            What if elements of
+            <em>nums2</em> are stored on disk, and the memory is limited such that you cannot load all elements into the memory at once?
+            <p></li>
+        </ul>
+        <li>Solution&ndash;2016&ndash;06&ndash;01 C++: 08 ms &ndash; 86%</li>
+        <pre><code>
+    class Solution {
+    public:
+        vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+
+          vector<int> res; 
+
+          sort( nums1.begin(), nums1.end());
+          sort( nums2.begin(), nums2.end());
+          int i = 0;
+          int j = 0;
+
+          while( i < nums1.size() && j < nums2.size() )
+          {
+              int a = nums1[i];
+              int b = nums2[j];
+
+              if( a < b )
+                i++;
+              else if( a > b )
+                j++;
+              else 
+              { 
+                 res.push_back(a);
+                 ++i;
+                 ++j;
+              }                  
+          }
+
+          return res;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_61" href="#TOC_HEAD_61">371 Sum of Two Integers</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/sum-of-two-integers/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Calculate the sum of two integers <em>a</em> and <em>b</em> , but you are <strong>not allowed</strong> to use the operator <code>+</code> and <code>-</code> .
+        </p>
+        <p>
+            <strong>Example:</strong>
+        </p>
+        <p>
+            Given
+            <em>a</em> = 1 and
+            <em>b</em> = 2, return 3.
+        </p>
+        <li>Solution&ndash;2017&ndash;03&ndash;29 C++: 3 ms &ndash; 3%</li>
+        <pre><code>
+    int getSum(int a, int b) {
+        while( b !=0 )
+        {   int t = a^b;
+            b = (a&b) << 1;
+            a = t;
+        }
+        return a;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;07&ndash;07 C++: 00 ms &ndash; 11%</li>
+        <pre><code>
+    class Solution {
+    public:
+        int getSum(int a, int b) {
+            return b == 0 ? a : getSum( a^b, (a & b) << 1);
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_62" href="#TOC_HEAD_62">374 Guess Number Higher or Lower</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/guess-number-higher-or-lower/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            We are playing the Guess Game. The game is as follows:
+        </p>
+        <p>
+            I pick a number from <strong>1</strong> to <em>n</em> . You have to guess which number I picked.
+        </p>
+        <p>
+            Every time you guess wrong, I&#039;ll tell you whether the number is higher or lower.
+        </p>
+        <p>
+            You call a pre&ndash;defined API
+            <code>guess(int num)</code> which returns 3 possible results (
+            <code>-1</code> ,
+            <code>1</code> , or
+            <code>0</code> ):
+        </p>
+        <pre><code>
+-1 : My number is lower
+ 1 : My number is higher
+ 0 : Congrats! You got it!
+        </code></pre>
+        <p>
+            <strong>Example:</strong>
+        </p>
+        <pre><code>
+n = 10, I pick 6.
+
+Return 6.
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;07&ndash;15: 00 ms &ndash; 00%</li>
+        <pre><code>
+    // Forward declaration of guess API.
+    // @param num, your guess
+    // @return -1 if my number is lower, 1 if my number is higher, otherwise return 0
+    int guess(int num);
+
+    class Solution {
+    public:
+        int guessNumber(int n) {
+
+            int h = n;
+            int l = 1;
+            int g = 0;
+            int r = 0;
+            while( l <= h && (r = guess(g = (l + ( h - l)/2))) != 0 )
+            {
+                // cout << g << ",l=" << l << ",h=" << h << ",r=" << r << endl;
+                if( r == -1)
+                {   h = g - 1;
+                } else 
+                {   l = g + 1; 
+                }
+            }
+            return g;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H1><a name="HEAD_63" href="#TOC_HEAD_63">Medium</a></H1>
+        <H2><a name="HEAD_64" href="#TOC_HEAD_64">179 Largest Number &ndash; TC000087 </a><a name="MARK_8" href="#TOC_MARK_8"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/largest-number/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -4129,7 +5038,7 @@ public int countPrimes(int n) {
   
     
     <hr>
-    <li><font color="#000080" size="2">Update Time: Wed Mar 29 09:31:31 CST 2017</font></li>
+    <li><font color="#000080" size="2">Update Time: Wed Mar 29 11:25:03 CST 2017</font></li>
     <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
 </body>
