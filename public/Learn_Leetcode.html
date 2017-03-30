@@ -25,7 +25,8 @@
         <li><a name="TOC_MARK_7" href="#MARK_7"><strong><font size="2" color="red">@TODO - Solution&ndash;2016&ndash;05&ndash;25: 48 ms &ndash; 48% &ndash; Better Solution ? </font></strong></a></li>
         <li><a name="TOC_MARK_8" href="#HEAD_65"><strong><font size="2" color="red">@TODO - 016 3Sum Closest - solve it by 动态规划? - 2017-03-29 </font></strong></a></li>
         <li><a name="TOC_MARK_9" href="#MARK_9"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;29 C: &ndash; <strong><font color="red">Runtime Error??</font></strong> </font></strong></a></li>
-        <li><a name="TOC_MARK_10" href="#HEAD_69"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
+        <li><a name="TOC_MARK_10" href="#HEAD_71"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
+        <li><a name="TOC_MARK_11" href="#HEAD_73"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
     </ul>
 
         </div>
@@ -108,7 +109,13 @@
             <li><a name="TOC_HEAD_66" href="#HEAD_66">017 Letter Combinations of a Phone Number</a></li>
             <li><a name="TOC_HEAD_67" href="#HEAD_67">031 Next Permutation</a></li>
             <li><a name="TOC_HEAD_68" href="#HEAD_68">034 Search for a Range</a></li>
-            <li><a name="TOC_HEAD_69" href="#HEAD_69">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_69" href="#HEAD_69">121 Best Time to Buy and Sell Stock</a></li>
+            <li><a name="TOC_HEAD_70" href="#HEAD_70">122 Best Time to Buy and Sell Stock II</a></li>
+            <li><a name="TOC_HEAD_71" href="#HEAD_71">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
+        </menu>
+        <b><a name="TOC_HEAD_72" href="#HEAD_72">Hard</a></b><br>
+        <menu>
+            <li><a name="TOC_HEAD_73" href="#HEAD_73">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
         </menu>
 
 </div>
@@ -5774,7 +5781,123 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_69" href="#TOC_HEAD_69">179 Largest Number &ndash; TC000087 </a><a name="MARK_10" href="#TOC_MARK_10"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_69" href="#TOC_HEAD_69">121 Best Time to Buy and Sell Stock</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Say you have an array for which the <strong>i</strong>th element is the price of a given stock on day
+            <em>i</em> .
+        </p>
+        <p>
+            If you were only permitted to complete at most one transaction (ie, buy one and sell one share of the stock), design an algorithm to find the maximum profit.
+        </p>
+        <li>Solution&ndash;2016&ndash;04&ndash;06 C++: 08 ms &ndash; 20%</li>
+        <blockquote>
+            <p>
+            Solution&ndash;1
+            </p>
+        </blockquote>
+        <pre><code>
+    class Solution {
+    public:
+        int maxProfit(vector<int>& prices) {
+
+            if( prices.size() < 2)
+                return 0;
+
+            int answer = 0; //At least, you do not need to by stock to loose any money
+            int p1 = 0;
+            for( size_t i = 1; i < prices.size(); ++i)
+            {
+                int p2 = prices[i] - prices[i-1];
+                p1 = std::max( p2, p1 + p2);
+                answer = std::max( answer, p1);
+            }
+
+            return answer;
+        }
+    };
+        </code></pre>
+        <blockquote>
+            <p>
+            Solution&ndash;2
+            </p>
+        </blockquote>
+        <pre><code>
+    class Solution {
+    public:
+        int maxProfit(vector<int>& prices) {
+
+            if( prices.size() < 2)
+                return 0;
+
+            int answer = 0; //At least, you do not need to by stock to loose any money
+            int lowerPrice = prices[0];
+            for( size_t i = 1; i < prices.size(); ++i)
+            {
+                int price = prices[i];
+
+                answer = std::max(answer, price - lowerPrice);
+                lowerPrice = std::min(lowerPrice, price);
+            }
+
+            return answer;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_70" href="#TOC_HEAD_70">122 Best Time to Buy and Sell Stock II</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Say you have an array for which the <strong>i</strong>th element is the price of a given stock on day <em>i</em> . Design an algorithm to find the maximum profit. You may complete as many transactions as you like (ie, buy one and sell one share of the stock multiple times). However, you may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/98482901/" target="_blank">Solution&ndash;2017&ndash;03&ndash;30 C: 3 ms &ndash; 23%</a></li>
+        <pre><code>
+    int maxProfit(int* prices, int pricesSize) {
+
+        if( pricesSize < 2 || prices == NULL )
+            return 0;
+
+        int total = 0;
+        int d, i;
+
+        for( i = 1; i < pricesSize; ++i )
+        {
+            d = prices[i]-prices[i-1];
+            if( d > 0 )
+                total += d;
+        }
+
+        return total;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;06 C++: 08 ms &ndash; 16%</li>
+        <pre><code>
+    class Solution {
+    public:
+        int maxProfit(vector<int>& prices) {
+
+            if( prices.empty() )
+                return 0;
+
+            int profit = 0;
+            int lastPrice = prices[0];
+            for( size_t i = 1; i < prices.size(); ++i )
+            {
+                int price = prices[i];
+                if( price > lastPrice )
+                    profit += price - lastPrice;
+
+                lastPrice = price;
+            }
+
+            return profit;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_71" href="#TOC_HEAD_71">179 Largest Number &ndash; TC000087 </a><a name="MARK_10" href="#TOC_MARK_10"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/largest-number/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5787,10 +5910,28 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
             Note: The result may be very large, so you need to return a string instead of an integer.
         </p>
     </ul>
+        <H1><a name="HEAD_72" href="#TOC_HEAD_72">Hard</a></H1>
+        <H2><a name="HEAD_73" href="#TOC_HEAD_73">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_11" href="#TOC_MARK_11"><strong><font color="red">@TODO</font></strong></a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Say you have an array for which the &lt;sup&gt;th&lt;/sup&gt;*i* element is the price of a given stock on day *i* .
+        </p>
+        <p>
+            Design an algorithm to find the maximum profit. You may complete at most
+            <em>two</em> transactions.
+        </p>
+        <p>
+            <strong>Note:</strong>
+        </p>
+        <p>
+            You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+        </p>
+    </ul>
   
     
     <hr>
-    <li><font color="#000080" size="2">Update Time: Thu Mar 30 00:58:35 CST 2017</font></li>
+    <li><font color="#000080" size="2">Update Time: Thu Mar 30 13:10:31 CST 2017</font></li>
     <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
 </body>
