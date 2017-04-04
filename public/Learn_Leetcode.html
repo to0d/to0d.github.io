@@ -25,8 +25,8 @@
         <li><a name="TOC_MARK_7" href="#MARK_7"><strong><font size="2" color="red">@TODO - Solution&ndash;2016&ndash;05&ndash;25: 48 ms &ndash; 48% &ndash; Better Solution ? </font></strong></a></li>
         <li><a name="TOC_MARK_8" href="#HEAD_65"><strong><font size="2" color="red">@TODO - 016 3Sum Closest - solve it by 动态规划? - 2017-03-29 </font></strong></a></li>
         <li><a name="TOC_MARK_9" href="#MARK_9"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;29 C: &ndash; <strong><font color="red">Runtime Error??</font></strong> </font></strong></a></li>
-        <li><a name="TOC_MARK_10" href="#HEAD_71"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
-        <li><a name="TOC_MARK_11" href="#HEAD_73"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
+        <li><a name="TOC_MARK_10" href="#HEAD_73"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
+        <li><a name="TOC_MARK_11" href="#HEAD_75"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
     </ul>
 
         </div>
@@ -109,13 +109,15 @@
             <li><a name="TOC_HEAD_66" href="#HEAD_66">017 Letter Combinations of a Phone Number</a></li>
             <li><a name="TOC_HEAD_67" href="#HEAD_67">031 Next Permutation</a></li>
             <li><a name="TOC_HEAD_68" href="#HEAD_68">034 Search for a Range</a></li>
-            <li><a name="TOC_HEAD_69" href="#HEAD_69">121 Best Time to Buy and Sell Stock</a></li>
-            <li><a name="TOC_HEAD_70" href="#HEAD_70">122 Best Time to Buy and Sell Stock II</a></li>
-            <li><a name="TOC_HEAD_71" href="#HEAD_71">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_69" href="#HEAD_69">039 Combination Sum</a></li>
+            <li><a name="TOC_HEAD_70" href="#HEAD_70">040 Combination Sum II</a></li>
+            <li><a name="TOC_HEAD_71" href="#HEAD_71">121 Best Time to Buy and Sell Stock</a></li>
+            <li><a name="TOC_HEAD_72" href="#HEAD_72">122 Best Time to Buy and Sell Stock II</a></li>
+            <li><a name="TOC_HEAD_73" href="#HEAD_73">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
         </menu>
-        <b><a name="TOC_HEAD_72" href="#HEAD_72">Hard</a></b><br>
+        <b><a name="TOC_HEAD_74" href="#HEAD_74">Hard</a></b><br>
         <menu>
-            <li><a name="TOC_HEAD_73" href="#HEAD_73">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_75" href="#HEAD_75">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
         </menu>
 
 </div>
@@ -5391,7 +5393,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
         return result;
     } 
         </code></pre>
-        <li>Solution&ndash;2016&ndash;05&ndash;10 C++: 02 ms &ndash; beats 07%</li>
+        <li>Solution&ndash;2016&ndash;05&ndash;10 C++: 02 ms &ndash; 07%</li>
         <pre><code>
     class Solution {
     public:
@@ -5781,7 +5783,339 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_69" href="#TOC_HEAD_69">121 Best Time to Buy and Sell Stock</a></H2>
+        <H2><a name="HEAD_69" href="#TOC_HEAD_69">039 Combination Sum</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/combination-sum/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a set of candidate numbers (
+            <em>C</em> ) and a target number (
+            <em>T</em> ), find all unique combinations in
+            <em>C</em> where the candidate numbers sums to
+            <em>T</em> .
+        </p>
+        <p>
+            The <strong>same</strong> repeated number may be chosen from
+            <em>C</em> unlimited number of times.
+        </p>
+        <p>
+            <strong>Note:</strong>
+        </p>
+        <ul>
+            <li>All numbers (including target) will be positive integers.</li>
+            <li>The solution set must not contain duplicate combinations.</li>
+        </ul>
+        <p>
+            For example, given candidate set
+            <code>2,3,6,7</code> and target
+            <code>7</code> ,
+        </p>
+        <p>
+            A solution set is:
+        </p>
+        <pre><code>
+    [
+      [7],
+      [2, 2, 3]
+    ]
+        </code></pre>
+        <li><a href="https://leetcode.com/submissions/detail/99059965/" target="_blank">Solution&ndash;2017&ndash;04&ndash;04 C++: 13 ms &ndash; 72%</a></li>
+        <pre><code>
+    class Solution {
+    public:
+
+        vector<vector<int>> combinationSum(vector<int>& candidates, int target) {        
+            vector<int> path;
+            result.clear();
+            find(candidates, candidates.size(), target, path);
+            return result;
+        }
+
+        void find(vector<int>& candidates, int size, int target, vector<int>& path)
+        {
+            //cout << "candidates" << candidates << endl;
+            // cout << "size" << size << ", target" << target << endl;
+
+            if( size == 0 || target < 0)
+            {   return;
+            }
+
+            if( target == 0 )
+            {   result.push_back(path); 
+                return;
+            }
+
+            int value = candidates[size-1];
+            if( target >= value )
+            {   path.push_back(value);
+                find(candidates, size, target-value, path);
+                path.pop_back();
+            }
+
+            find(candidates, size-1, target, path);
+        }
+
+        vector<vector<int>> result;
+    };
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;05&ndash;04 C++: 16 ms &ndash; 68%</li>
+        <pre><code>
+    class Solution {
+    public:
+        vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+
+            mCandidates = candidates;
+            maxIndex = candidates.size();
+            res.clear();
+            r.clear();
+
+            sort(mCandidates.begin(), mCandidates.end());
+            find(0, 0, target);
+
+            return res;
+        }
+
+        void find(int i, int m, int target)
+        {
+            if( target == 0 )
+            {
+                res.push_back(r);
+                return;
+            }
+
+            for( int j = m ; j < maxIndex; ++j )
+            {
+                 int v = mCandidates[j];
+                 if( v > target )
+                     return;
+
+                 r.push_back(v);
+                 find( i + 1, j, target - v);
+                 r.pop_back();
+            }
+        }
+
+        vector<vector<int>> res;
+        vector<int> r;
+        vector<int> mCandidates;
+        int maxIndex;
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_70" href="#TOC_HEAD_70">040 Combination Sum II</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/combination-sum-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a collection of candidate numbers (
+            <em>C</em> ) and a target number (
+            <em>T</em> ), find all unique combinations in
+            <em>C</em> where the candidate numbers sums to
+            <em>T</em> .
+        </p>
+        <p>
+            Each number in
+            <em>C</em> may only be used <strong>once</strong>
+            in the combination.
+        </p>
+        <p>
+            <strong>Note:</strong>
+        </p>
+        <ul>
+            <li>All numbers (including target) will be positive integers.</li>
+            <li>The solution set must not contain duplicate combinations.</li>
+        </ul>
+        <p>
+            For example, given candidate set
+            <code>10,1,2,7,6,1,5</code> and target
+            <code>8</code> ,
+        </p>
+        <p>
+            A solution set is:
+        </p>
+        <pre><code>
+    [
+      [1, 7],
+      [1, 2, 5],
+      [2, 6],
+      [1, 1, 6]
+    ]
+        </code></pre>
+        <li><a href="https://leetcode.com/submissions/detail/99062289/" target="_blank">Solution&ndash;2017&ndash;04&ndash;04 C++: 12 ms &ndash; 53%</a></li>
+        <pre><code>
+    class Solution {
+    public:
+        vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+
+            std::sort(candidates.begin(), candidates.end());
+            values.clear();
+            nums.clear();
+            result.clear();
+            path.clear();
+
+            int lastVal = -1;
+            int num = 0;
+            for( int v : candidates )
+            {
+                if( v != lastVal )
+                {
+                    if( num > 0 )
+                    {   values.push_back(lastVal);
+                        nums.push_back(num);
+                    }
+
+                    num = 1;
+                    lastVal = v;
+                }
+                else
+                {   ++num;
+                }            
+            }
+
+            if( num > 0 )
+            {   values.push_back(lastVal);
+                nums.push_back(num);
+            }
+
+            // std::copy( values.begin(), values.end(), ostream_iterator<int>(cout, ","));
+            // std::cout << endl;
+            // std::copy( nums.begin(), nums.end(), ostream_iterator<int>(cout, ","));
+            // std::cout << endl;
+
+            find(target, values.size()-1);
+            return result;
+        }
+
+        void find( int target, int k) 
+        {
+            // cout << "target" << target << ", k" << k << endl;
+
+            if( target == 0 )
+            {   result.push_back(path);
+                return;
+            }
+
+            if( k < 0 || target < 0 ) 
+            {   return;
+            }
+
+            int v = values[k];
+            int d = std::min(target/v, nums[k]);
+
+            while( d > 0 )
+            {   
+                for( int i = 0; i < d; ++i)
+                {   path.push_back(v);
+                }
+
+                find(target-d*v, k-1);
+
+                for( int i = 0; i < d; ++i)
+                {   path.pop_back();
+                }
+
+                d--;
+            }
+
+            find(target, k-1);
+        }
+
+
+        vector<int> values;
+        vector<int> nums;
+        vector<int> path;
+        vector<vector<int>> result;
+    };
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;05&ndash;04&ndash;01: 20 ms &ndash; 30%</li>
+        <pre><code>
+     // w1, w2,     wn,  ==> T
+     // 
+     // f(n, T) :=  f( n-1, T-wn)  when T > wn
+     //          |  f( n-1, T)
+     //          |  {wn}           when T == wn
+     //          |  {}             T <=0 || n <= 0 || sum(n) < T
+     // 
+     // sum(n) = w1 + w2 .. + wn
+
+    class Solution 
+    {
+    #define MAX_CAP 100
+    //#define DBG
+    public:
+
+        vector<vector<int> > combinationSum2(vector<int>& candidates, int target) {
+
+            m_candidates = candidates;
+            sort(m_candidates.begin(), m_candidates.end(), less<int>());
+            memset(m_sumMap, 0, sizeof(m_sumMap));
+
+            vector<vector<int> > r;
+    #ifdef DBG       
+            copy(m_candidates.begin(), m_candidates.end(), ostream_iterator<int>(cout, ","));
+            cout << endl;
+    #endif
+            find(r, candidates.size(), target, 0);
+
+            return r;
+        }
+
+        void find(vector<vector<int> >& r, int n, int t, int pos)
+        {
+    #ifdef DBG 
+            cout << "n=" << n << ", t=" << t<< ", pos=" << pos << endl; 
+            cout << "sum(" << n << ")=" << sum(n) << endl;
+    #endif 
+            if( n <= 0 || t <= 0 || sum(n) < t )
+                return;
+
+            int wn = m_candidates[n-1];
+            if( t == wn )
+            {
+                vector<int> rr;
+                rr.push_back(wn);
+
+                for(int i = pos - 1; i >=0; --i)
+                     rr.push_back(m_candidateStack[i]);
+
+                bool dup = false;
+                for(int i = r.size() - 1; !dup && i >=0; --i)
+                    dup = (r[i] == rr);
+
+                if(!dup)
+                    r.push_back(rr);
+            }
+            else if( t > wn )
+            {
+                m_candidateStack[ pos ] = wn;
+                find(r, n -1, t - wn, pos + 1);
+            }
+
+            find(r, n - 1, t, pos);
+        }
+
+        int sum( int n )
+        {
+            if( n <= 0 )
+                return 0;
+
+            int s = m_sumMap[ n-1 ];
+            if( s == 0)
+            {
+                s = sum(n-1) + m_candidates[ n-1 ];
+                m_sumMap[n - 1] = s;
+            }
+
+            return s;
+        }
+
+    private:
+
+        int    m_sumMap[MAX_CAP];
+        int    m_candidateStack[MAX_CAP];
+        vector<int> m_candidates;
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_71" href="#TOC_HEAD_71">121 Best Time to Buy and Sell Stock</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5846,7 +6180,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_70" href="#TOC_HEAD_70">122 Best Time to Buy and Sell Stock II</a></H2>
+        <H2><a name="HEAD_72" href="#TOC_HEAD_72">122 Best Time to Buy and Sell Stock II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5897,7 +6231,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_71" href="#TOC_HEAD_71">179 Largest Number &ndash; TC000087 </a><a name="MARK_10" href="#TOC_MARK_10"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_73" href="#TOC_HEAD_73">179 Largest Number &ndash; TC000087 </a><a name="MARK_10" href="#TOC_MARK_10"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/largest-number/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5910,8 +6244,8 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
             Note: The result may be very large, so you need to return a string instead of an integer.
         </p>
     </ul>
-        <H1><a name="HEAD_72" href="#TOC_HEAD_72">Hard</a></H1>
-        <H2><a name="HEAD_73" href="#TOC_HEAD_73">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_11" href="#TOC_MARK_11"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H1><a name="HEAD_74" href="#TOC_HEAD_74">Hard</a></H1>
+        <H2><a name="HEAD_75" href="#TOC_HEAD_75">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_11" href="#TOC_MARK_11"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5931,7 +6265,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
   
     
     <hr>
-    <li><font color="#000080" size="2">Update Time: Thu Mar 30 13:10:31 CST 2017</font></li>
+    <li><font color="#000080" size="2">Update Time: Tue Apr 04 23:03:15 CST 2017</font></li>
     <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
 </body>
