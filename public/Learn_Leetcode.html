@@ -25,8 +25,10 @@
         <li><a name="TOC_MARK_7" href="#MARK_7"><strong><font size="2" color="red">@TODO - Solution&ndash;2016&ndash;05&ndash;25: 48 ms &ndash; 48% &ndash; Better Solution ? </font></strong></a></li>
         <li><a name="TOC_MARK_8" href="#HEAD_65"><strong><font size="2" color="red">@TODO - 016 3Sum Closest - solve it by 动态规划? - 2017-03-29 </font></strong></a></li>
         <li><a name="TOC_MARK_9" href="#MARK_9"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;29 C: &ndash; <strong><font color="red">Runtime Error??</font></strong> </font></strong></a></li>
-        <li><a name="TOC_MARK_10" href="#HEAD_73"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
-        <li><a name="TOC_MARK_11" href="#HEAD_75"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
+        <li><a name="TOC_MARK_10" href="#HEAD_73"><strong><font size="2" color="red">@TODO - 047 Permutations II - </font></strong></a></li>
+        <li><a name="TOC_MARK_11" href="#MARK_11"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;04&ndash;05 &ndash; Correct?? </font></strong></a></li>
+        <li><a name="TOC_MARK_12" href="#HEAD_78"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
+        <li><a name="TOC_MARK_13" href="#HEAD_80"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
     </ul>
 
         </div>
@@ -111,13 +113,18 @@
             <li><a name="TOC_HEAD_68" href="#HEAD_68">034 Search for a Range</a></li>
             <li><a name="TOC_HEAD_69" href="#HEAD_69">039 Combination Sum</a></li>
             <li><a name="TOC_HEAD_70" href="#HEAD_70">040 Combination Sum II</a></li>
-            <li><a name="TOC_HEAD_71" href="#HEAD_71">121 Best Time to Buy and Sell Stock</a></li>
-            <li><a name="TOC_HEAD_72" href="#HEAD_72">122 Best Time to Buy and Sell Stock II</a></li>
-            <li><a name="TOC_HEAD_73" href="#HEAD_73">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_71" href="#HEAD_71">043 Multiply Strings</a></li>
+            <li><a name="TOC_HEAD_72" href="#HEAD_72">046 Permutations</a></li>
+            <li><a name="TOC_HEAD_73" href="#HEAD_73">047 Permutations II &ndash; <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_74" href="#HEAD_74">062 Unique Paths</a></li>
+            <li><a name="TOC_HEAD_75" href="#HEAD_75">064. Minimum Path Sum</a></li>
+            <li><a name="TOC_HEAD_76" href="#HEAD_76">121 Best Time to Buy and Sell Stock</a></li>
+            <li><a name="TOC_HEAD_77" href="#HEAD_77">122 Best Time to Buy and Sell Stock II</a></li>
+            <li><a name="TOC_HEAD_78" href="#HEAD_78">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
         </menu>
-        <b><a name="TOC_HEAD_74" href="#HEAD_74">Hard</a></b><br>
+        <b><a name="TOC_HEAD_79" href="#HEAD_79">Hard</a></b><br>
         <menu>
-            <li><a name="TOC_HEAD_75" href="#HEAD_75">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_80" href="#HEAD_80">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
         </menu>
 
 </div>
@@ -3010,7 +3017,7 @@ private boolean isPrime(int num) {
             <em>n</em> . But don&#039;t let that name scare you, I promise that the concept is surprisingly simple.
             <p></li>
             <p>
-                <img src="file:///E:/work/note/04 Public/https://leetcode.com/static/images/solutions/Sieve_of_Eratosthenes_animation.gif" />
+                <img src="https://leetcode.com/static/images/solutions/Sieve_of_Eratosthenes_animation.gif" />
             </p>
             <p>
                 Sieve of Eratosthenes: algorithm steps for primes below 121. &quot;Sieve of Eratosthenes Animation&quot; by SKopp is licensed under CC BY 2.0.
@@ -6115,7 +6122,422 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_71" href="#TOC_HEAD_71">121 Best Time to Buy and Sell Stock</a></H2>
+        <H2><a name="HEAD_71" href="#TOC_HEAD_71">043 Multiply Strings</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/multiply-strings/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given two numbers represented as strings, return multiplication of the numbers as a string.
+        </p>
+        <p>
+            Note: The numbers can be arbitrarily large and are non&ndash;negative.
+        </p>
+        <li>Solution&ndash;2016&ndash;04&ndash;09 C++: 08 ms &ndash; 52% <a href="http://codepad.org/k0I7zTcG " target="_blank"><strong>Test Code in CodePad - Click Link</strong></a></li>
+        <pre><code>
+    class Solution {
+
+        //#define DBG
+        #define BINARY_CAP 10000
+        #define BINARY_LEN 4
+        #define BINARY_FMT "%04d"
+
+    public:
+
+        string multiply(string num1, string num2) {
+
+            if( num1.empty() || num1 == "0" || num2.empty() || num2 == "0" )
+                return "0";
+
+            if( num1.size() > num2.size() )
+                return multiplyString(num2,num1);
+            else 
+                return multiplyString(num1,num2);
+        }
+
+    private:
+
+        vector<int> arr1;
+        vector<int> arr2; 
+        vector<int> arr3;
+        vector<int> res;
+
+        string multiplyString(const string& num1, const string& num2)
+        {
+            arr1.clear();
+            arr2.clear();
+            res.clear();
+
+            bool positive1 = converFromString(num1, arr1);
+            bool positive2 = converFromString(num2, arr2);
+    #ifdef DBG        
+            cout << "arr1: " << arr1 << endl;
+            cout << "arr2: " << arr2 << endl;
+    #endif   
+            for( int i = 0; i < (int)arr1.size(); ++i)
+            {
+                int v(0), j(0), k(i), a(arr1[i]);
+                arr3.clear();
+
+                // operator *
+                for(; v > 0 || j < (int)arr2.size(); ++j, v /= BINARY_CAP)
+                {
+                    v += (j < (int)arr2.size()) ? a * arr2[j] : 0 ;
+                    arr3.push_back( v % BINARY_CAP);
+                }
+
+                // operator +
+                v = 0;
+                j = 0;
+    #ifdef DBG              
+                cout << "arr3: " << arr3 << endl;
+    #endif
+                for(; v > 0 || j < (int)arr3.size(); ++j, ++k, v /= BINARY_CAP)
+                {
+                    v += ( j < (int)arr3.size()) ? arr3[j] : 0 ; 
+
+                    if( k < (int)res.size() )
+                        v += res[k];
+                    else
+                        res.push_back(0);
+
+                    res[k] = v % BINARY_CAP;
+                }
+            }
+
+            return converToString(res, (positive1 == positive2));  
+        }
+
+        string converToString(vector<int>& array, bool positive)
+        {
+    #ifdef DBG
+            cout << "converToString: " << array << endl;
+    #endif
+
+            int len = array.size();
+            char* buf = new char[ len * BINARY_LEN +2 ];
+            char* pstr = buf;
+            if( !positive )
+                *pstr++ = '-';
+
+            pstr += sprintf( pstr, "%d", array[--len]);
+            for(; len > 0; --len )
+                pstr += sprintf( pstr, BINARY_FMT, array[len-1]);
+
+            *pstr = '\0';
+
+            string r(buf);
+            delete [] buf;
+            return r;
+        }
+
+        bool converFromString(const string& num, vector<int>& array)
+        {
+    #ifdef DBG
+            cout << "converFromString: " << num << endl;
+    #endif    
+            const char* pstart = num.c_str(); 
+            const char* pend = num.c_str() + num.size();
+            char buf[ BINARY_LEN+1 ] = {0};
+            int val;
+
+            bool positive = true;
+            if( *pstart == '-' )
+            {
+                positive = false;
+                ++pstart;
+            }
+
+            for( ; pstart <  pend; pend -= BINARY_LEN)
+            {
+                if( pend >= ( pstart + BINARY_LEN ) )
+                    strncpy(buf, pend-BINARY_LEN, BINARY_LEN);
+                else
+                {
+                    strncpy(buf, pstart, pend - pstart);
+                    buf[pend - pstart] = '\0';
+                }
+
+                sscanf(buf,"%d",&val);
+                array.push_back(val);
+            }
+
+            return positive;
+        }
+
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_72" href="#TOC_HEAD_72">046 Permutations</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/permutations/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a collection of <strong>distinct</strong> numbers, return all possible permutations.
+        </p>
+        <p>
+            For example,
+        </p>
+        <p>
+            <code>[1,2,3]</code> have the following permutations:
+        </p>
+        <pre><code>
+[
+  [1,2,3],
+  [1,3,2],
+  [2,1,3],
+  [2,3,1],
+  [3,1,2],
+  [3,2,1]
+]
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;11&ndash;01: 16 ms &ndash; 20%</li>
+        <pre><code>
+    class Solution {
+    public:
+
+        vector<vector<int>> permute(vector<int>& nums) {
+
+            vector<vector<int>> res;
+            used = vector<bool>(nums.size(), false);
+            entry = vector<int>(nums.size(),0);
+            generate(nums,res,0);
+            return res;
+        }
+
+        void generate(vector<int>& nums, vector<vector<int>>& res, size_t i)
+        {
+             size_t len = nums.size();
+             if( i == len )
+             {
+                 res.push_back(entry);
+                 return;
+             }
+
+             for( size_t j = 0; j < len; ++j )
+             {
+                 if( !used[j] ) 
+                 {
+                    used[j] = true;
+                    entry[i] = nums[j];
+                    generate(nums, res, i+1); 
+                    used[j] = false;
+                 }
+             }
+        }
+
+        vector<bool> used;
+        vector<int>  entry;
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_73" href="#TOC_HEAD_73">047 Permutations II &ndash; </a><a name="MARK_10" href="#TOC_MARK_10"><strong><font color="red">@TODO</font></strong></a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/permutations-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+        </p>
+        <p>
+            For example,
+        </p>
+        <p>
+            <code>[1,1,2]</code> have the following unique permutations:
+        </p>
+        <pre><code>
+[
+  [1,1,2],
+  [1,2,1],
+  [2,1,1]
+]
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;11 C++: 32 ms &ndash; 46%</li>
+        <pre><code>
+    class Solution {
+    public:
+        vector<vector<int>> permuteUnique(vector<int>& nums) {
+
+            vector<vector<int>> res;
+
+            if( nums.empty() )
+                return res;
+
+            target = nums.size();
+            entry = vector<int>(target, 0); 
+            used.clear(); 
+            numbers.clear();       
+
+            std::sort(nums.begin(), nums.end(), std::less<int>());
+
+            int m(nums[0]), count(0);        
+            for( int n : nums )
+            {
+                if( m != n )
+                {
+                    numbers.push_back( m );
+                    used.push_back(count);
+                    count = 0;
+                }
+
+                m = n;
+                ++count;
+            }
+
+            numbers.push_back( m );
+            used.push_back( count);
+
+            dfs(res, 0 );
+
+            return res;
+        }
+
+        void dfs(vector<vector<int>>& res, int i )
+        {
+            if( i == target )
+            {
+                res.push_back(entry);
+                return;
+            }
+
+            for( int j = 0; j < numbers.size(); ++j )
+            {
+                if( used[j] > 0 )
+                {
+                    --used[j];
+                    entry[i] = numbers[j];
+                    dfs(res, i + 1);
+                    ++used[j];
+                }
+            }
+        }
+
+        vector<int> used;
+        vector<int> entry;
+        vector<int> numbers;
+        int target;
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_74" href="#TOC_HEAD_74">062 Unique Paths</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/unique-paths/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            A robot is located at the top&ndash;left corner of a
+            <em>m</em> x
+            <em>n</em> grid (marked &#039;Start&#039; in the diagram below).
+        </p>
+        <p>
+            The robot can only move either down or right at any point in time. The robot is trying to reach the bottom&ndash;right corner of the grid (marked &#039;Finish&#039; in the diagram below).
+        </p>
+        <p>
+            How many possible unique paths are there?
+        </p>
+        <p>
+            <img src="https://leetcode.com/static/images/problemset/robot_maze.png" />
+        </p>
+        <p>
+            Above is a 3 x 7 grid. How many possible unique paths are there?
+        </p>
+        <p>
+            <strong>Note:</strong>
+            <em>m</em> and
+            <em>n</em> will be at most 100.
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/99176114/" target="_blank">Solution&ndash;2017&ndash;04&ndash;05 C: 3 ms &ndash; 2%</a></li>
+        <pre><code>
+    // f(m,n) = f(m-1,n) + f(m,n-1)
+    // f(m,n) = f(n,m)
+    // f(1,n) = 1
+
+    #define MAX_NUM 100
+    static int uniqueNum[MAX_NUM*MAX_NUM] = {0};
+    int uniquePaths(int m, int n) {
+
+        if( m == 0 || n == 0 ) return 0;
+        if( m < n )  return uniquePaths(n, m);
+        if( n == 1 ) return 1;
+
+        int num = uniqueNum[(m-1)*MAX_NUM+n-1];
+        if( num == 0 )
+        {   num = uniquePaths(m-1,n)+uniquePaths(m,n-1);
+        }
+        uniqueNum[(m-1)*MAX_NUM+n-1] = num;
+        return num;
+    }
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_75" href="#TOC_HEAD_75">064. Minimum Path Sum</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/minimum-path-sum" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a m x n grid filled with non&ndash;negative numbers, find a path from top left to bottom right which minimizes the sum of all numbers along its path.
+        </p>
+        <p>
+            <strong>Note</strong>: You can only move either down or right at any point in time.
+        </p>
+        <li>Solution&ndash;2017&ndash;04&ndash;05 &ndash; Correct??  <a name="MARK_11" href="#TOC_MARK_11"><strong><font color="red">@TODO</font></strong></a></li>
+        <pre><code>
+    // Your input 
+    // 
+    // [[1,2],[1,1]]
+    // 
+    // Your answer
+    // 
+    // 2
+    // 
+    // Expected answer
+    // 
+    // 3  ====> ????
+
+    int getMinPathSum(int** grid, int* sum, int sc, int r, int c, int findedSum)
+    {
+        int ms = sum[r*sc+c];
+        if( ms != 0 )
+        {   return ms;
+        }
+
+        int v = grid[r][c];
+        if( v >= findedSum ) // no need search this way
+        {   ms = -1;
+        } 
+        else if( r == 0 && c == 0 )
+        {   ms = v;
+        } 
+        else
+        {
+            int a = -1;
+            int b = -1; 
+
+            if( r > 0 ) { a = getMinPathSum(grid, sum, sc, r-1, c, findedSum-v); }
+            if( c > 0 ) { b = getMinPathSum(grid, sum, sc, r, c-1, findedSum-v); }
+
+            if( a == -1 )
+            {   ms = b;
+            }
+            else if( b == -1 )
+            {   ms = a;
+            } 
+            else
+            {   ms = ( a < b ? a : b ) + v;               
+            }
+        }
+
+        sum[r*sc+c] = ms;
+        return ms;
+    }
+
+    int minPathSum(int** grid, int r, int c) {
+
+        if( grid == NULL || r == 0 || c == 0 )
+            return 0;
+
+        int* sum = (int*) malloc(sizeof(int)*r*c);
+        memset( sum, 0 , sizeof(int)*r*c);
+
+        int minSum = getMinPathSum(grid, sum, c, r-1, c-1, INT_MAX);
+        free(sum);
+
+        return minSum;
+    }
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_76" href="#TOC_HEAD_76">121 Best Time to Buy and Sell Stock</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6180,7 +6602,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_72" href="#TOC_HEAD_72">122 Best Time to Buy and Sell Stock II</a></H2>
+        <H2><a name="HEAD_77" href="#TOC_HEAD_77">122 Best Time to Buy and Sell Stock II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6231,7 +6653,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_73" href="#TOC_HEAD_73">179 Largest Number &ndash; TC000087 </a><a name="MARK_10" href="#TOC_MARK_10"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_78" href="#TOC_HEAD_78">179 Largest Number &ndash; TC000087 </a><a name="MARK_12" href="#TOC_MARK_12"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/largest-number/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6244,8 +6666,8 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
             Note: The result may be very large, so you need to return a string instead of an integer.
         </p>
     </ul>
-        <H1><a name="HEAD_74" href="#TOC_HEAD_74">Hard</a></H1>
-        <H2><a name="HEAD_75" href="#TOC_HEAD_75">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_11" href="#TOC_MARK_11"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H1><a name="HEAD_79" href="#TOC_HEAD_79">Hard</a></H1>
+        <H2><a name="HEAD_80" href="#TOC_HEAD_80">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_13" href="#TOC_MARK_13"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6265,7 +6687,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
   
     
     <hr>
-    <li><font color="#000080" size="2">Update Time: Tue Apr 04 23:03:15 CST 2017</font></li>
+    <li><font color="#000080" size="2">Update Time: Wed Apr 05 23:18:14 CST 2017</font></li>
     <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
 </body>
