@@ -27,8 +27,8 @@
         <li><a name="TOC_MARK_9" href="#MARK_9"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;29 C: &ndash; <strong><font color="red">Runtime Error??</font></strong> </font></strong></a></li>
         <li><a name="TOC_MARK_10" href="#HEAD_73"><strong><font size="2" color="red">@TODO - 047 Permutations II - </font></strong></a></li>
         <li><a name="TOC_MARK_11" href="#MARK_11"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;04&ndash;05 &ndash; Correct?? </font></strong></a></li>
-        <li><a name="TOC_MARK_12" href="#HEAD_78"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
-        <li><a name="TOC_MARK_13" href="#HEAD_80"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
+        <li><a name="TOC_MARK_12" href="#HEAD_79"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
+        <li><a name="TOC_MARK_13" href="#HEAD_81"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
     </ul>
 
         </div>
@@ -118,13 +118,14 @@
             <li><a name="TOC_HEAD_73" href="#HEAD_73">047 Permutations II &ndash; <font color="red">@TODO</font></a></li>
             <li><a name="TOC_HEAD_74" href="#HEAD_74">062 Unique Paths</a></li>
             <li><a name="TOC_HEAD_75" href="#HEAD_75">064. Minimum Path Sum</a></li>
-            <li><a name="TOC_HEAD_76" href="#HEAD_76">121 Best Time to Buy and Sell Stock</a></li>
-            <li><a name="TOC_HEAD_77" href="#HEAD_77">122 Best Time to Buy and Sell Stock II</a></li>
-            <li><a name="TOC_HEAD_78" href="#HEAD_78">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_76" href="#HEAD_76">071 Simplify Path</a></li>
+            <li><a name="TOC_HEAD_77" href="#HEAD_77">121 Best Time to Buy and Sell Stock</a></li>
+            <li><a name="TOC_HEAD_78" href="#HEAD_78">122 Best Time to Buy and Sell Stock II</a></li>
+            <li><a name="TOC_HEAD_79" href="#HEAD_79">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
         </menu>
-        <b><a name="TOC_HEAD_79" href="#HEAD_79">Hard</a></b><br>
+        <b><a name="TOC_HEAD_80" href="#HEAD_80">Hard</a></b><br>
         <menu>
-            <li><a name="TOC_HEAD_80" href="#HEAD_80">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_81" href="#HEAD_81">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
         </menu>
 
 </div>
@@ -6537,7 +6538,172 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_76" href="#TOC_HEAD_76">121 Best Time to Buy and Sell Stock</a></H2>
+        <H2><a name="HEAD_76" href="#TOC_HEAD_76">071 Simplify Path</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/simplify-path/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given an absolute path for a file (Unix&ndash;style), simplify it.
+        </p>
+        <p>
+            For example,
+        </p>
+        <p>
+            <strong>path</strong> = <code>"/home/"</code> , =&gt; <code>"/home"</code>
+        </p>
+        <p>
+            <strong>path</strong> = <code>"/a/./b/../../c/"</code> , =&gt; <code>"/c"</code>
+        </p>
+        <p>
+            <strong>Corner Cases:</strong>
+        </p>
+        <ul>
+            <li>Did you consider the case where <strong>path</strong> = <code>"/../"</code> ?</li>
+            <p>
+                In this case, you should return <code>"/"</code> .
+            </p>
+            <li>Another corner case is the path might contain multiple slashes <code>'/'</code> together, such as <code>"/home//foo/"</code> .</li>
+            <p>
+                In this case, you should ignore redundant slashes and return <code>"/home/foo"</code> .
+            </p>
+        </ul>
+        <li><a href="https://leetcode.com/submissions/detail/99286544/" target="_blank">Solution&ndash;2017&ndash;04&ndash;06 C: 3 ms &ndash; 44%</a></li>
+        <pre><code>
+    char* simplifyPath(char* path) 
+    {
+        char* stack[1024];
+        char c, *p1, *p2;
+        int n = 0;
+
+        if( path == NULL || path[0] != '/' )
+            return path;
+
+        p1 = p2 = path;
+    STR:while(( c = *p1++ ) != '\0' )
+        {   switch(c)
+            {
+            case '/':
+    NEXT:           stack[n++] = p2;
+                    *(p2++) = '/';
+    SKIP:           while( *p1 == '/' )
+                        ++p1;
+                    break;
+            case '.':
+                    // a.b/ or a./
+                    if( p2 > path && *(p2-1) != '/' )
+                    {
+    UNTIL:              while(1)
+                        {   *(p2++) = c;
+                            switch((c=*p1++))
+                            {   case '/' :  goto NEXT;
+                                case '\0':  goto END;
+                            }
+                        }
+                    }
+                    switch(*p1)
+                    {   case '/' :  ++p1; goto SKIP;    // ignore "./"
+                        case '\0':  goto STR;           // string end
+                        case '.' :                      // pop if "../"
+                            if( (*(p1+1)=='/') || (*(p1+1) == '\0') )   
+                            {
+                                p1++;
+                                n--;
+                                if( n <= 0 ) // assume the path start with "/"
+                                {   p2 = path;
+                                    n = 0;                                
+                                    goto NEXT;
+                                }
+                                p2 = stack[--n];
+                                goto NEXT;
+                            }
+                            //else:  "/..." or "/..a"                    
+                        default: ;// "/.a"
+                    }
+            default: // /a/
+                goto UNTIL; 
+            }
+        }
+    END:
+        if( p2 == path )
+            *(p2++) = '/';
+        else if( *(p2-1) == '/' && p2 > (path+1) )
+            --p2;
+        *(p2) = '\0';
+        return path;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;05&ndash;17 C++: 10 ms &ndash; 39%</li>
+        <pre><code>
+    class Solution {
+    public:
+        string simplifyPath(string path) {
+
+            if( path.empty() )
+                 return "";
+
+            deque<string> pathStack;
+            int  pathLength = 0;
+            bool absPath = false;
+            string name;
+
+            if( path[0] == '/' )
+            {
+                absPath = true;
+                pathLength++;
+            }
+
+            for(; pathLength < path.size() ; ++pathLength)
+            {
+                char c = path[pathLength];
+                if( c == '/' )
+                {
+                    if( !name.empty() )
+                    {
+                        if( name == ".." )
+                        {
+                            if( !pathStack.empty())
+                                pathStack.pop_back();
+                        }
+                        else if( name != "." )
+                            pathStack.push_back(name);
+
+                        name.clear();
+                    }
+                }
+                else
+                    name.push_back(c);
+            }
+
+            if( !name.empty() )
+            {
+                if( name == ".." )
+                {
+                    if( !pathStack.empty())
+                        pathStack.pop_back();
+                }
+                else if( name != "." )
+                    pathStack.push_back(name);       
+            }
+
+            string newPath;
+            if( absPath )
+                newPath.push_back('/');
+
+            while( !pathStack.empty() )
+            {
+                auto pn = pathStack.front();
+                pathStack.pop_front();
+
+                newPath += pn;
+                if( !pathStack.empty() )
+                     newPath.push_back('/');
+            }
+
+            return newPath;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_77" href="#TOC_HEAD_77">121 Best Time to Buy and Sell Stock</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6602,7 +6768,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_77" href="#TOC_HEAD_77">122 Best Time to Buy and Sell Stock II</a></H2>
+        <H2><a name="HEAD_78" href="#TOC_HEAD_78">122 Best Time to Buy and Sell Stock II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6653,7 +6819,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_78" href="#TOC_HEAD_78">179 Largest Number &ndash; TC000087 </a><a name="MARK_12" href="#TOC_MARK_12"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_79" href="#TOC_HEAD_79">179 Largest Number &ndash; TC000087 </a><a name="MARK_12" href="#TOC_MARK_12"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/largest-number/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6666,8 +6832,8 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
             Note: The result may be very large, so you need to return a string instead of an integer.
         </p>
     </ul>
-        <H1><a name="HEAD_79" href="#TOC_HEAD_79">Hard</a></H1>
-        <H2><a name="HEAD_80" href="#TOC_HEAD_80">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_13" href="#TOC_MARK_13"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H1><a name="HEAD_80" href="#TOC_HEAD_80">Hard</a></H1>
+        <H2><a name="HEAD_81" href="#TOC_HEAD_81">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_13" href="#TOC_MARK_13"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6687,7 +6853,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
   
     
     <hr>
-    <li><font color="#000080" size="2">Update Time: Wed Apr 05 23:18:14 CST 2017</font></li>
+    <li><font color="#000080" size="2">Update Time: Thu Apr 06 22:48:01 CST 2017</font></li>
     <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
 </body>
