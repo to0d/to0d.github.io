@@ -27,8 +27,8 @@
         <li><a name="TOC_MARK_9" href="#MARK_9"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;29 C: &ndash; <strong><font color="red">Runtime Error??</font></strong> </font></strong></a></li>
         <li><a name="TOC_MARK_10" href="#HEAD_73"><strong><font size="2" color="red">@TODO - 047 Permutations II - </font></strong></a></li>
         <li><a name="TOC_MARK_11" href="#MARK_11"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;04&ndash;05 &ndash; Correct?? </font></strong></a></li>
-        <li><a name="TOC_MARK_12" href="#HEAD_79"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
-        <li><a name="TOC_MARK_13" href="#HEAD_81"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
+        <li><a name="TOC_MARK_12" href="#HEAD_80"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
+        <li><a name="TOC_MARK_13" href="#HEAD_82"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
     </ul>
 
         </div>
@@ -119,13 +119,14 @@
             <li><a name="TOC_HEAD_74" href="#HEAD_74">062 Unique Paths</a></li>
             <li><a name="TOC_HEAD_75" href="#HEAD_75">064. Minimum Path Sum</a></li>
             <li><a name="TOC_HEAD_76" href="#HEAD_76">071 Simplify Path</a></li>
-            <li><a name="TOC_HEAD_77" href="#HEAD_77">121 Best Time to Buy and Sell Stock</a></li>
-            <li><a name="TOC_HEAD_78" href="#HEAD_78">122 Best Time to Buy and Sell Stock II</a></li>
-            <li><a name="TOC_HEAD_79" href="#HEAD_79">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_77" href="#HEAD_77">113 Path Sum II</a></li>
+            <li><a name="TOC_HEAD_78" href="#HEAD_78">121 Best Time to Buy and Sell Stock</a></li>
+            <li><a name="TOC_HEAD_79" href="#HEAD_79">122 Best Time to Buy and Sell Stock II</a></li>
+            <li><a name="TOC_HEAD_80" href="#HEAD_80">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
         </menu>
-        <b><a name="TOC_HEAD_80" href="#HEAD_80">Hard</a></b><br>
+        <b><a name="TOC_HEAD_81" href="#HEAD_81">Hard</a></b><br>
         <menu>
-            <li><a name="TOC_HEAD_81" href="#HEAD_81">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_82" href="#HEAD_82">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
         </menu>
 
 </div>
@@ -6703,7 +6704,122 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_77" href="#TOC_HEAD_77">121 Best Time to Buy and Sell Stock</a></H2>
+        <H2><a name="HEAD_77" href="#TOC_HEAD_77">113 Path Sum II</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/path-sum-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a binary tree and a sum, find all root&ndash;to&ndash;leaf paths where each path&#039;s sum equals the given sum.
+            For example:
+        </p>
+        <p>
+            Given the below binary tree and
+            <code>sum = 22</code> ,
+        </p>
+        <pre><code>
+              5
+             / \
+            4   8
+           /   / \
+          11  13  4
+         /  \    / \
+        7    2  5   1
+        </code></pre>
+        <p>
+            return
+        </p>
+        <pre><code>
+[
+   [5,4,11,2],
+   [5,8,4,5]
+]
+        </code></pre>
+        <li><a href="https://leetcode.com/submissions/detail/99393903/" target="_blank">Solution&ndash;2017&ndash;04&ndash;07 C++: 13 ms &ndash; 48%</a></li>
+        <pre><code>
+    /**
+     * Definition for a binary tree node.
+     * struct TreeNode {
+     *     int val;
+     *     TreeNode *left;
+     *     TreeNode *right;
+     *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+     * };
+     */
+    class Solution {
+    public:
+        vector<vector<int>> pathSum(TreeNode* root, int sum) {
+            result.clear();
+            path.clear();
+
+            if( root != NULL ) 
+                find(root, sum);
+
+            return result;
+        }
+
+        void find(TreeNode* node, int target)
+        {
+            path.push_back(node->val);
+            target -= node->val;
+
+            if( node->left == NULL && node->right == NULL && target == 0)
+                result.push_back(path);
+
+            // only if the value of node is positive number
+            // if( target <= 0 )
+            // {   path.pop_back();
+            //     return;
+            // }
+
+            if( node->left != NULL ) 
+                find(node->left, target); 
+            if( node->right != NULL ) 
+                find(node->right, target);  
+
+            path.pop_back();
+        }
+
+        vector<int> path;
+        vector<vector<int>> result;
+    };
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;10 C++: 12 ms &ndash; 80%</li>
+        <pre><code>
+    class Solution {
+    public:
+
+        vector<vector<int>> pathSum(TreeNode* root, int sum) {
+
+            vector<vector<int>> res;        
+            if( root != NULL ) 
+                findPathSum(root, sum, 0, res);  
+
+            return res;
+        }
+
+        void findPathSum(TreeNode* node, int sum, int len, vector<vector<int>>& res)
+        {
+            path[len] = node->val;
+            sum -= node->val;
+
+            if( node->left == NULL && node->right == NULL && sum == 0)
+            {
+                res.push_back(vector<int>(path, path+len+1));
+                return;
+            }
+
+            if( node->left != NULL )
+                findPathSum(node->left, sum, len + 1, res);
+
+            if( node->right != NULL )
+                findPathSum(node->right, sum, len + 1, res);
+        }
+
+    private:
+        int path[1024];
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_78" href="#TOC_HEAD_78">121 Best Time to Buy and Sell Stock</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6768,7 +6884,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_78" href="#TOC_HEAD_78">122 Best Time to Buy and Sell Stock II</a></H2>
+        <H2><a name="HEAD_79" href="#TOC_HEAD_79">122 Best Time to Buy and Sell Stock II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6819,7 +6935,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_79" href="#TOC_HEAD_79">179 Largest Number &ndash; TC000087 </a><a name="MARK_12" href="#TOC_MARK_12"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_80" href="#TOC_HEAD_80">179 Largest Number &ndash; TC000087 </a><a name="MARK_12" href="#TOC_MARK_12"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/largest-number/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6832,8 +6948,8 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
             Note: The result may be very large, so you need to return a string instead of an integer.
         </p>
     </ul>
-        <H1><a name="HEAD_80" href="#TOC_HEAD_80">Hard</a></H1>
-        <H2><a name="HEAD_81" href="#TOC_HEAD_81">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_13" href="#TOC_MARK_13"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H1><a name="HEAD_81" href="#TOC_HEAD_81">Hard</a></H1>
+        <H2><a name="HEAD_82" href="#TOC_HEAD_82">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_13" href="#TOC_MARK_13"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6853,7 +6969,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
   
     
     <hr>
-    <li><font color="#000080" size="2">Update Time: Thu Apr 06 22:48:01 CST 2017</font></li>
+    <li><font color="#000080" size="2">Update Time: Fri Apr 07 23:31:34 CST 2017</font></li>
     <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
 </body>
