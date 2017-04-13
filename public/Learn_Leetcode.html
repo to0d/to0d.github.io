@@ -28,7 +28,7 @@
         <li><a name="TOC_MARK_10" href="#HEAD_74"><strong><font size="2" color="red">@TODO - 047 Permutations II - </font></strong></a></li>
         <li><a name="TOC_MARK_11" href="#MARK_11"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;04&ndash;05 &ndash; Correct?? </font></strong></a></li>
         <li><a name="TOC_MARK_12" href="#HEAD_85"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
-        <li><a name="TOC_MARK_13" href="#HEAD_92"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
+        <li><a name="TOC_MARK_13" href="#HEAD_94"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
     </ul>
 
         </div>
@@ -129,14 +129,16 @@
             <li><a name="TOC_HEAD_84" href="#HEAD_84">122 Best Time to Buy and Sell Stock II</a></li>
             <li><a name="TOC_HEAD_85" href="#HEAD_85">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
             <li><a name="TOC_HEAD_86" href="#HEAD_86">213 House Robber II</a></li>
-            <li><a name="TOC_HEAD_87" href="#HEAD_87">274 H&ndash;Index</a></li>
-            <li><a name="TOC_HEAD_88" href="#HEAD_88">275 H&ndash;Index II</a></li>
-            <li><a name="TOC_HEAD_89" href="#HEAD_89">337 House Robber III</a></li>
-            <li><a name="TOC_HEAD_90" href="#HEAD_90">338 Counting Bits</a></li>
+            <li><a name="TOC_HEAD_87" href="#HEAD_87">227 Basic Calculator II</a></li>
+            <li><a name="TOC_HEAD_88" href="#HEAD_88">228 Summary Ranges</a></li>
+            <li><a name="TOC_HEAD_89" href="#HEAD_89">274 H&ndash;Index</a></li>
+            <li><a name="TOC_HEAD_90" href="#HEAD_90">275 H&ndash;Index II</a></li>
+            <li><a name="TOC_HEAD_91" href="#HEAD_91">337 House Robber III</a></li>
+            <li><a name="TOC_HEAD_92" href="#HEAD_92">338 Counting Bits</a></li>
         </menu>
-        <b><a name="TOC_HEAD_91" href="#HEAD_91">Hard</a></b><br>
+        <b><a name="TOC_HEAD_93" href="#HEAD_93">Hard</a></b><br>
         <menu>
-            <li><a name="TOC_HEAD_92" href="#HEAD_92">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_94" href="#HEAD_94">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
         </menu>
 
 </div>
@@ -7532,7 +7534,82 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_87" href="#TOC_HEAD_87">274 H&ndash;Index</a></H2>
+        <H2><a name="HEAD_87" href="#TOC_HEAD_87">227 Basic Calculator II</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/basic-calculator-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Implement a basic calculator to evaluate a simple expression string.
+        </p>
+        <p>
+            The expression string contains only <strong>non-negative</strong>
+            integers, <code>+</code> , <code>-</code> , <code>*</code> , <code>/</code> operators and empty spaces. The integer division should truncate toward zero.
+        </p>
+        <p>
+            You may assume that the given expression is always valid.
+        </p>
+        <p>
+            Some examples:
+        </p>
+        <pre><code>
+    "3+2*2" = 7
+    " 3/2 " = 1
+    " 3+5 / 2 " = 5
+        </code></pre>
+        <p>
+            <strong>Note:</strong> <strong>Do not</strong> use the <code>eval</code> built&ndash;in library function.
+        </p>
+    </ul>
+        <H2><a name="HEAD_88" href="#TOC_HEAD_88">228 Summary Ranges</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/summary-ranges/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a sorted integer array without duplicates, return the summary of its ranges.
+        </p>
+        <p>
+            For example, given
+            <code>[0,1,2,4,5,7]</code> , return
+            <code>["0->2","4->5","7"].</code>
+        </p>
+        <li>Solution&ndash;2016&ndash;04&ndash;21 C++: 00 ms &ndash; 45% &ndash; O(n)</li>
+        <pre><code>
+    class Solution {
+    public:
+
+        vector<string> summaryRanges(vector<int>& nums) 
+        {
+            int len = nums.size();
+
+            vector<string> res;
+            if( len == 0 )
+                return res;
+
+            int from = nums[0];
+            int to = from;
+            int v = 0;
+            for(int pos = 1; pos < len ; ++pos, to = v)
+            {
+                if( (v = nums[pos]) != (to + 1))
+                {
+                    res.push_back(toString(from, to));
+                    from = v;
+                }
+            }
+
+            res.push_back(toString(from, to));
+            return res;
+        }
+
+        string toString(int from, int to)
+        {
+            if(from == to )
+                return to_string(from);
+            else
+                return to_string(from) + "->" + to_string(to); 
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_89" href="#TOC_HEAD_89">274 H&ndash;Index</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/h-index/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7586,7 +7663,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_88" href="#TOC_HEAD_88">275 H&ndash;Index II</a></H2>
+        <H2><a name="HEAD_90" href="#TOC_HEAD_90">275 H&ndash;Index II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/h-index-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7640,7 +7717,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_89" href="#TOC_HEAD_89">337 House Robber III</a></H2>
+        <H2><a name="HEAD_91" href="#TOC_HEAD_91">337 House Robber III</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/house-robber-iii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7745,7 +7822,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_90" href="#TOC_HEAD_90">338 Counting Bits</a></H2>
+        <H2><a name="HEAD_92" href="#TOC_HEAD_92">338 Counting Bits</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/counting-bits/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7833,8 +7910,8 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H1><a name="HEAD_91" href="#TOC_HEAD_91">Hard</a></H1>
-        <H2><a name="HEAD_92" href="#TOC_HEAD_92">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_13" href="#TOC_MARK_13"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H1><a name="HEAD_93" href="#TOC_HEAD_93">Hard</a></H1>
+        <H2><a name="HEAD_94" href="#TOC_HEAD_94">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_13" href="#TOC_MARK_13"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7854,7 +7931,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
   
     
     <hr>
-    <li><font color="#000080" size="2">Update Time: Tue Apr 11 22:31:38 CST 2017</font></li>
+    <li><font color="#000080" size="2">Update Time: Wed Apr 12 21:50:21 CST 2017</font></li>
     <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
 </body>
