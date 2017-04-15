@@ -28,7 +28,8 @@
         <li><a name="TOC_MARK_10" href="#HEAD_74"><strong><font size="2" color="red">@TODO - 047 Permutations II - </font></strong></a></li>
         <li><a name="TOC_MARK_11" href="#MARK_11"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;04&ndash;05 &ndash; Correct?? </font></strong></a></li>
         <li><a name="TOC_MARK_12" href="#HEAD_85"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
-        <li><a name="TOC_MARK_13" href="#HEAD_94"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
+        <li><a name="TOC_MARK_13" href="#HEAD_87"><strong><font size="2" color="red">@TODO - 227 Basic Calculator II - </font></strong></a></li>
+        <li><a name="TOC_MARK_14" href="#HEAD_95"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
     </ul>
 
         </div>
@@ -129,16 +130,17 @@
             <li><a name="TOC_HEAD_84" href="#HEAD_84">122 Best Time to Buy and Sell Stock II</a></li>
             <li><a name="TOC_HEAD_85" href="#HEAD_85">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
             <li><a name="TOC_HEAD_86" href="#HEAD_86">213 House Robber II</a></li>
-            <li><a name="TOC_HEAD_87" href="#HEAD_87">227 Basic Calculator II</a></li>
+            <li><a name="TOC_HEAD_87" href="#HEAD_87">227 Basic Calculator II &ndash; <font color="red">@TODO</font></a></li>
             <li><a name="TOC_HEAD_88" href="#HEAD_88">228 Summary Ranges</a></li>
             <li><a name="TOC_HEAD_89" href="#HEAD_89">274 H&ndash;Index</a></li>
             <li><a name="TOC_HEAD_90" href="#HEAD_90">275 H&ndash;Index II</a></li>
-            <li><a name="TOC_HEAD_91" href="#HEAD_91">337 House Robber III</a></li>
-            <li><a name="TOC_HEAD_92" href="#HEAD_92">338 Counting Bits</a></li>
+            <li><a name="TOC_HEAD_91" href="#HEAD_91">306 Additive Number</a></li>
+            <li><a name="TOC_HEAD_92" href="#HEAD_92">337 House Robber III</a></li>
+            <li><a name="TOC_HEAD_93" href="#HEAD_93">338 Counting Bits</a></li>
         </menu>
-        <b><a name="TOC_HEAD_93" href="#HEAD_93">Hard</a></b><br>
+        <b><a name="TOC_HEAD_94" href="#HEAD_94">Hard</a></b><br>
         <menu>
-            <li><a name="TOC_HEAD_94" href="#HEAD_94">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_95" href="#HEAD_95">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
         </menu>
 
 </div>
@@ -7534,7 +7536,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_87" href="#TOC_HEAD_87">227 Basic Calculator II</a></H2>
+        <H2><a name="HEAD_87" href="#TOC_HEAD_87">227 Basic Calculator II &ndash; </a><a name="MARK_13" href="#TOC_MARK_13"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/basic-calculator-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7551,13 +7553,282 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
             Some examples:
         </p>
         <pre><code>
-    "3+2*2" = 7
-    " 3/2 " = 1
-    " 3+5 / 2 " = 5
+"3+2*2" = 7
+" 3/2 " = 1
+" 3+5 / 2 " = 5
         </code></pre>
         <p>
             <strong>Note:</strong> <strong>Do not</strong> use the <code>eval</code> built&ndash;in library function.
         </p>
+        <li><a href="https://leetcode.com/submissions/detail/100139679/" target="_blank">Solution&ndash;2017&ndash;04&ndash;15 C: 6 ms &ndash; 13%</a></li>
+        <pre><code>
+    char opStack[1024];
+    int  valStack[1024];
+    int opSize, valSize;
+
+    void init_stack() { opSize = 0; valSize = 0; }
+    void push_val(int val) { valStack[valSize++] = val; }
+    int pop_val()  { return valStack[--valSize]; }
+    int top_val()  { return valSize > 0 ? valStack[valSize-1] : 0; }
+    void push_op(char op) { opStack[opSize++] = op;  }
+    char pop_op()  { return opStack[--opSize]; }
+    bool empty_op(){ return opSize <= 0; }
+    char top_op()  { return opStack[opSize-1]; }
+
+    void cal(){
+        char op = pop_op();
+        int b = pop_val();
+        int a = pop_val();
+        //printf("cal %d %c %d\n", a, op, b);
+        switch(op)
+        {   case '+':  a += b; break;
+            case '-':  a -= b; break;
+            case '*':  a *= b; break;
+            case '/':  a /= b; break;
+        }
+        push_val(a);
+    }
+
+    int calculate(char* s) {
+
+        if( s == NULL ) return 0;
+
+        init_stack();
+
+        int val = 0;
+        int vn = 0;
+        char c;
+
+        while( (c=*s)!='\0' || vn > 0 )
+        {   //printf("while: c=%c\n", c);
+            if( c != '\0' )
+            {   s++;    
+                if( c <= '9' && c >= '0' )
+                {   val *= 10;
+                    val += c - '0';
+                    vn ++;
+                    continue;
+                }
+            }
+
+            if( vn > 0 )
+            {   push_val(val);
+                val = 0;
+                vn = 0;
+            }
+
+            switch(c)
+            {
+            case '+':
+            case '-':
+                while( !empty_op() )
+                    cal();
+                if( c != '\0')
+                    push_op(c);
+                break;
+            case '*':
+            case '/':
+                if( !empty_op() && (top_op() == '*' || top_op() == '/') )
+                    cal();
+                push_op(c);
+                break;
+            default: 
+                break; /* ignore other char, including ' '*/
+            }
+        }
+
+        while( !empty_op() )
+            cal();
+
+        return top_val();
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;13 C++: 88 ms &ndash; 14%</li>
+        <pre><code>
+    class Solution {
+
+    // #define TRACE( x ) x
+    #define TRACE( x )
+
+    public:
+
+        int calculate(string s) {      
+
+            TRACE( cout << s << ":" << endl; )
+
+            m_s = s;
+            m_nPos = 0;
+            m_nSize = s.size();
+            nums = stack<int>();
+            ops = stack<char>();
+
+            int nt = 0;
+            while((nt = next()) != 0 || !ops.empty())
+            {
+                TRACE( cout << " nt:" << nt << endl; )
+                if( nt == 1 )
+                {
+                    push_val( getNumber() );
+                    continue;
+                }
+
+                char op = (nt == 2 ? getOperator() : 0);           
+                if( op == '(' || ops.empty() || getOpLevel( ops.top() ) < getOpLevel(op) )
+                {
+                    push_op(op);
+                    continue;
+                }
+
+                if( op == ')' )
+                {
+                    while( ops.top() != '(' )
+                       compute();
+
+                    pop_op();
+                    continue;
+                }
+
+                while( !ops.empty() && getOpLevel(ops.top()) >= getOpLevel(op) )
+                    compute();
+
+                if( op != 0)
+                   ops.push(op);
+            }
+
+            TRACE (cout << endl; )
+            return nums.top();  
+        }
+
+        void compute()
+        {
+            char xop = pop_op();
+            int n1 = pop_val();
+            int n2 = pop_val();
+            int n3 = 0;
+
+            switch (xop)
+            {
+            case '+':
+                n3 = n2 + n1;
+                break;
+            case '-':
+                n3 = n2 - n1;
+                break;
+            case '*':
+                n3 = n2 * n1;
+                break;
+            case '/':
+                n3 = n2 / n1;
+                break;
+            }
+
+            TRACE ( cout << " xop:" << xop 
+                 << ", n1:" << n1 
+                 << ", n2:" << n2
+                 << ", n3:" << n3
+                 << endl;)
+
+            push_val(n3);;   
+        }
+
+        int pop_val()
+        {
+            int val = nums.top(); 
+            nums.pop();
+
+            TRACE ( cout << " pop value:" << val << endl; )
+            return val;
+        }
+
+        char pop_op()
+        {
+            char op = ops.top(); 
+            ops.pop();
+
+            TRACE( cout << " pop op:" << op << endl; )
+            return op;
+        }
+
+        void push_val(int v)
+        {
+            TRACE( cout << " push value:" << v << endl; )
+            nums.push( v ); 
+        }
+
+        void push_op(char op)
+        {
+            TRACE( cout << " push op:" << op << endl;)
+            ops.push( op ); 
+        }
+
+        //  0: no token found
+        //  1: number
+        //  2: operator
+        int next()
+        {
+            if( m_nPos >= m_nSize)
+                return 0;
+
+            char c = m_s[m_nPos];
+            if( c == '+' ||  c == '-' 
+            ||  c == '*' ||  c == '/' 
+            ||  c == '(' ||  c == ')')
+                return 2;
+
+            if( c >= '0' && c <= '9')
+                return 1;
+
+            ++m_nPos; //ignore other characters
+            return next();
+        }
+
+        char getOperator() 
+        { 
+            return m_s[m_nPos++]; 
+        }
+
+        int getOpLevel(char op)
+        {
+            switch(op)
+            {
+            case '+':
+            case '-':
+                return 10;
+            case '*':
+            case '/':
+                return 20;
+            case '(':
+            case ')':
+                return 0;
+            default:
+                return 0;
+            }
+        }
+
+        int getNumber()
+        {
+            char buffer[64] = {0};
+            int  len = 0;
+            int  val = 0;
+            char c = 0;
+            while( m_nPos < m_nSize && (c = m_s[m_nPos]) >= '0' && c <= '9')
+            {
+                buffer[len++] = c;
+                ++m_nPos;
+            }
+
+            sscanf(buffer, "%d", &val);
+            return val;
+        }
+    private:
+
+        stack<int> nums;
+        stack<char> ops;
+        string m_s;
+        int m_nPos;
+        int m_nSize;
+    };
+        </code></pre>
     </ul>
         <H2><a name="HEAD_88" href="#TOC_HEAD_88">228 Summary Ranges</a></H2>
     <ul>
@@ -7717,7 +7988,183 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_91" href="#TOC_HEAD_91">337 House Robber III</a></H2>
+        <H2><a name="HEAD_91" href="#TOC_HEAD_91">306 Additive Number</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/additive-number/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Additive number is a string whose digits can form additive sequence.
+        </p>
+        <p>
+            A valid additive sequence should contain <strong>at least</strong> three numbers. Except for the first two numbers, each subsequent number in the sequence must be the sum of the preceding two.
+        </p>
+        <p>
+            For example:
+        </p>
+        <p>
+            <code>"112358"</code> is an additive number because the digits can form an additive sequence: <code>1, 1, 2, 3, 5, 8</code> .
+        </p>
+        <pre><code>
+1 + 1 = 2, 1 + 2 = 3, 2 + 3 = 5, 3 + 5 = 8
+        </code></pre>
+        <p>
+            <code>"199100199"</code> is also an additive number, the additive sequence is: <code>1, 99, 100, 199</code> .
+        </p>
+        <pre><code>
+1 + 99 = 100, 99 + 100 = 199
+        </code></pre>
+        <p>
+            <strong>Note:</strong> Numbers in the additive sequence <strong>cannot</strong> have leading zeros, so sequence <code>1, 2, 03</code> or <code>1, 02, 3</code> is invalid.
+        </p>
+        <p>
+            Given a string containing only digits <code>'0'-'9'</code> , write a function to determine if it&#039;s an additive number.
+        </p>
+        <p>
+            <strong>Follow up:</strong>
+        </p>
+        <p>
+            How would you handle overflow for very large input integers?
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/100147889/" target="_blank">Solution&ndash;2017&ndash;04&ndash;11 C: 3 ms &ndash; 0%</a></li>
+        <pre><code>
+    // xxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+    //          |<-a->|<-b->|<-c->|    
+    // |<--          len       -->|
+    //  num[0..a-1] + num[a..a+b-1] = [a+b..a+b+c-1]
+    //     a+b+c <= len
+    //     a <= c
+    //     b <= c  ==> c <= len/2, b <= (len - c) /2, 
+
+    bool dfs_is_add_num( const char* start, int lb, int lc, int len)
+    {
+        if( lc > len/2 || lb > len/2) 
+            return false;
+
+        const char* pc = start + len - 1;
+        const char* pb = pc - lc;
+        const char* pa = pb - lb;
+        int i, v, la;
+        char c;
+        bool aEnd;
+
+        if( (*(pb+1) == '0' && lc > 1) )
+            return false;
+
+        if( (*(pa+1) == '0' && lb > 1) )
+            return false;
+
+        for (i=0,v=0,la=0,aEnd=false; i < lb || i < lc || v != 0; v /= 10, ++i)
+        {
+            if( !aEnd )  
+            {   if( pa >= start)
+                {   v += *pa-- - '0';
+                    ++la;
+                }
+                else
+                    aEnd = true;
+            }
+
+            if( i < lb ) 
+                v += *pb-- - '0';
+    TRY2:
+            c = '0' + v % 10;
+            if( i >= lc)
+                return false;
+
+            if( *pc-- != c )
+            {
+                if( !aEnd && la > 1)
+                {   v -= *(++pa) - '0';
+                    ++pc;
+                    --la;
+                    aEnd = true;
+                    goto TRY2;
+                }
+
+                return false;
+            }
+        }
+
+        while( *(++pa) == '0' && la > 1)
+            --la;
+
+        return pa == start || dfs_is_add_num( start, la, lb, len - lc);
+    }
+
+    bool isAdditiveNumber(char* num) {
+
+        if( num == NULL ) 
+            return false;
+
+        int len = strlen(num);
+
+        for(int lc = len /2; lc > 0; --lc )
+            for(int lb = len - lc - 1; lb > 0; --lb)
+                if( dfs_is_add_num( num, lb, lc, len))
+                    return true;
+
+        return false;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;17 C++: 00 ms &ndash; 11%</li>
+        <pre><code>
+    // xxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+    // |<-a->|<-b->|<-c->|    
+    // |<--          len       -->|
+    //  num[0..a-1] + num[a..a+b-1] = [a+b..a+b+c-1]
+    //     a+b+c <= len
+    //     a < c
+    //     b < c  ==> b <= (len - a) /2, a <= len/2
+
+    class Solution {
+    public:
+        bool isAdditiveNumber(string num) {
+
+            const char *pa = num.c_str();
+            int len = num.size();
+
+            for(int la = len /2; la > 0; --la )
+                for(int lb = ( len - la) / 2; lb > 0; --lb)
+                    if( dfs( pa, la, lb , len))
+                        return true;
+
+            return false;
+        }
+
+        bool dfs( const char* pa, int la, int lb, int len)
+        {
+            static char tmp[256] = {0};
+
+            if( lb > ( len - la )/2 || (*(pa + la) == '0' && lb > 1) ) 
+                return false;
+
+            const char* pb = pa + la;
+            char* pt = tmp + sizeof( tmp) / sizeof(char) - 2;
+
+            int i(0), lc(0), v(0);
+
+            for (; i < la || i < lb || v != 0; v /= 10, ++i, ++lc, --pt)
+            {
+                 if( i < la ) v += *( pa + la - i - 1) - '0';
+                 if( i < lb ) v += *( pb + lb - i - 1) - '0';
+                 *pt = '0' + v % 10;
+            }
+
+            // overflow
+            if( (la + lb + lc) > len ) 
+               return false;
+
+            ++pt;     
+            const char* pc = pa + la + lb;
+            for( i = lc; i > 0; --i,++pc, ++pt)
+                if( *pc != *pt)
+                    return false;
+
+            return (la + lb + lc) == len || dfs( pa+la, lb, lc, len - la );
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_92" href="#TOC_HEAD_92">337 House Robber III</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/house-robber-iii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7822,7 +8269,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_92" href="#TOC_HEAD_92">338 Counting Bits</a></H2>
+        <H2><a name="HEAD_93" href="#TOC_HEAD_93">338 Counting Bits</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/counting-bits/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7910,8 +8357,8 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H1><a name="HEAD_93" href="#TOC_HEAD_93">Hard</a></H1>
-        <H2><a name="HEAD_94" href="#TOC_HEAD_94">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_13" href="#TOC_MARK_13"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H1><a name="HEAD_94" href="#TOC_HEAD_94">Hard</a></H1>
+        <H2><a name="HEAD_95" href="#TOC_HEAD_95">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_14" href="#TOC_MARK_14"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7931,7 +8378,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
   
     
     <hr>
-    <li><font color="#000080" size="2">Update Time: Wed Apr 12 21:50:21 CST 2017</font></li>
+    <li><font color="#000080" size="2">Update Time: Sat Apr 15 22:06:51 CST 2017</font></li>
     <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
 </body>
