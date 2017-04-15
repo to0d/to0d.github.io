@@ -28,8 +28,7 @@
         <li><a name="TOC_MARK_10" href="#HEAD_74"><strong><font size="2" color="red">@TODO - 047 Permutations II - </font></strong></a></li>
         <li><a name="TOC_MARK_11" href="#MARK_11"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;04&ndash;05 &ndash; Correct?? </font></strong></a></li>
         <li><a name="TOC_MARK_12" href="#HEAD_85"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
-        <li><a name="TOC_MARK_13" href="#HEAD_87"><strong><font size="2" color="red">@TODO - 227 Basic Calculator II - </font></strong></a></li>
-        <li><a name="TOC_MARK_14" href="#HEAD_95"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
+        <li><a name="TOC_MARK_13" href="#HEAD_97"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
     </ul>
 
         </div>
@@ -129,18 +128,20 @@
             <li><a name="TOC_HEAD_83" href="#HEAD_83">121 Best Time to Buy and Sell Stock</a></li>
             <li><a name="TOC_HEAD_84" href="#HEAD_84">122 Best Time to Buy and Sell Stock II</a></li>
             <li><a name="TOC_HEAD_85" href="#HEAD_85">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
-            <li><a name="TOC_HEAD_86" href="#HEAD_86">213 House Robber II</a></li>
-            <li><a name="TOC_HEAD_87" href="#HEAD_87">227 Basic Calculator II &ndash; <font color="red">@TODO</font></a></li>
-            <li><a name="TOC_HEAD_88" href="#HEAD_88">228 Summary Ranges</a></li>
-            <li><a name="TOC_HEAD_89" href="#HEAD_89">274 H&ndash;Index</a></li>
-            <li><a name="TOC_HEAD_90" href="#HEAD_90">275 H&ndash;Index II</a></li>
-            <li><a name="TOC_HEAD_91" href="#HEAD_91">306 Additive Number</a></li>
-            <li><a name="TOC_HEAD_92" href="#HEAD_92">337 House Robber III</a></li>
-            <li><a name="TOC_HEAD_93" href="#HEAD_93">338 Counting Bits</a></li>
+            <li><a name="TOC_HEAD_86" href="#HEAD_86">207 Course Schedule</a></li>
+            <li><a name="TOC_HEAD_87" href="#HEAD_87">210 Course Schedule II</a></li>
+            <li><a name="TOC_HEAD_88" href="#HEAD_88">213 House Robber II</a></li>
+            <li><a name="TOC_HEAD_89" href="#HEAD_89">227 Basic Calculator II</a></li>
+            <li><a name="TOC_HEAD_90" href="#HEAD_90">228 Summary Ranges</a></li>
+            <li><a name="TOC_HEAD_91" href="#HEAD_91">274 H&ndash;Index</a></li>
+            <li><a name="TOC_HEAD_92" href="#HEAD_92">275 H&ndash;Index II</a></li>
+            <li><a name="TOC_HEAD_93" href="#HEAD_93">306 Additive Number</a></li>
+            <li><a name="TOC_HEAD_94" href="#HEAD_94">337 House Robber III</a></li>
+            <li><a name="TOC_HEAD_95" href="#HEAD_95">338 Counting Bits</a></li>
         </menu>
-        <b><a name="TOC_HEAD_94" href="#HEAD_94">Hard</a></b><br>
+        <b><a name="TOC_HEAD_96" href="#HEAD_96">Hard</a></b><br>
         <menu>
-            <li><a name="TOC_HEAD_95" href="#HEAD_95">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_97" href="#HEAD_97">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
         </menu>
 
 </div>
@@ -7445,7 +7446,373 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
             Note: The result may be very large, so you need to return a string instead of an integer.
         </p>
     </ul>
-        <H2><a name="HEAD_86" href="#TOC_HEAD_86">213 House Robber II</a></H2>
+        <H2><a name="HEAD_86" href="#TOC_HEAD_86">207 Course Schedule</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/course-schedule/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            There are a total of <em>n</em> courses you have to take, labeled from
+            <code>0</code> to
+            <code>n - 1</code> .
+        </p>
+        <p>
+            Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair:
+            <code>[0,1]</code>
+            Given the total number of courses and a list of prerequisite <strong>pairs</strong>
+            , is it possible for you to finish all courses?
+        </p>
+        <p>
+            For example:
+        </p>
+        <pre><code>
+2, [[1,0]]
+        </code></pre>
+        <p>
+            There are a total of 2 courses to take. To take course 1 you should have finished course 0. So it is possible.
+        </p>
+        <pre><code>
+2, [[1,0],[0,1]]
+        </code></pre>
+        <p>
+            There are a total of 2 courses to take. To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
+        </p>
+        <p>
+            <strong>Note:</strong>
+        </p>
+        <p>
+            The input prerequisites is a graph represented by <strong>a list of edges</strong>
+            , not adjacency matrices. Read more about
+            <a href="https://www.khanacademy.org/computing/computer-science/algorithms/graph-representation/a/representing-graphs" target="_blank">how a graph is represented</a> .
+        </p>
+        <p>
+            <strong>Hints:</strong>
+        </p>
+        <ol>
+            <li><p>
+            This problem is equivalent to finding if a cycle exists in a directed graph. If a cycle exists, no topological ordering exists and therefore it will be impossible to take all courses.
+            1.
+            <a href="https://class.coursera.org/algo-003/lecture/52" target="_blank">Topological Sort via DFS</a>
+            <p></li>
+            <li>A great video tutorial (21 minutes) on Coursera explaining the basic concepts of Topological Sort.</li>
+            <li><p>
+            Topological sort could also be done via
+            <a href="http://en.wikipedia.org/wiki/Topological_sorting#Algorithms" target="_blank">BFS</a>
+            .
+            <p></li>
+        </ol>
+        <li><a href="https://leetcode.com/submissions/detail/100167021/" target="_blank">Solution&ndash;2017&ndash;04&ndash;15 C: 6 ms &ndash; 88%</a></li>
+        <pre><code>
+    bool canFinish(int num, int** array, int r, int c) {
+        if( num == 0 || array == NULL || r == 0 )
+            return true;
+
+        struct LINK_T
+        {   int node;
+            struct LINK_T* next;
+        };
+
+    #define MAL(p,n) malloc(n) ; memset(p, 0, n);
+
+        int *cnt     = (int*) MAL(cnt,num*sizeof(int));
+        int *stack   = (int*) MAL(stack,num*sizeof(int));
+        struct LINK_T *edgs = (struct LINK_T*) MAL(edgs, num*sizeof(struct LINK_T) ) ;
+        struct LINK_T *pool = (struct LINK_T*) MAL(pool, r*sizeof(struct LINK_T) ) ;
+
+        int i, from, to, finished, sszie, k;
+        struct LINK_T* edg, *next, *freeLink;
+        for( i = 0, freeLink=pool; i < r; ++i)
+        {   
+            to = array[i][0];
+            from = array[i][1];
+            if( from == to )
+                continue;
+
+            cnt[to]++;
+            edg = edgs+from;
+            next = freeLink++;
+            next->node = to;
+            next->next = edg->next;
+            edg->next = next;
+        }
+
+        finished = num;
+        sszie = 0;
+        while( finished > 0 || sszie > 0 )
+        {
+            if( sszie == 0 )
+            {   
+                for( i = 0; i < num; ++i )
+                {   if( cnt[i] == 0 )
+                    {   cnt[i] = -1;
+                        --finished;
+                        stack[sszie++] = i;
+                    }
+                }
+
+                if( sszie == 0 || finished == 0 )
+                    break;
+                else
+                    continue;
+            }
+
+            k = stack[--sszie];
+            for(next = edgs+k; next->next != NULL; next=next->next)
+            {   to = next->next->node;
+                if( --(cnt[to]) == 0 )
+                {   cnt[to] = -1;
+                    --finished;
+                    stack[sszie++] = to;
+                }
+            }
+        }
+
+        free(cnt);
+        free(stack);
+        free(edgs);
+        free(pool);
+        return finished == 0;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;05&ndash;10 C++: 36 ms &ndash; 40%</li>
+        <pre><code>
+    class Solution {
+    public:
+        bool canFinish(int numCourses, vector<pair<int, int>>& prerequisites) {
+
+            unordered_map<int, vector<int>> nextMap;
+            unordered_map<int, int > preMap;
+            queue<int> noPreQueue;
+            int visitedCourse = 0 ;
+
+            for( auto p : prerequisites)
+            {
+                nextMap[p.first].push_back(p.second);
+                preMap[p.second]++;
+            }
+
+            for( int i = 0; i < numCourses; ++i)
+            {
+                if( preMap[i] == 0 )
+                    noPreQueue.push(i);
+            }
+
+            while( !noPreQueue.empty() )
+            {
+                int course = noPreQueue.front();
+                noPreQueue.pop();
+                ++visitedCourse;
+
+                for( int next : nextMap[course] )
+                    if( --preMap[next] == 0 )
+                        noPreQueue.push( next);
+            }
+
+            return visitedCourse == numCourses;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_87" href="#TOC_HEAD_87">210 Course Schedule II</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/course-schedule-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            There are a total of
+            <em>n</em> courses you have to take, labeled from
+            <code>0</code> to
+            <code>n - 1</code> .
+        </p>
+        <p>
+            Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair:
+            <code>[0,1]</code>
+            Given the total number of courses and a list of prerequisite <strong>pairs</strong>
+            , return the ordering of courses you should take to finish all courses.
+        </p>
+        <p>
+            There may be multiple correct orders, you just need to return one of them. If it is impossible to finish all courses, return an empty array.
+        </p>
+        <p>
+            For example:
+        </p>
+        <pre><code>
+2, [[1,0]]
+        </code></pre>
+        <p>
+            There are a total of 2 courses to take. To take course 1 you should have finished course 0. So the correct course order is
+            <code>[0,1]</code>
+            4, [[1,0],[2,0],[3,1],[3,2]]
+        </p>
+        <p>
+            There are a total of 4 courses to take. To take course 3 you should have finished both courses 1 and 2. Both courses 1 and 2 should be taken after you finished course 0. So one correct course order is
+            <code>[0,1,2,3]</code> . Another correct ordering is
+            <code>[0,2,1,3]</code> .
+        </p>
+        <p>
+            <strong>Note:</strong>
+        </p>
+        <p>
+            The input prerequisites is a graph represented by <strong>a list of edges</strong>
+            , not adjacency matrices. Read more about
+            <a href="https://www.khanacademy.org/computing/computer-science/algorithms/graph-representation/a/representing-graphs" target="_blank">how a graph is represented</a>
+            .
+        </p>
+        <p>
+            <strong>Hints:</strong>
+        </p>
+        <ol>
+            <li><p>
+            This problem is equivalent to finding the topological order in a directed graph. If a cycle exists, no topological ordering exists and therefore it will be impossible to take all courses.
+            1.
+            <a href="https://class.coursera.org/algo-003/lecture/52" target="_blank">Topological Sort via DFS</a>
+            <p></li>
+            <li>A great video tutorial (21 minutes) on Coursera explaining the basic concepts of Topological Sort.</li>
+            <li><p>
+            Topological sort could also be done via
+            <a href="http://en.wikipedia.org/wiki/Topological_sorting#Algorithms" target="_blank">BFS</a>
+            .
+            <p></li>
+        </ol>
+        <li><a href="https://leetcode.com/submissions/detail/100168756/" target="_blank">Solution&ndash;2017&ndash;04&ndash;15 C: 9 ms &ndash; 50%</a></li>
+        <pre><code>
+    /**
+     * Return an array of size *returnSize.
+     * Note: The returned array must be malloced, assume caller calls free().
+     */
+    int* findOrder(int num, int** array, int r, int c, int* returnSize) {
+
+        if( num == 0 )
+            return NULL;
+
+        struct LINK_T
+        {   int node;
+            struct LINK_T* next;
+        };
+
+    #define MAL(p,n) malloc(n) ; memset(p, 0, n);
+
+        int *cnt     = (int*) MAL(cnt,num*sizeof(int));
+        int *stack   = (int*) MAL(stack,num*sizeof(int));
+        int *result  = (int*) MAL(result,num*sizeof(int));
+
+        struct LINK_T *edgs = (struct LINK_T*) MAL(edgs, num*sizeof(struct LINK_T) ) ;
+        struct LINK_T *pool = (struct LINK_T*) MAL(pool, r*sizeof(struct LINK_T) ) ;
+
+        int i, from, to, finished, sszie, k, rsize;
+        struct LINK_T* edg, *next, *freeLink;
+        for( i = 0, freeLink=pool; i < r; ++i)
+        {   
+            to = array[i][0];
+            from = array[i][1];
+            if( from == to )
+                continue;
+
+            cnt[to]++;
+            edg = edgs+from;
+            next = freeLink++;
+            next->node = to;
+            next->next = edg->next;
+            edg->next = next;
+        }
+
+        finished = num;
+        sszie = 0;
+        rsize = 0;
+
+        while( finished > 0 || sszie > 0 )
+        {
+            if( sszie == 0 )
+            {   
+                for( i = 0; i < num; ++i )
+                {   if( cnt[i] == 0 )
+                    {   cnt[i] = -1;
+                        --finished;
+                        stack[sszie++] = i;
+                        result[rsize++] = i;
+                        //printf("push1 %d, rsize=%d, sszie=%d,finished=%d\n", i, rsize, sszie, finished);
+                    }
+                }
+
+                if( sszie == 0 || finished == 0 )
+                    break;
+                else
+                    continue;
+            }
+
+            k = stack[--sszie];
+            //printf("pop %d, rsize=%d, sszie=%d, finished=%d\n", k, rsize, sszie, finished);
+
+            for(next = edgs+k; next->next != NULL; next=next->next)
+            {   to = next->next->node;
+                if( --(cnt[to]) == 0 )
+                {   cnt[to] = -1;
+                    --finished;
+                    stack[sszie++] = to;
+                    result[rsize++] = to;
+                    //printf("push2 %d, rsize=%d, sszie=%d, finished=%d\n", to, rsize, sszie, finished);
+                }
+            }
+        }
+
+        free(cnt);
+        free(stack);
+        free(edgs);
+        free(pool);
+        *returnSize = (finished == 0 ? rsize : 0);
+        //printf("result = %d, finished=%d\n", *returnSize, finished);
+        return result;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;21 C++: 40 ms &ndash; 100%</li>
+        <pre><code>
+    class Solution {
+    public:
+        vector<int> findOrder(int numCourses, vector<pair<int, int>>& prerequisites) {
+
+             unordered_map<int, vector<int>> nextCourseMap;
+             queue<int> noPreQueue;   
+             vector<int> preCount(numCourses,0);
+             vector<int> res;
+
+             for( auto pa : prerequisites)
+             {
+                 int to = pa.first;
+                 int from = pa.second;
+                 if( nextCourseMap.count(from) == 0)
+                    nextCourseMap[from] = vector<int>();
+
+                 nextCourseMap[from].push_back(to);
+                 preCount[to]++;
+             }
+
+             for( int c = 0; c < numCourses; ++c)
+             {
+                 if( preCount[c] == 0)
+                    noPreQueue.push(c);
+             }
+
+             while( !noPreQueue.empty() )
+             {
+                 int c = noPreQueue.front();
+                 noPreQueue.pop();               
+                 res.push_back(c);
+
+                 if( nextCourseMap.count(c))
+                 {
+                     for( int to : nextCourseMap[c])
+                     {
+                         if( --preCount[to] == 0 )
+                            noPreQueue.push(to);
+                     }           
+                 }
+             }
+
+             if( res.size() != numCourses)
+                 res.clear();
+
+             return res;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_88" href="#TOC_HEAD_88">213 House Robber II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/house-robber-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7536,7 +7903,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_87" href="#TOC_HEAD_87">227 Basic Calculator II &ndash; </a><a name="MARK_13" href="#TOC_MARK_13"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_89" href="#TOC_HEAD_89">227 Basic Calculator II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/basic-calculator-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7830,7 +8197,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_88" href="#TOC_HEAD_88">228 Summary Ranges</a></H2>
+        <H2><a name="HEAD_90" href="#TOC_HEAD_90">228 Summary Ranges</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/summary-ranges/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7880,7 +8247,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_89" href="#TOC_HEAD_89">274 H&ndash;Index</a></H2>
+        <H2><a name="HEAD_91" href="#TOC_HEAD_91">274 H&ndash;Index</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/h-index/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7934,7 +8301,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_90" href="#TOC_HEAD_90">275 H&ndash;Index II</a></H2>
+        <H2><a name="HEAD_92" href="#TOC_HEAD_92">275 H&ndash;Index II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/h-index-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7988,7 +8355,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_91" href="#TOC_HEAD_91">306 Additive Number</a></H2>
+        <H2><a name="HEAD_93" href="#TOC_HEAD_93">306 Additive Number</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/additive-number/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8024,7 +8391,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
         <p>
             How would you handle overflow for very large input integers?
         </p>
-        <li><a href="https://leetcode.com/submissions/detail/100147889/" target="_blank">Solution&ndash;2017&ndash;04&ndash;11 C: 3 ms &ndash; 0%</a></li>
+        <li><a href="https://leetcode.com/submissions/detail/100147889/" target="_blank">Solution&ndash;2017&ndash;04&ndash;15 C: 3 ms &ndash; 0%</a></li>
         <pre><code>
     // xxxxxxxxxxxxxxxxxxxxxxxxxxxx 
     //          |<-a->|<-b->|<-c->|    
@@ -8164,7 +8531,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_92" href="#TOC_HEAD_92">337 House Robber III</a></H2>
+        <H2><a name="HEAD_94" href="#TOC_HEAD_94">337 House Robber III</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/house-robber-iii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8269,7 +8636,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_93" href="#TOC_HEAD_93">338 Counting Bits</a></H2>
+        <H2><a name="HEAD_95" href="#TOC_HEAD_95">338 Counting Bits</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/counting-bits/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8357,8 +8724,8 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H1><a name="HEAD_94" href="#TOC_HEAD_94">Hard</a></H1>
-        <H2><a name="HEAD_95" href="#TOC_HEAD_95">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_14" href="#TOC_MARK_14"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H1><a name="HEAD_96" href="#TOC_HEAD_96">Hard</a></H1>
+        <H2><a name="HEAD_97" href="#TOC_HEAD_97">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_13" href="#TOC_MARK_13"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8378,7 +8745,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
   
     
     <hr>
-    <li><font color="#000080" size="2">Update Time: Sat Apr 15 22:06:51 CST 2017</font></li>
+    <li><font color="#000080" size="2">Update Time: Sun Apr 16 00:29:56 CST 2017</font></li>
     <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
 </body>
