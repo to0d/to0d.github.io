@@ -28,8 +28,9 @@
         <li><a name="TOC_MARK_10" href="#HEAD_74"><strong><font size="2" color="red">@TODO - 047 Permutations II - </font></strong></a></li>
         <li><a name="TOC_MARK_11" href="#MARK_11"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;04&ndash;05 &ndash; Correct?? </font></strong></a></li>
         <li><a name="TOC_MARK_12" href="#HEAD_92"><strong><font size="2" color="red">@TODO - 148 Sort List </font></strong></a></li>
-        <li><a name="TOC_MARK_13" href="#HEAD_93"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
-        <li><a name="TOC_MARK_14" href="#HEAD_105"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
+        <li><a name="TOC_MARK_13" href="#HEAD_95"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
+        <li><a name="TOC_MARK_14" href="#HEAD_98"><strong><font size="2" color="red">@TODO - 201 Bitwise AND of Numbers Range </font></strong></a></li>
+        <li><a name="TOC_MARK_15" href="#HEAD_110"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
     </ul>
 
         </div>
@@ -136,21 +137,26 @@
             <li><a name="TOC_HEAD_90" href="#HEAD_90">121 Best Time to Buy and Sell Stock</a></li>
             <li><a name="TOC_HEAD_91" href="#HEAD_91">122 Best Time to Buy and Sell Stock II</a></li>
             <li><a name="TOC_HEAD_92" href="#HEAD_92">148 Sort List <font color="red">@TODO</font></a></li>
-            <li><a name="TOC_HEAD_93" href="#HEAD_93">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
-            <li><a name="TOC_HEAD_94" href="#HEAD_94">207 Course Schedule</a></li>
-            <li><a name="TOC_HEAD_95" href="#HEAD_95">210 Course Schedule II</a></li>
-            <li><a name="TOC_HEAD_96" href="#HEAD_96">213 House Robber II</a></li>
-            <li><a name="TOC_HEAD_97" href="#HEAD_97">227 Basic Calculator II</a></li>
-            <li><a name="TOC_HEAD_98" href="#HEAD_98">228 Summary Ranges</a></li>
-            <li><a name="TOC_HEAD_99" href="#HEAD_99">274 H&ndash;Index</a></li>
-            <li><a name="TOC_HEAD_100" href="#HEAD_100">275 H&ndash;Index II</a></li>
-            <li><a name="TOC_HEAD_101" href="#HEAD_101">306 Additive Number</a></li>
-            <li><a name="TOC_HEAD_102" href="#HEAD_102">337 House Robber III</a></li>
-            <li><a name="TOC_HEAD_103" href="#HEAD_103">338 Counting Bits</a></li>
+            <li><a name="TOC_HEAD_93" href="#HEAD_93">150 Evaluate Reverse Polish Notation</a></li>
+            <li><a name="TOC_HEAD_94" href="#HEAD_94">151 Reverse Words in a String</a></li>
+            <li><a name="TOC_HEAD_95" href="#HEAD_95">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_96" href="#HEAD_96">199 Course Schedule</a></li>
+            <li><a name="TOC_HEAD_97" href="#HEAD_97">200 Number of Islands</a></li>
+            <li><a name="TOC_HEAD_98" href="#HEAD_98">201 Bitwise AND of Numbers Range <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_99" href="#HEAD_99">207 Course Schedule</a></li>
+            <li><a name="TOC_HEAD_100" href="#HEAD_100">210 Course Schedule II</a></li>
+            <li><a name="TOC_HEAD_101" href="#HEAD_101">213 House Robber II</a></li>
+            <li><a name="TOC_HEAD_102" href="#HEAD_102">227 Basic Calculator II</a></li>
+            <li><a name="TOC_HEAD_103" href="#HEAD_103">228 Summary Ranges</a></li>
+            <li><a name="TOC_HEAD_104" href="#HEAD_104">274 H&ndash;Index</a></li>
+            <li><a name="TOC_HEAD_105" href="#HEAD_105">275 H&ndash;Index II</a></li>
+            <li><a name="TOC_HEAD_106" href="#HEAD_106">306 Additive Number</a></li>
+            <li><a name="TOC_HEAD_107" href="#HEAD_107">337 House Robber III</a></li>
+            <li><a name="TOC_HEAD_108" href="#HEAD_108">338 Counting Bits</a></li>
         </menu>
-        <b><a name="TOC_HEAD_104" href="#HEAD_104">Hard</a></b><br>
+        <b><a name="TOC_HEAD_109" href="#HEAD_109">Hard</a></b><br>
         <menu>
-            <li><a name="TOC_HEAD_105" href="#HEAD_105">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_110" href="#HEAD_110">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
         </menu>
 
 </div>
@@ -7966,8 +7972,326 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
         <p>
             Sort a linked list in <em>O</em> ( <em>n</em> log <em>n</em> ) time using constant space complexity.
         </p>
+        <li>Solution&ndash;2016&ndash;05&ndash;14 C++: 556 ms &ndash; 00%</li>
+        <p>
+            <strong>Simple Insert Sort</strong>
+        </p>
+        <pre><code>
+    /**
+     * Definition for singly-linked list.
+     * struct ListNode {
+     *     int val;
+     *     ListNode *next;
+     *     ListNode(int x) : val(x), next(NULL) {}
+     * };
+     */
+
+    class Solution {
+    public:
+
+        ListNode* sortList(ListNode* head) {
+
+            if( head == NULL )
+                return NULL;
+
+            ListNode* pHead(head), *pTail(head), *pNode(NULL), *pLast(NULL);         
+            head = head->next; 
+
+            while( (pNode = head) != NULL)
+            {
+                head = head->next;
+
+                if( pNode->val >= pTail->val ) // optimize a
+                {
+                    pTail->next = pNode;
+                    pTail = pNode;
+                } 
+                else if( pNode->val <= pHead->val )
+                {
+                    pNode->next = pHead;
+                    pHead = pNode;
+                }
+                else
+                {
+                    ListNode* pNode2 = (pLast != NULL) && ( pNode->val > pLast->val ) ? 
+                                          pLast : pHead; // optimize b
+
+                    while( pNode2 != pTail && pNode2->next->val < pNode->val)
+                        pNode2 = pNode2->next; 
+
+                    pNode->next = pNode2->next;
+                    pNode2->next = pNode;
+                }
+
+                pLast= pNode;
+            }
+
+            pTail->next = NULL;
+            return pHead;
+        }
+    };
+        </code></pre>
+        <li>Quick Sort learn from others : 64 ms</li>
+        <pre><code>
+    class Solution {
+    public:
+        ListNode* merge(ListNode * l1, ListNode * l2){
+
+            ListNode dummy = ListNode(0);
+            ListNode *p = &dummy;
+
+            while(l1 && l2)
+            {
+                if(l1->val < l2->val)
+                {
+                    p->next = l1;
+                    l1 = l1->next;
+                }
+                else
+                {
+                    p->next = l2;
+                    l2 = l2->next;
+                }
+
+                p = p->next;
+            }
+
+            if(l1)
+                p->next = l1;
+            if(l2)
+                p->next = l2;
+
+            return dummy.next;
+        }
+
+        ListNode* sortList(ListNode* head) {
+
+            if(head == NULL || head->next == NULL)
+                return head;
+
+            ListNode * slow = head;
+            ListNode * fast = head;
+
+            // Divides the list in two parts
+            while(fast->next && fast->next->next)
+            {
+                slow = slow->next;
+                fast = fast->next->next;
+            }
+
+
+            ListNode * headB = sortList(slow->next);
+
+            // So we know where to stop
+            slow->next = NULL;
+            ListNode * headA = sortList(head);
+
+            return merge(headA,headB);
+        }
+    };
+        </code></pre>
     </ul>
-        <H2><a name="HEAD_93" href="#TOC_HEAD_93">179 Largest Number &ndash; TC000087 </a><a name="MARK_13" href="#TOC_MARK_13"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_93" href="#TOC_HEAD_93">150 Evaluate Reverse Polish Notation</a></H2>
+    <ul>
+        <li><a href=" https://leetcode.com/problems/evaluate-reverse-polish-notation/ " target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Evaluate the value of an arithmetic expression in
+            <a href="http://en.wikipedia.org/wiki/Reverse_Polish_notation" target="_blank">Reverse Polish Notation</a>
+            .
+        </p>
+        <p>
+            Valid operators are
+            <code>+</code> ,
+            <code>-</code> ,
+            <code>*</code> ,
+            <code>/</code> . Each operand may be an integer or another expression.
+        </p>
+        <p>
+            Some examples:
+        </p>
+        <pre><code>
+  ["2", "1", "+", "3", "*"] -> ((2 + 1) * 3) -> 9
+  ["4", "13", "5", "/", "+"] -> (4 + (13 / 5)) -> 6
+        </code></pre>
+        <li><a href="https://leetcode.com/submissions/detail/100361205/" target="_blank">Solution&ndash;2017&ndash;04&ndash;17 C: 3 ms &ndash; 50%</a></li>
+        <pre><code>
+    int evalRPN(char** tokens, int size) {
+
+        if( tokens == NULL || size == 0 )
+            return 0;
+
+        int *stack = (int*) malloc(size*sizeof(int));
+        int slen, i, a, b;
+        char c;
+
+        for( i=0, slen = 0; i < size; ++i )
+        {
+            c=tokens[i][0];
+            if( (tokens[i][1] != '\0')||( c != '+' && c != '-' && c != '*' && c != '/' ))
+            {   a = atoi(tokens[i]);
+            }
+            else
+            {
+                b = stack[--slen];
+                a = stack[--slen];
+                switch( c )
+                {   case '+': a += b; break;
+                    case '-': a -= b; break;
+                    case '*': a *= b; break;
+                    case '/': a /= b; break;
+                }
+            }
+            stack[slen++] = a;
+        }
+
+        a = slen >0? stack[slen-1] : 0;
+        free(stack);
+        return a;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;05&ndash;15 C++: 18 ms &ndash; 28%</li>
+        <pre><code>
+    class Solution {
+    public:
+
+        int evalRPN(vector<string>& tokens) 
+        {   
+            if( tokens.empty() )
+                 return 0;
+
+            for( auto& t : tokens)
+            {
+                int val = 0;
+                if( t.size() == 1 && isOp(t[0]))
+                {
+                    int a = pop();
+                    int b = pop();
+
+                    switch( t[0] )
+                    {
+                        case '+':
+                            val = b + a;
+                            break;
+                        case '-':
+                            val = b - a;
+                            break;
+                        case '*':
+                            val = b * a;
+                            break;
+                        case '/':
+                            val = b / a;
+                            break;                        
+                    }
+                }                
+                else
+                    sscanf(t.c_str(), "%d", &val);
+
+                push(val);
+            }
+
+            return pop();
+        }
+
+    private:
+
+        bool isOp(char c) { return c == '+' || c == '-' || c == '*' || c == '/'; }
+        void push(int val) { numStack.push(val); }
+        int pop()
+        {
+            int val = numStack.top();
+            numStack.pop();
+            return val;
+        }
+
+        stack<int>  numStack;
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_94" href="#TOC_HEAD_94">151 Reverse Words in a String</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/reverse-words-in-a-string/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given an input string, reverse the string word by word.
+        </p>
+        <p>
+            For example,
+        </p>
+        <p>
+            Given s = &quot; <font color="red">the sky is blue</font> &quot;,
+        </p>
+        <p>
+            return &quot; <font color="red">blue is sky the</font> &quot;.
+        </p>
+        <p>
+            <strong><font color="red">Update (2015-02-12):</font></strong>
+        </p>
+        <p>
+            For C programmers: Try to solve it <em>in-place</em> in <em>O</em> (1) space.
+        </p>
+        <p>
+            <strong>Clarification:</strong>
+        </p>
+        <ul>
+            <li>What constitutes a word?</li>
+            <p>
+                A sequence of non&ndash;space characters constitutes a word.
+            </p>
+            <li>Could the input string contain leading or trailing spaces?</li>
+            <p>
+                Yes. However, your reversed string should not contain leading or trailing spaces.
+            </p>
+            <li>How about multiple spaces between two words?</li>
+            <p>
+                Reduce them to a single space in the reversed string.
+            </p>
+        </ul>
+        <li>Solution&ndash;2016&ndash;04&ndash;18 C: 00 ms &ndash; 30%</li>
+        <pre><code>
+    void veserseString( char* s, int start, int end)
+    {    
+        for(; start < end ;  ++start, --end)
+        {
+            int c = s[start];
+            s[start] = s[end];
+            s[end] = c;    
+        }
+    }
+
+    void reverseWords(char *s) {
+
+        int len = strlen(s);
+
+        veserseString(s, 0, len - 1);
+
+        int ls = 0;
+        int le = 0;
+        for(int i = 0; i < len; ++i)
+        {
+            if( s[i] == ' ')
+            {
+                if( le != ls )
+                {
+                    veserseString(s, ls, le-1);
+                    s[le] = ' ';
+                    ls = le + 1;
+                    le = ls;
+                }
+            }
+            else
+                s[le++] = s[i];
+        }
+
+        veserseString(s, ls, le-1);
+
+        if( le < len )
+            s[le] = '\0';
+
+        while( s[--le] == ' ' )
+            s[le] = '\0';
+    }
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_95" href="#TOC_HEAD_95">179 Largest Number &ndash; TC000087 </a><a name="MARK_13" href="#TOC_MARK_13"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/largest-number/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7980,7 +8304,201 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
             Note: The result may be very large, so you need to return a string instead of an integer.
         </p>
     </ul>
-        <H2><a name="HEAD_94" href="#TOC_HEAD_94">207 Course Schedule</a></H2>
+        <H2><a name="HEAD_96" href="#TOC_HEAD_96">199 Course Schedule</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/binary-tree-right-side-view/ " target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a binary tree, imagine yourself standing on the
+            <em>right</em> side of it, return the values of the nodes you can see ordered from top to bottom.
+        </p>
+        <p>
+            For example:
+        </p>
+        <p>
+            Given the following binary tree,
+        </p>
+        <pre><code>
+   1            <---
+ /   \
+2     3         <---
+ \     \
+  5     4       <---
+        </code></pre>
+        <p>
+            You should return
+            <code>[1, 3, 4]</code> .
+        </p>
+        <li>Solution&ndash;2016&ndash;05&ndash;09 C++: 04 ms &ndash; 14%</li>
+        <pre><code>
+    /**
+     * Definition for a binary tree node.
+     * struct TreeNode {
+     *     int val;
+     *     TreeNode *left;
+     *     TreeNode *right;
+     *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+     * };
+     */
+    class Solution {
+    public:
+        vector<int> rightSideView(TreeNode* root) {
+
+            vector<int> res;
+            queue<TreeNode*> nodeQueue;
+            nodeQueue.push(root);
+            nodeQueue.push(NULL);
+
+            TreeNode* last = NULL, *node = NULL;
+            for( ; !nodeQueue.empty(); last = node)
+            {
+                node = nodeQueue.front();
+                nodeQueue.pop();
+
+                if( node == NULL )
+                {
+                    if( last == NULL )
+                        break;
+
+                    res.push_back(last->val);
+                    nodeQueue.push(NULL);
+                }
+                else 
+                {
+                    if( node->left != NULL )
+                        nodeQueue.push( node->left );
+
+                    if( node->right != NULL )
+                        nodeQueue.push( node->right );
+                }
+            }
+            return res;
+        }
+    };
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_97" href="#TOC_HEAD_97">200 Number of Islands</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/number-of-islands/ " target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a 2d grid map of
+            <code>'1'</code> s (land) and
+            <code>'0'</code> s (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+        </p>
+        <p>
+            <strong>Example 1:</strong>
+        </p>
+        <pre><code>
+11110
+11010
+11000
+00000
+        </code></pre>
+        <p>
+            Answer: 1
+        </p>
+        <p>
+            <strong>Example 2:</strong>
+        </p>
+        <pre><code>
+11000
+11000
+00100
+00011
+        </code></pre>
+        <p>
+            Answer: 3
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/100363386/" target="_blank">Solution&ndash;2017&ndash;04&ndash;15 C: 3 ms &ndash; 16%</a></li>
+        <pre><code>
+    int markIslands(char** grid, int r, int c, int i, int j)
+    {
+        if( i >=0 && j >= 0 && i < r && j < c && grid[i][j] == '1' )
+        {   grid[i][j] = 0;
+            markIslands(grid, r, c, i+1, j);
+            markIslands(grid, r, c, i, j+1);
+            markIslands(grid, r, c, i-1, j);
+            markIslands(grid, r, c, i, j-1);
+            return 1;
+        }
+        return 0;
+    }
+
+    int numIslands(char** grid, int r, int c) {
+        if( grid == NULL || r == 0 || c == 0 )
+            return 0;
+        int count = 0;
+        int i, j;
+        for( i = 0; i < r; ++i )
+            for( j = 0; j < c; ++j )
+                count += markIslands(grid, r, c, i, j);
+        return count;
+    }
+        </code></pre>
+        <li>Solution&ndash;2016&ndash;04&ndash;23 C++: 12 ms &ndash; 25%</li>
+        <pre><code>
+    class Solution {
+    public:
+
+        int numIslands(vector<vector<char>>& grid) {
+
+            int row = grid.size();  if( row == 0 ) return 0 ;
+            int colum = grid[0].size(); if ( colum == 0 ) return 0 ;
+
+            vector<int> visited( row*colum, 0); 
+            int count = 0;
+
+            for( int r = 0; r < row; ++r)
+               for( int c = 0; c < colum; ++c )     
+                   if( grid[r][c] == '1' && visited[r*colum + c] == 0 )
+                   {
+                        ++count;
+                        stack<pair<int,int>> locStack;
+                        locStack.push(make_pair(r,c));
+                        visited[r*colum + c] = 1;
+
+                        while( !locStack.empty())
+                        {
+                            pair<int,int> loc = locStack.top();
+                            locStack.pop();
+
+                            int xr(loc.first), xc(loc.second);
+                            for( int i = 0; i < 4; ++i )
+                            {
+                               int xxr = xr + addR[i];
+                               int xxc = xc + addC[i];
+                               if( xxr < row && xxr >= 0 
+                                && xxc < colum && xxc >= 0 
+                                && grid[xxr][xxc] == '1' 
+                                && visited[xxr*colum + xxc] == 0)
+                               {
+                                    locStack.push(make_pair(xxr,xxc));
+                                    visited[xxr*colum + xxc] = 1;
+                               }
+                            }
+                        }                
+                   }
+            return count;
+        }
+
+        static int addR[4];
+        static int addC[4];
+    };
+
+    int Solution::addR[4] = {1,0,-1,0};
+    int Solution::addC[4] = {0,1,0,-1};
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_98" href="#TOC_HEAD_98">201 Bitwise AND of Numbers Range </a><a name="MARK_14" href="#TOC_MARK_14"><strong><font color="red">@TODO</font></strong></a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/bitwise-and-of-numbers-range/" target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a range [m, n] where 0 &lt;= m &lt;= n &lt;= 2147483647, return the bitwise AND of all numbers in this range, inclusive.
+        </p>
+        <p>
+            For example, given the range [5, 7], you should return 4.
+        </p>
+    </ul>
+        <H2><a name="HEAD_99" href="#TOC_HEAD_99">207 Course Schedule</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/course-schedule/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8145,7 +8663,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_95" href="#TOC_HEAD_95">210 Course Schedule II</a></H2>
+        <H2><a name="HEAD_100" href="#TOC_HEAD_100">210 Course Schedule II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/course-schedule-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8346,7 +8864,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_96" href="#TOC_HEAD_96">213 House Robber II</a></H2>
+        <H2><a name="HEAD_101" href="#TOC_HEAD_101">213 House Robber II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/house-robber-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8437,7 +8955,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_97" href="#TOC_HEAD_97">227 Basic Calculator II</a></H2>
+        <H2><a name="HEAD_102" href="#TOC_HEAD_102">227 Basic Calculator II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/basic-calculator-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8731,7 +9249,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_98" href="#TOC_HEAD_98">228 Summary Ranges</a></H2>
+        <H2><a name="HEAD_103" href="#TOC_HEAD_103">228 Summary Ranges</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/summary-ranges/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8781,7 +9299,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_99" href="#TOC_HEAD_99">274 H&ndash;Index</a></H2>
+        <H2><a name="HEAD_104" href="#TOC_HEAD_104">274 H&ndash;Index</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/h-index/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8835,7 +9353,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_100" href="#TOC_HEAD_100">275 H&ndash;Index II</a></H2>
+        <H2><a name="HEAD_105" href="#TOC_HEAD_105">275 H&ndash;Index II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/h-index-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8889,7 +9407,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_101" href="#TOC_HEAD_101">306 Additive Number</a></H2>
+        <H2><a name="HEAD_106" href="#TOC_HEAD_106">306 Additive Number</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/additive-number/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -9065,7 +9583,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_102" href="#TOC_HEAD_102">337 House Robber III</a></H2>
+        <H2><a name="HEAD_107" href="#TOC_HEAD_107">337 House Robber III</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/house-robber-iii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -9170,7 +9688,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_103" href="#TOC_HEAD_103">338 Counting Bits</a></H2>
+        <H2><a name="HEAD_108" href="#TOC_HEAD_108">338 Counting Bits</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/counting-bits/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -9258,8 +9776,8 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H1><a name="HEAD_104" href="#TOC_HEAD_104">Hard</a></H1>
-        <H2><a name="HEAD_105" href="#TOC_HEAD_105">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_14" href="#TOC_MARK_14"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H1><a name="HEAD_109" href="#TOC_HEAD_109">Hard</a></H1>
+        <H2><a name="HEAD_110" href="#TOC_HEAD_110">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_15" href="#TOC_MARK_15"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -9279,7 +9797,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
   
     
     <hr>
-    <li><font color="#000080" size="2">Update Time: Mon Apr 17 00:10:05 CST 2017</font></li>
+    <li><font color="#000080" size="2">Update Time: Mon Apr 17 23:24:07 CST 2017</font></li>
     <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com</font></li>
 </body>
