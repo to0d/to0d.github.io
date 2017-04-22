@@ -1,2 +1,1 @@
-# to0d.github.io
-TODD's BLOG
+# TODD's BLOG
