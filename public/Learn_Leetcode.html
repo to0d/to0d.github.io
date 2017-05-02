@@ -61,14 +61,14 @@
         <li><a name="TOC_MARK_5" href="#MARK_5"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;25 C &ndash; misaligned address error ? </font></strong></a></li>
         <li><a name="TOC_MARK_6" href="#MARK_6"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;25 C &ndash; misaligned address error ? </font></strong></a></li>
         <li><a name="TOC_MARK_7" href="#MARK_7"><strong><font size="2" color="red">@TODO - Solution&ndash;2016&ndash;05&ndash;25: 48 ms &ndash; 48% &ndash; Better Solution ? </font></strong></a></li>
-        <li><a name="TOC_MARK_8" href="#HEAD_75"><strong><font size="2" color="red">@TODO - 016 3Sum Closest - solve it by 动态规划? - 2017-03-29 </font></strong></a></li>
+        <li><a name="TOC_MARK_8" href="#HEAD_77"><strong><font size="2" color="red">@TODO - 016 3Sum Closest - solve it by 动态规划? - 2017-03-29 </font></strong></a></li>
         <li><a name="TOC_MARK_9" href="#MARK_9"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;03&ndash;29 C: &ndash; <strong><font color="red">Runtime Error??</font></strong> </font></strong></a></li>
-        <li><a name="TOC_MARK_10" href="#HEAD_83"><strong><font size="2" color="red">@TODO - 047 Permutations II - </font></strong></a></li>
+        <li><a name="TOC_MARK_10" href="#HEAD_85"><strong><font size="2" color="red">@TODO - 047 Permutations II - </font></strong></a></li>
         <li><a name="TOC_MARK_11" href="#MARK_11"><strong><font size="2" color="red">@TODO - Solution&ndash;2017&ndash;04&ndash;05 &ndash; Correct?? </font></strong></a></li>
-        <li><a name="TOC_MARK_12" href="#HEAD_109"><strong><font size="2" color="red">@TODO - 148 Sort List </font></strong></a></li>
-        <li><a name="TOC_MARK_13" href="#HEAD_112"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
-        <li><a name="TOC_MARK_14" href="#HEAD_115"><strong><font size="2" color="red">@TODO - 201 Bitwise AND of Numbers Range </font></strong></a></li>
-        <li><a name="TOC_MARK_15" href="#HEAD_128"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
+        <li><a name="TOC_MARK_12" href="#HEAD_111"><strong><font size="2" color="red">@TODO - 148 Sort List </font></strong></a></li>
+        <li><a name="TOC_MARK_13" href="#HEAD_114"><strong><font size="2" color="red">@TODO - 179 Largest Number - TC000087 </font></strong></a></li>
+        <li><a name="TOC_MARK_14" href="#HEAD_117"><strong><font size="2" color="red">@TODO - 201 Bitwise AND of Numbers Range </font></strong></a></li>
+        <li><a name="TOC_MARK_15" href="#HEAD_130"><strong><font size="2" color="red">@TODO - 123 Best Time to Buy and Sell Stock III - </font></strong></a></li>
     </ul>
 
             </div>
@@ -5133,7 +5133,124 @@ Return 6.
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_65" href="#TOC_HEAD_65">530 Minimum Absolute Difference in BST</a></H2>
+        <H2><a name="HEAD_65" href="#TOC_HEAD_65">441 Arranging Coins</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/arranging-coins/#/description " target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            You have a total of <em>n</em> coins that you want to form in a staircase shape, where every <em>k</em> &ndash;th row must have exactly <em>k</em> coins.
+        </p>
+        <p>
+            Given <em>n</em> , find the total number of <strong>full</strong> staircase rows that can be formed.
+        </p>
+        <p>
+            <em>n</em> is a non&ndash;negative integer and fits within the range of a 32&ndash;bit signed integer.
+        </p>
+        <p>
+            <strong>Example 1:</strong>
+        </p>
+        <pre><code>
+n = 5
+
+The coins can form the following rows:
+#
+##
+##
+
+Because the 3rd row is incomplete, we return 2.
+        </code></pre>
+        <p>
+            <strong>Example 2:</strong>
+        </p>
+        <pre><code>
+n = 8
+
+The coins can form the following rows:
+
+x
+xx
+xxx
+xx
+
+Because the 4th row is incomplete, we return 3.
+        </code></pre>
+        <li><a href="https://leetcode.com/submissions/detail/101775589/ " target="_blank">Solution&ndash;2017&ndash;05&ndash;02: 39 ms &ndash; beats 19%</a></li>
+        <pre><code>
+    int arrangeCoins(int n) {
+        if( n <= 0 ) 
+            return 0;
+    #define max_count(x) ((long long)(x))*(x+1)/2
+    #define max_root     65535   // (max_root)(max_root+1)/2 < INT_MAX
+    #define min(a,b)     ((a)<(b))?(a):(b)
+        int l = 1;
+        int h = min(n,max_root);
+        int m;
+        long long v;
+
+        while( l < h )
+        {
+            m = (h-l)/2+l;
+            v = max_count(m);
+            if( v > INT_MAX ) // overflow
+            {   h = m -1;
+            }
+            else if( v == n )
+            {   return m;
+            }
+            else if( v < n )
+            {   if( max_count(m+1) > n )
+                    return m;
+                else
+                    l = m + 1;
+            }
+            else 
+            {   h = m - 1;
+            }
+        }
+        return h;
+    }
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_66" href="#TOC_HEAD_66">476 Number Complement</a></H2>
+    <ul>
+        <li><a href="https://leetcode.com/problems/number-complement/#/description " target="_blank">Description &ndash; LeetCode OJ</a></li>
+        <p>
+            Given a positive integer, output its complement number. The complement strategy is to flip the bits of its binary representation.
+        </p>
+        <p>
+            <strong>Note:</strong>
+        </p>
+        <ol>
+            <li>The given integer is guaranteed to fit within the range of a 32&ndash;bit signed integer.</li>
+            <li>You could assume no leading zero bit in the integer&rsquo;s binary representation.</li>
+        </ol>
+        <p>
+            <strong>Example 1:</strong>
+        </p>
+        <p>
+            <strong>Input:</strong> 5
+            <strong>Output:</strong> 2
+            <strong>Explanation:</strong> The binary representation of 5 is 101 (no leading zero bits), and its complement is 010. So you need to output 2.
+        </p>
+        <p>
+            <strong>Example 2:</strong>
+        </p>
+        <p>
+            <strong>Input:</strong> 1
+            <strong>Output:</strong> 0
+            <strong>Explanation:</strong> The binary representation of 1 is 1 (no leading zero bits), and its complement is 0. So you need to output 0.
+        </p>
+        <li><a href="https://leetcode.com/submissions/detail/101777019/ " target="_blank">Solution&ndash;2017&ndash;05&ndash;02: 3 ms &ndash; beats 36%</a></li>
+        <pre><code>
+    int findComplement(int num) {
+        int mask = 1;
+        for( int t = num>> 1; t != 0 ; t >>= 1 )
+            mask = mask<<1|1;
+        //printf("num=%d, mast=%d\n", num, mask);
+        return mask & ~num;
+    }
+        </code></pre>
+    </ul>
+        <H2><a name="HEAD_67" href="#TOC_HEAD_67">530 Minimum Absolute Difference in BST</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/minimum-absolute-difference-in-bst/#/description " target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5162,7 +5279,7 @@ The minimum absolute difference is 1, which is the difference between 2 and 1 (o
         <p>
             <strong>Note:</strong> There are at least two nodes in this BST.
         </p>
-        <li><a href="https://leetcode.com/submissions/detail/101626875/" target="_blank">Solution&ndash;2017&ndash;05&ndash;01: 18 ms &ndash; beats 13%</a></li>
+        <li><a href="https://leetcode.com/submissions/detail/101626875/ " target="_blank">Solution&ndash;2017&ndash;05&ndash;01: 18 ms &ndash; beats 13%</a></li>
         <pre><code>
     int abs(int v){   return v > 0 ? v : -v; }
     int min(int a, int b) {return a < b ? a : b; }
@@ -5181,7 +5298,7 @@ The minimum absolute difference is 1, which is the difference between 2 and 1 (o
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_66" href="#TOC_HEAD_66">541 Reverse String II</a></H2>
+        <H2><a name="HEAD_68" href="#TOC_HEAD_68">541 Reverse String II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/reverse-string-ii/#/description " target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5234,7 +5351,7 @@ The minimum absolute difference is 1, which is the difference between 2 and 1 (o
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_67" href="#TOC_HEAD_67">543 Diameter of Binary Tree</a></H2>
+        <H2><a name="HEAD_69" href="#TOC_HEAD_69">543 Diameter of Binary Tree</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/diameter-of-binary-tree/#/description " target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5289,7 +5406,7 @@ The minimum absolute difference is 1, which is the difference between 2 and 1 (o
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_68" href="#TOC_HEAD_68">551 Student Attendance Record I</a></H2>
+        <H2><a name="HEAD_70" href="#TOC_HEAD_70">551 Student Attendance Record I</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/student-attendance-record-i/#/description " target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5329,7 +5446,7 @@ The minimum absolute difference is 1, which is the difference between 2 and 1 (o
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_69" href="#TOC_HEAD_69">556 Next Greater Element III</a></H2>
+        <H2><a name="HEAD_71" href="#TOC_HEAD_71">556 Next Greater Element III</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/next-greater-element-iii " target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5392,7 +5509,7 @@ Output: -1
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_70" href="#TOC_HEAD_70">557 Reverse Words in a String III</a></H2>
+        <H2><a name="HEAD_72" href="#TOC_HEAD_72">557 Reverse Words in a String III</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/reverse-words-in-a-string-iii " target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5432,7 +5549,7 @@ Output: "s'teL ekat edoCteeL tsetnoc"
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_71" href="#TOC_HEAD_71">561 Array Partition I</a></H2>
+        <H2><a name="HEAD_73" href="#TOC_HEAD_73">561 Array Partition I</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/array-partition-i" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5471,7 +5588,7 @@ Output: "s'teL ekat edoCteeL tsetnoc"
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_72" href="#TOC_HEAD_72">563 Binary Tree Tilt</a></H2>
+        <H2><a name="HEAD_74" href="#TOC_HEAD_74">563 Binary Tree Tilt</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/binary-tree-tilt" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5530,8 +5647,8 @@ Tilt of binary tree : 0 + 0 + 1 = 1
     }
         </code></pre>
     </ul>
-        <H1><a name="HEAD_73" href="#TOC_HEAD_73">Medium</a></H1>
-        <H2><a name="HEAD_74" href="#TOC_HEAD_74">002 Add Two Numbers</a></H2>
+        <H1><a name="HEAD_75" href="#TOC_HEAD_75">Medium</a></H1>
+        <H2><a name="HEAD_76" href="#TOC_HEAD_76">002 Add Two Numbers</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/add-two-numbers/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5692,7 +5809,7 @@ Tilt of binary tree : 0 + 0 + 1 = 1
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_75" href="#TOC_HEAD_75">016 3Sum Closest &ndash; solve it by 动态规划? &ndash; 2017&ndash;03&ndash;29 </a><a name="MARK_8" href="#TOC_MARK_8"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_77" href="#TOC_HEAD_77">016 3Sum Closest &ndash; solve it by 动态规划? &ndash; 2017&ndash;03&ndash;29 </a><a name="MARK_8" href="#TOC_MARK_8"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/3sum-closest/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5776,7 +5893,7 @@ The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_76" href="#TOC_HEAD_76">017 Letter Combinations of a Phone Number</a></H2>
+        <H2><a name="HEAD_78" href="#TOC_HEAD_78">017 Letter Combinations of a Phone Number</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -5957,7 +6074,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_77" href="#TOC_HEAD_77">031 Next Permutation</a></H2>
+        <H2><a name="HEAD_79" href="#TOC_HEAD_79">031 Next Permutation</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/next-permutation/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6069,7 +6186,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_78" href="#TOC_HEAD_78">034 Search for a Range</a></H2>
+        <H2><a name="HEAD_80" href="#TOC_HEAD_80">034 Search for a Range</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/search-for-a-range/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6276,7 +6393,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_79" href="#TOC_HEAD_79">039 Combination Sum</a></H2>
+        <H2><a name="HEAD_81" href="#TOC_HEAD_81">039 Combination Sum</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/combination-sum/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6394,7 +6511,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_80" href="#TOC_HEAD_80">040 Combination Sum II</a></H2>
+        <H2><a name="HEAD_82" href="#TOC_HEAD_82">040 Combination Sum II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/combination-sum-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6608,7 +6725,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_81" href="#TOC_HEAD_81">043 Multiply Strings</a></H2>
+        <H2><a name="HEAD_83" href="#TOC_HEAD_83">043 Multiply Strings</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/multiply-strings/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6752,7 +6869,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_82" href="#TOC_HEAD_82">046 Permutations</a></H2>
+        <H2><a name="HEAD_84" href="#TOC_HEAD_84">046 Permutations</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/permutations/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6814,7 +6931,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_83" href="#TOC_HEAD_83">047 Permutations II &ndash; </a><a name="MARK_10" href="#TOC_MARK_10"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_85" href="#TOC_HEAD_85">047 Permutations II &ndash; </a><a name="MARK_10" href="#TOC_MARK_10"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/permutations-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6900,7 +7017,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_84" href="#TOC_HEAD_84">050 Pow(x, n)</a></H2>
+        <H2><a name="HEAD_86" href="#TOC_HEAD_86">050 Pow(x, n)</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/powx-n/ " target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -6967,7 +7084,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_85" href="#TOC_HEAD_85">053 Maximum Subarray</a></H2>
+        <H2><a name="HEAD_87" href="#TOC_HEAD_87">053 Maximum Subarray</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/maximum-subarray/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7127,7 +7244,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     }    
         </code></pre>
     </ul>
-        <H2><a name="HEAD_86" href="#TOC_HEAD_86">055 Jump Game</a></H2>
+        <H2><a name="HEAD_88" href="#TOC_HEAD_88">055 Jump Game</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/maximum-subarray" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7241,7 +7358,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_87" href="#TOC_HEAD_87">060 Permutation Sequence</a></H2>
+        <H2><a name="HEAD_89" href="#TOC_HEAD_89">060 Permutation Sequence</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/permutation-sequence/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7304,7 +7421,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_88" href="#TOC_HEAD_88">061 Rotate List</a></H2>
+        <H2><a name="HEAD_90" href="#TOC_HEAD_90">061 Rotate List</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/rotate-list/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7367,7 +7484,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_89" href="#TOC_HEAD_89">062 Unique Paths</a></H2>
+        <H2><a name="HEAD_91" href="#TOC_HEAD_91">062 Unique Paths</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/unique-paths/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7415,7 +7532,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_90" href="#TOC_HEAD_90">063 Unique Paths II</a></H2>
+        <H2><a name="HEAD_92" href="#TOC_HEAD_92">063 Unique Paths II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/unique-paths-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7525,7 +7642,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_91" href="#TOC_HEAD_91">064. Minimum Path Sum</a></H2>
+        <H2><a name="HEAD_93" href="#TOC_HEAD_93">064. Minimum Path Sum</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/minimum-path-sum" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7600,7 +7717,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_92" href="#TOC_HEAD_92">071 Simplify Path</a></H2>
+        <H2><a name="HEAD_94" href="#TOC_HEAD_94">071 Simplify Path</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/simplify-path/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7765,7 +7882,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_93" href="#TOC_HEAD_93">073 Set Matrix Zeroes</a></H2>
+        <H2><a name="HEAD_95" href="#TOC_HEAD_95">073 Set Matrix Zeroes</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/set-matrix-zeroes/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7847,7 +7964,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_94" href="#TOC_HEAD_94">074 Search a 2D Matrix</a></H2>
+        <H2><a name="HEAD_96" href="#TOC_HEAD_96">074 Search a 2D Matrix</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/search-a-2d-matrix/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -7947,7 +8064,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_95" href="#TOC_HEAD_95">075 Sort Colors</a></H2>
+        <H2><a name="HEAD_97" href="#TOC_HEAD_97">075 Sort Colors</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/sort-colors/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8037,7 +8154,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_96" href="#TOC_HEAD_96">077 Combinations</a></H2>
+        <H2><a name="HEAD_98" href="#TOC_HEAD_98">077 Combinations</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/combinations/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8089,7 +8206,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_97" href="#TOC_HEAD_97">078 Subsets</a></H2>
+        <H2><a name="HEAD_99" href="#TOC_HEAD_99">078 Subsets</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/subsets/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8142,7 +8259,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_98" href="#TOC_HEAD_98">080 Remove Duplicates from Sorted Array II</a></H2>
+        <H2><a name="HEAD_100" href="#TOC_HEAD_100">080 Remove Duplicates from Sorted Array II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8220,7 +8337,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_99" href="#TOC_HEAD_99">089 Gray Code</a></H2>
+        <H2><a name="HEAD_101" href="#TOC_HEAD_101">089 Gray Code</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/gray-code/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8280,7 +8397,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_100" href="#TOC_HEAD_100">090 Subsets II</a></H2>
+        <H2><a name="HEAD_102" href="#TOC_HEAD_102">090 Subsets II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/subsets-ii/ " target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8360,7 +8477,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_101" href="#TOC_HEAD_101">091 Decode Ways</a></H2>
+        <H2><a name="HEAD_103" href="#TOC_HEAD_103">091 Decode Ways</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/decode-ways/ " target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8385,7 +8502,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
             The number of ways decoding <code>"12"</code> is 2.
         </p>
     </ul>
-        <H2><a name="HEAD_102" href="#TOC_HEAD_102">092 Reverse Linked List II</a></H2>
+        <H2><a name="HEAD_104" href="#TOC_HEAD_104">092 Reverse Linked List II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/reverse-linked-list-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8480,7 +8597,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_103" href="#TOC_HEAD_103">113 Path Sum II</a></H2>
+        <H2><a name="HEAD_105" href="#TOC_HEAD_105">113 Path Sum II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/path-sum-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8595,7 +8712,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_104" href="#TOC_HEAD_104">121 Best Time to Buy and Sell Stock</a></H2>
+        <H2><a name="HEAD_106" href="#TOC_HEAD_106">121 Best Time to Buy and Sell Stock</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8660,7 +8777,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_105" href="#TOC_HEAD_105">122 Best Time to Buy and Sell Stock II</a></H2>
+        <H2><a name="HEAD_107" href="#TOC_HEAD_107">122 Best Time to Buy and Sell Stock II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8711,7 +8828,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_106" href="#TOC_HEAD_106">142 Linked List Cycle II</a></H2>
+        <H2><a name="HEAD_108" href="#TOC_HEAD_108">142 Linked List Cycle II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/linked-list-cycle-ii " target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8773,7 +8890,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_107" href="#TOC_HEAD_107">144 Binary Tree Preorder Traversal</a></H2>
+        <H2><a name="HEAD_109" href="#TOC_HEAD_109">144 Binary Tree Preorder Traversal</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/binary-tree-preorder-traversal/ " target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -8827,7 +8944,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_108" href="#TOC_HEAD_108">147 Insertion Sort List</a></H2>
+        <H2><a name="HEAD_110" href="#TOC_HEAD_110">147 Insertion Sort List</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/insertion-sort-list/ " target="_blank">Description &ndash; LeetCode OJ</a></li>
     </ul>
@@ -8888,7 +9005,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_109" href="#TOC_HEAD_109">148 Sort List </a><a name="MARK_12" href="#TOC_MARK_12"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_111" href="#TOC_HEAD_111">148 Sort List </a><a name="MARK_12" href="#TOC_MARK_12"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/sort-list/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -9013,7 +9130,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_110" href="#TOC_HEAD_110">150 Evaluate Reverse Polish Notation</a></H2>
+        <H2><a name="HEAD_112" href="#TOC_HEAD_112">150 Evaluate Reverse Polish Notation</a></H2>
     <ul>
         <li><a href=" https://leetcode.com/problems/evaluate-reverse-polish-notation/ " target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -9129,7 +9246,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_111" href="#TOC_HEAD_111">151 Reverse Words in a String</a></H2>
+        <H2><a name="HEAD_113" href="#TOC_HEAD_113">151 Reverse Words in a String</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/reverse-words-in-a-string/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -9213,7 +9330,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_112" href="#TOC_HEAD_112">179 Largest Number &ndash; TC000087 </a><a name="MARK_13" href="#TOC_MARK_13"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_114" href="#TOC_HEAD_114">179 Largest Number &ndash; TC000087 </a><a name="MARK_13" href="#TOC_MARK_13"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/largest-number/#/description" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -9226,7 +9343,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
             Note: The result may be very large, so you need to return a string instead of an integer.
         </p>
     </ul>
-        <H2><a name="HEAD_113" href="#TOC_HEAD_113">199 Course Schedule</a></H2>
+        <H2><a name="HEAD_115" href="#TOC_HEAD_115">199 Course Schedule</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/binary-tree-right-side-view/ " target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -9298,7 +9415,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_114" href="#TOC_HEAD_114">200 Number of Islands</a></H2>
+        <H2><a name="HEAD_116" href="#TOC_HEAD_116">200 Number of Islands</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/number-of-islands/ " target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -9410,7 +9527,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     int Solution::addC[4] = {0,1,0,-1};
         </code></pre>
     </ul>
-        <H2><a name="HEAD_115" href="#TOC_HEAD_115">201 Bitwise AND of Numbers Range </a><a name="MARK_14" href="#TOC_MARK_14"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H2><a name="HEAD_117" href="#TOC_HEAD_117">201 Bitwise AND of Numbers Range </a><a name="MARK_14" href="#TOC_MARK_14"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/bitwise-and-of-numbers-range/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -9420,7 +9537,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
             For example, given the range [5, 7], you should return 4.
         </p>
     </ul>
-        <H2><a name="HEAD_116" href="#TOC_HEAD_116">207 Course Schedule</a></H2>
+        <H2><a name="HEAD_118" href="#TOC_HEAD_118">207 Course Schedule</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/course-schedule/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -9585,7 +9702,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_117" href="#TOC_HEAD_117">210 Course Schedule II</a></H2>
+        <H2><a name="HEAD_119" href="#TOC_HEAD_119">210 Course Schedule II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/course-schedule-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -9786,7 +9903,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_118" href="#TOC_HEAD_118">213 House Robber II</a></H2>
+        <H2><a name="HEAD_120" href="#TOC_HEAD_120">213 House Robber II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/house-robber-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -9877,7 +9994,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_119" href="#TOC_HEAD_119">215 Kth Largest Element in an Array</a></H2>
+        <H2><a name="HEAD_121" href="#TOC_HEAD_121">215 Kth Largest Element in an Array</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/kth-largest-element-in-an-array/ " target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -9992,7 +10109,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
         };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_120" href="#TOC_HEAD_120">227 Basic Calculator II</a></H2>
+        <H2><a name="HEAD_122" href="#TOC_HEAD_122">227 Basic Calculator II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/basic-calculator-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -10286,7 +10403,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_121" href="#TOC_HEAD_121">228 Summary Ranges</a></H2>
+        <H2><a name="HEAD_123" href="#TOC_HEAD_123">228 Summary Ranges</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/summary-ranges/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -10336,7 +10453,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_122" href="#TOC_HEAD_122">274 H&ndash;Index</a></H2>
+        <H2><a name="HEAD_124" href="#TOC_HEAD_124">274 H&ndash;Index</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/h-index/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -10390,7 +10507,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     }
         </code></pre>
     </ul>
-        <H2><a name="HEAD_123" href="#TOC_HEAD_123">275 H&ndash;Index II</a></H2>
+        <H2><a name="HEAD_125" href="#TOC_HEAD_125">275 H&ndash;Index II</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/h-index-ii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -10444,7 +10561,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_124" href="#TOC_HEAD_124">306 Additive Number</a></H2>
+        <H2><a name="HEAD_126" href="#TOC_HEAD_126">306 Additive Number</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/additive-number/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -10620,7 +10737,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_125" href="#TOC_HEAD_125">337 House Robber III</a></H2>
+        <H2><a name="HEAD_127" href="#TOC_HEAD_127">337 House Robber III</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/house-robber-iii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -10725,7 +10842,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H2><a name="HEAD_126" href="#TOC_HEAD_126">338 Counting Bits</a></H2>
+        <H2><a name="HEAD_128" href="#TOC_HEAD_128">338 Counting Bits</a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/counting-bits/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -10813,8 +10930,8 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     };
         </code></pre>
     </ul>
-        <H1><a name="HEAD_127" href="#TOC_HEAD_127">Hard</a></H1>
-        <H2><a name="HEAD_128" href="#TOC_HEAD_128">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_15" href="#TOC_MARK_15"><strong><font color="red">@TODO</font></strong></a></H2>
+        <H1><a name="HEAD_129" href="#TOC_HEAD_129">Hard</a></H1>
+        <H2><a name="HEAD_130" href="#TOC_HEAD_130">123 Best Time to Buy and Sell Stock III &ndash; </a><a name="MARK_15" href="#TOC_MARK_15"><strong><font color="red">@TODO</font></strong></a></H2>
     <ul>
         <li><a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/" target="_blank">Description &ndash; LeetCode OJ</a></li>
         <p>
@@ -10833,7 +10950,7 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
     </ul>
     
         <hr>
-        <li><font color="#000080" size="2">Update Time: Mon May 01 07:58:30 CST 2017</font></li>
+        <li><font color="#000080" size="2">Update Time: Tue May 02 22:47:19 CST 2017</font></li>
         <li><font color="#000080" size="2">Original File: E:\work\note\04 Public\Learn Leetcode.md</font></li>
     </div>
     <div id="Left-Nav">
@@ -10909,74 +11026,76 @@ Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
             <li><a name="TOC_HEAD_62" href="#HEAD_62">350 Intersection of Two Arrays II</a></li>
             <li><a name="TOC_HEAD_63" href="#HEAD_63">371 Sum of Two Integers</a></li>
             <li><a name="TOC_HEAD_64" href="#HEAD_64">374 Guess Number Higher or Lower</a></li>
-            <li><a name="TOC_HEAD_65" href="#HEAD_65">530 Minimum Absolute Difference in BST</a></li>
-            <li><a name="TOC_HEAD_66" href="#HEAD_66">541 Reverse String II</a></li>
-            <li><a name="TOC_HEAD_67" href="#HEAD_67">543 Diameter of Binary Tree</a></li>
-            <li><a name="TOC_HEAD_68" href="#HEAD_68">551 Student Attendance Record I</a></li>
-            <li><a name="TOC_HEAD_69" href="#HEAD_69">556 Next Greater Element III</a></li>
-            <li><a name="TOC_HEAD_70" href="#HEAD_70">557 Reverse Words in a String III</a></li>
-            <li><a name="TOC_HEAD_71" href="#HEAD_71">561 Array Partition I</a></li>
-            <li><a name="TOC_HEAD_72" href="#HEAD_72">563 Binary Tree Tilt</a></li>
+            <li><a name="TOC_HEAD_65" href="#HEAD_65">441 Arranging Coins</a></li>
+            <li><a name="TOC_HEAD_66" href="#HEAD_66">476 Number Complement</a></li>
+            <li><a name="TOC_HEAD_67" href="#HEAD_67">530 Minimum Absolute Difference in BST</a></li>
+            <li><a name="TOC_HEAD_68" href="#HEAD_68">541 Reverse String II</a></li>
+            <li><a name="TOC_HEAD_69" href="#HEAD_69">543 Diameter of Binary Tree</a></li>
+            <li><a name="TOC_HEAD_70" href="#HEAD_70">551 Student Attendance Record I</a></li>
+            <li><a name="TOC_HEAD_71" href="#HEAD_71">556 Next Greater Element III</a></li>
+            <li><a name="TOC_HEAD_72" href="#HEAD_72">557 Reverse Words in a String III</a></li>
+            <li><a name="TOC_HEAD_73" href="#HEAD_73">561 Array Partition I</a></li>
+            <li><a name="TOC_HEAD_74" href="#HEAD_74">563 Binary Tree Tilt</a></li>
         </menu>
-        <b><a name="TOC_HEAD_73" href="#HEAD_73">Medium</a></b><br>
+        <b><a name="TOC_HEAD_75" href="#HEAD_75">Medium</a></b><br>
         <menu>
-            <li><a name="TOC_HEAD_74" href="#HEAD_74">002 Add Two Numbers</a></li>
-            <li><a name="TOC_HEAD_75" href="#HEAD_75">016 3Sum Closest &ndash; solve it by 动态规划? &ndash; 2017&ndash;03&ndash;29 <font color="red">@TODO</font></a></li>
-            <li><a name="TOC_HEAD_76" href="#HEAD_76">017 Letter Combinations of a Phone Number</a></li>
-            <li><a name="TOC_HEAD_77" href="#HEAD_77">031 Next Permutation</a></li>
-            <li><a name="TOC_HEAD_78" href="#HEAD_78">034 Search for a Range</a></li>
-            <li><a name="TOC_HEAD_79" href="#HEAD_79">039 Combination Sum</a></li>
-            <li><a name="TOC_HEAD_80" href="#HEAD_80">040 Combination Sum II</a></li>
-            <li><a name="TOC_HEAD_81" href="#HEAD_81">043 Multiply Strings</a></li>
-            <li><a name="TOC_HEAD_82" href="#HEAD_82">046 Permutations</a></li>
-            <li><a name="TOC_HEAD_83" href="#HEAD_83">047 Permutations II &ndash; <font color="red">@TODO</font></a></li>
-            <li><a name="TOC_HEAD_84" href="#HEAD_84">050 Pow(x, n)</a></li>
-            <li><a name="TOC_HEAD_85" href="#HEAD_85">053 Maximum Subarray</a></li>
-            <li><a name="TOC_HEAD_86" href="#HEAD_86">055 Jump Game</a></li>
-            <li><a name="TOC_HEAD_87" href="#HEAD_87">060 Permutation Sequence</a></li>
-            <li><a name="TOC_HEAD_88" href="#HEAD_88">061 Rotate List</a></li>
-            <li><a name="TOC_HEAD_89" href="#HEAD_89">062 Unique Paths</a></li>
-            <li><a name="TOC_HEAD_90" href="#HEAD_90">063 Unique Paths II</a></li>
-            <li><a name="TOC_HEAD_91" href="#HEAD_91">064. Minimum Path Sum</a></li>
-            <li><a name="TOC_HEAD_92" href="#HEAD_92">071 Simplify Path</a></li>
-            <li><a name="TOC_HEAD_93" href="#HEAD_93">073 Set Matrix Zeroes</a></li>
-            <li><a name="TOC_HEAD_94" href="#HEAD_94">074 Search a 2D Matrix</a></li>
-            <li><a name="TOC_HEAD_95" href="#HEAD_95">075 Sort Colors</a></li>
-            <li><a name="TOC_HEAD_96" href="#HEAD_96">077 Combinations</a></li>
-            <li><a name="TOC_HEAD_97" href="#HEAD_97">078 Subsets</a></li>
-            <li><a name="TOC_HEAD_98" href="#HEAD_98">080 Remove Duplicates from Sorted Array II</a></li>
-            <li><a name="TOC_HEAD_99" href="#HEAD_99">089 Gray Code</a></li>
-            <li><a name="TOC_HEAD_100" href="#HEAD_100">090 Subsets II</a></li>
-            <li><a name="TOC_HEAD_101" href="#HEAD_101">091 Decode Ways</a></li>
-            <li><a name="TOC_HEAD_102" href="#HEAD_102">092 Reverse Linked List II</a></li>
-            <li><a name="TOC_HEAD_103" href="#HEAD_103">113 Path Sum II</a></li>
-            <li><a name="TOC_HEAD_104" href="#HEAD_104">121 Best Time to Buy and Sell Stock</a></li>
-            <li><a name="TOC_HEAD_105" href="#HEAD_105">122 Best Time to Buy and Sell Stock II</a></li>
-            <li><a name="TOC_HEAD_106" href="#HEAD_106">142 Linked List Cycle II</a></li>
-            <li><a name="TOC_HEAD_107" href="#HEAD_107">144 Binary Tree Preorder Traversal</a></li>
-            <li><a name="TOC_HEAD_108" href="#HEAD_108">147 Insertion Sort List</a></li>
-            <li><a name="TOC_HEAD_109" href="#HEAD_109">148 Sort List <font color="red">@TODO</font></a></li>
-            <li><a name="TOC_HEAD_110" href="#HEAD_110">150 Evaluate Reverse Polish Notation</a></li>
-            <li><a name="TOC_HEAD_111" href="#HEAD_111">151 Reverse Words in a String</a></li>
-            <li><a name="TOC_HEAD_112" href="#HEAD_112">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
-            <li><a name="TOC_HEAD_113" href="#HEAD_113">199 Course Schedule</a></li>
-            <li><a name="TOC_HEAD_114" href="#HEAD_114">200 Number of Islands</a></li>
-            <li><a name="TOC_HEAD_115" href="#HEAD_115">201 Bitwise AND of Numbers Range <font color="red">@TODO</font></a></li>
-            <li><a name="TOC_HEAD_116" href="#HEAD_116">207 Course Schedule</a></li>
-            <li><a name="TOC_HEAD_117" href="#HEAD_117">210 Course Schedule II</a></li>
-            <li><a name="TOC_HEAD_118" href="#HEAD_118">213 House Robber II</a></li>
-            <li><a name="TOC_HEAD_119" href="#HEAD_119">215 Kth Largest Element in an Array</a></li>
-            <li><a name="TOC_HEAD_120" href="#HEAD_120">227 Basic Calculator II</a></li>
-            <li><a name="TOC_HEAD_121" href="#HEAD_121">228 Summary Ranges</a></li>
-            <li><a name="TOC_HEAD_122" href="#HEAD_122">274 H&ndash;Index</a></li>
-            <li><a name="TOC_HEAD_123" href="#HEAD_123">275 H&ndash;Index II</a></li>
-            <li><a name="TOC_HEAD_124" href="#HEAD_124">306 Additive Number</a></li>
-            <li><a name="TOC_HEAD_125" href="#HEAD_125">337 House Robber III</a></li>
-            <li><a name="TOC_HEAD_126" href="#HEAD_126">338 Counting Bits</a></li>
+            <li><a name="TOC_HEAD_76" href="#HEAD_76">002 Add Two Numbers</a></li>
+            <li><a name="TOC_HEAD_77" href="#HEAD_77">016 3Sum Closest &ndash; solve it by 动态规划? &ndash; 2017&ndash;03&ndash;29 <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_78" href="#HEAD_78">017 Letter Combinations of a Phone Number</a></li>
+            <li><a name="TOC_HEAD_79" href="#HEAD_79">031 Next Permutation</a></li>
+            <li><a name="TOC_HEAD_80" href="#HEAD_80">034 Search for a Range</a></li>
+            <li><a name="TOC_HEAD_81" href="#HEAD_81">039 Combination Sum</a></li>
+            <li><a name="TOC_HEAD_82" href="#HEAD_82">040 Combination Sum II</a></li>
+            <li><a name="TOC_HEAD_83" href="#HEAD_83">043 Multiply Strings</a></li>
+            <li><a name="TOC_HEAD_84" href="#HEAD_84">046 Permutations</a></li>
+            <li><a name="TOC_HEAD_85" href="#HEAD_85">047 Permutations II &ndash; <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_86" href="#HEAD_86">050 Pow(x, n)</a></li>
+            <li><a name="TOC_HEAD_87" href="#HEAD_87">053 Maximum Subarray</a></li>
+            <li><a name="TOC_HEAD_88" href="#HEAD_88">055 Jump Game</a></li>
+            <li><a name="TOC_HEAD_89" href="#HEAD_89">060 Permutation Sequence</a></li>
+            <li><a name="TOC_HEAD_90" href="#HEAD_90">061 Rotate List</a></li>
+            <li><a name="TOC_HEAD_91" href="#HEAD_91">062 Unique Paths</a></li>
+            <li><a name="TOC_HEAD_92" href="#HEAD_92">063 Unique Paths II</a></li>
+            <li><a name="TOC_HEAD_93" href="#HEAD_93">064. Minimum Path Sum</a></li>
+            <li><a name="TOC_HEAD_94" href="#HEAD_94">071 Simplify Path</a></li>
+            <li><a name="TOC_HEAD_95" href="#HEAD_95">073 Set Matrix Zeroes</a></li>
+            <li><a name="TOC_HEAD_96" href="#HEAD_96">074 Search a 2D Matrix</a></li>
+            <li><a name="TOC_HEAD_97" href="#HEAD_97">075 Sort Colors</a></li>
+            <li><a name="TOC_HEAD_98" href="#HEAD_98">077 Combinations</a></li>
+            <li><a name="TOC_HEAD_99" href="#HEAD_99">078 Subsets</a></li>
+            <li><a name="TOC_HEAD_100" href="#HEAD_100">080 Remove Duplicates from Sorted Array II</a></li>
+            <li><a name="TOC_HEAD_101" href="#HEAD_101">089 Gray Code</a></li>
+            <li><a name="TOC_HEAD_102" href="#HEAD_102">090 Subsets II</a></li>
+            <li><a name="TOC_HEAD_103" href="#HEAD_103">091 Decode Ways</a></li>
+            <li><a name="TOC_HEAD_104" href="#HEAD_104">092 Reverse Linked List II</a></li>
+            <li><a name="TOC_HEAD_105" href="#HEAD_105">113 Path Sum II</a></li>
+            <li><a name="TOC_HEAD_106" href="#HEAD_106">121 Best Time to Buy and Sell Stock</a></li>
+            <li><a name="TOC_HEAD_107" href="#HEAD_107">122 Best Time to Buy and Sell Stock II</a></li>
+            <li><a name="TOC_HEAD_108" href="#HEAD_108">142 Linked List Cycle II</a></li>
+            <li><a name="TOC_HEAD_109" href="#HEAD_109">144 Binary Tree Preorder Traversal</a></li>
+            <li><a name="TOC_HEAD_110" href="#HEAD_110">147 Insertion Sort List</a></li>
+            <li><a name="TOC_HEAD_111" href="#HEAD_111">148 Sort List <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_112" href="#HEAD_112">150 Evaluate Reverse Polish Notation</a></li>
+            <li><a name="TOC_HEAD_113" href="#HEAD_113">151 Reverse Words in a String</a></li>
+            <li><a name="TOC_HEAD_114" href="#HEAD_114">179 Largest Number &ndash; TC000087 <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_115" href="#HEAD_115">199 Course Schedule</a></li>
+            <li><a name="TOC_HEAD_116" href="#HEAD_116">200 Number of Islands</a></li>
+            <li><a name="TOC_HEAD_117" href="#HEAD_117">201 Bitwise AND of Numbers Range <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_118" href="#HEAD_118">207 Course Schedule</a></li>
+            <li><a name="TOC_HEAD_119" href="#HEAD_119">210 Course Schedule II</a></li>
+            <li><a name="TOC_HEAD_120" href="#HEAD_120">213 House Robber II</a></li>
+            <li><a name="TOC_HEAD_121" href="#HEAD_121">215 Kth Largest Element in an Array</a></li>
+            <li><a name="TOC_HEAD_122" href="#HEAD_122">227 Basic Calculator II</a></li>
+            <li><a name="TOC_HEAD_123" href="#HEAD_123">228 Summary Ranges</a></li>
+            <li><a name="TOC_HEAD_124" href="#HEAD_124">274 H&ndash;Index</a></li>
+            <li><a name="TOC_HEAD_125" href="#HEAD_125">275 H&ndash;Index II</a></li>
+            <li><a name="TOC_HEAD_126" href="#HEAD_126">306 Additive Number</a></li>
+            <li><a name="TOC_HEAD_127" href="#HEAD_127">337 House Robber III</a></li>
+            <li><a name="TOC_HEAD_128" href="#HEAD_128">338 Counting Bits</a></li>
         </menu>
-        <b><a name="TOC_HEAD_127" href="#HEAD_127">Hard</a></b><br>
+        <b><a name="TOC_HEAD_129" href="#HEAD_129">Hard</a></b><br>
         <menu>
-            <li><a name="TOC_HEAD_128" href="#HEAD_128">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
+            <li><a name="TOC_HEAD_130" href="#HEAD_130">123 Best Time to Buy and Sell Stock III &ndash; <font color="red">@TODO</font></a></li>
         </menu>
 
 </div>
