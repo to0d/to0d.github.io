@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>%%title%%</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- <link rel="stylesheet" type="text/css" href="https://to0d.github.io/stylesheets/github-light.css" media="screen"> -->
+        <!-- <link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/solarized_dark.min.css">-->
+        <!-- <script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>-->
+        <link rel="stylesheet" href="../stylesheets/solarized_dark.min.css">
+        <script src="../stylesheets/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+    </head>
+<body style="word-wrap:break-word">
+    <div class="header">
+        <h1>%%title%%</h1>
+        <div>
+            %%mark_list%%
+        </div>
+        <hr/>
+    </div>
+    %%content%%  
+    
+    <hr>
+    <li><font color="#000080" size="2">Update Time: %%time%%</font></li>
+    <li><font color="#000080" size="2">Original File: %%src_path%%</font></li>
+    <li><font color="#000080" size="2">%%mark_name%% - %%mark_copy%% - %%owner_mail%%</font></li>
+</body>
+</html>

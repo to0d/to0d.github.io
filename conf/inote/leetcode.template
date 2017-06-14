@@ -1,0 +1,78 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>%%title%%</title>
+        <link rel="stylesheet" href="css/androidstudio.min.css">
+        <!-- <script src="js/cloudflare/highlight.min.js"></script> -->
+        <!-- <script>hljs.initHighlightingOnLoad();</script>        -->
+        <!-- <script src="js/yandex/highlight.min.js"></script>     -->
+        <!-- <link rel="stylesheet" href="css/default.min.css">     -->
+        <!-- <script>hljs.initHighlightingOnLoad();</script>        -->
+        <link rel="stylesheet" href="../stylesheets/solarized_dark.min.css">
+        <script src="../stylesheets/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+<style type="text/css">
+#Container{
+    margin:0 auto;
+}
+#Header{
+    margin:0 auto;
+    text-align:center;
+    background-color:#ccc;
+}
+#Left-Nav{
+    position:fixed;
+    z-index:1;
+    left:10pt;
+    top:0;
+    width:30%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height:100%;
+}
+#Content-Main{
+    position:absolute;
+    left:30%;
+    margin-left:2%;
+    top:0px;
+    width:68%;
+    z-index:2;
+    height:100%;
+    overflow-y: auto;
+    overflow-x: scroll;
+}
+#Footer{
+    background:#90C;
+    margin-top:20px;
+}
+
+</style>
+    </head>
+<body>
+    <div id="Content-Main">
+        <div class="header">
+            <h1 id="Header">%%title%%</h1>
+            <div>
+                %%mark_list%%
+            </div>
+            <hr/>
+        </div>
+        %%content%%    
+        <hr>
+        <li><font color="#000080" size="2">Update Time: %%time%%</font></li>
+        <li><font color="#000080" size="2">Original File: %%src_path%%</font></li>
+    </div>
+    <div id="Left-Nav">
+    <font size="2">
+    %%toc_list%%
+    <br>
+    </font>
+    <hr>
+    <font color="#000080" size="1">%%mark_name%%</font><br>
+    <font color="#000080" size="1">%%mark_copy%%</font><br>
+    <font color="#000080" size="1">%%owner_mail%%</font><br>
+    <br>
+    <br>
+    </div>
+</body>
+</html>

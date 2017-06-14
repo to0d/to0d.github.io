@@ -1,0 +1,19 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+        <title>WORK</title>
+    </head >
+<body>
+    <H1> TODD's NOTE</H1>
+    <hr/>
+    
+    %%content%%
+    
+    <p></p>
+    <p></p>
+    <p></p>
+ 
+    
+    <li><font color="#000080" size="2">Update at %%time%%</font><br>
+</body>
+</html>
