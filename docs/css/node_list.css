@@ -1,0 +1,196 @@
+#in-container{   /* inote-container */
+    margin:0 auto;
+}
+
+#in-header{  /* inote-header */
+    margin:0 auto;
+    text-align:center;
+    background-color:#ccc;
+}
+
+#in-main{  /*inote-right-main-content */
+    position:absolute;
+    left:20%;
+    margin-left:2%;
+    top:0px;
+    width:78%;
+    z-index:2;
+    height:100%;
+    overflow-y: auto;
+    overflow-x: scroll;
+}
+
+#in-nav{    /* inote-left-nav */
+    position:fixed;
+    z-index:1;
+    left:10pt;
+    top:0;
+    width:20%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height:100%;
+}
+
+#in-footer{  /* inote-footer */
+    background:#90C;
+    margin-top:20px;
+}
+
+
+
+
+
+#inltc   /* inote-list-tag-category */
+{
+    font-weight:bold;
+    font-size:small;
+}
+
+#innt   /* inote-list-note-table*/
+{
+    border:0;
+    border-spacing:1;
+}
+
+#inntb   /* inote-list-note-tag-block */
+{
+    font-size:small;
+}
+
+#inlnl   /* inote-list-note-link */
+{
+  
+}
+
+#inlna   /* inote-list-note-attribute */
+{   
+    font-size:small;
+}
+
+#inlnm   /* inote-list-note-mark */
+{
+    font-weight:bold;
+    color:red;
+}
+
+#inlnt   /* inote-list-note-type */
+{
+    font-style:italic;
+    font-size:small;
+}
+
+#inlnf   /* inote-list-note-file */
+{
+    font-style:italic;
+    font-size:small;
+}
+
+#inlnd  /* inote-list-note-domain */
+{
+    font-size:small;
+}
+
+#innt_tr1  /* inote-list-note-table: color 1*/
+{
+    background:#CCCCCC;
+}
+
+#innt_tr2  /* inote-list-note-table: color 2*/
+{
+    
+}
+
+
+#intt   /* inote-tag-table*/
+{
+    border:0;
+    width:100%;
+    border-spacing:1;
+    font-size:small;
+}
+
+
+#intt_tdx /* inote-term-table: tag name td */
+{
+    width:25%;
+    font-weight:bold;
+    
+}
+
+#intt_td1 /* inote-term-table: tag name td */
+{
+    width:25%;
+    font-style:italic;
+}
+
+#intt_td2  /* inote-term-table: term name td */
+{
+    width:20%;
+    text-align:left;
+}
+
+#intt_td3  /* inote-term-table: term description td */
+{
+    text-align:left;
+    font-style:italic;
+    font-size:small;
+}
+
+
+#innt_index  /* inote-list-note-table: index td */
+{
+    width:30px;
+    text-align:right;
+    padding-right:5px;
+}
+
+#intrh  /* note table row header*/
+{
+    font-size:25px;
+    height:50px;
+}
+
+#intci  /* note table colum index*/
+{
+    width:25px;
+}
+
+#intcda  /* note table colum day*/
+{
+    max-width:75px;
+}
+
+#intcl  /* note table colum line*/
+{
+    max-width:30px;
+}
+
+#intct  /* note table colum tags*/
+{
+    width:20%;
+}
+
+#intcm  /* note table colum tags*/
+{
+    width:70px;
+}
+
+#intcdm  /* note table colum domain*/
+{
+    font-size:small;
+}
+
+#innt_tag   /* inote-list-note-tag */
+{
+    font-weight:bold;
+    font-size:small;
+    font-style:italic;
+}
+
+#innt_domain   /* inote-list-note-tag: domain */
+{
+    width:70px;
+    font-weight:bold;
+    font-size:small;
+}
+

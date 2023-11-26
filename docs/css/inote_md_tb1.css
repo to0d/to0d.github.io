@@ -1,0 +1,40 @@
+
+
+#mdt_t   /* table*/
+{
+    border:0;
+    min-width:50%;
+    border-spacing:1;
+}
+
+
+#mdt_hd /* tr: Header */
+{
+    font-weight:bold; 
+	background:#E9EFFF;
+}
+
+#mdt_tr1  /* tr: color 1*/
+{
+    background:#CCCCCC;
+}
+
+#mdt_tr2  /* tr: color 2*/
+{
+    
+}
+
+#mdt_td_l  /* td: align left*/
+{
+    text-align:left;
+}
+
+#mdt_td_r  /* td: align right*/
+{
+    text-align:right;
+}
+
+#mdt_td_c  /* td: align center*/
+{
+    text-align:center;
+}

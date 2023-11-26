@@ -1,0 +1,47 @@
+#btopt{ /* blog top table  */
+    border: 0px;
+    border-collapse: 10px;
+    width:100%;
+}
+
+#btopc1{ /* blog top table column note */
+    width:65%;    
+}
+
+#btopc2{ /* blog top table column tag */
+    width:20%;    
+}
+
+#btopc3{ /* blog top table column additonal mark */
+    width:15%;
+    text-align:right;
+}
+
+#btlt{ /* blog tag list table  */
+    border: 0px;
+    border-collapse: 10px;
+    width:100%;
+}
+
+#btlc1{ /* blog tag list table column tag */
+    width:40%;
+}
+
+#btlc2{ /* blog tag list table column term */
+    width:60%;
+    text-align:right;
+}
+
+
+#btrl{ /* blog tag relation table  */
+    border: 0px;
+    border-collapse: 10px;
+    width:100%;
+}
+
+#btrc1{ /* blog tag relation table column name */
+    width:10%;
+}
+
+#btrc2{ /* blog tag relation table column value */
+}

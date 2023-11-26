@@ -1,0 +1,243 @@
+#in-container{   /* inote-container */
+    margin:0 auto;
+}
+
+#in-header{  /* inote-header */
+    margin:0 auto;
+    text-align:center;
+    background-color:#ccc;
+}
+
+#in-alais   /* inote-alias-block */
+{
+    text-align:left;
+    margin-left:25px;
+}
+
+#in-main{  /*inote-right-main-content */
+    position:absolute;
+    left:15%;
+    margin-left:2%;
+    top:0px;
+    width:83%;
+    z-index:2;
+    height:100%;
+    overflow-y: auto;
+    overflow-x: scroll;
+}
+
+#in-nav{    /* inote-left-nav */
+    position:fixed;
+    z-index:1;
+    left:10pt;
+    top:0;
+    width:15%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height:100%;
+    font-size:small;
+}
+
+#in-footer{  /* inote-footer */
+    background:#90C;
+    margin-top:20px;
+}
+
+#in-dl{   /* inote-domain-list */
+    margin-left:-25px;
+    font-size:small;
+    font-style:italic;
+}
+
+#in-rtl{   /* inote-related-tag-list */
+    margin-left:-25px;
+    font-size:small;
+    font-style:italic;
+}
+
+
+#inltc   /* inote-list-tag-category */
+{
+    font-weight:bold;
+    font-size:small;
+}
+
+#innt   /* inote-list-note-table*/
+{
+    border:0;
+    width:95%;
+    border-spacing:1;
+    padding-left:20px;
+}
+
+#inntb   /* inote-list-note-tag-block */
+{
+    font-size:small;
+}
+
+#inlnl   /* inote-list-note-link */
+{
+  
+}
+
+#inlna   /* inote-list-note-attribute */
+{   
+    font-size:small;
+}
+
+#inlnm   /* inote-list-note-mark */
+{
+    font-weight:bold;
+    color:red;
+}
+
+#inlnt   /* inote-list-note-type */
+{
+    font-style:italic;
+    font-size:small;
+}
+
+#inlnf   /* inote-list-note-file */
+{
+    font-style:italic;
+    font-size:small;
+}
+
+#inlnd  /* inote-list-note-domain */
+{
+    font-size:small;
+}
+
+#innt_tr1  /* inote-list-note-table: color 1*/
+{
+    background:#CCCCCC;
+}
+
+#innt_tr2  /* inote-list-note-table: color 2*/
+{
+    
+}
+
+
+#gt_in   /* gnatt - index note*/
+{
+    font-style:bold;
+    margin-left:5px;
+}
+
+#gt_ie   /* gnatt - index Entry*/
+{
+    font-size:small;
+    margin-left:5px;
+}
+
+#gt_n   /* gnatt - note entry*/
+{
+    font-style:bold;
+}
+
+#gt_c   /* gnatt - closed*/
+{ 
+    text-decoration:line-through;
+    color:#000000;
+    text-align:left;
+    font-size:small;
+   /* margin-left:10px; */
+}
+
+#gt_l   /* gnatt - low*/
+{ 
+    background:#A9A9A9;
+    color:#000000;
+    font-size:small;
+}
+
+#gt_p   /* gnatt - plan*/
+{ 
+    font-size:small;
+}
+
+#gt_w   /* gnatt - working*/
+{ 
+    background:#FCD29A;
+    color:#714715;
+    font-size:small;
+}
+
+#gt_h   /* gnatt - high */
+{ 
+    background:#F9C4E1;
+    color:#78436D;
+    font-size:small;
+}
+
+#gt_v   /* gnatt - overdue */
+{ 
+    background:#F9C4E1;
+    color:#78436D;
+    font-size:small;
+}
+
+
+#nt_in   /* note - index note*/
+{
+     
+}
+
+#nt_ie   /* gnatt - index Entry*/
+{
+     font-size:small; 
+}
+
+
+#nt_c   /* note - comment*/
+{
+    text-decoration:line-through;
+    background:#A9A9A9;
+    color:#000000;
+    font-size:small;
+    font-style:italic;
+}
+
+#nt_l   /* note - low entry*/
+{
+    background:#A9A9A9;
+    color:#000000;
+    font-size:small;
+}
+
+#nt_w   /* note - working entry */
+{
+    background:#FCD29A;
+    color:#714715;
+    font-size:small;
+}
+
+#nt_v   /* note - overdue entry */
+{
+    background:#F9C4E1;
+    color:#78436D;
+    font-size:small;
+}
+
+#nt_td_pt /* note - td - plan type */
+{
+    font-style:italic;
+    font-size:small;
+}
+
+#innt_tag   /* inote-list-note-tag */
+{
+    font-weight:bold;
+    font-size:small;
+    font-style:italic;
+}
+
+#innt_domain   /* inote-list-note-tag: domain */
+{
+    width:70px;
+    font-weight:bold;
+    font-size:small;
+}
+
+

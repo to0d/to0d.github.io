@@ -1,0 +1,130 @@
+#in-container{   /* inote-container */
+    margin:0 auto;
+}
+
+#in-header{  /* inote-header */
+    margin:0 auto;
+    text-align:center;
+    background-color:#ccc;
+}
+
+#in-main{  /*inote-right-main-content */
+    position:absolute;
+    margin-left:2%;
+    top:0px;
+    width:95%;
+    z-index:2;
+    height:100%;
+    overflow-y: auto;
+    overflow-x: scroll;
+}
+
+
+#in-footer{  /* inote-footer */
+    background:#90C;
+    margin-top:20px;
+}
+
+#in-dl{   /* inote-domain-list */
+    margin-left:-25px;
+    font-size:small;
+    font-style:italic;
+}
+
+#in-rtl{   /* inote-related-tag-list */
+    margin-left:-25px;
+    font-size:small;
+    font-style:italic;
+}
+
+
+#indt   /* inote-domain-table*/
+{
+    border:0;
+    width:95%;
+    border-spacing:1;
+}
+
+
+#indp   /* inote-domain-pic*/
+{ 
+    width:95%; 
+    text-align:center;
+}
+
+
+#indt_idt  /* inote-domain-table: td index */
+{
+    width:40px;
+    text-align:right;
+    padding-right:20px;
+}
+ 
+#innt_ndt  /* inote-domain-table: td domain */
+{
+    font-weight:bold;    
+    font-size:small;
+}
+
+#indt_trh  /* inote-domain-table: tr Header */
+{
+    background:#E9EFFF;
+    height:28px;
+    font-weight:bold; 
+    font-size:small;    
+}
+
+#indt_tdth  /* inote-domain-table: td Header */
+{
+   text-align:right;
+   font-size:small
+}
+
+
+#inntb   /* inote-list-note-tag-block */
+{
+    font-size:small;
+}
+
+#indt_tdtn   /* inote-domain-table: td tag number */
+{
+   width:5%;
+   font-size:small;
+   text-align:right;
+}
+
+#indt_dtn   /* note-domain-table: td date */
+{
+    width:7%;
+    font-size:small;
+    text-align:right;
+}
+
+#indt_dtdes   /* note-domain-table: td description */
+{
+    width:10%;
+    font-size:small;
+    text-align:left;
+}
+
+#indt_mark   /* note-domain-table: mark */
+{
+    font-weight:bold;
+    font-size:normal;
+    color:red;
+}
+
+#inlnd  /* inote-list-note-domain */
+{
+    font-size:small;
+}
+
+#innt_tr1  /* inote-list-note-table: color 1*/
+{
+    background:#CCCCCC;
+}
+
+#innt_tr2  /* inote-list-note-table: color 2*/
+{
+    
+}

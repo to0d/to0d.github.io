@@ -1,0 +1,105 @@
+#in-container{   /* inote-container */
+    margin:0 auto;
+}
+
+#in-header{  /* inote-header */
+    margin:0 auto;
+    text-align:center;
+    background-color:#ccc;
+}
+
+#in-main{  /*inote-right-main-content */
+    position:absolute;
+    left:1%;
+    margin-left:1%;
+    top:0px;
+    width:98%;
+    z-index:2;
+    height:100%;
+    overflow-y: auto;
+    overflow-x: scroll;
+}
+
+#in-nav{    /* inote-left-nav */
+    position:fixed;
+    z-index:1;
+    left:10pt;
+    top:0;
+    width:20%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height:100%;
+}
+
+#in-footer{  /* inote-footer */
+    background:#90C;
+    margin-top:20px;
+}
+
+#in-dl{   /* inote-domain-list */
+    margin-left:-25px;
+    font-size:small;
+    font-style:italic;
+}
+
+
+#intt   /* inote-tag-table*/
+{
+    border:0;
+    width:98%;
+    border-spacing:1;
+    font-size:small;
+}
+
+#tt_td_idx /* td: index */
+{
+    font-style:italic;
+}
+
+
+#tt_td_uid /* td: uid */
+{
+    width:20%;
+    font-weight:bold;
+}
+
+#tt_td_nolink /* td: no link */
+{
+    font-weight:bold;
+    color:red;
+}
+
+#tt_td_tolink /* td: to link */
+{
+    text-align:right;
+    font-style:italic;
+}
+
+#tt_td_entry  /* td: entry */
+{
+    width:30%;
+    text-align:left;
+    font-size:small;
+}
+
+#tt_td_note /* td: note */
+{
+    text-align:left;
+    font-style:italic;
+    font-size:small;
+}
+
+#innt_tr1  /* inote-list-note-table: color 1*/
+{
+    background:#CCCCCC;
+}
+
+#innt_tr2  /* inote-list-note-table: color 2*/
+{
+}
+
+#tt_td_domain   /* td: domain */
+{
+    width:70px;
+    font-size:small;
+}

@@ -1,0 +1,28 @@
+#t3_row_index  /* tag-tabler-table: index */
+{
+    width:20px;
+}
+
+#t3_column_group  /* tag-tabler-table: column group name */
+{
+    font-weight:bold;
+    text-align:center;    
+}
+
+#t3_column_tag  /* tag-tabler-table: column tag name */
+{
+    text-align:center;
+}
+
+#t3_row_group  /* tag-tabler-table: row group name */
+{
+    width:15%;
+    font-weight:bold;
+    text-align:center;
+}
+
+#t3_row_tag  /* tag-tabler-table: row tag name */
+{
+    width:15%;
+    text-align:left;
+}

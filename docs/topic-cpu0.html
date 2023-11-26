@@ -1,0 +1,3084 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>LLVM: cpu0</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">LLVM: cpu0</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-22</time>
+            <i><a href="../tags/CPU0.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>CPU0</a>&nbsp;<a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">why &ndash; why 2023/11/05 </a></li>
+	<li><a name="TOC_MARK_2" href="#MARK_2" id="in-ttl">what the fixup is used for? &ndash; 2023/11/13 </a></li>
+</ol>
+</div>
+        <div class="entry-content">
+<ul>
+	<li><a name="HEAD_HIDDEN_957e92d3"><a href="https://github.com/to0d/llvm-cpu0" target="_blank">llvm&ndash;cpu0 &ndash; github</a> &nbsp;<a href="../tags/CPU0.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>CPU0</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_328f85b" href="#TOC_HEAD_328f85b">1. Ch2: Cpu0 architecture and LLVM structure</a></H2>
+	<H3><a name="HEAD_bce8904" href="#TOC_HEAD_bce8904">1.1. setup (LLVM 12)</a></H3>
+<pre><code>cd ~
+git clone todd@todd-pi:/home/todd/.git/llvm-cpu0
+git clone git@github.com:to0d/llvm-project.git
+
+cd ~/llvm-project
+git checkout -b 12.x origin/release/12.x
+git checkout 12.x
+git checkout e8a397203c67adbeae04763ce25c6a5ae76af52c</code></pre>
+	<H3><a name="HEAD_eebe4729" href="#TOC_HEAD_eebe4729">1.2. recognise triple</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/include/llvm/ADT/Triple.h</li>
+		<br />
+		<pre><code>class Triple {
+
+cpu0,           // For Tutorial Backend Cpu0
+cpu0el,		</code></pre>
+		<li>llvm/lib/Support/Triple.cpp</li>
+		<br />
+		<pre><code>StringRef Triple::getArchTypeName(ArchType Kind) {
+
+case cpu0:           return "cpu0";
+case cpu0el:         return "cpu0el";
+
+StringRef Triple::getArchTypePrefix(ArchType Kind) {
+
+case cpu0:
+case cpu0el:      return "cpu0";
+
+Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
+
+.Case("cpu0", cpu0)
+.Case("cpu0el", cpu0el)
+
+static Triple::ArchType parseArch(StringRef ArchName) {
+
+.Cases("cpu0", "cpu0eb", "cpu0allegrex", Triple::cpu0)
+.Cases("cpu0el", "cpu0allegrexel", Triple::cpu0el)
+
+static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
+
+case Triple::cpu0:
+case Triple::cpu0el:
+return Triple::ELF;
+
+static unsigned getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
+
+case llvm::Triple::cpu0:
+case llvm::Triple::cpu0el:
+return 32;
+
+Triple Triple::get32BitArchVariant() const {
+
+case Triple::cpu0:
+case Triple::cpu0el:
+// Already 32-bit.
+break;
+
+Triple Triple::get64BitArchVariant() const {
+
+case Triple::cpu0:
+case Triple::cpu0el:
+T.setArch(UnknownArch);
+break;
+
+Triple Triple::getBigEndianArchVariant() const {
+case Triple::cpu0:
+case Triple::cpu0el:
+T.setArch(UnknownArch);
+break;
+
+
+Triple Triple::getLittleEndianArchVariant() const {
+
+case Triple::cpu0:
+case Triple::cpu0el:
+T.setArch(UnknownArch);
+break;
+
+bool Triple::isLittleEndian() const {
+
+case Triple::cpu0el:		</code></pre>
+	</ol>
+	<li><a name="wd_ln_git-commit_0"><b>git-commit</b></a> &ndash; &quot;ch1: recognise triple&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ee44c0c8" href="#TOC_HEAD_ee44c0c8">1.3. update elf</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>src/llvm/include/llvm/BinaryFormat/ELF.h</li>
+		<br />
+		<pre><code>EM_CPU0 = 999,          // Document LLVM Backend Tutorial Cpu0
+
+// Cpu0 Specific e_flags
+enum {
+EF_CPU0_NOREORDER = 0x00000001, // Don't reorder instructions
+EF_CPU0_PIC       = 0x00000002, // Position independent code
+EF_CPU0_ARCH_32   = 0x50000000, // CPU032 instruction set per linux not elf.h
+EF_CPU0_ARCH      = 0xf0000000  // Mask for applying EF_CPU0_ARCH_ variant
+};
+
+// ELF Relocation types for Cpu0
+enum {
+#include "ELFRelocs/Cpu0.def"
+};		</code></pre>
+		<li>src/llvm/include/llvm/Object/ELFObjectFile.h</li>
+		<br />
+		<pre><code>StringRef ELFObjectFile&lt;ELFT&gt;::getFileFormatName() const {
+
+case ELF::EM_CPU0:	// llvm-objdump -t -r
+return "ELF32-cpu0";
+
+template &lt;class ELFT&gt; Triple::ArchType ELFObjectFile&lt;ELFT&gt;::getArch() const {
+
+case ELF::EM_CPU0:	// llvm-objdump -t -r
+switch (EF.getHeader().e_ident[ELF::EI_CLASS]) {
+case ELF::ELFCLASS32:
+return IsLittleEndian ? Triple::cpu0el : Triple::cpu0;
+default:
+report_fatal_error("Invalid ELFCLASS!");
+}		</code></pre>
+		<li>src/llvm/include/llvm/module.modulemap</li>
+		<br />
+		<pre><code>module LLVM_BinaryFormat {
+
+textual header "BinaryFormat/ELFRelocs/Cpu0.def"		</code></pre>
+	</ol>
+	<li>new files</li>
+	<br />
+	<ul>
+		<li>src/llvm/include/llvm/BinaryFormat/ELFRelocs/Cpu0.def</li>
+		<br />
+		<pre><code>ELF_RELOC(R_CPU0_NONE,                0)
+ELF_RELOC(R_CPU0_32,                  2)
+ELF_RELOC(R_CPU0_HI16,                5)
+ELF_RELOC(R_CPU0_LO16,                6)
+ELF_RELOC(R_CPU0_GPREL16,             7)
+ELF_RELOC(R_CPU0_LITERAL,             8)
+ELF_RELOC(R_CPU0_GOT16,               9)
+ELF_RELOC(R_CPU0_PC16,               10)
+ELF_RELOC(R_CPU0_CALL16,             11)
+ELF_RELOC(R_CPU0_GPREL32,            12)
+ELF_RELOC(R_CPU0_PC24,               13)
+ELF_RELOC(R_CPU0_GOT_HI16,           22)
+ELF_RELOC(R_CPU0_GOT_LO16,           23)
+ELF_RELOC(R_CPU0_RELGOT,             36)
+ELF_RELOC(R_CPU0_TLS_GD,             42)
+ELF_RELOC(R_CPU0_TLS_LDM,            43)
+ELF_RELOC(R_CPU0_TLS_DTP_HI16,       44)
+ELF_RELOC(R_CPU0_TLS_DTP_LO16,       45)
+ELF_RELOC(R_CPU0_TLS_GOTTPREL,       46)
+ELF_RELOC(R_CPU0_TLS_TPREL32,        47)
+ELF_RELOC(R_CPU0_TLS_TP_HI16,        49)
+ELF_RELOC(R_CPU0_TLS_TP_LO16,        50)
+ELF_RELOC(R_CPU0_GLOB_DAT,           51)
+ELF_RELOC(R_CPU0_JUMP_SLOT,          127)		</code></pre>
+	</ul>
+	<li><a name="wd_ln_git-commit_1"><b>git-commit</b></a> &ndash; &quot;ch2: update elf&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_79f6b517" href="#TOC_HEAD_79f6b517">1.4. add empty backend ( <strong><font color="red">can build</font></strong> )</a></H3>
+<ul>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/CMakeLists.txt</li>
+		<br />
+		<pre><code>add_llvm_component_group(Cpu0)
+
+add_llvm_target(Cpu0CodeGen
+Cpu0TargetMachine.cpp
+
+LINK_COMPONENTS
+CodeGen
+Core
+Cpu0Desc
+Cpu0Info
+Support
+Target
+
+ADD_TO_COMPONENT
+Cpu0
+)
+
+add_subdirectory(TargetInfo)
+add_subdirectory(MCTargetDesc)		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0TargetMachine.h</li>
+		<br />
+		<pre><code>// empty		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0TargetMachine.cpp</li>
+		<br />
+		<pre><code>extern "C" void LLVMInitializeCpu0Target() {
+}		</code></pre>
+		<p>
+			llvm/lib/Target/Cpu0/Cpu0.h
+		</p>
+		<pre><code>namespace llvm {
+class Cpu0TargetMachine;
+class FunctionPass;
+
+} // end namespace llvm;		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0Config.h</li>
+		<br />
+		<li>llvm/lib/Target/Cpu0/Cpu0SetChapter.h</li>
+		<br />
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/CMakeLists.txt</li>
+		<br />
+		<pre><code>add_llvm_component_library(LLVMCpu0Desc
+Cpu0MCTargetDesc.cpp
+
+LINK_COMPONENTS
+MC
+Cpu0Info
+Support
+
+ADD_TO_COMPONENT
+Cpu0
+)		</code></pre>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.h</li>
+		<br />
+		<pre><code>namespace llvm {
+class Target;
+class Triple;
+
+extern Target TheCpu0Target;
+extern Target TheCpu0elTarget;
+
+} // End llvm namespace		</code></pre>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.cpp</li>
+		<br />
+		<pre><code>extern "C" void LLVMInitializeCpu0TargetMC() {
+
+}		</code></pre>
+		<li>llvm/lib/Target/Cpu0/TargetInfo/CMakeLists.txt</li>
+		<br />
+		<pre><code>add_llvm_component_library(LLVMCpu0Info
+Cpu0TargetInfo.cpp
+
+LINK_COMPONENTS
+Support
+
+ADD_TO_COMPONENT
+Cpu0
+)		</code></pre>
+		<li>llvm/lib/Target/Cpu0/TargetInfo/Cpu0TargetInfo.cpp</li>
+		<br />
+		<pre><code>Target llvm::TheCpu0Target, llvm::TheCpu0elTarget;
+
+extern "C" void LLVMInitializeCpu0TargetInfo() {
+RegisterTarget&lt;Triple::cpu0,
+    /*HasJIT=*/true&gt; X(TheCpu0Target, "cpu0", "CPU0 (32-bit big endian)", "Cpu0");
+
+RegisterTarget&lt;Triple::cpu0el,
+    /*HasJIT=*/true&gt; Y(TheCpu0elTarget, "cpu0el", "CPU0 (32-bit little endian)", "Cpu0");
+}		</code></pre>
+	</ol>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/CMakeLists.txt</li>
+		<br />
+		<pre><code>set(LLVM_ALL_TARGETS
+
+Cpu0		</code></pre>
+		<ul>
+			<li><strong><font color="red">NOTE</font></strong> : Don&#039;t add this if this is an experimental backend.</li>
+			<ul>
+				<li>refer <a href="https://lists.llvm.org/pipermail/llvm-dev/2017-August/116347.html" target="_blank">https://lists.llvm.org/pipermail/llvm&ndash;dev/2017&ndash;August/116347.html</a></li>
+				<br />
+			</ul>
+		</ul>
+		<li>llvm/cmake/config&ndash;ix.cmake</li>
+		<br />
+		<pre><code>elseif (LLVM_NATIVE_ARCH MATCHES "cpu0")
+set(LLVM_NATIVE_ARCH Cpu0)		</code></pre>
+		<ul>
+			<li>Support build just the target alone</li>
+			<ul>
+				<li>refer 8afcd938ed9cc51dd7db79171d1b06d1e479b3dc // 2018&ndash;03&ndash;14: Makes it possible to build just the RISCV target alone</li>
+				<br />
+			</ul>
+		</ul>
+	</ol>
+	<li><a name="wd_ln_build_0"><b>build</b></a> (first time) succ</li>
+	<br />
+	<pre><code>cd ~/llvm-cpu0
+mkdir build
+cd build
+
+cmake -G Ninja -DLLVM_ENABLE_PROJECTS='clang' -DCMAKE_BUILD_TYPE=Release -DLLVM_TARGETS_TO_BUILD='Cpu0' -DLLVM_PARALLEL_COMPILE_JOBS=4 -DLLVM_PARALLEL_LINK_JOBS=1 ~/llvm-project/llvm
+time ninja	</code></pre>
+	<li><a name="wd_ln_git-commit_2"><b>git-commit</b></a> &ndash; &quot;ch2: add empty backend&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_f2b216b9" href="#TOC_HEAD_f2b216b9">1.5. <code>llc &ndash;&ndash;version</code> <strong><font color="red">succ</font></strong></a></H3>
+<pre><code>./bin/llc --version
+LLVM (http://llvm.org/):
+LLVM version 12.0.1
+Optimized build.
+Default target: x86_64-unknown-linux-gnu
+Host CPU: skylake
+
+Registered Targets:
+    cpu0   - CPU0 (32-bit big endian)
+    cpu0el - CPU0 (32-bit little endian)</code></pre>
+	<H3><a name="HEAD_b03b4236" href="#TOC_HEAD_b03b4236">1.6. add .td files</a></H3>
+<ul>
+	<li>new files</li>
+	<br />
+	<ul>
+		<li><code>cp &tilde;/llvm&ndash;cpu0/lbdex/chapters/Chapter2/*.td llvm/lib/Target/Cpu0/</code></li>
+		<br />
+		<pre><code>llvm/lib/Target/Cpu0/Cpu0.td
+llvm/lib/Target/Cpu0/Cpu0InstrFormats.td
+llvm/lib/Target/Cpu0/Cpu0InstrInfo.td
+llvm/lib/Target/Cpu0/Cpu0Other.td
+llvm/lib/Target/Cpu0/Cpu0RegisterInfo.td
+llvm/lib/Target/Cpu0/Cpu0RegisterInfoGPROutForOther.td
+llvm/lib/Target/Cpu0/Cpu0Schedule.td		</code></pre>
+	</ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/CMakeLists.txt</li>
+		<br />
+		<pre><code>set(LLVM_TARGET_DEFINITIONS Cpu0Other.td)
+tablegen(LLVM Cpu0GenRegisterInfo.inc -gen-register-info)
+tablegen(LLVM Cpu0GenInstrInfo.inc -gen-instr-info)
+tablegen(LLVM Cpu0GenSubtargetInfo.inc -gen-subtarget)
+tablegen(LLVM Cpu0GenMCPseudoLowering.inc -gen-pseudo-lowering)
+add_public_tablegen_target(Cpu0CommonTableGen)		</code></pre>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.cpp</li>
+		<br />
+		<pre><code>#define GET_INSTRINFO_MC_DESC
+#include "Cpu0GenInstrInfo.inc"
+
+#define GET_SUBTARGETINFO_MC_DESC
+#include "Cpu0GenSubtargetInfo.inc"
+
+#define GET_REGINFO_MC_DESC
+#include "Cpu0GenRegisterInfo.inc"		</code></pre>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.h</li>
+		<br />
+		<pre><code>#define GET_REGINFO_ENUM
+#include "Cpu0GenRegisterInfo.inc"
+
+#define GET_INSTRINFO_ENUM
+#include "Cpu0GenInstrInfo.inc"
+
+#define GET_SUBTARGETINFO_ENUM
+#include "Cpu0GenSubtargetInfo.inc"		</code></pre>
+	</ol>
+</ul>
+	<H3><a name="HEAD_76c2d450" href="#TOC_HEAD_76c2d450">1.7. <strong><font color="red">build fail</font></strong></a></H3>
+<pre><code>    build/lib/Target/Cpu0/Cpu0GenSubtargetInfo.inc:69:39: error: zero-size array ‘llvm::Cpu0SubTypeKV’
+    69 | extern const llvm::SubtargetSubTypeKV Cpu0SubTypeKV[] = {
+        |                                       ^~~~~~~~~~~~~</code></pre>
+<ul>
+	<li>Check <strong>SubtargetEmitter::CPUKeyValues</strong> in <code>llvm/utils/TableGen/SubtargetEmitter.cpp</code></li>
+	<br />
+	<pre><code>// For each processor
+for (Record *Processor : ProcessorList) {	</code></pre>
+	<ul>
+		<li>The ProcessorList is empty</li>
+		<br />
+	</ul>
+	<li><a name="wd_ln_git-commit_3"><b>git-commit</b></a> &ndash; &quot;ch2: add .td files&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_31fd2153" href="#TOC_HEAD_31fd2153">2. Ch3: Backend structure</a></H2>
+	<H2><a name="HEAD_704a8c3" href="#TOC_HEAD_704a8c3">3. Ch3_1: TargetMachine structure</a></H2>
+	<H3><a name="HEAD_a2f5b44c" href="#TOC_HEAD_a2f5b44c">3.1. add Processor &amp; SubtargetFeature</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0.td</li>
+		<br />
+		<pre><code>def FeatureChapter3_1
+def FeatureChapter3_2
+...
+def FeatureCpu032II
+
+class Proc&lt;string Name, list&lt;SubtargetFeature&gt; Features&gt;
+: Processor&lt;Name, Cpu0GenericItineraries, Features&gt;;
+
+def : Proc&lt;"cpu032I",  [FeatureCpu032I]&gt;;
+def : Proc&lt;"cpu032II", [FeatureCpu032II]&gt;;		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_4"><b>git-commit</b></a> &ndash; &quot;ch3_1: add Processor &amp; SubtargetFeature&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ecea6417" href="#TOC_HEAD_ecea6417">3.2. add TargetMachine</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<li>llvm/lib/Target/Cpu0/Cpu0TargetMachine.h</li>
+	<br />
+	<pre><code>class Cpu0TargetMachine : public LLVMTargetMachine
+
+TargetPassConfig *createPassConfig(PassManagerBase &PM) override;
+TargetLoweringObjectFile *getObjFileLowering() const override {
+
+class Cpu0ebTargetMachine : public Cpu0TargetMachine
+class Cpu0elTargetMachine : public Cpu0TargetMachine	</code></pre>
+	<li>llvm/lib/Target/Cpu0/Cpu0TargetMachine.cpp</li>
+	<br />
+	<pre><code>extern "C" void LLVMInitializeCpu0Target() {
+// Register the target.
+//- Big endian Target Machine
+RegisterTargetMachine&lt;Cpu0ebTargetMachine&gt; X(TheCpu0Target);
+//- Little endian Target Machine
+RegisterTargetMachine&lt;Cpu0elTargetMachine&gt; Y(TheCpu0elTarget);
+}
+
+
+static std::string computeDataLayout(const Triple &TT, StringRef CPU,
+
+static Reloc::Model getEffectiveRelocModel(bool JIT,
+
+TargetPassConfig *Cpu0TargetMachine::createPassConfig(PassManagerBase &PM) {	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_5"><b>git-commit</b></a> &ndash; &quot;ch3_1: add TargetMachine&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ab48a6f2" href="#TOC_HEAD_ab48a6f2">3.3. add Subtarget</a></H3>
+<ul>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.h</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.cpp</li>
+		<br />
+	</ol>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/CMakeLists.txt</li>
+		<br />
+		<pre><code>add_llvm_target(Cpu0CodeGen
+Cpu0Subtarget.cpp
+
+LINK_COMPONENTS
+SelectionDAG		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0TargetMachine.h</li>
+		<br />
+		<pre><code>class Cpu0TargetMachine : public LLVMTargetMachine {
+
+Cpu0Subtarget DefaultSubtarget;
+
+const Cpu0Subtarget *getSubtargetImpl() const
+const Cpu0Subtarget *getSubtargetImpl(const Function &F) const override;		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0TargetMachine.cpp</li>
+		<br />
+		<pre><code>Cpu0TargetMachine::Cpu0TargetMachine(const Target &T, const Triple &TT,
+DefaultSubtarget(TT, CPU, FS, isLittle, *this)
+
+
+Cpu0TargetMachine::getSubtargetImpl(const Function &F) const {
+
+
+class Cpu0PassConfig : public TargetPassConfig {
+
+TargetPassConfig *Cpu0TargetMachine::createPassConfig(PassManagerBase &PM) {
+return new Cpu0PassConfig(*this, PM);
+}		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_6"><b>git-commit</b></a> &ndash; &quot;ch3_1: add Subtarget&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_cd12c540" href="#TOC_HEAD_cd12c540">3.4. <code>llc &ndash;march=cpu0 &ndash;mcpu=help</code> <strong><font color="red">Segmentation fault</font></strong></a></H3>
+<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -mcpu=help 2&gt;&1 &gt; ch3/ch3_1.1.dump
+
+    Available CPUs for this target:
+
+    cpu032I  - Select the cpu032I processor.
+    cpu032II - Select the cpu032II processor.
+
+    Available features for this target:
+
+    ch10_1   - Enable Chapter instructions..
+    ...
+
+    #4 0x00007f1791433047 llvm::LLVMTargetMachine::initAsmInfo() (/home/todd-wsl/ll
+    #5 0x00007f17912a767c llvm::Cpu0TargetMachine::Cpu0TargetMachine(llvm::Target const&,</code></pre>
+<ul>
+	<li>caused by <strong>null TmpAsmInfo</strong> in <code>LLVMTargetMachine::initAsmInfo()</code></li>
+	<ul>
+		<li>caused by <strong>MCAsmInfo not initialized</strong></li>
+		<ul>
+			<li>should be fixed in <strong>LLVMInitializeCpu0TargetMC()</strong> in <code>Chapter3_2/MCTargetDesc/Cpu0MCTargetDesc.cpp</code></li>
+			<br />
+			<pre><code>extern "C" void LLVMInitializeCpu0TargetMC() {
+
+RegisterMCAsmInfoFn X(*T, createCpu0MCAsmInfo);			</code></pre>
+		</ul>
+	</ul>
+</ul>
+	<H3><a name="HEAD_2c25006f" href="#TOC_HEAD_2c25006f">3.5. add FrameLowering</a></H3>
+<ul>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0FrameLowering.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0FrameLowering.h</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEFrameLowering.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEFrameLowering.h</li>
+		<br />
+	</ol>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.h</li>
+		<br />
+		<pre><code>std::unique_ptr&lt;const Cpu0FrameLowering&gt; FrameLowering;
+
+const TargetFrameLowering *getFrameLowering() const override {
+return FrameLowering.get();
+}		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.cpp</li>
+		<br />
+		<pre><code>FrameLowering(Cpu0FrameLowering::create(*this))		</code></pre>
+		<li>llvm/lib/Target/Cpu0/CMakeLists.txt</li>
+		<br />
+		<pre><code>add_llvm_target(Cpu0CodeGen
+Cpu0FrameLowering.cpp
+Cpu0SEFrameLowering.cpp		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_7"><b>git-commit</b></a> &ndash; &quot;ch3_1: add FrameLowering&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_4f12db71" href="#TOC_HEAD_4f12db71">3.6. add TargetLowering</a></H3>
+<ul>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0ISelLowering.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0ISelLowering.h</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEISelLowering.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEISelLowering.h</li>
+		<br />
+	</ol>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.h</li>
+		<br />
+		<pre><code>std::unique_ptr&lt;const Cpu0TargetLowering&gt; TLInfo;
+
+const Cpu0TargetLowering *getTargetLowering() const override {
+return TLInfo.get();
+}		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.cpp</li>
+		<br />
+		<pre><code>TLInfo(Cpu0TargetLowering::create(TM, *this))		</code></pre>
+		<li>llvm/lib/Target/Cpu0/CMakeLists.txt</li>
+		<br />
+		<pre><code>Cpu0ISelLowering.cpp
+Cpu0SEISelLowering.cpp		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_7"><b>git-commit</b></a> &ndash; &quot;ch3_1: add FrameLowering&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_42866fa0" href="#TOC_HEAD_42866fa0">3.7. add MachineFunction</a></H3>
+<ul>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0MachineFunction.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0MachineFunction.h</li>
+		<br />
+	</ol>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/CMakeLists.txt</li>
+		<br />
+		<pre><code>add_llvm_target(Cpu0CodeGen
+Cpu0MachineFunction.cpp		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_8"><b>git-commit</b></a> &ndash; &quot;ch3_1: add MachineFunction&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_40fa7730" href="#TOC_HEAD_40fa7730">3.8. add RegisterInfo</a></H3>
+<ul>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0CallingConv.td</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0RegisterInfo.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0RegisterInfo.h</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SERegisterInfo.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SERegisterInfo.h</li>
+		<br />
+	</ol>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0.td</li>
+		<br />
+		<pre><code>include "Cpu0CallingConv.td"		</code></pre>
+		<li>llvm/lib/Target/Cpu0/CMakeLists.txt</li>
+		<br />
+		<pre><code>tablegen(LLVM Cpu0GenCallingConv.inc -gen-callingconv)
+
+add_llvm_target(Cpu0CodeGen
+Cpu0RegisterInfo.cpp
+Cpu0SERegisterInfo.cpp		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0ISelLowering.cpp</li>
+		<br />
+		<pre><code>#include "Cpu0GenCallingConv.inc"		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_9"><b>git-commit</b></a> &ndash; &quot;ch3_1: add RegisterInfo&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_8d9b0cdb" href="#TOC_HEAD_8d9b0cdb">3.9. add InstrInfo</a></H3>
+<ul>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.h</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEInstrInfo.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEInstrInfo.h</li>
+		<br />
+	</ol>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.h</li>
+		<br />
+		<pre><code>std::unique_ptr&lt;const Cpu0InstrInfo&gt; InstrInfo;
+const Cpu0InstrInfo *getInstrInfo() const override { return InstrInfo.get(); }
+const Cpu0RegisterInfo *getRegisterInfo() const override {
+return &InstrInfo-&gt;getRegisterInfo();
+}		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.cpp</li>
+		<br />
+		<pre><code>InstrInfo(
+Cpu0InstrInfo::create(initializeSubtargetDependencies(CPU, FS, TM)))		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEISelLowering.cpp</li>
+		<br />
+		<pre><code>addRegisterClass(MVT::i32, &Cpu0::CPURegsRegClass);
+computeRegisterProperties(Subtarget.getRegisterInfo());		</code></pre>
+		<li>llvm/lib/Target/Cpu0/CMakeLists.txt</li>
+		<br />
+		<pre><code>Cpu0InstrInfo.cpp
+Cpu0SEInstrInfo.cpp		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_10"><b>git-commit</b></a> &ndash; &quot;ch3_1: add InstrInfo&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_1495125a" href="#TOC_HEAD_1495125a">3.10. add ObjectFile</a></H3>
+<ul>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0TargetObjectFile.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0TargetObjectFile.h</li>
+		<br />
+	</ol>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/CMakeLists.txt</li>
+		<br />
+		<pre><code>Cpu0TargetObjectFile.cpp		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0TargetMachine.cpp</li>
+		<br />
+		<pre><code>TLOF(std::make_unique&lt;Cpu0TargetObjectFile&gt;())		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_11"><b>git-commit</b></a> &ndash; &quot;ch3_1: add ObjectFile&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_a1755497" href="#TOC_HEAD_a1755497">3.11. add ABIInfo</a></H3>
+<ul>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0ABIInfo.cpp</li>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0ABIInfo.h</li>
+		<br />
+	</ol>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0ISelLowering.cpp</li>
+		<br />
+		<pre><code>ABI(TM.getABI())		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0ISelLowering.h</li>
+		<br />
+		<pre><code>const Cpu0ABIInfo &ABI;		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.cpp</li>
+		<br />
+		<pre><code>const Cpu0ABIInfo &Cpu0Subtarget::getABI() const { return TM.getABI(); }		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.h</li>
+		<br />
+		<pre><code>const Cpu0ABIInfo &getABI() const;		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0TargetMachine.cpp</li>
+		<br />
+		<pre><code>ABI(Cpu0ABIInfo::computeTargetABI())		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0TargetMachine.h</li>
+		<br />
+		<pre><code>Cpu0ABIInfo ABI;
+const Cpu0ABIInfo &getABI() const { return ABI; }		</code></pre>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/CMakeLists.txt</li>
+		<br />
+		<pre><code>Cpu0ABIInfo.cpp		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_12"><b>git-commit</b></a> &ndash; &quot;ch3_1: add ABIInfo&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_1f170f85" href="#TOC_HEAD_1f170f85">3.12. <strong><font color="red">llc fail</font></strong></a></H3>
+<pre><code>cp ~/llvm-cpu0/lbdex/input/ch3.cpp ~/llvm-cpu0/test/
+~/llvm-cpu0/build/bin/clang -target mips-unknown-linux-gnu -c ch3.cpp -emit-llvm -o ch3/ch3.bc
+~/llvm-cpu0/build/bin/llvm-dis ch3/ch3.bc -o - 2&gt;&1 1&gt; ch3/ch3_1.2.dump
+~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_1.2.dump -o ch3/ch3.cpu0.s
+
+    ...
+    llvm::LLVMTargetMachine::initAsmInfo() (/home/todd-wsl/llvm-cpu0/build/bin/llc+0x4b48c
+    llvm::Cpu0TargetMachine::Cpu0TargetMachine(llvm::Target const&, llvm::Triple const&, l</code></pre>
+	<H2><a name="HEAD_b7b66165" href="#TOC_HEAD_b7b66165">4. Ch3_2: Add AsmPrinter</a></H2>
+	<H3><a name="HEAD_14e75e94" href="#TOC_HEAD_14e75e94">4.1. add MCAsmInfo</a></H3>
+<ul>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCAsmInfo.cpp</li>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCAsmInfo.h</li>
+		<br />
+	</ol>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.cpp</li>
+		<br />
+		<pre><code>static MCAsmInfo *createCpu0MCAsmInfo(const MCRegisterInfo &MRI,
+                                const Triple &TT,
+                                const MCTargetOptions &Options) {
+MCAsmInfo *MAI = new Cpu0MCAsmInfo(TT);
+
+unsigned SP = MRI.getDwarfRegNum(Cpu0::SP, true);
+MCCFIInstruction Inst = MCCFIInstruction::createDefCfaRegister(nullptr, SP);
+MAI-&gt;addInitialFrameState(Inst);
+
+return MAI;
+}
+
+
+RegisterMCAsmInfoFn X(*T, createCpu0MCAsmInfo);		</code></pre>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/CMakeLists.txt</li>
+		<br />
+		<pre><code>add_llvm_component_library(LLVMCpu0Desc
+Cpu0MCAsmInfo.cpp		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test fail</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -mcpu=help
+~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_1.2.dump -o ch3/ch3.cpu0.s	</code></pre>
+	<li><a name="wd_ln_git-commit_13"><b>git-commit</b></a> &ndash; &quot;ch3_2: add MCAsmInfo&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ffa665be" href="#TOC_HEAD_ffa665be">4.2. Register the MC instruction info</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.cpp</li>
+		<br />
+		<pre><code>static MCInstrInfo *createCpu0MCInstrInfo() {
+MCInstrInfo *X = new MCInstrInfo();
+InitCpu0MCInstrInfo(X); // defined in Cpu0GenInstrInfo.inc
+return X;
+}
+
+TargetRegistry::RegisterMCInstrInfo(*T, createCpu0MCInstrInfo);		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_14"><b>git-commit</b></a> &ndash; &quot;ch3_2: Register the MC instruction info&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ca7be80d" href="#TOC_HEAD_ca7be80d">4.3. Register the MC register info</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.cpp</li>
+		<br />
+		<pre><code>static MCRegisterInfo *createCpu0MCRegisterInfo(const Triple &TT) {
+MCRegisterInfo *X = new MCRegisterInfo();
+InitCpu0MCRegisterInfo(X, Cpu0::SW); // defined in Cpu0GenRegisterInfo.inc
+return X;
+}
+
+TargetRegistry::RegisterMCRegInfo(*T, createCpu0MCRegisterInfo);		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_15"><b>git-commit</b></a> &ndash; &quot;ch3_2: Register the MC register info&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_52cff7c2" href="#TOC_HEAD_52cff7c2">4.4. <code>llc &ndash;march=cpu0 &ndash;mcpu=help</code> <strong><font color="red">succ</font></strong></a></H3>
+<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -mcpu=help   2&gt; ch3/ch3_1.3.dump
+
+Available CPUs for this target:
+
+cpu032I  - Select the cpu032I processor.
+cpu032II - Select the cpu032II processor.
+
+Available features for this target:
+
+ch10_1   - Enable Chapter instructions..
+ch11_1   - Enable Chapter instructions..
+ch11_2   - Enable Chapter instructions..
+ch12_1   - Enable Chapter instructions..
+ch3_1    - Enable Chapter instructions..
+ch3_2    - Enable Chapter instructions..
+ch3_3    - Enable Chapter instructions..
+ch3_4    - Enable Chapter instructions..
+ch3_5    - Enable Chapter instructions..
+ch4_1    - Enable Chapter instructions..
+ch4_2    - Enable Chapter instructions..
+ch5_1    - Enable Chapter instructions..
+ch6_1    - Enable Chapter instructions..
+ch7_1    - Enable Chapter instructions..
+ch8_1    - Enable Chapter instructions..
+ch8_2    - Enable Chapter instructions..
+ch9_1    - Enable Chapter instructions..
+ch9_2    - Enable Chapter instructions..
+ch9_3    - Enable Chapter instructions..
+chall    - Enable Chapter instructions..
+cmp      - Enable 'cmp' instructions..
+cpu032I  - Cpu032I ISA Support.
+cpu032II - Cpu032II ISA Support (slt).
+slt      - Enable 'slt' instructions..
+
+Use +feature to enable a feature, or -feature to disable it.
+For example, llc -mcpu=mycpu -mattr=+feature1,-feature2</code></pre>
+	<H3><a name="HEAD_feac6e0f" href="#TOC_HEAD_feac6e0f">4.5. <strong><font color="red">fails to gen asm</font></strong></a></H3>
+<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_1.2.dump -o ch3/ch3.cpu0.s
+llc: error: target does not support generation of this file type</code></pre>
+<ul>
+	<li><a name="wd_ln_git-commit_16"><b>git-commit</b></a> &ndash; &quot;ch3_2: llc &ndash;march=cpu0 &ndash;mcpu=help &ndash; succ&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_e4197bdb" href="#TOC_HEAD_e4197bdb">4.6. Register the MC subtarget info</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.cpp</li>
+		<br />
+		<pre><code>static MCInstPrinter *createCpu0MCInstPrinter(const Triple &T,
+
+static MCSubtargetInfo *createCpu0MCSubtargetInfo(const Triple &TT,
+
+TargetRegistry::RegisterMCSubtargetInfo(*T,
+                                    createCpu0MCSubtargetInfo);		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_17"><b>git-commit</b></a> &ndash; &quot;ch3_2: Register the MC subtarget info&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ede45b6" href="#TOC_HEAD_ede45b6">4.7. Register the MC instruction analyzer</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.cpp</li>
+		<br />
+		<pre><code>class Cpu0MCInstrAnalysis : public MCInstrAnalysis {
+public:
+Cpu0MCInstrAnalysis(const MCInstrInfo *Info) : MCInstrAnalysis(Info) {}
+};
+
+static MCInstrAnalysis *createCpu0MCInstrAnalysis(const MCInstrInfo *Info) {
+return new Cpu0MCInstrAnalysis(Info);
+}
+
+TargetRegistry::RegisterMCInstrAnalysis(*T, createCpu0MCInstrAnalysis);		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_18"><b>git-commit</b></a> &ndash; &quot;ch3_2: Register the MC instruction analyzer&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_4a6909f2" href="#TOC_HEAD_4a6909f2">4.8. Register the MCInstPrinter</a></H3>
+<ul>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/InstPrinter/CMakeLists.txt</li>
+		<li>llvm/lib/Target/Cpu0/InstPrinter/Cpu0InstPrinter.cpp</li>
+		<li>llvm/lib/Target/Cpu0/InstPrinter/Cpu0InstPrinter.h</li>
+		<br />
+	</ol>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/CMakeLists.txt</li>
+		<br />
+		<pre><code>tablegen(LLVM Cpu0GenAsmWriter.inc -gen-asm-writer)
+
+LINK_COMPONENTS
+Cpu0AsmPrinter
+
+add_subdirectory(InstPrinter)		</code></pre>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/CMakeLists.txt</li>
+		<br />
+		<pre><code>LINK_COMPONENTS
+Cpu0AsmPrinter		</code></pre>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.cpp</li>
+		<br />
+		<pre><code>static MCInstPrinter *createCpu0MCInstPrinter(const Triple &T,
+                                        unsigned SyntaxVariant,
+                                        const MCAsmInfo &MAI,
+                                        const MCInstrInfo &MII,
+                                        const MCRegisterInfo &MRI) {
+return new Cpu0InstPrinter(MAI, MII, MRI);
+}
+
+
+TargetRegistry::RegisterMCInstPrinter(*T,
+                                createCpu0MCInstPrinter);		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_19"><b>git-commit</b></a> &ndash; &quot;ch3_2: Register the MCInstPrinter&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_b97e0be9" href="#TOC_HEAD_b97e0be9">4.9. add AsmPrinter &amp; MCInstLower</a></H3>
+<ul>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0AsmPrinter.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0AsmPrinter.h</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0MCInstLower.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0MCInstLower.h</li>
+		<br />
+	</ol>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/CMakeLists.txt</li>
+		<br />
+		<pre><code>add_llvm_target(Cpu0CodeGen
+Cpu0AsmPrinter.cpp
+Cpu0MCInstLower.cpp		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0MachineFunction.h</li>
+		<br />
+		<pre><code>EmitNOAT(false),
+
+bool getEmitNOAT() const { return EmitNOAT; }
+void setEmitNOAT() { EmitNOAT = true; }
+
+bool EmitNOAT;		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_20"><b>git-commit</b></a> &ndash; &quot;ch3_2: add AsmPrinter &amp; MCInstLower&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_62fa438" href="#TOC_HEAD_62fa438">4.10. merge</a></H3>
+<ul>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0BaseInfo.h</li>
+		<br />
+	</ol>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0ISelLowering.h</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.h</li>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.h</li>
+		<li>llvm/lib/Target/Cpu0/CMakeLists.txt</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0AsmPrinter.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0MCInstLower.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0MachineFunction.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEInstrInfo.cpp</li>
+		<br />
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test &ndash; same failure</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_1.2.dump -o ch3/ch3.cpu0.s
+llc: error: target does not support generation of this file type	</code></pre>
+	<li><a name="wd_ln_git-commit_21"><b>git-commit</b></a> &ndash; &quot;ch3_2: merge&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_23caf4bd" href="#TOC_HEAD_23caf4bd">5. Ch3_3: Add Cpu0DAGToDAGISel class</a></H2>
+	<H3><a name="HEAD_235706e" href="#TOC_HEAD_235706e">5.1. add SelectionDAGISel</a></H3>
+<ul>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0ISelDAGToDAG.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0ISelDAGToDAG.h</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEISelDAGToDAG.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEISelDAGToDAG.h</li>
+		<br />
+	</ol>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/CMakeLists.txt</li>
+		<br />
+		<pre><code>Cpu0ISelDAGToDAG.cpp
+Cpu0SEISelDAGToDAG.cpp		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.h</li>
+		<br />
+		<pre><code>bool hasChapter3_3() const {
+return true;
+}		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0TargetMachine.cpp</li>
+		<br />
+		<pre><code>class Cpu0PassConfig : public TargetPassConfig {
+bool addInstSelector() override;
+
+
+// Install an instruction selector pass using
+// the ISelDag to gen Cpu0 code.
+bool Cpu0PassConfig::addInstSelector() {
+addPass(createCpu0SEISelDag(getCpu0TargetMachine(), getOptLevel()));
+return false;
+}		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ea9953b4" href="#TOC_HEAD_ea9953b4">5.2. <strong><font color="red">Cannot select: Cpu0ISD::Ret</font></strong></a></H3>
+<ul>
+	<li>test &ndash; new failure <strong><font color="red">(Cannot select: Cpu0ISD::Ret)</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_1.2.dump -o ch3/ch3.cpu0.s
+LLVM ERROR: Cannot select: 0x7fffefd745b8: ch = Cpu0ISD::Ret 0x7fffefd744e8, Register:i32 $lr
+0x7fffefd74550: i32 = Register $lr	</code></pre>
+	<li><a name="wd_ln_git-commit_22"><b>git-commit</b></a> &ndash; &quot;ch3_3: add SelectionDAGISel&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_9b42e26e" href="#TOC_HEAD_9b42e26e">6. Ch3_4: Handle return register $lr</a></H2>
+	<H3><a name="HEAD_51b77a01" href="#TOC_HEAD_51b77a01">6.1. expand <strong>RetLR</strong></a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrFormats.td</li>
+		<br />
+		<pre><code>// Cpu0 Pseudo Instructions Format
+class Cpu0Pseudo&lt;dag outs, dag ins, string asmstr, list&lt;dag&gt; pattern&gt;:
+Cpu0Inst&lt;outs, ins, asmstr, pattern, IIPseudo, Pseudo&gt; {
+let isCodeGenOnly = 1;
+let isPseudo = 1;
+}		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<br />
+		<pre><code>let Predicates = [Ch3_4] in {
+let isReturn=1, isTerminator=1, hasDelaySlot=1, isBarrier=1, hasCtrlDep=1 in
+def RetLR : Cpu0Pseudo&lt;(outs), (ins), "", [(Cpu0Ret)]&gt;;
+}		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEInstrInfo.cpp</li>
+		<br />
+		<pre><code>/// Expand Pseudo instructions into real backend instructions
+bool Cpu0SEInstrInfo::expandPostRAPseudo(MachineInstr &MI) const {
+//@expandPostRAPseudo-body
+MachineBasicBlock &MBB = *MI.getParent();
+
+switch (MI.getDesc().getOpcode()) {
+default:
+return false;
+case Cpu0::RetLR:
+expandRetLR(MBB, MI);
+break;
+}
+
+MBB.erase(MI);
+return true;
+}
+
+void Cpu0SEInstrInfo::expandRetLR(MachineBasicBlock &MBB,
+                            MachineBasicBlock::iterator I) const {
+BuildMI(MBB, I, I-&gt;getDebugLoc(), get(Cpu0::RET)).addReg(Cpu0::LR);
+}		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEInstrInfo.h</li>
+		<br />
+		<pre><code>bool expandPostRAPseudo(MachineInstr &MI) const override;
+void expandRetLR(MachineBasicBlock &MBB, MachineBasicBlock::iterator I) const;		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test &ndash; same failure (Cannot select: Cpu0ISD::Ret)</li>
+	<br />
+	<li><a name="wd_ln_git-commit_23"><b>git-commit</b></a> &ndash; &quot;ch3_4: expand RetLR&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_c798e8dd" href="#TOC_HEAD_c798e8dd">6.2. LowerFormalArguments &amp; LowerReturn</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0CallingConv.td</li>
+		<br />
+		<pre><code>def RetCC_Cpu0EABI : CallingConv&lt;[
+// i32 are returned in registers V0, V1, A0, A1
+CCIfType&lt;[i32], CCAssignToReg&lt;[V0, V1, A0, A1]&gt;&gt;
+]&gt;;
+
+def RetCC_Cpu0 : CallingConv&lt;[
+CCDelegateTo&lt;RetCC_Cpu0EABI&gt;
+]&gt;;		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0ISelLowering.cpp</li>
+		<br />
+		<pre><code>Cpu0TargetLowering::LowerFormalArguments()
+Cpu0TargetLowering::LowerReturn()		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0ISelLowering.h</li>
+		<br />
+		<pre><code>class Cpu0CC		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0MachineFunction.h</li>
+		<br />
+		<pre><code>unsigned getSRetReturnReg()
+void setSRetReturnReg(unsigned Reg)
+bool hasByvalArg()
+void setFormalArgInfo(unsigned Size, bool HasByval)
+
+unsigned SRetReturnReg;
+bool HasByvalArg;
+unsigned IncomingArgSize;		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test &ndash; same failure (Cannot select: Cpu0ISD::Ret)</li>
+	<br />
+	<li><a name="wd_ln_git-commit_24"><b>git-commit</b></a> &ndash; &quot;ch3_4: LowerFormalArguments &amp; LowerReturn&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_7438f8fc" href="#TOC_HEAD_7438f8fc">6.3. enable hasChapter3_4 &amp; merge <strong>(llc hang)</strong></a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.h</li>
+		<br />
+		<pre><code>bool hasChapter3_4() const {
+return true;
+}		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_95c849a6" href="#TOC_HEAD_95c849a6">6.4. <strong><font color="red">fail to gen asm &ndash; llc hang</font></strong></a></H3>
+<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_1.2.dump -o -
+        .text
+        .section .mdebug.abiO32
+        .previous
+        .file   "ch3.cpp"</code></pre>
+<ul>
+	<li><a name="HEAD_HIDDEN_e696e047">why &ndash; why 2023/11/05  <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></li>
+	<br />
+	<li><a name="wd_ln_git-commit_25"><b>git-commit</b></a> &ndash; &quot;ch3_4: merge (llc still hang)&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_cae234ae" href="#TOC_HEAD_cae234ae">6.5. <strong><font color="red">succ to gen asm (clang &ndash;O2)</font></strong></a></H3>
+<pre><code>~/llvm-cpu0/build/bin/clang -O2 -target mips-unknown-linux-gnu -c ch3.cpp -emit-llvm -o ch3/ch3.o2.bc
+~/llvm-cpu0/build/bin/llvm-dis ch3/ch3.o2.bc -o -
+~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3.o2.bc -o ch3/ch3.cpu0.ch3_4.s
+
+        .text
+        .section .mdebug.abiO32
+        .previous
+        .file   "ch3.cpp"
+        .globl  main                            # -- Begin function main
+        .p2align        1
+        .type   main,@function
+        .ent    main                            # @main
+main:
+        .frame  $sp,0,$lr
+        .mask   0x00000000,0
+        .set    noreorder
+        .set    nomacro
+# %bb.0:
+        addiu   $2, $zero, 0
+        ret     $lr
+        .set    macro
+        .set    reorder
+        .end    main
+$func_end0:
+        .size   main, ($func_end0)-main
+                                        # -- End function
+        .ident  "clang version 12.0.1 (git@github.com:llvm/llvm-project 8fa9f1b08bbabc25c22030100fadf4b30bc4759d)"
+        .section        ".note.GNU-stack","",@progbits</code></pre>
+<ul>
+	<li><a name="wd_ln_git-commit_26"><b>git-commit</b></a> &ndash; &quot;ch3_4: the ch3.cpp can be run with option &#039;clang &ndash;O2&#039;&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_c4bce058" href="#TOC_HEAD_c4bce058">6.6. root cause &ndash; not handled <strong><font color="red">stack slot for local variables</font></strong></a></H3>
+<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm  -print-before-all -print-after-all ch3/ch3.o2.bc -o -</code></pre>
+	<H2><a name="HEAD_b465f030" href="#TOC_HEAD_b465f030">7. Ch3_5: Add Prologue/Epilogue functions</a></H2>
+	<H3><a name="HEAD_22c4353a" href="#TOC_HEAD_22c4353a">7.1. impl emitPrologue</a></H3>
+<ul>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0AnalyzeImmediate.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0AnalyzeImmediate.h</li>
+		<br />
+	</ol>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<br />
+		<pre><code>def shamt
+def uimm16
+def LO16
+def immZExt16
+def immZExt5
+class ArithLogicR
+class shift_rotate_imm
+class shift_rotate_imm32
+class LoadUpper
+def ORi
+def LUi
+def ADDu
+def SHL		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.h</li>
+		<br />
+		<pre><code>bool hasChapter3_5() const {
+return true;
+}		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEFrameLowering.cpp</li>
+		<br />
+		<pre><code>void Cpu0SEFrameLowering::emitPrologue(MachineFunction &MF,		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.h</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEInstrInfo.h</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEInstrInfo.cpp</li>
+		<br />
+		<pre><code>void adjustStackPtr(unsigned SP, int64_t Amount, MachineBasicBlock &MBB,
+unsigned loadImmediate(int64_t Imm, MachineBasicBlock &MBB,		</code></pre>
+		<li>llvm/lib/Target/Cpu0/CMakeLists.txt</li>
+		<br />
+		<pre><code>add_llvm_target(Cpu0CodeGen
+Cpu0AnalyzeImmediate.cpp		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test &ndash; same failure <strong><font color="red">(llc hang</font>)</strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_1.2.dump -o -	</code></pre>
+	<li><a name="wd_ln_git-commit_27"><b>git-commit</b></a> &ndash; &quot;ch3_5: impl emitPrologue&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_380dbd69" href="#TOC_HEAD_380dbd69">7.2. impl emitEpilogue</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEFrameLowering.cpp</li>
+		<br />
+		<pre><code>void Cpu0SEFrameLowering::emitEpilogue(MachineFunction &MF,		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test &ndash; same failure <strong><font color="red">(llc hang</font>)</strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_1.2.dump -o -	</code></pre>
+	<li><a name="wd_ln_git-commit_28"><b>git-commit</b></a> &ndash; &quot;ch3_5: impl emitEpilogue&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_2db4c527" href="#TOC_HEAD_2db4c527">7.3. impl eliminateFrameIndex</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0RegisterInfo.cpp</li>
+		<br />
+		<pre><code>void Cpu0RegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II, int SPAdj,		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_c2ac908f" href="#TOC_HEAD_c2ac908f">7.4. <strong><font color="red">succ to gen asm (local variables)</font></strong></a></H3>
+<ul>
+	<li>ch3.bc <font color="red">succ</font></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3.bc -o ch3/ch3.cpu0.ch3_5.1.s	</code></pre>
+</ul>
+	<H3><a name="HEAD_751df315" href="#TOC_HEAD_751df315">7.5. <strong><font color="red">succ to gen asm (largeframe)</font></strong></a></H3>
+<ul>
+	<li>ch3_largeframe.bc <font color="red">succ</font></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/clang -target mips-unknown-linux-gnu -c ch3_largeframe.cpp -emit-llvm -o ch3/ch3_largeframe.bc
+~/llvm-cpu0/build/bin/llvm-dis ch3/ch3_largeframe.bc -o -
+
+define dso_local i32 @_Z16test_largegframev() #0 {
+%1 = alloca [469753856 x i32], align 4
+ret i32 0
+}
+
+~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_largeframe.bc -o ch3/ch3_largeframe.1.s	</code></pre>
+</ul>
+	<H3><a name="HEAD_eb78df94" href="#TOC_HEAD_eb78df94">7.6. <strong><font color="red">fail to gen asm (ch3_localarraylargeimm)</font></strong></a></H3>
+<pre><code>~/llvm-cpu0/build/bin/clang -target mips-unknown-linux-gnu -c ch3_localarraylargeimm.cpp -emit-llvm -o ch3/ch3_localarraylargeimm.bc
+~/llvm-cpu0/build/bin/llvm-dis ch3/ch3_localarraylargeimm.bc -o -
+
+    define dso_local i32 @main() #0 {
+    %1 = alloca i32, align 4
+    %2 = alloca [100000 x i32], align 4
+    %3 = alloca i32, align 4
+    %4 = alloca i32, align 4
+    %5 = alloca i32, align 4
+    %6 = alloca i32, align 4
+    store i32 0, i32* %1, align 4
+    %7 = getelementptr inbounds [100000 x i32], [100000 x i32]* %2, i32 0, i32 99990
+    store i32 6, i32* %7, align 4
+    store i32 5, i32* %3, align 4
+    store i32 2, i32* %4, align 4
+    %8 = load i32, i32* %3, align 4
+    %9 = load i32, i32* %4, align 4
+    %10 = add nsw i32 %8, %9
+    store i32 %10, i32* %5, align 4
+    %11 = load i32, i32* %4, align 4
+    %12 = add nsw i32 %11, 1
+    store i32 %12, i32* %6, align 4
+    %13 = load i32, i32* %5, align 4
+    %14 = load i32, i32* %6, align 4
+    %15 = add nsw i32 %13, %14
+    ret i32 %15
+    }
+
+    ~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_localarraylargeimm.bc -o -
+
+        Cannot select: 0x7ffff2bb53e8: i32 = Constant&lt;399960&gt;</code></pre>
+	<H3><a name="HEAD_f783a558" href="#TOC_HEAD_f783a558">7.7. what changed</a></H3>
+<ul>
+	<li><strong>A</strong> : ch3.o2.bc (&tilde;/llvm&ndash;cpu0/build/bin/llvm&ndash;dis ch3/ch3.o2.bc &ndash;o &ndash;)</li>
+	<br />
+	<pre><code>define dso_local i32 @main() local_unnamed_addr #0 {
+ret i32 0
+}	</code></pre>
+	<li><strong>B</strong> : ch3.bc (&tilde;/llvm&ndash;cpu0/build/bin/llvm&ndash;dis ch3/ch3.bc &ndash;o &ndash;)</li>
+	<br />
+	<pre><code>define dso_local i32 @main() #0 {
+%1 = alloca i32, align 4                  &lt;=====
+store i32 0, i32* %1, align 4             &lt;===== local variables
+ret i32 0
+}	</code></pre>
+	<li><strong>A</strong> : ch3.cpu0.ch3_4.s (&tilde;/llvm&ndash;cpu0/build/bin/llc &ndash;march=cpu0 &ndash;relocation&ndash;model=pic &ndash;filetype=asm ch3/ch3.o2.bc &ndash;o &ndash;)</li>
+	<br />
+	<pre><code>main:
+        .frame  $sp,0,$lr
+        .masvk   0x00000000,0
+        .set    noreorder
+        .set    nomacro
+# %bb.0:
+        addiu   $2, $zero, 0
+        ret     $lr
+        .set    macro
+        .set    reorder
+        .end    main	</code></pre>
+	<li><strong>B</strong> : ch3.cpu0.ch3_5.1.s (&tilde;/llvm&ndash;cpu0/build/bin/llc &ndash;march=cpu0 &ndash;relocation&ndash;model=pic &ndash;filetype=asm ch3/ch3.bc &ndash;o &ndash;)</li>
+	<br />
+	<pre><code>main:
+        .frame  $fp,8,$lr           &lt;==== diff  : $sp,0,$lr
+        .mask   0x00000000,0
+        .set    noreorder
+        .set    nomacro
+# %bb.0:
+        addiu   $sp, $sp, -8        &lt;===== new
+        addiu   $2, $zero, 0
+        st      $2, 4($sp)          &lt;===== new
+        addiu   $sp, $sp, 8         &lt;===== new
+        ret     $lr
+        .set    macro
+        .set    reorder
+        .end    main	</code></pre>
+	<li><a name="wd_ln_git-commit_29"><b>git-commit</b></a> &ndash; &quot;ch3_5: impl eliminateFrameIndex&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_33642cd7" href="#TOC_HEAD_33642cd7">7.8. add testcase ch3_2.cpp</a></H3>
+<pre><code>~/llvm-cpu0/build/bin/clang -target mips-unknown-linux-gnu -c ch3_2.cpp -emit-llvm -o ch3/ch3_2.bc
+~/llvm-cpu0/build/bin/llvm-dis ch3/ch3_2.bc -o -
+
+    define dso_local i32 @main() #0 {
+    %1 = alloca i32, align 4
+    %2 = alloca i32, align 4
+    %3 = alloca i32, align 4
+    %4 = alloca i32, align 4
+    %5 = alloca i32, align 4
+    store i32 0, i32* %1, align 4
+    store i32 5, i32* %2, align 4
+    store i32 2, i32* %3, align 4
+    %6 = load i32, i32* %2, align 4
+    %7 = load i32, i32* %3, align 4
+    %8 = add nsw i32 %6, %7
+    store i32 %8, i32* %4, align 4
+    %9 = load i32, i32* %3, align 4
+    %10 = add nsw i32 %9, 1
+    store i32 %10, i32* %5, align 4
+    %11 = load i32, i32* %4, align 4
+    %12 = load i32, i32* %5, align 4
+    %13 = add nsw i32 %11, %12
+    ret i32 %13
+    }
+
+~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_2.bc -o ch3/ch3_2.cpu0.ch3_5.2.s
+
+    main:
+            .frame  $fp,24,$lr
+            .mask   0x00000000,0
+            .set    noreorder
+            .set    nomacro
+    # %bb.0:
+            addiu   $sp, $sp, -24
+            addiu   $2, $zero, 0
+            st      $2, 20($sp)
+            addiu   $2, $zero, 5
+            st      $2, 16($sp)
+            addiu   $2, $zero, 2
+            st      $2, 12($sp)
+            ld      $2, 16($sp)
+            ld      $3, 12($sp)
+            addu    $2, $2, $3
+            st      $2, 8($sp)
+            ld      $2, 12($sp)
+            addiu   $2, $2, 1
+            st      $2, 4($sp)
+            ld      $2, 8($sp)
+            ld      $3, 4($sp)
+            addu    $2, $2, $3
+            addiu   $sp, $sp, 24
+            ret     $lr
+            .set    macro
+            .set    reorder
+            .end    main</code></pre>
+<ul>
+	<li><a name="wd_ln_git-commit_30"><b>git-commit</b></a> &ndash; &quot;ch3_5: add testcase ch3_2.cpp&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_6df10eb2" href="#TOC_HEAD_6df10eb2">7.9. impl hasReservedCallFrame &amp; determineCalleeSaves</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEFrameLowering.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEFrameLowering.h</li>
+		<br />
+		<pre><code>bool hasReservedCallFrame(const MachineFunction &MF) const override;
+void determineCalleeSaves(MachineFunction &MF, BitVector &SavedRegs,		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test (no change)</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3.bc -o -
+~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_2.bc -o -	</code></pre>
+	<li><a name="wd_ln_git-commit_31"><b>git-commit</b></a> &ndash; &quot;ch3_5: impl hasReservedCallFrame &amp; determineCalleeSaves&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_53e05550" href="#TOC_HEAD_53e05550">7.10. impl storeRegToStackSlot &amp; loadRegFromStackSlot</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEInstrInfo.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEInstrInfo.h</li>
+		<br />
+		<pre><code>void storeRegToStack(MachineBasicBlock &MBB,
+void loadRegFromStack(MachineBasicBlock &MBB,		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.h</li>
+		<br />
+		<pre><code>void storeRegToStackSlot(MachineBasicBlock &MBB
+void loadRegFromStackSlot(MachineBasicBlock &MBB
+MachineMemOperand *GetMemOperand(MachineBasicBlock &MBB, int FI,		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test (no change)</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3.bc -o -
+~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_2.bc -o -	</code></pre>
+	<li><a name="wd_ln_git-commit_32"><b>git-commit</b></a> &ndash; &quot;ch3_5: impl storeRegToStackSlot &amp; loadRegFromStackSlot&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_8d12ddf5" href="#TOC_HEAD_8d12ddf5">7.11. add more functions in MachineFunction</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0MachineFunction.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0MachineFunction.h</li>
+		<br />
+		<pre><code>unsigned getIncomingArgSize() const { return IncomingArgSize; }
+
+bool callsEhReturn() const { return CallsEhReturn; }
+void setCallsEhReturn() { CallsEhReturn = true; }
+
+bool callsEhDwarf() const { return CallsEhDwarf; }
+void setCallsEhDwarf() { CallsEhDwarf = true; }
+
+void createEhDataRegsFI();
+int getEhDataRegFI(unsigned Reg) const { return EhDataRegFI[Reg]; }
+
+unsigned getMaxCallFrameSize() const { return MaxCallFrameSize; }
+void setMaxCallFrameSize(unsigned S) { MaxCallFrameSize = S; }		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test (no change)</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3.bc -o -
+~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_2.bc -o -	</code></pre>
+	<li><a name="wd_ln_git-commit_33"><b>git-commit</b></a> &ndash; &quot;ch3_5: add more functions in MachineFunction&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_62fa438_0" href="#TOC_HEAD_62fa438_0">7.12. merge</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<br />
+		<pre><code>class Cpu0InstAlias
+def HI16
+def immLow16Zero
+def : Cpu0InstAlias&lt;"move $dst, $src", (ADDu GPROut:$dst, GPROut:$src,ZERO), 1&gt;;
+def : Pat&lt;(i32 immZExt16:$in), (ORi ZERO, imm:$in)&gt;;
+def : Pat&lt;(i32 immLow16Zero:$in), (LUi (HI16 imm:$in))&gt;;
+def : Pat&lt;(i32 imm:$imm), (ORi (LUi (HI16 imm:$imm)), (LO16 imm:$imm))&gt;;		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test (no change)</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3.bc -o -
+~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_2.bc -o -
+~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_largeframe.bc -o ch3/ch3_largeframe.1.s	</code></pre>
+	<li><a name="wd_ln_git-commit_34"><b>git-commit</b></a> &ndash; &quot;ch3_5: merge&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_a995f79d" href="#TOC_HEAD_a995f79d">7.13. <strong><font color="red">diff failure (ch3_localarraylargeimm)</font></strong></a></H3>
+<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch3/ch3_localarraylargeimm.bc -o -
+
+Cannot select: 0x7fffcc362380: i32 = FrameIndex&lt;1&gt;</code></pre>
+<ul>
+	<li><a name="wd_ln_git-commit_35"><b>git-commit</b></a> &ndash; &quot;ch3_5: add testcase ch3_largeframe &amp; ch3_localarraylargeimm&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_a24fbb11" href="#TOC_HEAD_a24fbb11">8. Ch4: Arithmetic and logic instructions</a></H2>
+	<H2><a name="HEAD_2bf5c731" href="#TOC_HEAD_2bf5c731">9. Ch4_1: Arithmetic</a></H2>
+	<H3><a name="HEAD_bda28541" href="#TOC_HEAD_bda28541">9.1. test ch4_1_math &ndash; <strong><font color="red">fail</font></strong></a></H3>
+<pre><code>~/llvm-cpu0/build/bin/clang -target mips-unknown-linux-gnu -c ch4_1_math.cpp -emit-llvm -o ch4/ch4_1_math.bc
+~/llvm-cpu0/build/bin/llvm-dis ch4/ch4_1_math.bc -o -
+
+    define dso_local i32 @_Z9test_mathv() #0 {
+    %1 = alloca i32, align 4
+    %2 = alloca i32, align 4
+    %3 = alloca i32, align 4
+    %4 = alloca i32, align 4
+    %5 = alloca i32, align 4
+    %6 = alloca i32, align 4
+    %7 = alloca i32, align 4
+    %8 = alloca i32, align 4
+    %9 = alloca i32, align 4
+    %10 = alloca i32, align 4
+    %11 = alloca i32, align 4
+    %12 = alloca i32, align 4
+    %13 = alloca i32, align 4
+    %14 = alloca i32, align 4
+    %15 = alloca i32, align 4
+    store i32 5, i32* %1, align 4
+    store i32 2, i32* %2, align 4
+    store i32 -5, i32* %3, align 4
+    %16 = load i32, i32* %1, align 4
+    %17 = load i32, i32* %2, align 4
+    %18 = add nsw i32 %16, %17
+    store i32 %18, i32* %4, align 4
+    %19 = load i32, i32* %1, align 4
+    %20 = load i32, i32* %2, align 4
+    %21 = sub nsw i32 %19, %20
+    store i32 %21, i32* %5, align 4
+    %22 = load i32, i32* %1, align 4
+    %23 = load i32, i32* %2, align 4
+    %24 = mul nsw i32 %22, %23
+    store i32 %24, i32* %6, align 4
+    %25 = load i32, i32* %1, align 4
+    %26 = shl i32 %25, 2
+    store i32 %26, i32* %7, align 4
+    %27 = load i32, i32* %3, align 4
+    %28 = shl i32 %27, 1
+    store i32 %28, i32* %12, align 4
+    %29 = load i32, i32* %1, align 4
+    %30 = ashr i32 %29, 2
+    store i32 %30, i32* %8, align 4
+    %31 = load i32, i32* %3, align 4
+    %32 = lshr i32 %31, 30
+    store i32 %32, i32* %13, align 4
+    %33 = load i32, i32* %1, align 4
+    %34 = shl i32 1, %33
+    store i32 %34, i32* %9, align 4
+    %35 = load i32, i32* %2, align 4
+    %36 = shl i32 1, %35
+    store i32 %36, i32* %14, align 4
+    %37 = load i32, i32* %1, align 4
+    %38 = ashr i32 128, %37
+    store i32 %38, i32* %10, align 4
+    %39 = load i32, i32* %2, align 4
+    %40 = load i32, i32* %1, align 4
+    %41 = ashr i32 %39, %40
+    store i32 %41, i32* %15, align 4
+    store i32 -6, i32* %11, align 4
+    %42 = load i32, i32* %4, align 4
+    %43 = load i32, i32* %5, align 4
+    %44 = add nsw i32 %42, %43
+    %45 = load i32, i32* %6, align 4
+    %46 = add nsw i32 %44, %45
+    %47 = load i32, i32* %7, align 4
+    %48 = add nsw i32 %46, %47
+    %49 = load i32, i32* %12, align 4
+    %50 = add nsw i32 %48, %49
+    %51 = load i32, i32* %8, align 4
+    %52 = add nsw i32 %50, %51
+    %53 = load i32, i32* %13, align 4
+    %54 = add nsw i32 %52, %53
+    %55 = load i32, i32* %9, align 4
+    %56 = add nsw i32 %54, %55
+    %57 = load i32, i32* %14, align 4
+    %58 = add nsw i32 %56, %57
+    %59 = load i32, i32* %10, align 4
+    %60 = add nsw i32 %58, %59
+    %61 = load i32, i32* %15, align 4
+    %62 = add nsw i32 %60, %61
+    %63 = load i32, i32* %11, align 4
+    %64 = add nsw i32 %62, %63
+    ret i32 %64
+    }</code></pre>
+<ul>
+	<li>test fail &ndash; <strong><font color="red">(Cannot select sra)</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_1_math.bc -o -
+
+Cannot select: 0x7fffc43bc888: i32 = sra 0x7fffc43bc7b8, 0x7fffc43bc820	</code></pre>
+</ul>
+	<H3><a name="HEAD_aee1a0fa" href="#TOC_HEAD_aee1a0fa">9.2. handle <strong><font color="red">sra</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.h</li>
+		<br />
+		<pre><code>bool hasChapter4_1() const {
+return true;
+}		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<br />
+		<pre><code>class shift_rotate_reg
+def SRAV		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test fail &ndash; <strong><font color="red">(Cannot select srl)</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_1_math.bc -o -
+
+Cannot select: 0x7ffff027dfd0: i32 = srl Constant:i32&lt;128&gt;, 0x7ffff02815b0	</code></pre>
+	<li><a name="wd_ln_git-commit_36"><b>git-commit</b></a> &ndash; &quot;ch4_1: handle sra node&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_dd26605" href="#TOC_HEAD_dd26605">9.3. handle <strong><font color="red">srl</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<br />
+		<pre><code>def SHRV		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test fail &ndash; <strong><font color="red">(Cannot select shl)</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_1_math.bc -o -
+
+Cannot select: 0x7fffdd780478: i32 = shl Constant:i32&lt;1&gt;, 0x7fffdd780410	</code></pre>
+	<li><a name="wd_ln_git-commit_37"><b>git-commit</b></a> &ndash; &quot;ch4_1: handle srl node&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_82f3facf" href="#TOC_HEAD_82f3facf">9.4. handle <strong><font color="red">shl</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<br />
+		<pre><code>def SHLV		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test fail &ndash; <strong><font color="red">(Cannot select mul)</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_1_math.bc -o -
+
+Cannot select: 0x7fffe660a928: i32 = mul nsw 0x7fffe660a858, 0x7fffe660a8c0	</code></pre>
+	<li><a name="wd_ln_git-commit_38"><b>git-commit</b></a> &ndash; &quot;ch4_1: handle shl node&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_6d5288dc" href="#TOC_HEAD_6d5288dc">9.5. handle <strong><font color="red">mul</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<br />
+		<pre><code>def MUL		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0Schedule.td</li>
+		<br />
+		<pre><code>def IIImul : InstrItinClass;
+InstrItinData&lt;IIImul , [InstrStage&lt;17, [IMULDIV]&gt;]&gt;,		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test fail &ndash; <strong><font color="red">(Cannot select sub)</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_1_math.bc -o -
+
+Cannot select: 0x7fffdf6d84c8: i32 = sub nsw 0x7fffdf6d83f8, 0x7fffdf6d8460	</code></pre>
+	<li><a name="wd_ln_git-commit_39"><b>git-commit</b></a> &ndash; &quot;ch4_1: handle mul node&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_20026358" href="#TOC_HEAD_20026358">9.6. handle <strong><font color="red">sub</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<br />
+		<pre><code>def SUBu		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_40"><b>git-commit</b></a> &ndash; &quot;ch4_1: handle sub node&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_39522ffa" href="#TOC_HEAD_39522ffa">9.7. <strong><font color="red">support +, -, *, <<, and >></font></strong></a></H3>
+<ul>
+	<li>test succ &ndash; ch4_1_math</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_1_math.bc -o ch4/ch4_1_math.1.asm	</code></pre>
+	<li><a name="wd_ln_git-commit_41"><b>git-commit</b></a> &ndash; &quot;ch4_1: support +, &ndash;, *, &lt;&lt;, and &gt;&gt;&quot;</li>
+	<br />
+	<li>test succ &ndash; ch4_math.ll</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4_math.ll -o ch4/ch4_math.1.asm	</code></pre>
+	<li>test succ &ndash; ch4_overflow.ll</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4_overflow.ll -o ch4/ch4_overflow.1.asm	</code></pre>
+</ul>
+	<H3><a name="HEAD_2491fc19" href="#TOC_HEAD_2491fc19">9.8. test ch4_1_mult &ndash; <strong><font color="red">fail</font></strong></a></H3>
+<ul>
+	<li>test fail &ndash; <strong><font color="red">(Cannot select mulhs)</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/clang -target mips-unknown-linux-gnu -c ch4_1_mult.cpp -emit-llvm -o ch4/ch4_1_mult.bc
+~/llvm-cpu0/build/bin/llvm-dis ch4/ch4_1_mult.bc -o -
+
+define dso_local i32 @_Z9test_multv() #0 {
+%1 = alloca i32, align 4
+store i32 11, i32* %1, align 4
+%2 = load i32, i32* %1, align 4
+%3 = add nsw i32 %2, 1
+%4 = srem i32 %3, 12
+store i32 %4, i32* %1, align 4
+%5 = load i32, i32* %1, align 4
+ret i32 %5
+}
+
+
+~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_1_mult.bc -o -
+
+Cannot select: 0x7fffc6798778: i32 = mulhs 0x7fffc6798368, Constant:i32&lt;715827883&gt;	</code></pre>
+	<li><a name="wd_ln_git-commit_42"><b>git-commit</b></a> &ndash; &quot;ch4_1: add testcase ch4_1_mult&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_5c6b7827" href="#TOC_HEAD_5c6b7827">9.9. handle <strong><font color="red">mulhs</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEISelDAGToDAG.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEISelDAGToDAG.h</li>
+		<br />
+		<pre><code>Cpu0SEDAGToDAGISel::selectMULT(SDNode *N, unsigned Opc, const SDLoc &DL, EVT Ty,
+
+bool Cpu0SEDAGToDAGISel::trySelect(SDNode *Node) {
+...
+switch(Opcode) {
+...
+case ISD::MULHS:
+case ISD::MULHU: {
+MultOpc = (Opcode == ISD::MULHU ? Cpu0::MULTu : Cpu0::MULT);
+auto LoHi = selectMULT(Node, MultOpc, DL, NodeTy, false, true);
+ReplaceNode(Node, LoHi.second);
+return true;
+}		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<br />
+		<pre><code>class Mult
+class Mult32
+class MoveFromLOHI
+class MoveToLOHI
+def MULT
+def MULTu
+def MFHI
+def MFLO
+def MTHI
+def MTLO		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0RegisterInfo.td</li>
+		<br />
+		<pre><code>def HI
+def LO
+def HILO		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0Schedule.td</li>
+		<br />
+		<pre><code>def IIHiLo
+InstrItinData&lt;IIHiLo , [InstrStage&lt;1,  [IMULDIV]&gt;]&gt;,		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test succ</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_1_mult.bc -o ch4/ch4_1_mult.1.asm	</code></pre>
+	<li><a name="wd_ln_git-commit_43"><b>git-commit</b></a> &ndash; &quot;ch4_1: handle mulhs node&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_f73babdf" href="#TOC_HEAD_f73babdf">9.10. test ch4_1_mult2 &ndash; <strong><font color="red">fail</font></strong></a></H3>
+<pre><code>~/llvm-cpu0/build/bin/clang -target mips-unknown-linux-gnu -c ch4_1_mult2.cpp -emit-llvm -o ch4/ch4_1_mult2.bc
+~/llvm-cpu0/build/bin/llvm-dis ch4/ch4_1_mult2.bc -o -
+
+    define dso_local i32 @_Z9test_multv() #0 {
+    %1 = alloca i32, align 4
+    %2 = alloca i32, align 4
+    store i32 11, i32* %1, align 4
+    store i32 12, i32* %2, align 4
+    %3 = load i32, i32* %1, align 4
+    %4 = add nsw i32 %3, 1
+    %5 = load i32, i32* %2, align 4
+    %6 = srem i32 %4, %5
+    store i32 %6, i32* %1, align 4
+    %7 = load i32, i32* %1, align 4
+    ret i32 %7
+    }</code></pre>
+<ul>
+	<li>test fail &ndash; <strong><font color="red">(Cannot select srem)</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_1_mult2.bc -o -
+
+Cannot select: 0x7fffec10d690: i32 = srem 0x7fffec10d5c0, 0x7fffec10d628	</code></pre>
+</ul>
+	<H3><a name="HEAD_68a3a551" href="#TOC_HEAD_68a3a551">9.11. handle <strong><font color="red">srem</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0ISelLowering.cpp</li>
+		<br />
+		<pre><code>setOperationAction(ISD::SREM, MVT::i32, Expand);		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test fail &ndash; <strong><font color="red">(Cannot select sdivrem)</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_1_mult2.bc -o -
+
+Cannot select: 0x7fffccca3040: i32,i32 = sdivrem 0x7fffccca3380, 0x7fffccca33e8	</code></pre>
+	<li><a name="wd_ln_git-commit_44"><b>git-commit</b></a> &ndash; &quot;ch4_1: handle srem node&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_b9423234" href="#TOC_HEAD_b9423234">9.12. handle <strong><font color="red">sdivrem</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0ISelLowering.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0ISelLowering.h</li>
+		<br />
+		<pre><code>setTargetDAGCombine(ISD::SDIVREM);
+
+static SDValue performDivRemCombine(SDNode *N, SelectionDAG& DAG,
+SDValue Cpu0TargetLowering::PerformDAGCombine(SDNode *N, DAGCombinerInfo &DCI)		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test fail &ndash; <strong><font color="red">(Cannot select DivRem)</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_1_mult2.bc -o -
+
+Cannot select: 0x7fffc3cd65b0: glue = Cpu0ISD::DivRem 0x7fffc3cd64e0, 0x7fffc3cd6548	</code></pre>
+	<li><a name="wd_ln_git-commit_45"><b>git-commit</b></a> &ndash; &quot;ch4_1: handle sdivrem node&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_65ca4033" href="#TOC_HEAD_65ca4033">9.13. handle <strong><font color="red">DivRem</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<br />
+		<pre><code>def SDT_Cpu0DivRem
+def Cpu0DivRem
+class Div
+class Div32
+def SDIV		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0Schedule.td</li>
+		<br />
+		<pre><code>def IIIdiv : InstrItinClass;
+InstrItinData&lt;IIIdiv, [InstrStage&lt;38, [IMULDIV]&gt;]&gt;,		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test fail &ndash; <strong><font color="red">Segmentation fault</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_1_mult2.bc -o -
+
+#4 0x00007f0c56fddf94 llvm::Cpu0SEFrameLowering::emitPrologue(llvm::MachineFunction&, llvm::MachineBasicBlock&) const (.cold) (/home/todd-wsl/llvm-cpu0/build/bin/llc+0x2bbf94)
+Segmentation fault (core dumped)	</code></pre>
+	<li><a name="wd_ln_git-commit_46"><b>git-commit</b></a> &ndash; &quot;ch4_1: handle DivRem node&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_d226da4f" href="#TOC_HEAD_d226da4f">9.14. Fix Segmentation fault</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEInstrInfo.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEInstrInfo.h</li>
+		<br />
+		<pre><code>void copyPhysReg(MachineBasicBlock &MBB, MachineBasicBlock::iterator MI,		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test ch4_1_mult2 &ndash; succ</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_1_mult2.bc -o ch4/ch4_1_mult2.1.asm	</code></pre>
+	<li><a name="wd_ln_git-commit_47"><b>git-commit</b></a> &ndash; &quot;ch4_1: Fix Segmentation fault&quot;</li>
+	<br />
+	<li>test ch4_1_mod &ndash; succ</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/clang -target mips-unknown-linux-gnu -c ch4_1_mod.cpp -emit-llvm -o ch4/ch4_1_mod.bc
+~/llvm-cpu0/build/bin/llvm-dis ch4/ch4_1_mod.bc -o -
+
+define dso_local i32 @_Z8test_modv() #0 {
+%1 = alloca i32, align 4
+%2 = alloca i32, align 4
+store i32 11, i32* %1, align 4
+store volatile i32 12, i32* %2, align 4
+%3 = load i32, i32* %1, align 4
+%4 = add nsw i32 %3, 1
+%5 = load volatile i32, i32* %2, align 4
+%6 = srem i32 %4, %5
+store i32 %6, i32* %1, align 4
+%7 = load i32, i32* %1, align 4
+ret i32 %7
+}	</code></pre>
+	<p>
+		&tilde;/llvm&ndash;cpu0/build/bin/llc &ndash;march=cpu0 &ndash;relocation&ndash;model=pic &ndash;filetype=asm ch4/ch4_1_mod.bc &ndash;o ch4/ch4_1_mod.1.asm
+	</p>
+	<li>test ch4_1_rotate &ndash; fail &ndash; <strong><font color="red">(Cannot select rotl)</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/clang -target mips-unknown-linux-gnu -c ch4_1_rotate.cpp -emit-llvm -o ch4/ch4_1_rotate.bc
+~/llvm-cpu0/build/bin/llvm-dis ch4/ch4_1_rotate.bc -o -
+
+define dso_local i32 @_Z16test_rotate_leftv() #0 {
+%1 = alloca i32, align 4
+%2 = alloca i32, align 4
+store i32 8, i32* %1, align 4
+%3 = load i32, i32* %1, align 4
+%4 = shl i32 %3, 30
+%5 = load i32, i32* %1, align 4
+%6 = lshr i32 %5, 2
+%7 = or i32 %4, %6
+store i32 %7, i32* %2, align 4
+%8 = load i32, i32* %2, align 4
+ret i32 %8
+}	</code></pre>
+	<p>
+		&tilde;/llvm&ndash;cpu0/build/bin/llc &ndash;march=cpu0 &ndash;relocation&ndash;model=pic &ndash;filetype=asm ch4/ch4_1_rotate.bc &ndash;o &ndash;
+	</p>
+	<pre><code>Cannot select: 0x7fffbd6ea310: i32 = rotl 0x7fffbd6ea448, Constant:i32&lt;30&gt;	</code></pre>
+	<li><a name="wd_ln_git-commit_48"><b>git-commit</b></a> &ndash; &quot;ch4_1: add testcase ch4_1_rotate&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_5e4d197f" href="#TOC_HEAD_5e4d197f">9.15. handle <strong><font color="red">rotl</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<br />
+		<pre><code>def ROL : shift_rotate_imm32&lt;0x1c, 0x01, "rol", rotl&gt;;		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test ch4_1_mult2 &ndash; succ</li>
+	<br />
+	<p>
+		&tilde;/llvm&ndash;cpu0/build/bin/llc &ndash;march=cpu0 &ndash;relocation&ndash;model=pic &ndash;filetype=asm ch4/ch4_1_rotate.bc &ndash;o ch4/ch4_1_rotate.1.asm
+	</p>
+	<li><a name="wd_ln_git-commit_49"><b>git-commit</b></a> &ndash; &quot;ch4_1: handle rotl node&quot;</li>
+	<br />
+	<li>test ch4_1_addsuboverflow &ndash; succ</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/clang -target mips-unknown-linux-gnu -c ch4_1_addsuboverflow.cpp -emit-llvm -o ch4/ch4_1_addsuboverflow.bc
+~/llvm-cpu0/build/bin/llvm-dis ch4/ch4_1_addsuboverflow.bc -o -
+
+define dso_local i32 @_Z17test_add_overflowv() #0 {
+%1 = alloca i32, align 4
+%2 = alloca i32, align 4
+%3 = alloca i32, align 4
+store i32 1879048192, i32* %1, align 4
+store i32 536870912, i32* %2, align 4
+store i32 0, i32* %3, align 4
+%4 = load i32, i32* %1, align 4
+%5 = load i32, i32* %2, align 4
+%6 = add nsw i32 %4, %5
+store i32 %6, i32* %3, align 4
+ret i32 0
+}
+
+define dso_local i32 @_Z17test_sub_overflowv() #0 {
+%1 = alloca i32, align 4
+%2 = alloca i32, align 4
+%3 = alloca i32, align 4
+store i32 -1879048192, i32* %1, align 4
+store i32 536870912, i32* %2, align 4
+store i32 0, i32* %3, align 4
+%4 = load i32, i32* %1, align 4
+%5 = load i32, i32* %2, align 4
+%6 = sub nsw i32 %4, %5
+store i32 %6, i32* %3, align 4
+ret i32 0
+}	</code></pre>
+	<p>
+		&tilde;/llvm&ndash;cpu0/build/bin/llc &ndash;march=cpu0 &ndash;relocation&ndash;model=pic &ndash;filetype=asm ch4/ch4_1_addsuboverflow.bc &ndash;o ch4/ch4_1_addsuboverflow.1.asm
+	</p>
+	<li><a name="wd_ln_git-commit_50"><b>git-commit</b></a> &ndash; &quot;ch4_1: add testcase ch4_1_addsuboverflow&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_4fb1edaf" href="#TOC_HEAD_4fb1edaf">9.16. add <strong>cpu0&ndash;enable&ndash;overflow</strong> option</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.cpp</li>
+		<br />
+		<pre><code>static cl::opt&lt;bool&gt; EnableOverflowOpt
+            ("cpu0-enable-overflow", cl::Hidden, cl::init(false),
+            cl::desc("Use trigger overflow instructions add and sub \
+            instead of non-overflow instructions addu and subu"));
+
+EnableOverflow = EnableOverflowOpt;		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test fail &ndash; <strong><font color="red">(Cannot select add)</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_1_addsuboverflow.bc -cpu0-enable-overflow=true -o -
+Cannot select: 0x7fffdffab480: i32 = add nsw 0x7fffdffab3b0, 0x7fffdffab418	</code></pre>
+	<li><a name="wd_ln_git-commit_51"><b>git-commit</b></a> &ndash; &quot;ch4_1: add cpu0&ndash;enable&ndash;overflow option&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_97962cb9" href="#TOC_HEAD_97962cb9">9.17. handle <strong><font color="red">add</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.cpp</li>
+		<br />
+		<pre><code>let Predicates = [EnableOverflow] in {
+def ADD     : ArithLogicR&lt;0x13, "add", add, IIAlu, CPURegs, 1&gt;;
+def SUB     : ArithLogicR&lt;0x14, "sub", sub, IIAlu, CPURegs&gt;;
+}		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test succ</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_1_addsuboverflow.bc -cpu0-enable-overflow=true -o ch4/ch4_1_addsuboverflow.2.asm
+
+diff ch4/ch4_1_addsuboverflow.1.asm ch4/ch4_1_addsuboverflow.2.asm
+
+addu    $3, $3, $4  ===&gt;    add     $3, $3, $4
+subu    $3, $3, $4  ===&gt;    sub     $3, $3, $4	</code></pre>
+	<li><a name="wd_ln_git-commit_52"><b>git-commit</b></a> &ndash; &quot;ch4_1: handle add node&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_a5d95556" href="#TOC_HEAD_a5d95556">10. Ch4_2: Logic</a></H2>
+	<H3><a name="HEAD_a3d5d2b3" href="#TOC_HEAD_a3d5d2b3">10.1. test ch4_2_logic</a></H3>
+<pre><code>~/llvm-cpu0/build/bin/clang -target mips-unknown-linux-gnu -c ch4_2_logic.cpp -emit-llvm -o ch4/ch4_2_logic.bc
+~/llvm-cpu0/build/bin/llvm-dis ch4/ch4_2_logic.bc -o -
+
+    define dso_local i32 @_Z26test_andorxornotcomplementv() #0 {
+    %1 = alloca i32, align 4
+    %2 = alloca i32, align 4
+    %3 = alloca i32, align 4
+    %4 = alloca i32, align 4
+    %5 = alloca i32, align 4
+    %6 = alloca i32, align 4
+    %7 = alloca i32, align 4
+    store i32 5, i32* %1, align 4
+    store i32 3, i32* %2, align 4
+    store i32 0, i32* %3, align 4
+    store i32 0, i32* %4, align 4
+    store i32 0, i32* %5, align 4
+    store i32 0, i32* %6, align 4
+    store i32 0, i32* %7, align 4
+    %8 = load i32, i32* %1, align 4
+    %9 = load i32, i32* %2, align 4
+    %10 = and i32 %8, %9
+    store i32 %10, i32* %3, align 4
+    %11 = load i32, i32* %1, align 4
+    %12 = load i32, i32* %2, align 4
+    %13 = or i32 %11, %12
+    store i32 %13, i32* %4, align 4
+    %14 = load i32, i32* %1, align 4
+    %15 = load i32, i32* %2, align 4
+    %16 = xor i32 %14, %15
+    store i32 %16, i32* %5, align 4
+    %17 = load i32, i32* %1, align 4
+    %18 = icmp ne i32 %17, 0
+    %19 = xor i1 %18, true
+    %20 = zext i1 %19 to i32
+    store i32 %20, i32* %2, align 4
+    %21 = load i32, i32* %6, align 4
+    %22 = xor i32 %21, -1
+    store i32 %22, i32* %7, align 4
+    %23 = load i32, i32* %3, align 4
+    %24 = load i32, i32* %4, align 4
+    %25 = add nsw i32 %23, %24
+    %26 = load i32, i32* %5, align 4
+    %27 = add nsw i32 %25, %26
+    %28 = load i32, i32* %2, align 4
+    %29 = add nsw i32 %27, %28
+    %30 = load i32, i32* %7, align 4
+    %31 = add nsw i32 %29, %30
+    ret i32 %31
+    }
+
+    ; Function Attrs: noinline nounwind optnone mustprogress
+    define dso_local i32 @_Z10test_setxxv() #0 {
+    %1 = alloca i32, align 4
+    %2 = alloca i32, align 4
+    %3 = alloca i32, align 4
+    %4 = alloca i32, align 4
+    %5 = alloca i32, align 4
+    %6 = alloca i32, align 4
+    %7 = alloca i32, align 4
+    %8 = alloca i32, align 4
+    store i32 5, i32* %1, align 4
+    store i32 3, i32* %2, align 4
+    %9 = load i32, i32* %1, align 4
+    %10 = load i32, i32* %2, align 4
+    %11 = icmp eq i32 %9, %10
+    %12 = zext i1 %11 to i32
+    store i32 %12, i32* %3, align 4
+    %13 = load i32, i32* %1, align 4
+    %14 = load i32, i32* %2, align 4
+    %15 = icmp ne i32 %13, %14
+    %16 = zext i1 %15 to i32
+    store i32 %16, i32* %4, align 4
+    %17 = load i32, i32* %1, align 4
+    %18 = load i32, i32* %2, align 4
+    %19 = icmp slt i32 %17, %18
+    %20 = zext i1 %19 to i32
+    store i32 %20, i32* %5, align 4
+    %21 = load i32, i32* %1, align 4
+    %22 = load i32, i32* %2, align 4
+    %23 = icmp sle i32 %21, %22
+    %24 = zext i1 %23 to i32
+    store i32 %24, i32* %6, align 4
+    %25 = load i32, i32* %1, align 4
+    %26 = load i32, i32* %2, align 4
+    %27 = icmp sgt i32 %25, %26
+    %28 = zext i1 %27 to i32
+    store i32 %28, i32* %7, align 4
+    %29 = load i32, i32* %1, align 4
+    %30 = load i32, i32* %2, align 4
+    %31 = icmp sge i32 %29, %30
+    %32 = zext i1 %31 to i32
+    store i32 %32, i32* %8, align 4
+    %33 = load i32, i32* %3, align 4
+    %34 = load i32, i32* %4, align 4
+    %35 = add nsw i32 %33, %34
+    %36 = load i32, i32* %5, align 4
+    %37 = add nsw i32 %35, %36
+    %38 = load i32, i32* %6, align 4
+    %39 = add nsw i32 %37, %38
+    %40 = load i32, i32* %7, align 4
+    %41 = add nsw i32 %39, %40
+    %42 = load i32, i32* %8, align 4
+    %43 = add nsw i32 %41, %42
+    ret i32 %43
+    }</code></pre>
+<ul>
+	<li>test fail &ndash; <strong><font color="red">(Cannot select xor)</font></strong></li>
+	<br />
+	<p>
+		&tilde;/llvm&ndash;cpu0/build/bin/llc &ndash;march=cpu0 &ndash;relocation&ndash;model=pic &ndash;filetype=asm ch4/ch4_2_logic.bc &ndash;o &ndash;
+	</p>
+	<pre><code>Cannot select: 0x7fffe37a3488: i32 = xor 0x7fffe37a33b8, Constant:i32&lt;-1&gt;	</code></pre>
+	<li><a name="wd_ln_git-commit_53"><b>git-commit</b></a> &ndash; &quot;ch4_2: add testcase ch4_2_logic&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_93082a73" href="#TOC_HEAD_93082a73">10.2. handle <strong><font color="red">xor</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<br />
+		<pre><code>def AND     : ArithLogicR&lt;0x18, "and", and, IIAlu, CPURegs, 1&gt;;
+def OR      : ArithLogicR&lt;0x19, "or", or, IIAlu, CPURegs, 1&gt;;
+def XOR     : ArithLogicR&lt;0x1a, "xor", xor, IIAlu, CPURegs, 1&gt;;		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.h</li>
+		<br />
+		<pre><code>bool hasChapter4_2() const {
+return true;
+}		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test fail &ndash; <strong><font color="red">(Cannot select setcc(seteq))</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_2_logic.bc -o -
+
+Cannot select: 0x7fffc8671f70: i32 = setcc 0x7fffc8671f08, Constant:i32&lt;0&gt;, seteq:ch	</code></pre>
+	<li><a name="wd_ln_git-commit_54"><b>git-commit</b></a> &ndash; &quot;ch4_2: handle xor node&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_8ce6480b" href="#TOC_HEAD_8ce6480b">10.3. handle <strong><font color="red">setcc(seteq)</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<br />
+		<pre><code>class CmpInstr&lt;bits&lt;8&gt; op, string instr_asm,
+        InstrItinClass itin, RegisterClass RC, RegisterClass RD,
+        bit isComm = 0&gt;:
+FA&lt;op, (outs RD:$ra), (ins RC:$rb, RC:$rc),
+!strconcat(instr_asm, "\t$ra, $rb, $rc"), [], itin&gt; {
+let shamt = 0;
+let isCommutable = isComm;
+let Predicates = [HasCmp];
+}
+
+def ANDi    : ArithLogicI&lt;0x0c, "andi", and, uimm16, immZExt16, CPURegs&gt;;
+def XORi    : ArithLogicI&lt;0x0e, "xori", xor, uimm16, immZExt16, CPURegs&gt;;
+def CMP     : CmpInstr&lt;0x2A, "cmp", IIAlu, CPURegs, SR, 0&gt;;
+def SHR     : shift_rotate_imm32&lt;0x1f, 0x00, "shr", srl&gt;;
+
+multiclass SeteqPatsCmp&lt;RegisterClass RC&gt; {
+// a == b
+def : Pat&lt;(seteq RC:$lhs, RC:$rhs),
+        (SHR (ANDi (CMP RC:$lhs, RC:$rhs), 2), 1)&gt;;
+// a != b
+def : Pat&lt;(setne RC:$lhs, RC:$rhs),
+        (XORi (SHR (ANDi (CMP RC:$lhs, RC:$rhs), 2), 1), 1)&gt;;
+}
+
+defm : SeteqPatsCmp&lt;CPURegs&gt;;		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test fail &ndash; <strong><font color="red">(Cannot select setcc(setge))</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_2_logic.bc -o -
+
+Cannot select: 0x7fffd85b5ad0: i32 = setcc 0x7fffd85a29a8, 0x7fffd85a28d8, setge:ch	</code></pre>
+	<li><a name="wd_ln_git-commit_55"><b>git-commit</b></a> &ndash; &quot;ch4_2: handle setcc(seteq) node&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_433e6019" href="#TOC_HEAD_433e6019">10.4. handle <strong><font color="red">setcc(setge)</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<br />
+		<pre><code>class SetCC_R&lt;bits&lt;8&gt; op, string instr_asm, PatFrag cond_op,
+        RegisterClass RC&gt;:
+FA&lt;op, (outs GPROut:$ra), (ins RC:$rb, RC:$rc),
+!strconcat(instr_asm, "\t$ra, $rb, $rc"),
+[(set GPROut:$ra, (cond_op RC:$rb, RC:$rc))],
+IIAlu&gt;, Requires&lt;[HasSlt]&gt; {
+let shamt = 0;
+}
+
+def SLT     : SetCC_R&lt;0x28, "slt", setlt, CPURegs&gt;;
+def SLTu    : SetCC_R&lt;0x29, "sltu", setult, CPURegs&gt;;
+
+// a &gt;= b
+multiclass SetgePatsSlt&lt;RegisterClass RC, Instruction SLTOp, Instruction SLTuOp&gt; {
+def : Pat&lt;(setge RC:$lhs, RC:$rhs),
+// a &gt;= b is equal to b &lt;= a
+            (XORi (SLTOp RC:$lhs, RC:$rhs), 1)&gt;;
+def : Pat&lt;(setuge RC:$lhs, RC:$rhs),
+            (XORi (SLTuOp RC:$lhs, RC:$rhs), 1)&gt;;
+}
+
+defm : SetgePatsSlt&lt;CPURegs, SLT, SLTu&gt;;		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test fail &ndash; <strong><font color="red">(Cannot select setcc(setgt))</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_2_logic.bc -o -
+
+Cannot select: 0x7fffcf013c50: i32 = setcc 0x7fffcf001268, 0x7fffcf0012d0, setgt:ch	</code></pre>
+	<li><a name="wd_ln_git-commit_56"><b>git-commit</b></a> &ndash; &quot;ch4_2: handle setcc(setge) node&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_938c00ea" href="#TOC_HEAD_938c00ea">10.5. handle <strong><font color="red">setcc(setgt)</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<br />
+		<pre><code>// a &gt; b
+multiclass SetgtPatsSlt&lt;RegisterClass RC, Instruction SLTOp, Instruction SLTuOp&gt; {
+def : Pat&lt;(setgt RC:$lhs, RC:$rhs),
+// a &gt; b is equal to b &lt; a is equal to setlt(b, a)
+            (SLTOp RC:$rhs, RC:$lhs)&gt;;
+def : Pat&lt;(setugt RC:$lhs, RC:$rhs),
+            (SLTuOp RC:$rhs, RC:$lhs)&gt;;
+}
+
+defm : SetgtPatsSlt&lt;CPURegs, SLT, SLTu&gt;;		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test fail &ndash; <strong><font color="red">(Cannot select setcc(setle))</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_2_logic.bc -o -
+
+Cannot select: 0x7fffcd907258: i32 = setcc 0x7fffcd9040f0, 0x7fffcd904088, setle:ch	</code></pre>
+	<li><a name="wd_ln_git-commit_57"><b>git-commit</b></a> &ndash; &quot;ch4_2: handle setcc(setgt) node&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_2bb5ddde" href="#TOC_HEAD_2bb5ddde">10.6. handle <strong><font color="red">setcc(setle)</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<br />
+		<pre><code>// a &lt;= b
+multiclass SetlePatsSlt&lt;RegisterClass RC, Instruction SLTOp, Instruction SLTuOp&gt; {
+def : Pat&lt;(setle RC:$lhs, RC:$rhs),
+// a &lt;= b is equal to (XORi (b &lt; a), 1)
+            (XORi (SLTOp RC:$rhs, RC:$lhs), 1)&gt;;
+def : Pat&lt;(setule RC:$lhs, RC:$rhs),
+            (XORi (SLTuOp RC:$rhs, RC:$lhs), 1)&gt;;
+}
+
+defm : SetlePatsSlt&lt;CPURegs, SLT, SLTu&gt;;		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test succ</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_2_logic.bc -o ch4/ch4_2_logic.1.asm	</code></pre>
+	<li>test ch4_2_slt_explain succ</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/clang -target mips-unknown-linux-gnu -c ch4_2_slt_explain.cpp -emit-llvm -o ch4/ch4_2_slt_explain.bc
+~/llvm-cpu0/build/bin/llvm-dis ch4/ch4_2_slt_explain.bc -o -
+
+define dso_local i32 @_Z11test_OptSltv() #0 {
+%1 = alloca i32, align 4
+%2 = alloca i32, align 4
+%3 = alloca i32, align 4
+%4 = alloca i32, align 4
+%5 = alloca i32, align 4
+store i32 3, i32* %1, align 4
+store i32 1, i32* %2, align 4
+store i32 0, i32* %3, align 4
+store i32 0, i32* %4, align 4
+store i32 0, i32* %5, align 4
+%6 = load i32, i32* %1, align 4
+%7 = icmp slt i32 %6, 1
+%8 = zext i1 %7 to i32
+store i32 %8, i32* %3, align 4
+%9 = load i32, i32* %2, align 4
+%10 = icmp slt i32 %9, 2
+%11 = zext i1 %10 to i32
+store i32 %11, i32* %4, align 4
+%12 = load i32, i32* %3, align 4
+%13 = load i32, i32* %4, align 4
+%14 = add nsw i32 %12, %13
+store i32 %14, i32* %5, align 4
+%15 = load i32, i32* %5, align 4
+ret i32 %15
+}
+
+~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch4_2_slt_explain.bc -o ch4/ch4_2_slt_explain.1.asm	</code></pre>
+	<li><a name="wd_ln_git-commit_58"><b>git-commit</b></a> &ndash; &quot;ch4_2: handle setcc(setle) node&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_62fa438_1" href="#TOC_HEAD_62fa438_1">10.7. merge</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0ISelLowering.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0InstrInfo.td</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0SEISelDAGToDAG.cpp</li>
+		<br />
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_59"><b>git-commit</b></a> &ndash; &quot;ch4_2: merge&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_227912fc" href="#TOC_HEAD_227912fc">11. Ch5_1: Generating object files</a></H2>
+	<H3><a name="HEAD_279a805c" href="#TOC_HEAD_279a805c">11.1. <strong><font color="red">llc obj fail</font></strong></a></H3>
+<ul>
+	<li>test fail</li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=obj ch4/ch4_1_math.bc -o ch4/ch4_1_math.cpu0.1.o
+llc: error: target does not support generation of this file type	</code></pre>
+</ul>
+	<H3><a name="HEAD_a83cb931" href="#TOC_HEAD_a83cb931">11.2. add fixup</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_89cd0d6">what the fixup is used for? &ndash; 2023/11/13  <a name="MARK_2" href="#TOC_MARK_2"><strong><font color="red">@TODO</font></strong></a></li>
+	<br />
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0FixupKinds.h</li>
+		<br />
+	</ol>
+	<li><a name="wd_ln_git-commit_60"><b>git-commit</b></a> &ndash; &quot;ch5_1: add Cpu0FixupKinds&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_f199d19a" href="#TOC_HEAD_f199d19a">11.3. Register the elf streamer</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.cpp</li>
+		<br />
+		<pre><code>static MCStreamer *createMCStreamer(const Triple &TT, MCContext &Context,
+                                std::unique_ptr&lt;MCAsmBackend&gt; &&MAB,
+                                std::unique_ptr&lt;MCObjectWriter&gt; &&OW,
+                                std::unique_ptr&lt;MCCodeEmitter&gt; &&Emitter,
+                                bool RelaxAll) {
+return createELFStreamer(Context, std::move(MAB), std::move(OW),
+                    std::move(Emitter), RelaxAll);;
+}
+
+
+TargetRegistry::RegisterELFStreamer(*T, createMCStreamer);		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.h</li>
+		<br />
+		<pre><code>bool hasChapter5_1() const {
+return true;
+}		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_61"><b>git-commit</b></a> &ndash; &quot;ch5_1: Register the elf streamer&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_4abbfdab" href="#TOC_HEAD_4abbfdab">11.4. Register the asm target streamer</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.cpp</li>
+		<br />
+		<pre><code>static MCTargetStreamer *createCpu0AsmTargetStreamer(MCStreamer &S,
+                                                formatted_raw_ostream &OS,
+                                                MCInstPrinter *InstPrint,
+                                                bool isVerboseAsm) {
+return new Cpu0TargetAsmStreamer(S, OS);
+}
+
+TargetRegistry::RegisterAsmTargetStreamer(*T, createCpu0AsmTargetStreamer);		</code></pre>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/CMakeLists.txt</li>
+		<br />
+		<pre><code>Cpu0TargetStreamer.cpp		</code></pre>
+	</ol>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0TargetStreamer.h</li>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0TargetStreamer.cpp</li>
+		<br />
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_62"><b>git-commit</b></a> &ndash; &quot;ch5_1: Register the asm target streamer&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_3fdfdacd" href="#TOC_HEAD_3fdfdacd">11.5. add MCELFObjectTargetWriter</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.h</li>
+		<br />
+		<pre><code>std::unique_ptr&lt;MCObjectTargetWriter&gt; createCpu0ELFObjectWriter(const Triple &TT);		</code></pre>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/CMakeLists.txt</li>
+		<br />
+		<pre><code>Cpu0ELFObjectWriter.cpp		</code></pre>
+	</ol>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0ELFObjectWriter.cpp</li>
+		<br />
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_63"><b>git-commit</b></a> &ndash; &quot;ch5_1: add MCELFObjectTargetWriter&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ec9b2563" href="#TOC_HEAD_ec9b2563">11.6. Register the asm backend</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/CMakeLists.txt</li>
+		<br />
+		<pre><code>Cpu0AsmBackend.cpp		</code></pre>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.cpp</li>
+		<br />
+		<pre><code>TargetRegistry::RegisterMCAsmBackend(*T, createCpu0AsmBackend);		</code></pre>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.h</li>
+		<br />
+		<pre><code>MCAsmBackend *createCpu0AsmBackend(const Target &T,
+                            const MCSubtargetInfo &STI,
+                            const MCRegisterInfo &MRI,
+                            const MCTargetOptions &Options);		</code></pre>
+	</ol>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0AsmBackend.cpp</li>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0AsmBackend.h</li>
+		<br />
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_64"><b>git-commit</b></a> &ndash; &quot;ch5_1: Register the asm backend&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_7913f67b" href="#TOC_HEAD_7913f67b">11.7. add MCTargetExpr</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/CMakeLists.txt</li>
+		<br />
+		<pre><code>Cpu0MCExpr.cpp		</code></pre>
+	</ol>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCExpr.cpp</li>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCExpr.h</li>
+		<br />
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_65"><b>git-commit</b></a> &ndash; &quot;ch5_1: add MCTargetExpr&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_af2517f9" href="#TOC_HEAD_af2517f9">11.8. Register the MC Code Emitter</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/CMakeLists.txt</li>
+		<br />
+		<pre><code>Cpu0MCCodeEmitter.cpp		</code></pre>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.cpp</li>
+		<br />
+		<pre><code>TargetRegistry::RegisterMCCodeEmitter(TheCpu0Target,
+                                createCpu0MCCodeEmitterEB);
+TargetRegistry::RegisterMCCodeEmitter(TheCpu0elTarget,
+                                createCpu0MCCodeEmitterEL);		</code></pre>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCTargetDesc.h</li>
+		<br />
+		<pre><code>MCCodeEmitter *createCpu0MCCodeEmitterEB(const MCInstrInfo &MCII,
+                                    const MCRegisterInfo &MRI,
+                                    MCContext &Ctx);
+MCCodeEmitter *createCpu0MCCodeEmitterEL(const MCInstrInfo &MCII,
+                                    const MCRegisterInfo &MRI,
+                                    MCContext &Ctx);		</code></pre>
+	</ol>
+	<li>new files</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCCodeEmitter.cpp</li>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0MCCodeEmitter.h</li>
+		<br />
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_66"><b>git-commit</b></a> &ndash; &quot;ch5_1: Register the MC Code Emitter&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_c7d3c9a2" href="#TOC_HEAD_c7d3c9a2">11.9. <strong><font color="red">succ to gen obj</font></strong></a></H3>
+<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=obj ch4/ch4_1_math.bc -o ch4/ch4_1_math.cpu0.1.o
+objdump -s ch4/ch4_1_math.cpu0.1.o
+
+    ch4/ch4_1_math.cpu0.1.o:     file format elf32-big
+
+    Contents of section .text:
+    0000 09ddffc0 09200005 022d003c 09200002  ..... ...-.&lt;. ..
+    0010 022d0038 0920fffb 022d0034 012d003c  .-.8. ...-.4.-.&lt;
+    0020 013d0038 11223000 022d0030 012d003c  .=.8."0..-.0.-.&lt;
+    0030 013d0038 12223000 022d002c 012d003c  .=.8."0..-.,.-.&lt;
+    0040 013d0038 17223000 022d0028 012d003c  .=.8."0..-.(.-.&lt;
+    0050 1e220002 022d0024 012d0034 1e220001  ."...-.$.-.4."..
+    0060 022d0010 012d003c 20220002 022d0020  .-...-.&lt; "...-.
+    0070 012d0034 1f22001e 022d000c 012d003c  .-.4."...-...-.&lt;
+    0080 09300001 22232000 022d001c 012d0038  .0.."# ..-...-.8
+    0090 22232000 022d0008 012d003c 09300080  "# ..-...-.&lt;.0..
+    00a0 23232000 022d0018 012d0038 013d003c  ## ..-...-.8.=.&lt;
+    00b0 21223000 022d0004 0920fffa 022d0014  !"0..-... ...-..
+    00c0 012d0030 013d002c 11223000 013d0028  .-.0.=.,."0..=.(
+    00d0 11223000 013d0024 11223000 013d0010  ."0..=.$."0..=..
+    00e0 11223000 013d0020 11223000 013d000c  ."0..=. ."0..=..
+    00f0 11223000 013d001c 11223000 013d0008  ."0..=..."0..=..
+    0100 11223000 013d0018 11223000 013d0004  ."0..=..."0..=..
+    0110 11223000 013d0014 11223000 09dd0040  ."0..=..."0....@
+    0120 3ce00000                             &lt;...
+    Contents of section .comment:
+    0000 00636c61 6e672076 65727369 6f6e2031  .clang version 1
+    0010 322e302e 31202867 69744067 69746875  2.0.1 (git@githu
+    0020 622e636f 6d3a6c6c 766d2f6c 6c766d2d  b.com:llvm/llvm-
+    0030 70726f6a 65637420 61626430 31633638  project abd01c68
+    0040 35666466 38396339 61386133 33326238  5fdf89c9a8a332b8
+    0050 36356265 39613231 32303738 61656433  65be9a212078aed3
+    0060 2900                                 ).</code></pre>
+<ul>
+	<li><a name="wd_ln_git-commit_67"><b>git-commit</b></a> &ndash; &quot;ch5_1: succ to gen obj&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_ed869ab1" href="#TOC_HEAD_ed869ab1">12. ch6: Global variables</a></H2>
+	<H3><a name="HEAD_3f344f0a" href="#TOC_HEAD_3f344f0a">12.1. test ch6_1.cpp</a></H3>
+<pre><code>~/llvm-cpu0/build/bin/clang -target mips-unknown-linux-gnu -c ch6_1.cpp -emit-llvm -o ch4/ch6_1.bc
+~/llvm-cpu0/build/bin/llvm-dis ch4/ch6_1.bc -o -
+
+    define dso_local i32 @_Z11test_globalv() #0 {
+    %1 = alloca i32, align 4
+    store i32 0, i32* %1, align 4
+    %2 = load i32, i32* @gI, align 4
+    store i32 %2, i32* %1, align 4
+    %3 = load i32, i32* %1, align 4
+    ret i32 %3
+    }
+
+~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch6_1.bc -o -
+
+    Cannot select: 0x7fffd10b0250: i32 = GlobalAddress&lt;i32* @gI&gt; 0</code></pre>
+<ul>
+	<li><a name="wd_ln_git-commit_68"><b>git-commit</b></a> &ndash; &quot;ch6_1: add testcase ch6_1&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_4eef8e09" href="#TOC_HEAD_4eef8e09">12.2. handle <strong><font color="red">GlobalAddress</font></strong> node</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<ol>
+		<li>llvm/lib/Target/Cpu0/Cpu0ISelLowering.cpp</li>
+		<br />
+		<pre><code>SDValue Cpu0TargetLowering::getGlobalReg(SelectionDAG &DAG, EVT Ty)
+SDValue Cpu0TargetLowering::getTargetNode(GlobalAddressSDNode *N, EVT Ty,
+
+setOperationAction(ISD::GlobalAddress,      MVT::i32,   Custom);
+
+SDValue Cpu0TargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const
+SDValue Cpu0TargetLowering::lowerGlobalAddress(SDValue Op,		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0ISelLowering.h</li>
+		<br />
+		<pre><code>SDValue LowerOperation(SDValue Op, SelectionDAG &DAG) const override;
+SDValue getGlobalReg(SelectionDAG &DAG, EVT Ty) const;
+
+template&lt;class NodeTy&gt;
+SDValue getAddrLocal(NodeTy *N, EVT Ty, SelectionDAG &DAG) const {
+
+template&lt;class NodeTy&gt;
+SDValue getAddrGlobal(NodeTy *N, EVT Ty, SelectionDAG &DAG,
+
+template&lt;class NodeTy&gt;
+SDValue getAddrGlobalLargeGOT(NodeTy *N, EVT Ty, SelectionDAG &DAG,
+
+template&lt;class NodeTy&gt;
+SDValue getAddrNonPIC(NodeTy *N, EVT Ty, SelectionDAG &DAG) const {
+
+SDValue getTargetNode(GlobalAddressSDNode *N, EVT Ty, SelectionDAG &DAG,		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0MachineFunction.cpp</li>
+		<br />
+		<pre><code>unsigned Cpu0FunctionInfo::getGlobalBaseReg() {
+return GlobalBaseReg = Cpu0::GP;
+}		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0MachineFunction.h</li>
+		<br />
+		<pre><code>GlobalBaseReg(0),
+unsigned getGlobalBaseReg();
+unsigned GlobalBaseReg;		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0Subtarget.h</li>
+		<br />
+		<pre><code>bool hasChapter6_1() const {
+return true;
+}
+
+bool UseSmallSection;
+bool useSmallSection() const { return UseSmallSection; }		</code></pre>
+		<li>llvm/lib/Target/Cpu0/Cpu0TargetObjectFile.cpp</li>
+		<li>llvm/lib/Target/Cpu0/Cpu0TargetObjectFile.h</li>
+		<br />
+		<pre><code>static bool IsInSmallSection(uint64_t Size) {
+bool Cpu0TargetObjectFile::IsGlobalInSmallSection(
+bool Cpu0TargetObjectFile::IsGlobalInSmallSection(const GlobalObject *GO, const TargetMachine &TM,
+bool Cpu0TargetObjectFile::IsGlobalInSmallSectionImpl(const GlobalObject *GV,		</code></pre>
+		<li>llvm/lib/Target/Cpu0/MCTargetDesc/Cpu0BaseInfo.h</li>
+		<br />
+		<pre><code>MO_GOT,		</code></pre>
+	</ol>
+	<li>build succ</li>
+	<br />
+	<li>test fail &ndash; <strong><font color="red">(Cannot select Cpu0ISD::Wrapper(TargetGlobalAddress))</font></strong></li>
+	<br />
+	<pre><code>~/llvm-cpu0/build/bin/llc -march=cpu0 -relocation-model=pic -filetype=asm ch4/ch6_1.bc -o -
+
+Cannot select: 0x7ffff3926950: i32 = Cpu0ISD::Wrapper 0x7ffff3926880, TargetGlobalAddress:i32&lt;i32* @gI&gt; 0 [TF=7]	</code></pre>
+	<li><a name="wd_ln_git-commit_69"><b>git-commit</b></a> &ndash; &quot;ch6_1: handle GlobalAddress node&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_91ac9013" href="#TOC_HEAD_91ac9013">13. Refers</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_cbed6a4"><a href="https://llvm.org/docs/GettingStarted.html" target="_blank">LLVM &ndash; Getting Started with the LLVM System</a> &nbsp;<a href="../tags/LLVM.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM</a></li>
+	<li><a name="HEAD_HIDDEN_4b188867"><a href="https://aosabook.org/en/v1/llvm.html" target="_blank">The Architecture of Open Source Applications &ndash; Volume 1 &ndash; LLVM</a> &nbsp;<a href="../tags/LLVM.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM</a></li>
+	<li><a name="HEAD_HIDDEN_d4fc72a9"><a href="https://jonathan2251.github.io/lbd/#" target="_blank">Tutorial: Creating an LLVM Backend for the Cpu0 Architecture</a> &nbsp;<a href="../tags/CPU0.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>CPU0</a>&nbsp;<a href="../tags/LLVM-target.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-target</a></li>
+	<br />
+	<li><a name="HEAD_HIDDEN_5aedb3d4"><a href="https://github.com/P2Tree/LLVM_for_cpu0" target="_blank">LLVM_for_cpu0 &ndash; GitHub</a> &nbsp;<a href="../tags/CPU0.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>CPU0</a>&nbsp;<a href="../tags/GitHub.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>GitHub</a></li>
+	<li><a name="HEAD_HIDDEN_be71ce3"><a href="https://github.com/P2Tree/LLVM_for_cpu0/blob/main/tutorial/llvm-hou-duan-shi-jian-bi-ji-0.md" target="_blank">LLVM_for_cpu0 &ndash; 第 0 章 序</a> &nbsp;<a href="../tags/CPU0.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>CPU0</a></li>
+	<br />
+</ul>
+	<hr/>
+	<H2><a name="HEAD_4737b7f1" href="#TOC_HEAD_4737b7f1">14. Index (2)</a></H2>
+	<H3><a name="wd_def_build" href="#TOC_wd_def_build">14.1. build (1)</a></H3>
+	<ul>
+		<li><a href="#wd_ln_build_0" >build (first time) succ</a>
+	</ul>
+	<H3><a name="wd_def_git-commit" href="#TOC_wd_def_git-commit">14.2. git&ndash;commit (70)</a></H3>
+	<ul>
+		<li><a href="#wd_ln_git-commit_0" >git-commit &ndash; &quot;ch1: recognise triple&quot;</a>
+		<li><a href="#wd_ln_git-commit_1" >git-commit &ndash; &quot;ch2: update elf&quot;</a>
+		<li><a href="#wd_ln_git-commit_2" >git-commit &ndash; &quot;ch2: add empty backend&quot;</a>
+		<li><a href="#wd_ln_git-commit_3" >git-commit &ndash; &quot;ch2: add .td files&quot;</a>
+		<li><a href="#wd_ln_git-commit_4" >git-commit &ndash; &quot;ch3_1: add Processor &amp; SubtargetFeature&quot;</a>
+		<li><a href="#wd_ln_git-commit_5" >git-commit &ndash; &quot;ch3_1: add TargetMachine&quot;</a>
+		<li><a href="#wd_ln_git-commit_6" >git-commit &ndash; &quot;ch3_1: add Subtarget&quot;</a>
+		<li><a href="#wd_ln_git-commit_7" >git-commit &ndash; &quot;ch3_1: add FrameLowering&quot;</a>
+		<li><a href="#wd_ln_git-commit_8" >git-commit &ndash; &quot;ch3_1: add MachineFunction&quot;</a>
+		<li><a href="#wd_ln_git-commit_9" >git-commit &ndash; &quot;ch3_1: add RegisterInfo&quot;</a>
+		<li><a href="#wd_ln_git-commit_10" >git-commit &ndash; &quot;ch3_1: add InstrInfo&quot;</a>
+		<li><a href="#wd_ln_git-commit_11" >git-commit &ndash; &quot;ch3_1: add ObjectFile&quot;</a>
+		<li><a href="#wd_ln_git-commit_12" >git-commit &ndash; &quot;ch3_1: add ABIInfo&quot;</a>
+		<li><a href="#wd_ln_git-commit_13" >git-commit &ndash; &quot;ch3_2: add MCAsmInfo&quot;</a>
+		<li><a href="#wd_ln_git-commit_14" >git-commit &ndash; &quot;ch3_2: Register the MC instruction info&quot;</a>
+		<li><a href="#wd_ln_git-commit_15" >git-commit &ndash; &quot;ch3_2: Register the MC register info&quot;</a>
+		<li><a href="#wd_ln_git-commit_16" >git-commit &ndash; &quot;ch3_2: llc &ndash;march=cpu0 &ndash;mcpu=help &ndash; succ&quot;</a>
+		<li><a href="#wd_ln_git-commit_17" >git-commit &ndash; &quot;ch3_2: Register the MC subtarget info&quot;</a>
+		<li><a href="#wd_ln_git-commit_18" >git-commit &ndash; &quot;ch3_2: Register the MC instruction analyzer&quot;</a>
+		<li><a href="#wd_ln_git-commit_19" >git-commit &ndash; &quot;ch3_2: Register the MCInstPrinter&quot;</a>
+		<li><a href="#wd_ln_git-commit_20" >git-commit &ndash; &quot;ch3_2: add AsmPrinter &amp; MCInstLower&quot;</a>
+		<li><a href="#wd_ln_git-commit_21" >git-commit &ndash; &quot;ch3_2: merge&quot;</a>
+		<li><a href="#wd_ln_git-commit_22" >git-commit &ndash; &quot;ch3_3: add SelectionDAGISel&quot;</a>
+		<li><a href="#wd_ln_git-commit_23" >git-commit &ndash; &quot;ch3_4: expand RetLR&quot;</a>
+		<li><a href="#wd_ln_git-commit_24" >git-commit &ndash; &quot;ch3_4: LowerFormalArguments &amp; LowerReturn&quot;</a>
+		<li><a href="#wd_ln_git-commit_25" >git-commit &ndash; &quot;ch3_4: merge (llc still hang)&quot;</a>
+		<li><a href="#wd_ln_git-commit_26" >git-commit &ndash; &quot;ch3_4: the ch3.cpp can be run with option &#039;clang &ndash;O2&#039;&quot;</a>
+		<li><a href="#wd_ln_git-commit_27" >git-commit &ndash; &quot;ch3_5: impl emitPrologue&quot;</a>
+		<li><a href="#wd_ln_git-commit_28" >git-commit &ndash; &quot;ch3_5: impl emitEpilogue&quot;</a>
+		<li><a href="#wd_ln_git-commit_29" >git-commit &ndash; &quot;ch3_5: impl eliminateFrameIndex&quot;</a>
+		<li><a href="#wd_ln_git-commit_30" >git-commit &ndash; &quot;ch3_5: add testcase ch3_2.cpp&quot;</a>
+		<li><a href="#wd_ln_git-commit_31" >git-commit &ndash; &quot;ch3_5: impl hasReservedCallFrame &amp; determineCalleeSaves&quot;</a>
+		<li><a href="#wd_ln_git-commit_32" >git-commit &ndash; &quot;ch3_5: impl storeRegToStackSlot &amp; loadRegFromStackSlot&quot;</a>
+		<li><a href="#wd_ln_git-commit_33" >git-commit &ndash; &quot;ch3_5: add more functions in MachineFunction&quot;</a>
+		<li><a href="#wd_ln_git-commit_34" >git-commit &ndash; &quot;ch3_5: merge&quot;</a>
+		<li><a href="#wd_ln_git-commit_35" >git-commit &ndash; &quot;ch3_5: add testcase ch3_largeframe &amp; ch3_localarraylargeimm&quot;</a>
+		<li><a href="#wd_ln_git-commit_36" >git-commit &ndash; &quot;ch4_1: handle sra node&quot;</a>
+		<li><a href="#wd_ln_git-commit_37" >git-commit &ndash; &quot;ch4_1: handle srl node&quot;</a>
+		<li><a href="#wd_ln_git-commit_38" >git-commit &ndash; &quot;ch4_1: handle shl node&quot;</a>
+		<li><a href="#wd_ln_git-commit_39" >git-commit &ndash; &quot;ch4_1: handle mul node&quot;</a>
+		<li><a href="#wd_ln_git-commit_40" >git-commit &ndash; &quot;ch4_1: handle sub node&quot;</a>
+		<li><a href="#wd_ln_git-commit_41" >git-commit &ndash; &quot;ch4_1: support +, &ndash;, *, &lt;&lt;, and &gt;&gt;&quot;</a>
+		<li><a href="#wd_ln_git-commit_42" >git-commit &ndash; &quot;ch4_1: add testcase ch4_1_mult&quot;</a>
+		<li><a href="#wd_ln_git-commit_43" >git-commit &ndash; &quot;ch4_1: handle mulhs node&quot;</a>
+		<li><a href="#wd_ln_git-commit_44" >git-commit &ndash; &quot;ch4_1: handle srem node&quot;</a>
+		<li><a href="#wd_ln_git-commit_45" >git-commit &ndash; &quot;ch4_1: handle sdivrem node&quot;</a>
+		<li><a href="#wd_ln_git-commit_46" >git-commit &ndash; &quot;ch4_1: handle DivRem node&quot;</a>
+		<li><a href="#wd_ln_git-commit_47" >git-commit &ndash; &quot;ch4_1: Fix Segmentation fault&quot;</a>
+		<li><a href="#wd_ln_git-commit_48" >git-commit &ndash; &quot;ch4_1: add testcase ch4_1_rotate&quot;</a>
+		<li><a href="#wd_ln_git-commit_49" >git-commit &ndash; &quot;ch4_1: handle rotl node&quot;</a>
+		<li><a href="#wd_ln_git-commit_50" >git-commit &ndash; &quot;ch4_1: add testcase ch4_1_addsuboverflow&quot;</a>
+		<li><a href="#wd_ln_git-commit_51" >git-commit &ndash; &quot;ch4_1: add cpu0&ndash;enable&ndash;overflow option&quot;</a>
+		<li><a href="#wd_ln_git-commit_52" >git-commit &ndash; &quot;ch4_1: handle add node&quot;</a>
+		<li><a href="#wd_ln_git-commit_53" >git-commit &ndash; &quot;ch4_2: add testcase ch4_2_logic&quot;</a>
+		<li><a href="#wd_ln_git-commit_54" >git-commit &ndash; &quot;ch4_2: handle xor node&quot;</a>
+		<li><a href="#wd_ln_git-commit_55" >git-commit &ndash; &quot;ch4_2: handle setcc(seteq) node&quot;</a>
+		<li><a href="#wd_ln_git-commit_56" >git-commit &ndash; &quot;ch4_2: handle setcc(setge) node&quot;</a>
+		<li><a href="#wd_ln_git-commit_57" >git-commit &ndash; &quot;ch4_2: handle setcc(setgt) node&quot;</a>
+		<li><a href="#wd_ln_git-commit_58" >git-commit &ndash; &quot;ch4_2: handle setcc(setle) node&quot;</a>
+		<li><a href="#wd_ln_git-commit_59" >git-commit &ndash; &quot;ch4_2: merge&quot;</a>
+		<li><a href="#wd_ln_git-commit_60" >git-commit &ndash; &quot;ch5_1: add Cpu0FixupKinds&quot;</a>
+		<li><a href="#wd_ln_git-commit_61" >git-commit &ndash; &quot;ch5_1: Register the elf streamer&quot;</a>
+		<li><a href="#wd_ln_git-commit_62" >git-commit &ndash; &quot;ch5_1: Register the asm target streamer&quot;</a>
+		<li><a href="#wd_ln_git-commit_63" >git-commit &ndash; &quot;ch5_1: add MCELFObjectTargetWriter&quot;</a>
+		<li><a href="#wd_ln_git-commit_64" >git-commit &ndash; &quot;ch5_1: Register the asm backend&quot;</a>
+		<li><a href="#wd_ln_git-commit_65" >git-commit &ndash; &quot;ch5_1: add MCTargetExpr&quot;</a>
+		<li><a href="#wd_ln_git-commit_66" >git-commit &ndash; &quot;ch5_1: Register the MC Code Emitter&quot;</a>
+		<li><a href="#wd_ln_git-commit_67" >git-commit &ndash; &quot;ch5_1: succ to gen obj&quot;</a>
+		<li><a href="#wd_ln_git-commit_68" >git-commit &ndash; &quot;ch6_1: add testcase ch6_1&quot;</a>
+		<li><a href="#wd_ln_git-commit_69" >git-commit &ndash; &quot;ch6_1: handle GlobalAddress node&quot;</a>
+	</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    <b><a href="#HEAD_todo"><font color="red">TODO: 2</font></a></b><br>﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_328f85b" href="#HEAD_328f85b">1. Ch2: Cpu0 architecture and LLVM structure</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_bce8904" href="#HEAD_bce8904">1.1. setup (LLVM 12)</a></li>
+		<li><a name="TOC_HEAD_eebe4729" href="#HEAD_eebe4729">1.2. recognise triple</a></li>
+		<li><a name="TOC_HEAD_ee44c0c8" href="#HEAD_ee44c0c8">1.3. update elf</a></li>
+		<li><a name="TOC_HEAD_79f6b517" href="#HEAD_79f6b517">1.4. add empty backend ( <strong><font color="red">can build</font></strong> )</a></li>
+		<li><a name="TOC_HEAD_f2b216b9" href="#HEAD_f2b216b9">1.5. <code>llc &ndash;&ndash;version</code> <strong><font color="red">succ</font></strong></a></li>
+		<li><a name="TOC_HEAD_b03b4236" href="#HEAD_b03b4236">1.6. add .td files</a></li>
+		<li><a name="TOC_HEAD_76c2d450" href="#HEAD_76c2d450">1.7. <strong><font color="red">build fail</font></strong></a></li>
+	</menu>
+	<b><a name="TOC_HEAD_31fd2153" href="#HEAD_31fd2153">2. Ch3: Backend structure</a></b><br>
+	<b><a name="TOC_HEAD_704a8c3" href="#HEAD_704a8c3">3. Ch3_1: TargetMachine structure</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_a2f5b44c" href="#HEAD_a2f5b44c">3.1. add Processor &amp; SubtargetFeature</a></li>
+		<li><a name="TOC_HEAD_ecea6417" href="#HEAD_ecea6417">3.2. add TargetMachine</a></li>
+		<li><a name="TOC_HEAD_ab48a6f2" href="#HEAD_ab48a6f2">3.3. add Subtarget</a></li>
+		<li><a name="TOC_HEAD_cd12c540" href="#HEAD_cd12c540">3.4. <code>llc &ndash;march=cpu0 &ndash;mcpu=help</code> <strong><font color="red">Segmentation fault</font></strong></a></li>
+		<li><a name="TOC_HEAD_2c25006f" href="#HEAD_2c25006f">3.5. add FrameLowering</a></li>
+		<li><a name="TOC_HEAD_4f12db71" href="#HEAD_4f12db71">3.6. add TargetLowering</a></li>
+		<li><a name="TOC_HEAD_42866fa0" href="#HEAD_42866fa0">3.7. add MachineFunction</a></li>
+		<li><a name="TOC_HEAD_40fa7730" href="#HEAD_40fa7730">3.8. add RegisterInfo</a></li>
+		<li><a name="TOC_HEAD_8d9b0cdb" href="#HEAD_8d9b0cdb">3.9. add InstrInfo</a></li>
+		<li><a name="TOC_HEAD_1495125a" href="#HEAD_1495125a">3.10. add ObjectFile</a></li>
+		<li><a name="TOC_HEAD_a1755497" href="#HEAD_a1755497">3.11. add ABIInfo</a></li>
+		<li><a name="TOC_HEAD_1f170f85" href="#HEAD_1f170f85">3.12. <strong><font color="red">llc fail</font></strong></a></li>
+	</menu>
+	<b><a name="TOC_HEAD_b7b66165" href="#HEAD_b7b66165">4. Ch3_2: Add AsmPrinter</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_14e75e94" href="#HEAD_14e75e94">4.1. add MCAsmInfo</a></li>
+		<li><a name="TOC_HEAD_ffa665be" href="#HEAD_ffa665be">4.2. Register the MC instruction info</a></li>
+		<li><a name="TOC_HEAD_ca7be80d" href="#HEAD_ca7be80d">4.3. Register the MC register info</a></li>
+		<li><a name="TOC_HEAD_52cff7c2" href="#HEAD_52cff7c2">4.4. <code>llc &ndash;march=cpu0 &ndash;mcpu=help</code> <strong><font color="red">succ</font></strong></a></li>
+		<li><a name="TOC_HEAD_feac6e0f" href="#HEAD_feac6e0f">4.5. <strong><font color="red">fails to gen asm</font></strong></a></li>
+		<li><a name="TOC_HEAD_e4197bdb" href="#HEAD_e4197bdb">4.6. Register the MC subtarget info</a></li>
+		<li><a name="TOC_HEAD_ede45b6" href="#HEAD_ede45b6">4.7. Register the MC instruction analyzer</a></li>
+		<li><a name="TOC_HEAD_4a6909f2" href="#HEAD_4a6909f2">4.8. Register the MCInstPrinter</a></li>
+		<li><a name="TOC_HEAD_b97e0be9" href="#HEAD_b97e0be9">4.9. add AsmPrinter &amp; MCInstLower</a></li>
+		<li><a name="TOC_HEAD_62fa438" href="#HEAD_62fa438">4.10. merge</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_23caf4bd" href="#HEAD_23caf4bd">5. Ch3_3: Add Cpu0DAGToDAGISel class</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_235706e" href="#HEAD_235706e">5.1. add SelectionDAGISel</a></li>
+		<li><a name="TOC_HEAD_ea9953b4" href="#HEAD_ea9953b4">5.2. <strong><font color="red">Cannot select: Cpu0ISD::Ret</font></strong></a></li>
+	</menu>
+	<b><a name="TOC_HEAD_9b42e26e" href="#HEAD_9b42e26e">6. Ch3_4: Handle return register $lr</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_51b77a01" href="#HEAD_51b77a01">6.1. expand <strong>RetLR</strong></a></li>
+		<li><a name="TOC_HEAD_c798e8dd" href="#HEAD_c798e8dd">6.2. LowerFormalArguments &amp; LowerReturn</a></li>
+		<li><a name="TOC_HEAD_7438f8fc" href="#HEAD_7438f8fc">6.3. enable hasChapter3_4 &amp; merge <strong>(llc hang)</strong></a></li>
+		<li><a name="TOC_HEAD_95c849a6" href="#HEAD_95c849a6">6.4. <strong><font color="red">fail to gen asm &ndash; llc hang</font></strong></a></li>
+		<li><a name="TOC_HEAD_cae234ae" href="#HEAD_cae234ae">6.5. <strong><font color="red">succ to gen asm (clang &ndash;O2)</font></strong></a></li>
+		<li><a name="TOC_HEAD_c4bce058" href="#HEAD_c4bce058">6.6. root cause &ndash; not handled <strong><font color="red">stack slot for local variables</font></strong></a></li>
+	</menu>
+	<b><a name="TOC_HEAD_b465f030" href="#HEAD_b465f030">7. Ch3_5: Add Prologue/Epilogue functions</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_22c4353a" href="#HEAD_22c4353a">7.1. impl emitPrologue</a></li>
+		<li><a name="TOC_HEAD_380dbd69" href="#HEAD_380dbd69">7.2. impl emitEpilogue</a></li>
+		<li><a name="TOC_HEAD_2db4c527" href="#HEAD_2db4c527">7.3. impl eliminateFrameIndex</a></li>
+		<li><a name="TOC_HEAD_c2ac908f" href="#HEAD_c2ac908f">7.4. <strong><font color="red">succ to gen asm (local variables)</font></strong></a></li>
+		<li><a name="TOC_HEAD_751df315" href="#HEAD_751df315">7.5. <strong><font color="red">succ to gen asm (largeframe)</font></strong></a></li>
+		<li><a name="TOC_HEAD_eb78df94" href="#HEAD_eb78df94">7.6. <strong><font color="red">fail to gen asm (ch3_localarraylargeimm)</font></strong></a></li>
+		<li><a name="TOC_HEAD_f783a558" href="#HEAD_f783a558">7.7. what changed</a></li>
+		<li><a name="TOC_HEAD_33642cd7" href="#HEAD_33642cd7">7.8. add testcase ch3_2.cpp</a></li>
+		<li><a name="TOC_HEAD_6df10eb2" href="#HEAD_6df10eb2">7.9. impl hasReservedCallFrame &amp; determineCalleeSaves</a></li>
+		<li><a name="TOC_HEAD_53e05550" href="#HEAD_53e05550">7.10. impl storeRegToStackSlot &amp; loadRegFromStackSlot</a></li>
+		<li><a name="TOC_HEAD_8d12ddf5" href="#HEAD_8d12ddf5">7.11. add more functions in MachineFunction</a></li>
+		<li><a name="TOC_HEAD_62fa438_0" href="#HEAD_62fa438_0">7.12. merge</a></li>
+		<li><a name="TOC_HEAD_a995f79d" href="#HEAD_a995f79d">7.13. <strong><font color="red">diff failure (ch3_localarraylargeimm)</font></strong></a></li>
+	</menu>
+	<b><a name="TOC_HEAD_a24fbb11" href="#HEAD_a24fbb11">8. Ch4: Arithmetic and logic instructions</a></b><br>
+	<b><a name="TOC_HEAD_2bf5c731" href="#HEAD_2bf5c731">9. Ch4_1: Arithmetic</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_bda28541" href="#HEAD_bda28541">9.1. test ch4_1_math &ndash; <strong><font color="red">fail</font></strong></a></li>
+		<li><a name="TOC_HEAD_aee1a0fa" href="#HEAD_aee1a0fa">9.2. handle <strong><font color="red">sra</font></strong> node</a></li>
+		<li><a name="TOC_HEAD_dd26605" href="#HEAD_dd26605">9.3. handle <strong><font color="red">srl</font></strong> node</a></li>
+		<li><a name="TOC_HEAD_82f3facf" href="#HEAD_82f3facf">9.4. handle <strong><font color="red">shl</font></strong> node</a></li>
+		<li><a name="TOC_HEAD_6d5288dc" href="#HEAD_6d5288dc">9.5. handle <strong><font color="red">mul</font></strong> node</a></li>
+		<li><a name="TOC_HEAD_20026358" href="#HEAD_20026358">9.6. handle <strong><font color="red">sub</font></strong> node</a></li>
+		<li><a name="TOC_HEAD_39522ffa" href="#HEAD_39522ffa">9.7. <strong><font color="red">support +, -, *, <<, and >></font></strong></a></li>
+		<li><a name="TOC_HEAD_2491fc19" href="#HEAD_2491fc19">9.8. test ch4_1_mult &ndash; <strong><font color="red">fail</font></strong></a></li>
+		<li><a name="TOC_HEAD_5c6b7827" href="#HEAD_5c6b7827">9.9. handle <strong><font color="red">mulhs</font></strong> node</a></li>
+		<li><a name="TOC_HEAD_f73babdf" href="#HEAD_f73babdf">9.10. test ch4_1_mult2 &ndash; <strong><font color="red">fail</font></strong></a></li>
+		<li><a name="TOC_HEAD_68a3a551" href="#HEAD_68a3a551">9.11. handle <strong><font color="red">srem</font></strong> node</a></li>
+		<li><a name="TOC_HEAD_b9423234" href="#HEAD_b9423234">9.12. handle <strong><font color="red">sdivrem</font></strong> node</a></li>
+		<li><a name="TOC_HEAD_65ca4033" href="#HEAD_65ca4033">9.13. handle <strong><font color="red">DivRem</font></strong> node</a></li>
+		<li><a name="TOC_HEAD_d226da4f" href="#HEAD_d226da4f">9.14. Fix Segmentation fault</a></li>
+		<li><a name="TOC_HEAD_5e4d197f" href="#HEAD_5e4d197f">9.15. handle <strong><font color="red">rotl</font></strong> node</a></li>
+		<li><a name="TOC_HEAD_4fb1edaf" href="#HEAD_4fb1edaf">9.16. add <strong>cpu0&ndash;enable&ndash;overflow</strong> option</a></li>
+		<li><a name="TOC_HEAD_97962cb9" href="#HEAD_97962cb9">9.17. handle <strong><font color="red">add</font></strong> node</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_a5d95556" href="#HEAD_a5d95556">10. Ch4_2: Logic</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_a3d5d2b3" href="#HEAD_a3d5d2b3">10.1. test ch4_2_logic</a></li>
+		<li><a name="TOC_HEAD_93082a73" href="#HEAD_93082a73">10.2. handle <strong><font color="red">xor</font></strong> node</a></li>
+		<li><a name="TOC_HEAD_8ce6480b" href="#HEAD_8ce6480b">10.3. handle <strong><font color="red">setcc(seteq)</font></strong> node</a></li>
+		<li><a name="TOC_HEAD_433e6019" href="#HEAD_433e6019">10.4. handle <strong><font color="red">setcc(setge)</font></strong> node</a></li>
+		<li><a name="TOC_HEAD_938c00ea" href="#HEAD_938c00ea">10.5. handle <strong><font color="red">setcc(setgt)</font></strong> node</a></li>
+		<li><a name="TOC_HEAD_2bb5ddde" href="#HEAD_2bb5ddde">10.6. handle <strong><font color="red">setcc(setle)</font></strong> node</a></li>
+		<li><a name="TOC_HEAD_62fa438_1" href="#HEAD_62fa438_1">10.7. merge</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_227912fc" href="#HEAD_227912fc">11. Ch5_1: Generating object files</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_279a805c" href="#HEAD_279a805c">11.1. <strong><font color="red">llc obj fail</font></strong></a></li>
+		<li><a name="TOC_HEAD_a83cb931" href="#HEAD_a83cb931">11.2. add fixup</a></li>
+		<li><a name="TOC_HEAD_f199d19a" href="#HEAD_f199d19a">11.3. Register the elf streamer</a></li>
+		<li><a name="TOC_HEAD_4abbfdab" href="#HEAD_4abbfdab">11.4. Register the asm target streamer</a></li>
+		<li><a name="TOC_HEAD_3fdfdacd" href="#HEAD_3fdfdacd">11.5. add MCELFObjectTargetWriter</a></li>
+		<li><a name="TOC_HEAD_ec9b2563" href="#HEAD_ec9b2563">11.6. Register the asm backend</a></li>
+		<li><a name="TOC_HEAD_7913f67b" href="#HEAD_7913f67b">11.7. add MCTargetExpr</a></li>
+		<li><a name="TOC_HEAD_af2517f9" href="#HEAD_af2517f9">11.8. Register the MC Code Emitter</a></li>
+		<li><a name="TOC_HEAD_c7d3c9a2" href="#HEAD_c7d3c9a2">11.9. <strong><font color="red">succ to gen obj</font></strong></a></li>
+	</menu>
+	<b><a name="TOC_HEAD_ed869ab1" href="#HEAD_ed869ab1">12. ch6: Global variables</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_3f344f0a" href="#HEAD_3f344f0a">12.1. test ch6_1.cpp</a></li>
+		<li><a name="TOC_HEAD_4eef8e09" href="#HEAD_4eef8e09">12.2. handle <strong><font color="red">GlobalAddress</font></strong> node</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_91ac9013" href="#HEAD_91ac9013">13. Refers</a></b><br>
+	<b><a name="TOC_HEAD_4737b7f1" href="#HEAD_4737b7f1">14. Index (2)</a></b><br>
+	<menu>
+		<li><a name="TOC_wd_def_build" href="#wd_def_build">14.1. build (1) </a></li>
+		<li><a name="TOC_wd_def_git-commit" href="#wd_def_git-commit">14.2. git&ndash;commit (70) </a></li>
+	</menu>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

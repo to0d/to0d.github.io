@@ -1,0 +1,2250 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>MLIR: mytoy</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">MLIR: mytoy</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-18</time>
+            <i><a href="../tags/MLIR-Beginner.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>MLIR-Beginner</a>&nbsp;<a href="../tags/MLIR-toy.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>MLIR-toy</a>&nbsp;<a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">Unexpect output &ndash; 2023/10/22 </a></li>
+	<li><a name="TOC_MARK_2" href="#MARK_2" id="in-ttl">but why the inline works without the following code, what these codes are used for? &ndash; 2023/10/23 </a></li>
+	<li><a name="TOC_MARK_3" href="#MARK_3" id="in-ttl"><strong><font color="red">compile failure when switch llvm&ndash;project to 17.x</font></strong> &ndash; why 2023/10/29 </a></li>
+	<li><a name="TOC_MARK_4" href="#MARK_4" id="in-ttl">Add <strong>add</strong> 算子 &ndash; 2023/10/29 </a></li>
+</ol>
+</div>
+        <div class="entry-content">
+<ul>
+	<li><a name="HEAD_HIDDEN_a5f867f8"><a href="https://github.com/to0d/mlir-mytoy" target="_blank">mlir mytoy &ndash; github</a> &nbsp;<a href="../tags/MLIR-toy.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>MLIR-toy</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_ba968bbb" href="#TOC_HEAD_ba968bbb">1. Ch1 (source to ast)</a></H2>
+	<H3><a name="HEAD_e7fd2381" href="#TOC_HEAD_e7fd2381">1.1. <a name="wd_ln_build_0"><b>build</b></a> &ndash; mlir (LLVM 17)</a></H3>
+<pre><code>git clone git@github.com:to0d/llvm-project.git
+
+cd ~/llvm-project
+
+git checkout -b 17.x origin/release/17.x
+git checkout 17.x
+
+mkdir ~/llvm-build-17-release
+cd ~/llvm-build-17-release
+
+cmake -G Ninja -DLLVM_ENABLE_PROJECTS='clang;mlir' -DCMAKE_BUILD_TYPE=Release -DLLVM_TARGETS_TO_BUILD='X86' -DLLVM_PARALLEL_COMPILE_JOBS=4 -DLLVM_PARALLEL_LINK_JOBS=1 -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++  -DBUILD_SHARED_LIBS=ON -DLLVM_BUILD_EXAMPLES=ON -DLLVM_ENABLE_ASSERTIONS=ON ~/llvm-project/llvm
+time ninja</code></pre>
+<ul>
+	<li><a name="HEAD_HIDDEN_370611ca">refer &quot;Build LLVM on WSL&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_6843a7d" href="#TOC_HEAD_6843a7d">1.2. setup</a></H3>
+<ul>
+	<li>copy from Ch1</li>
+	<br />
+	<pre><code>cp -r ~/llvm-project/mlir/examples/toy/Ch1/*  ~/mlir-mytoy/	</code></pre>
+	<li>Overwrite CMakeLists.txt from mlir <strong>standalone</strong></li>
+	<br />
+	<pre><code>cp -r ~/llvm-project/mlir/examples/standalone/CMakeLists.txt  ./	</code></pre>
+	<li>update CMakeLists.txt &ndash; refer <code>mlir\examples\toy\Ch1\CMakeLists.txt</code></li>
+	<br />
+	<pre><code>add_llvm_executable(mytoy
+toyc.cpp
+parser/AST.cpp
+)
+include_directories(include/)
+target_link_libraries(mytoy
+PRIVATE
+MLIRSupport)	</code></pre>
+	<li><a name="wd_ln_build_1"><b>build</b></a> mytoy</li>
+	<br />
+	<pre><code>mkdir ~/mlir-mytoy/build/
+cd ~/mlir-mytoy/build/
+cmake -DCMAKE_PREFIX_PATH=~/llvm-build-17-release/ -DCMAKE_BUILD_TYPE=Debug ~/mlir-mytoy/
+make	</code></pre>
+	<li><a name="wd_ln_git-commit_0"><b>git-commit</b></a> &ndash; ch1&ndash;setup</li>
+	<br />
+	<li>Refer</li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_e1a0d4e4">&quot;2022&ndash;08&ndash;25 利用CMake和MLIR框架设计一个Alone项目 知乎.html&quot;</li>
+		<li><a name="HEAD_HIDDEN_81c9a948">&quot;Build mlir standalone project&quot;</li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_797a5b4b" href="#TOC_HEAD_797a5b4b">1.3. test cn1_ast.toy</a></H3>
+<ul>
+	<li><a name="wd_ln_test_0"><b>test</b></a> cn1_ast.toy</li>
+	<br />
+	<pre><code>PATH=~/mlir-mytoy/build/bin:~/llvm-build-17-release/bin:$PATH
+
+cp -r ~/llvm-project/mlir/test/Examples/Toy/Ch1/ast.toy ~/mlir-mytoy/test/cn1_ast.toy
+mytoy ~/mlir-mytoy/test/cn1_ast.toy -emit=ast	</code></pre>
+	<li>create autotest script &ndash; **mytest.sh&quot;&quot;</li>
+	<br />
+	<pre><code>./mytest.sh -r	</code></pre>
+	<li><a name="wd_ln_git-commit_1"><b>git-commit</b></a> &ndash; ch1&ndash;test &amp; autotest script</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_601a0425" href="#TOC_HEAD_601a0425">1.4. add cn1_empty.toy</a></H3>
+<pre><code>cp -r ~/llvm-project/mlir/test/Examples/Toy/Ch1/empty.toy ~/mlir-mytoy/test/cn1_empty.toy
+mytoy ~/mlir-mytoy/test/cn1_empty.toy -emit=ast</code></pre>
+<ul>
+	<li><a name="wd_ln_git-commit_2"><b>git-commit</b></a> &ndash; add cn1_empty.toy</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_124f19af" href="#TOC_HEAD_124f19af">2. Ch2 (ast to mlir)</a></H2>
+	<H3><a name="HEAD_ea0d64ef" href="#TOC_HEAD_ea0d64ef">2.1. create empty myops.td</a></H3>
+<ul>
+	<li>add <strong>Toy_Dialect</strong> and <strong>ConstantOp</strong> from <code>mlir\examples\toy\Ch2\include\toy\Ops.td</code></li>
+	<br />
+	<pre><code>touch ~/mlir-mytoy/include/toy/myops.td
+
+include "mlir/IR/OpBase.td"
+
+def MyToyDialect : Dialect {
+let name = "mytoy";
+let cppNamespace = "::mlir::mytoy";
+}
+
+class Toy_Op&lt;string mnemonic, list&lt;Trait&gt; traits = []&gt; :
+    Op&lt;MyToyDialect, mnemonic, traits&gt;;
+
+def ConstantOp : Toy_Op&lt;"constant"&gt; {
+}
+
+
+
+mlir-tblgen -gen-dialect-decls ~/mlir-mytoy/include/toy/myops.td -I ~/llvm-project/mlir/include 2&gt;&1 &gt; ~/mlir-mytoy/test/cn2_myops_1.txt
+mlir-tblgen -gen-op-defs       ~/mlir-mytoy/include/toy/myops.td -I ~/llvm-project/mlir/include 2&gt;&1 &gt; ~/mlir-mytoy/test/cn2_myops_2.txt	</code></pre>
+	<li>Defining Arguments and Results in <strong>ConstantOp</strong></li>
+	<br />
+	<pre><code>myops.td
+
+let arguments = (ins F64ElementsAttr:$value);
+let results = (outs F64Tensor);
+
+
+mlir-tblgen -gen-op-defs       ~/mlir-mytoy/include/toy/myops.td -I ~/llvm-project/mlir/include 2&gt;&1 &gt; ~/mlir-mytoy/test/cn2_myops_3.txt	</code></pre>
+	<li>Verifying Operation Semantics</li>
+	<br />
+	<pre><code>myops.td
+
+let hasVerifier = 1;
+
+mlir-tblgen -gen-op-defs       ~/mlir-mytoy/include/toy/myops.td -I ~/llvm-project/mlir/include 2&gt;&1 &gt; ~/mlir-mytoy/test/cn2_myops_4.txt	</code></pre>
+	<li>Attaching build Methods</li>
+	<br />
+	<pre><code>myops.td
+
+let builders = [
+OpBuilder&lt;(ins "DenseElementsAttr":$value), [{
+    build($builder, $result, value.getType(), value);
+}]&gt;,
+// Build a constant with a given constant floating-point value.
+OpBuilder&lt;(ins "double":$value)&gt;
+];
+
+
+mlir-tblgen -gen-op-defs       ~/mlir-mytoy/include/toy/myops.td -I ~/llvm-project/mlir/include 2&gt;&1 &gt; ~/mlir-mytoy/test/cn2_myops_5.txt	</code></pre>
+	<li>Update CMakeLists</li>
+	<br />
+	<pre><code>~/mlir-mytoy/include/CMakeLists.txt
+
+add_subdirectory(toy)
+
+
+~/mlir-mytoy/include/toy/CMakeLists.txt
+
+set(LLVM_TARGET_DEFINITIONS myops.td)
+mlir_tablegen(myops.h.inc -gen-op-decls)
+mlir_tablegen(myops.cpp.inc -gen-op-defs)
+mlir_tablegen(Dialect.h.inc -gen-dialect-decls)
+mlir_tablegen(Dialect.cpp.inc -gen-dialect-defs)
+add_public_tablegen_target(MytoyOpsIncGen)
+
+
+~/mlir-mytoy/CMakeLists.txt
+
+add_llvm_executable(mytoy
+
+DEPENDS
+MytoyOpsIncGen
+)
+
+add_subdirectory(include)	</code></pre>
+	<li>rebuild</li>
+	<br />
+	<pre><code>cd build
+rm -rf *
+cmake -DCMAKE_PREFIX_PATH=~/llvm-build-17-release/ ~/mlir-mytoy/
+make	</code></pre>
+	<li>check the new generated .inc files</li>
+	<br />
+	<pre><code>find ~/mlir-mytoy/build | grep -e ".inc$"
+/home/todd-wsl/mlir-mytoy/build/include/toy/Dialect.cpp.inc
+/home/todd-wsl/mlir-mytoy/build/include/toy/Dialect.h.inc
+/home/todd-wsl/mlir-mytoy/build/include/toy/myops.cpp.inc
+/home/todd-wsl/mlir-mytoy/build/include/toy/myops.h.inc	</code></pre>
+	<li><a name="wd_ln_git-commit_3"><b>git-commit</b></a> &ndash; &quot;create empty myops.td&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_d2fb559e" href="#TOC_HEAD_d2fb559e">2.2. dump mlir &ndash; empty module</a></H3>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_b260e26b" href="#HEAD_b260e26b">2.2.1. copy files from Ch2</a></li>
+	<li><a name="TOC_HEAD_71e56682" href="#HEAD_71e56682">2.2.2. rebuild &amp; fix compile errors</a></li>
+	<li><a name="TOC_HEAD_cb3bbe07" href="#HEAD_cb3bbe07">2.2.3. rebuild &amp; fix link errors</a></li>
+	<li><a name="TOC_HEAD_45d58e53" href="#HEAD_45d58e53">2.2.4. copy Dialect.cpp &amp; MLIRGen.cpp</a></li>
+	<li><a name="TOC_HEAD_81e89c6f" href="#HEAD_81e89c6f">2.2.5. add FuncOp in td</a></li>
+</menu>
+
+</div>
+	<H4><a name="HEAD_b260e26b" href="#TOC_HEAD_b260e26b">2.2.1. copy files from Ch2</a></H4>
+<pre><code>cp -r ~/llvm-project/mlir/examples/toy/Ch2/include/toy/MLIRGen.h  ~/mlir-mytoy/include/toy/
+cp -r ~/llvm-project/mlir/examples/toy/Ch2/include/toy/Dialect.h  ~/mlir-mytoy/include/toy/
+cp -r ~/llvm-project/mlir/examples/toy/Ch2/toyc.cpp               ~/mlir-mytoy/</code></pre>
+<ul>
+	<li><a name="wd_ln_git-commit_4"><b>git-commit</b></a> &ndash; &quot;cn2: copy files from Ch2&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_71e56682" href="#TOC_HEAD_71e56682">2.2.2. rebuild &amp; fix compile errors</a></H4>
+<pre><code>toy ==&gt; mytoy
+ToyDialect ==&gt; MyToyDialect</code></pre>
+<ul>
+	<li><a name="wd_ln_git-commit_5"><b>git-commit</b></a> &ndash; &quot;cn2: fix compile errors&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_cb3bbe07" href="#TOC_HEAD_cb3bbe07">2.2.3. rebuild &amp; fix link errors</a></H4>
+<pre><code>~/mlir-mytoy/CMakeLists.txt
+
+    target_link_libraries(mytoy
+    PRIVATE
+    MLIRSupport
+    MLIRAnalysis
+    MLIRIR
+    MLIRParser
+    MLIRSideEffectInterfaces
+    MLIRTransforms)</code></pre>
+<ul>
+	<li><a name="wd_ln_git-commit_6"><b>git-commit</b></a> &ndash; &quot;cn2: fix link errors&quot;</li>
+	<br />
+	<li>rebuild &amp; there are still link errors</li>
+	<br />
+	<pre><code>undefined reference to `mlir::detail::TypeIDResolver&lt;mlir::mytoy::MyToyDialect, void&gt;::id'
+undefined reference to `mytoy::mlirGen(mlir::MLIRContext&, mytoy::ModuleAST&)'
+undefined reference to `mlir::mytoy::MyToyDialect::MyToyDialect(mlir::MLIRContext*)'	</code></pre>
+</ul>
+	<H4><a name="HEAD_45d58e53" href="#TOC_HEAD_45d58e53">2.2.4. copy Dialect.cpp &amp; MLIRGen.cpp</a></H4>
+<pre><code>cp -r ~/llvm-project/mlir/examples/toy/Ch2/mlir  ~/mlir-mytoy/
+
+~/mlir-mytoy/CMakeLists.txt</code></pre>
+<ul>
+	<li><a name="wd_ln_git-commit_7"><b>git-commit</b></a> &ndash; &quot;cn2: copy Dialect.cpp &amp; MLIRGen.cpp&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_81e89c6f" href="#TOC_HEAD_81e89c6f">2.2.5. add FuncOp in td</a></H4>
+<pre><code>mlir-tblgen -gen-op-defs ~/mlir-mytoy/include/toy/myops.td -I ~/llvm-project/mlir/include 2&gt;&1 &gt; ~/mlir-mytoy/test/cn2_myops_6.txt</code></pre>
+<ul>
+	<li><a name="wd_ln_git-commit_8"><b>git-commit</b></a> &ndash; &quot;cn2: add FuncOp in td&quot;</li>
+	<br />
+	<li>fix build error &amp; remove unused codes</li>
+	<br />
+	<li><a name="wd_ln_git-commit_9"><b>git-commit</b></a> &ndash; &quot;cn2: fix build error &amp; remove unused codes&quot;</li>
+	<br />
+	<li>test cn1_ast.toy &ndash; dump ir &ndash; should fail</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn1_ast.toy -emit=mlir	</code></pre>
+	<li>create cn2_empty_module.toy</li>
+	<br />
+	<li><a name="wd_ln_git-commit_10"><b>git-commit</b></a> &ndash; &quot;cn2: fix build error &amp; test cn2_empty_module.toy&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_3d2687cd" href="#TOC_HEAD_3d2687cd">2.3. dump mlir &ndash; var expr</a></H3>
+<ul>
+	<li><a name="wd_ln_git-commit_11"><b>git-commit</b></a> &ndash; &quot;cn2: support var expr&quot;</li>
+	<br />
+	<li><a name="HEAD_HIDDEN_987088e4">Unexpect output &ndash; 2023/10/22  <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></li>
+	<br />
+	<pre><code>~/mlir-mytoy$ mytoy /home/todd-wsl/mlir-mytoy/test/cn2_var_def.toy -emit=mlir
+"builtin.module"() ({
+"mytoy.func"() ({
+%0 = "mytoy.constant"() {value = dense&lt;5.500000e+00&gt; : tensor&lt;f64&gt;} : () -&gt; tensor&lt;f64&gt;
+}) {function_type = () -&gt; (), sym_name = "main"} : () -&gt; ()
+}) : () -&gt; ()	</code></pre>
+</ul>
+	<H3><a name="HEAD_d68d9eef" href="#TOC_HEAD_d68d9eef">2.4. merge all differences</a></H3>
+<pre><code>include/toy/myops.td
+mlir/Dialect.cpp
+mlir/MLIRGen.cpp</code></pre>
+<ul>
+	<li><a name="wd_ln_git-commit_12"><b>git-commit</b></a> &ndash; &quot;cn2: merge all differences from Ch2&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_1a409949" href="#TOC_HEAD_1a409949">2.5. merge all testcase</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>cp -r ~/llvm-project/mlir/test/Examples/Toy/Ch2/codegen.toy     ~/mlir-mytoy/test/cn2_codegen.toy
+cp -r ~/llvm-project/mlir/test/Examples/Toy/Ch2/scalar.toy      ~/mlir-mytoy/test/cn2_scalar.toy
+cp -r ~/llvm-project/mlir/test/Examples/Toy/Ch2/invalid.mlir    ~/mlir-mytoy/test/cn2_invalid.mlir	</code></pre>
+	<li><a name="wd_ln_git-commit_13"><b>git-commit</b></a> &ndash; &quot;cn2: merge all testcase&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_e849cb91" href="#TOC_HEAD_e849cb91">3. Ch3 (opt by C++ and DRR)</a></H2>
+	<H3><a name="HEAD_a5f61373" href="#TOC_HEAD_a5f61373">3.1. support opt option</a></H3>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_73f3d1ae" href="#HEAD_73f3d1ae">3.1.1. add transpose_transpose testcase</a></li>
+	<li><a name="TOC_HEAD_eead1d56" href="#HEAD_eead1d56">3.1.2. add opt option in toyc.cpp</a></li>
+</menu>
+
+</div>
+	<H4><a name="HEAD_73f3d1ae" href="#TOC_HEAD_73f3d1ae">3.1.1. add transpose_transpose testcase</a></H4>
+<pre><code>cp ~/llvm-project/mlir/test/Examples/Toy/Ch3/transpose_transpose.toy ~/mlir-mytoy/test/cn3_transpose_transpose.toy
+cp ~/mlir-mytoy/test/cn3_transpose_transpose.toy ~/mlir-mytoy/test/cn3_transpose_transpose_opt.toy
+
+update cn3_transpose_transpose.toy</code></pre>
+<ul>
+	<li>the cn3_transpose_transpose_opt.toy <font color="red">failed</font></li>
+	<br />
+	<li><a name="wd_ln_git-commit_14"><b>git-commit</b></a> &ndash; &quot;cn3: add transpose_transpose testcase&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_eead1d56" href="#TOC_HEAD_eead1d56">3.1.2. add opt option in toyc.cpp</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn3_transpose_transpose_opt.toy -emit=mlir 2&gt; ~/mlir-mytoy/test/cn3_transpose_transpose_opt.1.mlir
+mytoy ~/mlir-mytoy/test/cn3_transpose_transpose_opt.toy -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn3_transpose_transpose_opt.2.mlir	</code></pre>
+	<li>there is no any change after opt</li>
+	<br />
+	<li><a name="wd_ln_git-commit_15"><b>git-commit</b></a> &ndash; &quot;cn3: add opt option in toyc.cpp&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_eb1aaffc" href="#TOC_HEAD_eb1aaffc">3.2. add TransposeOp opt C++ code</a></H3>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_a9e5b700" href="#HEAD_a9e5b700">3.2.1. Test milr change</a></li>
+</menu>
+
+</div>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>cp ~/llvm-project/mlir/examples/toy/Ch3/mlir/ToyCombine.cpp ~/mlir-mytoy/mlir/
+// remove unused code
+
+update include/toy/myops.td
+
+def TransposeOp
+...
+let hasCanonicalizer = 1;
+
+update CMakeLists.txt
+
+add_llvm_executable(mytoy
+
+mlir/ToyCombine.cpp	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_16"><b>git-commit</b></a> &ndash; &quot;cn3: add TransposeOp opt C++ code&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_a9e5b700" href="#TOC_HEAD_a9e5b700">3.2.1. Test milr change</a></H4>
+<ul>
+	<li>test</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn3_transpose_transpose_opt.toy -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn3_transpose_transpose_opt.3.mlir
+
+cn3_transpose_transpose_opt.2.mlir:
+
+mytoy.func @transpose_transpose(%arg0: tensor&lt;*xf64&gt;) -&gt; tensor&lt;*xf64&gt; {
+%0 = mytoy.transpose(%arg0 : tensor&lt;*xf64&gt;) to tensor&lt;*xf64&gt;                // not used
+%1 = mytoy.transpose(%0 : tensor&lt;*xf64&gt;) to tensor&lt;*xf64&gt;                   // removed
+mytoy.return %1 : tensor&lt;*xf64&gt;                                             // return arg0 directly
+}
+
+cn3_transpose_transpose_opt.3.mlir:
+
+mytoy.func @transpose_transpose(%arg0: tensor&lt;*xf64&gt;) -&gt; tensor&lt;*xf64&gt; {
+%0 = mytoy.transpose(%arg0 : tensor&lt;*xf64&gt;) to tensor&lt;*xf64&gt;
+mytoy.return %arg0 : tensor&lt;*xf64&gt;
+}	</code></pre>
+	<li><a name="wd_ln_git-commit_17"><b>git-commit</b></a> &ndash; &quot;cn3: Test TransposeOp opt milr change&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_de512468" href="#TOC_HEAD_de512468">3.3. add Pure in TransposeOp</a></H3><ul><a href="../tags/trait-pure.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>trait-pure</a>&nbsp;</ul>
+<ul>
+	<li>include/toy/myops.td:</li>
+	<br />
+	<pre><code>def TransposeOp : Toy_Op&lt;"transpose", [Pure]&gt; {	</code></pre>
+	<li>build</li>
+	<br />
+	<li>test</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn3_transpose_transpose_opt.toy -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn3_transpose_transpose_opt.4.mlir
+
+mytoy.func @transpose_transpose(%arg0: tensor&lt;*xf64&gt;) -&gt; tensor&lt;*xf64&gt; {
+mytoy.return %arg0 : tensor&lt;*xf64&gt;
+}	</code></pre>
+	<li><a name="wd_ln_git-commit_18"><b>git-commit</b></a> &ndash; &quot;cn3: add Pure in TransposeOp&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_a2ba4906" href="#TOC_HEAD_a2ba4906">3.4. add ReshapeOp opt DRR code</a></H3><ul><a href="../tags/DRR.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DRR</a>&nbsp;</ul>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_4dcbec09" href="#HEAD_4dcbec09">3.4.1. porting trivial_reshape testcase</a></li>
+	<li><a name="TOC_HEAD_c7cbf0e6" href="#HEAD_c7cbf0e6">3.4.2. add ReshapeReshapeOptPattern in ToyCombine.td</a></li>
+</menu>
+
+</div>
+	<H4><a name="HEAD_4dcbec09" href="#TOC_HEAD_4dcbec09">3.4.1. porting trivial_reshape testcase</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>cp ~/llvm-project/mlir/test/Examples/Toy/Ch3/trivial_reshape.toy ~/mlir-mytoy/test/cn3_trivial_reshape.toy
+cp ~/mlir-mytoy/test/cn3_trivial_reshape.toy ~/mlir-mytoy/test/cn3_trivial_reshape_opt.toy
+
+update cn3_trivial_reshape.toy	</code></pre>
+	<li>the cn3_trivial_reshape_opt.toy <font color="red">failed</font></li>
+	<br />
+	<li>prime cn3_trivial_reshape_opt</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn3_trivial_reshape_opt.toy -emit=mlir 2&gt; ~/mlir-mytoy/test/cn3_trivial_reshape_opt.1.mlir
+mytoy ~/mlir-mytoy/test/cn3_trivial_reshape_opt.toy -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn3_trivial_reshape_opt.2.mlir	</code></pre>
+	<li><a name="wd_ln_git-commit_19"><b>git-commit</b></a> &ndash; &quot;cn3: porting trivial_reshape testcase&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_c7cbf0e6" href="#TOC_HEAD_c7cbf0e6">3.4.2. add ReshapeReshapeOptPattern in ToyCombine.td</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>cp ~/llvm-project/mlir/examples/toy/Ch3/mlir/ToyCombine.td ~/mlir-mytoy/mlir/
+// remove unused code
+
+update CMakeLists.txt
+
+set(LLVM_TARGET_DEFINITIONS mlir/ToyCombine.td)
+mlir_tablegen(ToyCombine.inc -gen-rewriters)
+add_public_tablegen_target(MyToyCombineIncGen)
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+DEPENDS
+MyToyCombineIncGen
+
+
+update include/toy/myops.td
+
+let hasCanonicalizer = 1;
+
+update mlir/ToyCombine.cpp
+
+void ReshapeOp::getCanonicalizationPatterns(RewritePatternSet &results,
+                                            MLIRContext *context) {
+results.add&lt;ReshapeReshapeOptPattern&gt;(context);
+}	</code></pre>
+	<li>buil succ</li>
+	<br />
+	<li>test</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn3_trivial_reshape_opt.toy -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn3_trivial_reshape_opt.3.mlir
+
+
+mytoy.func @main() {
+%0 = mytoy.constant dense
+%1 = mytoy.reshape(%0 : tensor&lt;2xf64&gt;) to tensor&lt;2x1xf64&gt;       // ===&gt; %1 = mytoy.reshape(%0 : tensor&lt;2xf64&gt;) to tensor&lt;2x1xf64&gt;
+%2 = mytoy.reshape(%1 : tensor&lt;2x1xf64&gt;) to tensor&lt;2x1xf64&gt;     // ===&gt; %2 = mytoy.reshape(%0 : tensor&lt;2xf64&gt;) to tensor&lt;2x1xf64&gt;
+%3 = mytoy.reshape(%2 : tensor&lt;2x1xf64&gt;) to tensor&lt;2x1xf64&gt;     // ===&gt; %3 = mytoy.reshape(%0 : tensor&lt;2xf64&gt;) to tensor&lt;2x1xf64&gt;
+mytoy.print %3 : tensor&lt;2x1xf64&gt;
+mytoy.return
+}	</code></pre>
+	<li><a name="wd_ln_git-commit_20"><b>git-commit</b></a> &ndash; &quot;cn3: add ReshapeReshapeOptPattern&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_6cfa8bd" href="#TOC_HEAD_6cfa8bd">3.5. add Pure in ReshapeOp</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>myops.td
+
+def ReshapeOp : Toy_Op&lt;"reshape", [Pure]&gt; {	</code></pre>
+	<li>buil succ</li>
+	<br />
+	<li>test</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn3_trivial_reshape_opt.toy -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn3_trivial_reshape_opt.4.mlir
+
+mytoy.func @main() {
+%0 = mytoy.constant dense&lt;[1.000000e+00, 2.000000e+00]&gt; : tensor&lt;2xf64&gt;
+%1 = mytoy.reshape(%0 : tensor&lt;2xf64&gt;) to tensor&lt;2x1xf64&gt;
+mytoy.print %1 : tensor&lt;2x1xf64&gt;
+mytoy.return
+}	</code></pre>
+	<li><a name="wd_ln_git-commit_21"><b>git-commit</b></a> &ndash; &quot;cn3: add Pure in ReshapeOp&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_75accba" href="#TOC_HEAD_75accba">3.6. add FoldConstantReshapeOptPattern opt</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>ToyCombine.td
+
+def ReshapeConstant :
+NativeCodeCall&lt;"$0.reshape(::llvm::cast&lt;ShapedType&gt;($1.getType()))"&gt;;
+def FoldConstantReshapeOptPattern : Pat&lt;
+(ReshapeOp:$res (ConstantOp $arg)),
+(ConstantOp (ReshapeConstant $arg, $res))&gt;;
+
+ToyCombine.cpp
+
+void ReshapeOp::getCanonicalizationPatterns(RewritePatternSet &results,
+                                            MLIRContext *context) {
+results.add&lt;ReshapeReshapeOptPattern, FoldConstantReshapeOptPattern&gt;(context);
+}	</code></pre>
+	<li>buil succ</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn3_trivial_reshape_opt.toy -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn3_trivial_reshape_opt.5.mlir
+
+mytoy.func @main() {
+%0 = mytoy.constant dense&lt;[[1.000000e+00], [2.000000e+00]]&gt; : tensor&lt;2x1xf64&gt;
+mytoy.print %0 : tensor&lt;2x1xf64&gt;
+mytoy.return
+}	</code></pre>
+	<li>all testcases passed</li>
+	<br />
+	<pre><code>./mytest.sh -r
+total 10, succ 10	</code></pre>
+	<li><a name="wd_ln_git-commit_22"><b>git-commit</b></a> &ndash; &quot;cn3: add FoldConstantReshapeOptPattern opt&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_d68d9eef_0" href="#TOC_HEAD_d68d9eef_0">3.7. merge all differences</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>include/toy/myops.td
+mlir/ToyCombine.cpp
+mlir/ToyCombine.td	</code></pre>
+	<li>buil succ &amp; all testcase passed</li>
+	<br />
+	<li><a name="wd_ln_git-commit_23"><b>git-commit</b></a> &ndash; &quot;cn3: merge all differences&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_2f58234" href="#TOC_HEAD_2f58234">4. Ch4 (Transform)</a></H2>
+	<H3><a name="HEAD_57c25908" href="#TOC_HEAD_57c25908">4.1. porting shape_inference.mlir testcase</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>cp ~/llvm-project/mlir/test/Examples/Toy/Ch4/shape_inference.mlir ~/mlir-mytoy/test/cn4_shape_inference.mlir	</code></pre>
+	<li>all testcases except the new one passed</li>
+	<br />
+	<pre><code>./mytest.sh -r
+...
+total 11, succ 10	</code></pre>
+	<li><a name="wd_ln_git-commit_24"><b>git-commit</b></a> &ndash; &quot;ch4: porting shape_inference.mlir testcase&quot;</li>
+	<br />
+	<li>test cn4_shape_inference</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn4_shape_inference.mlir -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn4/cn4_shape_inference.1.mlir
+
+compare ~/mlir-mytoy/test/cn4_shape_inference.mlir ~/mlir-mytoy/test/cn4/cn4_shape_inference.1.mlir
+
+mytoy.func private @multiply_transpose // not changed
+mytoy.func @main() {                   // changed due to FoldConstantReshapeOptPattern	</code></pre>
+	<li><a name="wd_ln_git-commit_25"><b>git-commit</b></a> &ndash; &quot;ch4: test cn4_shape_inference.mlir&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_1869e136" href="#TOC_HEAD_1869e136">4.2. Inlining</a></H3>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_79d993b2" href="#HEAD_79d993b2">4.2.1. add struct ToyInlinerInterface</a></li>
+	<li><a name="TOC_HEAD_4c75b162" href="#HEAD_4c75b162">4.2.2. update FuncOp &amp; GenericCallOp and provide a definition</a></li>
+	<li><a name="TOC_HEAD_ab8ca598" href="#HEAD_ab8ca598">4.2.3. add the inliner pass to the pass manager</a></li>
+	<li><a name="TOC_HEAD_c0175d36" href="#HEAD_c0175d36">4.2.4. add CastOp &amp; inline works</a></li>
+</menu>
+
+</div>
+	<H4><a name="HEAD_79d993b2" href="#TOC_HEAD_79d993b2">4.2.1. add struct ToyInlinerInterface</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>milr/Dialect.cpp
+
+struct ToyInlinerInterface // without func materializeCallConversion	</code></pre>
+	<li>buil succ</li>
+	<br />
+	<li>test cn4_shape_inference.mlir &ndash; nothing changed</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn4_shape_inference.mlir -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn4/cn4_shape_inference.2.mlir	</code></pre>
+	<li><a name="wd_ln_git-commit_26"><b>git-commit</b></a> &ndash; &quot;ch4: add struct ToyInlinerInterface&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_4c75b162" href="#TOC_HEAD_4c75b162">4.2.2. update FuncOp &amp; GenericCallOp and provide a definition</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>myops.td
+
+def FuncOp : Toy_Op&lt;"func", [
+    DeclareOpInterfaceMethods&lt;CallableOpInterface&gt;,
+
+def GenericCallOp : Toy_Op&lt;"generic_call",
+    [DeclareOpInterfaceMethods&lt;CallOpInterface&gt;]&gt; {
+
+Dialect.cpp
+
+
+/// Returns the region on the function operation that is callable.
+mlir::Region *FuncOp::getCallableRegion() { return &getBody(); }
+
+/// Returns the results types that the callable region produces when
+/// executed.
+llvm::ArrayRef&lt;mlir::Type&gt; FuncOp::getCallableResults() {
+return getFunctionType().getResults();
+}
+
+/// Returns the argument attributes for all callable region arguments or
+/// null if there are none.
+ArrayAttr FuncOp::getCallableArgAttrs() {
+return getArgAttrs().value_or(nullptr);
+}
+
+/// Returns the result attributes for all callable region results or
+/// null if there are none.
+ArrayAttr FuncOp::getCallableResAttrs() {
+return getResAttrs().value_or(nullptr);
+}
+
+/// Return the callee of the generic call operation, this is required by the
+/// call interface.
+CallInterfaceCallable GenericCallOp::getCallableForCallee() {
+return (*this)-&gt;getAttrOfType&lt;SymbolRefAttr&gt;("callee");
+}
+
+/// Set the callee for the generic call operation, this is required by the call
+/// interface.
+void GenericCallOp::setCalleeFromCallable(CallInterfaceCallable callee) {
+(*this)-&gt;setAttr("callee", callee.get&lt;SymbolRefAttr&gt;());
+}
+
+/// Get the argument operands to the called function, this is required by the
+/// call interface.
+Operation::operand_range GenericCallOp::getArgOperands() { return getInputs(); }
+
+/// Get the argument operands to the called function as a mutable range, this is
+/// required by the call interface.
+MutableOperandRange GenericCallOp::getArgOperandsMutable() {
+return getInputsMutable();
+}	</code></pre>
+	<li>buil succ</li>
+	<br />
+	<li>test cn4_shape_inference.mlir &ndash; nothing changed</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn4_shape_inference.mlir -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn4/cn4_shape_inference.3.mlir	</code></pre>
+	<li><a name="wd_ln_git-commit_27"><b>git-commit</b></a> &ndash; &quot;ch4: update FuncOp &amp; GenericCallOp and provide a definition&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_ab8ca598" href="#TOC_HEAD_ab8ca598">4.2.3. add the inliner pass to the pass manager</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>toyc.cpp	</code></pre>
+	<li>buil succ</li>
+	<br />
+	<li>test cn4_shape_inference.mlir &ndash; nothing changed</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn4_shape_inference.mlir -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn4/cn4_shape_inference.4.mlir	</code></pre>
+	<li><a name="wd_ln_git-commit_28"><b>git-commit</b></a> &ndash; &quot;ch4: add the inliner pass to the pass manager&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_c0175d36" href="#TOC_HEAD_c0175d36">4.2.4. add CastOp &amp; inline works</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>myops.td // without ShapeInferenceOpInterface
+
+def CastOp : Toy_Op&lt;"cast", [
+    DeclareOpInterfaceMethods&lt;CastOpInterface&gt;,
+    Pure,
+    SameOperandsAndResultShape
+]&gt; {
+...
+
+
+Dialect.cpp
+
+struct ToyInlinerInterface : public DialectInlinerInterface {
+
+    Operation *materializeCallConversion(OpBuilder &builder, Value input,
+
+bool CastOp::areCastCompatible(TypeRange inputs, TypeRange outputs) {
+
+Dialect.h
+
+#include "mlir/Interfaces/CastInterfaces.h"
+
+CMakeLists.txt
+
+target_link_libraries(mytoy
+PRIVATE
+...
+MLIRCastInterfaces
+MLIRCallInterfaces	</code></pre>
+	<li>buil succ</li>
+	<br />
+	<li>test cn4_shape_inference.mlir &ndash; inline works, <code>@multiply_transpose</code> be removed</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn4_shape_inference.mlir -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn4/cn4_shape_inference.5.mlir	</code></pre>
+	<li><a name="wd_ln_git-commit_29"><b>git-commit</b></a> &ndash; &quot;ch4: add CastOp &amp; inline works&quot;</li>
+	<br />
+	<li><a name="HEAD_HIDDEN_9c4052e4">but why the inline works without the following code, what these codes are used for? &ndash; 2023/10/23  <a name="MARK_2" href="#TOC_MARK_2"><strong><font color="red">@TODO</font></strong></a></li>
+	<br />
+	<pre><code>if (funcAST.getProto()-&gt;getName() != "main")
+function.setPrivate();	</code></pre>
+</ul>
+	<H3><a name="HEAD_505de035" href="#TOC_HEAD_505de035">4.3. Intraprocedural Shape Inference</a></H3>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_1af28c02" href="#HEAD_1af28c02">4.3.1. add ShapeInferenceInterface</a></li>
+	<li><a name="TOC_HEAD_841d2788" href="#HEAD_841d2788">4.3.2. add pass createShapeInferencePass but not work</a></li>
+	<li><a name="TOC_HEAD_5dc3374" href="#HEAD_5dc3374">4.3.3. add pass createCSEPass, the milr be simplified</a></li>
+	<li><a name="TOC_HEAD_8ace3f4d" href="#HEAD_8ace3f4d">4.3.4. change pass order, the milr be simplified further</a></li>
+</menu>
+
+</div>
+	<H4><a name="HEAD_1af28c02" href="#TOC_HEAD_1af28c02">4.3.1. add ShapeInferenceInterface</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>cp ~/llvm-project/mlir/examples/toy/Ch4/include/toy/ShapeInferenceInterface.td  ~/mlir-mytoy/include/toy/
+cp ~/llvm-project/mlir/examples/toy/Ch4/include/toy/ShapeInferenceInterface.h   ~/mlir-mytoy/include/toy/
+cp ~/llvm-project/mlir/examples/toy/Ch4/include/toy/Passes.h                    ~/mlir-mytoy/include/toy/
+cp ~/llvm-project/mlir/examples/toy/Ch4/mlir/ShapeInferencePass.cpp             ~/mlir-mytoy/mlir
+
+
+~/mlir-mytoy/include/toy/CMakeLists.txt
+
+set(LLVM_TARGET_DEFINITIONS ShapeInferenceInterface.td)
+mlir_tablegen(ShapeInferenceOpInterfaces.h.inc -gen-op-interface-decls)
+mlir_tablegen(ShapeInferenceOpInterfaces.cpp.inc -gen-op-interface-defs)
+add_public_tablegen_target(MyToyShapeInferenceInterfaceIncGen)
+
+myops.td
+
+add DeclareOpInterfaceMethods&lt;ShapeInferenceOpInterface&gt; in AddOp, MulOp, TransposeOp and CastOp
+
+Dialect.h
+
+#include "mlir/IR/BuiltinTypes.h"
+#include "toy/ShapeInferenceInterface.h"	</code></pre>
+	<p>
+		Dialect.cpp
+	</p>
+	<pre><code>add inferShapes() in AddOp, MulOp, TransposeOp and CastOp
+
+
+CMakeLists.txt
+
+add_llvm_executable(mytoy
+
+mlir/ShapeInferencePass.cpp
+
+DEPENDS
+
+MyToyShapeInferenceInterfaceIncGen	</code></pre>
+	<li><a name="HEAD_HIDDEN_f1be5fdf">cmake error &ndash; cycle dependency &nbsp;<a href="../tags/CMake-Issue.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>CMake-Issue</a></li>
+	<br />
+	<pre><code>&gt; cmake -DCMAKE_PREFIX_PATH=~/llvm-build-17-release/ -DCMAKE_BUILD_TYPE=Debug ~/mlir-mytoy/
+
+CMake Error: The inter-target dependency graph contains the following strongly connected component (cycle):
+"MyToyShapeInferenceInterfaceIncGen" of type UTILITY
+    depends on "MytoyOpsIncGen" (strong)
+"MytoyOpsIncGen" of type UTILITY
+    depends on "MyToyShapeInferenceInterfaceIncGen" (strong)
+At least one of these targets is not a STATIC_LIBRARY.  Cyclic dependencies are allowed only among static libraries.
+CMake Generate step failed.  Build files cannot be regenerated correctly.	</code></pre>
+	<li>fix</li>
+	<br />
+	<pre><code>CMakeLists.txt
+
+// move add_subdirectory(include) before LLVM_TARGET_DEFINITIONS
+
+add_subdirectory(include)
+
+set(LLVM_TARGET_DEFINITIONS mlir/ToyCombine.td)	</code></pre>
+	<li>buil succ</li>
+	<br />
+	<li>test cn4_shape_inference.mlir &ndash; nothing changed</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn4_shape_inference.mlir -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn4/cn4_shape_inference.6.mlir	</code></pre>
+	<li><a name="wd_ln_git-commit_30"><b>git-commit</b></a> &ndash; &quot;ch4: add ShapeInferenceInterface&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_841d2788" href="#TOC_HEAD_841d2788">4.3.2. add pass createShapeInferencePass but not work</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>toyc.cpp
+
+pm.addNestedPass&lt;mlir::mytoy::FuncOp&gt;(mlir::mytoy::createShapeInferencePass());	</code></pre>
+	<li>buil succ</li>
+	<br />
+	<li>test cn4_shape_inference.mlir &ndash; nothing changed</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn4_shape_inference.mlir -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn4/cn4_shape_inference.7.mlir	</code></pre>
+	<li><a name="wd_ln_git-commit_31"><b>git-commit</b></a> &ndash; &quot;ch4: add pass createShapeInferencePass but not work&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_5dc3374" href="#TOC_HEAD_5dc3374">4.3.3. add pass createCSEPass, the milr be simplified</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>toyc.cpp
+
+pm.addNestedPass&lt;mlir::mytoy::FuncOp&gt;(mlir::createCSEPass());	</code></pre>
+	<li>buil succ</li>
+	<br />
+	<li>test cn4_shape_inference.mlir &ndash; the milr be simplified</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn4_shape_inference.mlir -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn4/cn4_shape_inference.8.mlir	</code></pre>
+	<li><a name="wd_ln_git-commit_32"><b>git-commit</b></a> &ndash; &quot;ch4: add pass createCSEPass, the milr be simplified&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_8ace3f4d" href="#TOC_HEAD_8ace3f4d">4.3.4. change pass order, the milr be simplified further</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>toyc.cpp
+
+pm.addNestedPass&lt;mlir::mytoy::FuncOp&gt;(mlir::mytoy::createShapeInferencePass());
+pm.addNestedPass&lt;mlir::mytoy::FuncOp&gt;(mlir::createCanonicalizerPass());
+pm.addNestedPass&lt;mlir::mytoy::FuncOp&gt;(mlir::createCSEPass());	</code></pre>
+	<li>buil succ</li>
+	<br />
+	<li>test cn4_shape_inference.mlir &ndash; the milr be simplified further</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn4_shape_inference.mlir -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn4/cn4_shape_inference.9.mlir	</code></pre>
+	<li><a name="wd_ln_git-commit_33"><b>git-commit</b></a> &ndash; &quot;ch4: change pass order, the milr be simplified further&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_fb50553c" href="#TOC_HEAD_fb50553c">4.4. merge all differences &amp; fix all testcases</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<li>buil succ</li>
+	<br />
+	<li>fix all testcases</li>
+	<br />
+	<li><a name="wd_ln_git-commit_34"><b>git-commit</b></a> &ndash; &quot;cn4: merge all differences &amp; fix all testcases&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_7426a65b" href="#TOC_HEAD_7426a65b">5. Ch5 (Conversion)</a></H2>
+	<H3><a name="HEAD_6123d19b" href="#TOC_HEAD_6123d19b">5.1. new pass ToyToAffineLoweringPass</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+namespace {
+struct ToyToAffineLoweringPass
+    : public PassWrapper&lt;ToyToAffineLoweringPass, OperationPass&lt;ModuleOp&gt;&gt; {
+MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(ToyToAffineLoweringPass)
+
+void getDependentDialects(DialectRegistry &registry) const override {
+    registry.insert&lt;affine::AffineDialect, func::FuncDialect,
+                    memref::MemRefDialect&gt;();
+}
+void runOnOperation() final;
+};
+} // namespace
+
+void ToyToAffineLoweringPass::runOnOperation() {
+
+}
+
+
+std::unique_ptr&lt;Pass&gt; mlir::toy::createLowerToAffinePass() {
+return std::make_unique&lt;ToyToAffineLoweringPass&gt;();
+}
+
+
+include/toy/Passes.h
+
+std::unique_ptr&lt;mlir::Pass&gt; createLowerToAffinePass();
+
+CMakeLists.txt
+
+get_property(dialect_libs GLOBAL PROPERTY MLIR_DIALECT_LIBS)
+get_property(extension_libs GLOBAL PROPERTY MLIR_EXTENSION_LIBS)
+
+mlir/LowerToAffineLoops.cpp
+
+target_link_libraries(mytoy
+PRIVATE
+${dialect_libs}
+${extension_libs}	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_35"><b>git-commit</b></a> &ndash; &quot;ch5: Create empty ToyToAffineLoweringPass&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_42b3b599" href="#TOC_HEAD_42b3b599">5.2. new option <strong>mlir&ndash;affine</strong></a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>toyc.cpp
+
+#include "mlir/Dialect/Func/Extensions/AllExtensions.h"
+#include "mlir/Dialect/Affine/Passes.h"
+#include "mlir/InitAllDialects.h"
+
+enum Action { ..., DumpMLIRAffine };
+
+
+cl::values(clEnumValN(DumpMLIRAffine, "mlir-affine",
+
+
+int dumpMLIR() {
+
+mlir::DialectRegistry registry;
+mlir::func::registerAllExtensions(registry);
+mlir::MLIRContext context(registry);
+
+...
+
+// Check to see what granularity of MLIR we are compiling to.
+bool isLoweringToAffine = emitAction &gt;= Action::DumpMLIRAffine;
+
+if (enableOpt || isLoweringToAffine) {
+...
+    if (isLoweringToAffine) {
+    // Partially lower the toy dialect.
+    pm.addPass(mlir::mytoy::createLowerToAffinePass());
+
+    // Add a few cleanups post lowering.
+    mlir::OpPassManager &optPM = pm.nest&lt;mlir::func::FuncOp&gt;();
+    optPM.addPass(mlir::createCanonicalizerPass());
+    optPM.addPass(mlir::createCSEPass());
+    }
+
+int main(int argc, char **argv) {
+
+case Action::DumpMLIRAffine:
+    return dumpMLIR();	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test affine&ndash;lowering.mlir &ndash; not change (same to &ndash;emit=mlir)</li>
+	<br />
+	<pre><code>cp ~/llvm-project/mlir/test/Examples/Toy/Ch5/affine-lowering.mlir    ~/mlir-mytoy/test/cn5_affine-lowering.mlir
+
+mytoy ~/mlir-mytoy/test/cn5_affine-lowering.mlir -emit=mlir-affine 2&gt; ~/mlir-mytoy/test/cn5/cn5_affine-lowering.mlir.1.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_36"><b>git-commit</b></a> &ndash; &quot;ch5: add option mlir&ndash;affine&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_8f5ec99b" href="#TOC_HEAD_8f5ec99b">5.3. Conversion Target, add Legal/Illegal Dialects</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+ConversionTarget target(getContext());
+
+target.addLegalDialect&lt;affine::AffineDialect, BuiltinDialect,
+                    arith::ArithDialect, func::FuncDialect,
+                    memref::MemRefDialect&gt;();
+
+target.addIllegalDialect&lt;mytoy::MyToyDialect&gt;();
+
+target.addDynamicallyLegalOp&lt;mytoy::PrintOp&gt;([](mytoy::PrintOp op) {
+return llvm::none_of(op-&gt;getOperandTypes(),
+                    [](Type type) { return llvm::isa&lt;TensorType&gt;(type); });
+});	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test affine&ndash;lowering.mlir &ndash; not change</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn5_affine-lowering.mlir -emit=mlir-affine 2&gt; ~/mlir-mytoy/test/cn5/cn5_affine-lowering.mlir.2.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_37"><b>git-commit</b></a> &ndash; &quot;ch5: Conversion Target, add Legal/Illegal Dialects&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ea2fb50c" href="#TOC_HEAD_ea2fb50c">5.4. Conversion Patterns, empty</a></H3>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_d57381a5" href="#HEAD_d57381a5">5.4.1. add FuncOpLowering</a></li>
+	<li><a name="TOC_HEAD_213ad305" href="#HEAD_213ad305">5.4.2. add ConstantOpLowering</a></li>
+	<li><a name="TOC_HEAD_af79543c" href="#HEAD_af79543c">5.4.3. add TransposeOpLowering</a></li>
+	<li><a name="TOC_HEAD_508b832e" href="#HEAD_508b832e">5.4.4. add AddOpLowering, MulOpLowering</a></li>
+	<li><a name="TOC_HEAD_86476730" href="#HEAD_86476730">5.4.5. add PrintOpLowering</a></li>
+	<li><a name="TOC_HEAD_47412151" href="#HEAD_47412151">5.4.6. add ReturnOpLowering</a></li>
+</menu>
+
+</div>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+
+RewritePatternSet patterns(&getContext());
+
+if (failed(
+    applyPartialConversion(getOperation(), target, std::move(patterns))))
+signalPassFailure();	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test affine&ndash;lowering.mlir &ndash; failed to legalize operation &#039;mytoy.func&#039;</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn5_affine-lowering.mlir -emit=mlir-affine 2&gt; ~/mlir-mytoy/test/cn5/cn5_affine-lowering.mlir.3.dump
+
+cn5_affine-lowering.mlir:4:1: error: failed to legalize operation 'mytoy.func' that was explicitly marked illegal
+mytoy.func @main() {
+^	</code></pre>
+	<li><a name="wd_ln_git-commit_38"><b>git-commit</b></a> &ndash; &quot;ch5: Conversion Patterns, empty&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_d57381a5" href="#TOC_HEAD_d57381a5">5.4.1. add FuncOpLowering</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+struct FuncOpLowering : public OpConversionPattern&lt;mytoy::FuncOp&gt; {
+...
+
+patterns.add&lt;FuncOpLowering&gt;(&getContext());	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test affine&ndash;lowering.mlir &ndash; failed to legalize operation &#039;mytoy.constant&#039;</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn5_affine-lowering.mlir -emit=mlir-affine 2&gt; ~/mlir-mytoy/test/cn5/cn5_affine-lowering.mlir.4.dump
+
+cn5_affine-lowering.mlir:5:8: error: failed to legalize operation 'mytoy.constant' that was explicitly marked illegal
+%0 = mytoy.constant dense&lt;[[1.000000e+00, 2.000000e+00, 3.000000e+00], [4.000000e+00, 5.000000e+00, 6.000000e+00]]&gt; : tensor&lt;2x3xf64&gt;
+    ^	</code></pre>
+	<li><a name="wd_ln_git-commit_39"><b>git-commit</b></a> &ndash; &quot;ch5: Conversion Patterns, add FuncOpLowering&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_213ad305" href="#TOC_HEAD_213ad305">5.4.2. add ConstantOpLowering</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+static MemRefType convertTensorToMemRef(RankedTensorType type) {
+
+static Value insertAllocAndDealloc(MemRefType type, Location loc,
+
+struct ConstantOpLowering : public OpRewritePattern&lt;mytoy::ConstantOp&gt; {
+
+patterns.add&lt;..., ConstantOpLowering&gt;(&getContext());	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test affine&ndash;lowering.mlir &ndash; failed to legalize operation &#039;mytoy.transpose&#039;</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn5_affine-lowering.mlir -emit=mlir-affine 2&gt; ~/mlir-mytoy/test/cn5/cn5_affine-lowering.mlir.5.dump
+
+cn5_affine-lowering.mlir:6:8: error: failed to legalize operation 'mytoy.transpose' that was explicitly marked illegal
+%2 = mytoy.transpose(%0 : tensor&lt;2x3xf64&gt;) to tensor&lt;3x2xf64&gt;
+    ^	</code></pre>
+	<li><a name="wd_ln_git-commit_40"><b>git-commit</b></a> &ndash; &quot;ch5: Conversion Patterns, add ConstantOpLowering&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_af79543c" href="#TOC_HEAD_af79543c">5.4.3. add TransposeOpLowering</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+static void lowerOpToLoops(Operation *op, ValueRange operands,
+
+struct TransposeOpLowering : public ConversionPattern {
+
+patterns.add&lt;..., TransposeOpLowering&gt;(&getContext());	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test affine&ndash;lowering.mlir &ndash; failed to legalize operation &#039;mytoy.mul&#039;</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn5_affine-lowering.mlir -emit=mlir-affine 2&gt; ~/mlir-mytoy/test/cn5/cn5_affine-lowering.mlir.6.dump
+
+cn5_affine-lowering.mlir:7:8: error: failed to legalize operation 'mytoy.mul' that was explicitly marked illegal
+%3 = mytoy.mul %2, %2 : tensor&lt;3x2xf64&gt;
+    ^	</code></pre>
+	<li><a name="wd_ln_git-commit_41"><b>git-commit</b></a> &ndash; &quot;ch5: Conversion Patterns, add TransposeOpLowering&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_508b832e" href="#TOC_HEAD_508b832e">5.4.4. add AddOpLowering, MulOpLowering</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+
+template &lt;typename BinaryOp, typename LoweredBinaryOp&gt;
+struct BinaryOpLowering : public ConversionPattern {
+...
+
+using AddOpLowering = BinaryOpLowering&lt;toy::AddOp, arith::AddFOp&gt;;
+using MulOpLowering = BinaryOpLowering&lt;toy::MulOp, arith::MulFOp&gt;;
+
+patterns.add&lt;..., AddOpLowering, MulOpLowering&gt;(&getContext());	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test affine&ndash;lowering.mlir &ndash; failed to legalize operation &#039;mytoy.print&#039;</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn5_affine-lowering.mlir -emit=mlir-affine 2&gt; ~/mlir-mytoy/test/cn5/cn5_affine-lowering.mlir.7.dump
+
+cn5_affine-lowering.mlir:8:3: error: failed to legalize operation 'mytoy.print' that was explicitly marked illegal
+mytoy.print %3 : tensor&lt;3x2xf64&gt;
+^	</code></pre>
+	<li><a name="wd_ln_git-commit_42"><b>git-commit</b></a> &ndash; &quot;ch5: Conversion Patterns, add AddOpLowering, MulOpLowering&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_86476730" href="#TOC_HEAD_86476730">5.4.5. add PrintOpLowering</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+
+struct PrintOpLowering : public OpConversionPattern&lt;mytoy::PrintOp&gt; {
+
+patterns.add&lt;..., PrintOpLowering&gt;(&getContext());	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test affine&ndash;lowering.mlir &ndash; failed to legalize operation &#039;mytoy.return&#039;</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn5_affine-lowering.mlir -emit=mlir-affine 2&gt; ~/mlir-mytoy/test/cn5/cn5_affine-lowering.mlir.8.dump
+
+cn5_affine-lowering.mlir:9:3: error: failed to legalize operation 'mytoy.return' that was explicitly marked illegal
+mytoy.return
+^	</code></pre>
+	<li><a name="wd_ln_git-commit_43"><b>git-commit</b></a> &ndash; &quot;ch5: Conversion Patterns, add PrintOpLowering&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_47412151" href="#TOC_HEAD_47412151">5.4.6. add ReturnOpLowering</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+struct ReturnOpLowering : public OpRewritePattern&lt;mytoy::ReturnOp&gt; {
+
+patterns.add&lt;..., ReturnOpLowering&gt;(&getContext());	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test affine&ndash;lowering.mlir &ndash; error: &#039;mytoy.print&#039; op operand</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn5_affine-lowering.mlir -emit=mlir-affine 2&gt; ~/mlir-mytoy/test/cn5/cn5_affine-lowering.mlir.9.dump
+
+cn5_affine-lowering.mlir:8:3: error: 'mytoy.print' op operand #0 must be tensor of 64-bit float values, but got 'memref&lt;3x2xf64&gt;'
+mytoy.print %3 : tensor&lt;3x2xf64&gt;
+^	</code></pre>
+	<li><a name="wd_ln_git-commit_44"><b>git-commit</b></a> &ndash; &quot;ch5: Conversion Patterns, add ReturnOpLowering&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_be6105f2" href="#TOC_HEAD_be6105f2">5.5. Update toy.print to allow for operating on the lowered type</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>myops.td
+
+def PrintOp :
+
+let arguments = (ins AnyTypeOf&lt;[F64Tensor, F64MemRef]&gt;:$input)	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test affine&ndash;lowering.mlir &ndash; succ</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn5_affine-lowering.mlir -emit=mlir-affine 2&gt; ~/mlir-mytoy/test/cn5/cn5_affine-lowering.mlir.10.dump
+
+module {
+func.func @main() {
+    %cst = arith.constant 6.000000e+00 : f64
+    %cst_0 = arith.constant 5.000000e+00 : f64
+    %cst_1 = arith.constant 4.000000e+00 : f64
+    %cst_2 = arith.constant 3.000000e+00 : f64
+    %cst_3 = arith.constant 2.000000e+00 : f64
+    %cst_4 = arith.constant 1.000000e+00 : f64
+    %alloc = memref.alloc() : memref&lt;3x2xf64&gt;
+    %alloc_5 = memref.alloc() : memref&lt;3x2xf64&gt;
+    %alloc_6 = memref.alloc() : memref&lt;2x3xf64&gt;
+    affine.store %cst_4, %alloc_6[0, 0] : memref&lt;2x3xf64&gt;
+    affine.store %cst_3, %alloc_6[0, 1] : memref&lt;2x3xf64&gt;
+    affine.store %cst_2, %alloc_6[0, 2] : memref&lt;2x3xf64&gt;
+    affine.store %cst_1, %alloc_6[1, 0] : memref&lt;2x3xf64&gt;
+    affine.store %cst_0, %alloc_6[1, 1] : memref&lt;2x3xf64&gt;
+    affine.store %cst, %alloc_6[1, 2] : memref&lt;2x3xf64&gt;
+    affine.for %arg0 = 0 to 3 {
+    affine.for %arg1 = 0 to 2 {
+        %0 = affine.load %alloc_6[%arg1, %arg0] : memref&lt;2x3xf64&gt;
+        affine.store %0, %alloc_5[%arg0, %arg1] : memref&lt;3x2xf64&gt;
+    }
+    }
+    affine.for %arg0 = 0 to 3 {
+    affine.for %arg1 = 0 to 2 {
+        %0 = affine.load %alloc_5[%arg0, %arg1] : memref&lt;3x2xf64&gt;
+        %1 = arith.mulf %0, %0 : f64
+        affine.store %1, %alloc[%arg0, %arg1] : memref&lt;3x2xf64&gt;
+    }
+    }
+    mytoy.print %alloc : memref&lt;3x2xf64&gt;
+    memref.dealloc %alloc_6 : memref&lt;2x3xf64&gt;
+    memref.dealloc %alloc_5 : memref&lt;3x2xf64&gt;
+    memref.dealloc %alloc : memref&lt;3x2xf64&gt;
+    return
+}
+}	</code></pre>
+	<li><a name="wd_ln_git-commit_45"><b>git-commit</b></a> &ndash; &quot;ch5: Update toy.print to allow for operating on the lowered type&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_8452488e" href="#TOC_HEAD_8452488e">5.6. Affine Optimization</a></H3>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_1ed0a292" href="#HEAD_1ed0a292">5.6.1. before opt</a></li>
+	<li><a name="TOC_HEAD_2aa86234" href="#HEAD_2aa86234">5.6.2. add createLoopFusionPass</a></li>
+	<li><a name="TOC_HEAD_c08fb73d" href="#HEAD_c08fb73d">5.6.3. add createAffineScalarReplacementPass</a></li>
+</menu>
+
+</div>
+	<H4><a name="HEAD_1ed0a292" href="#TOC_HEAD_1ed0a292">5.6.1. before opt</a></H4>
+<ul>
+	<li>test affine&ndash;lowering.mlir &ndash; no changed</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn5_affine-lowering.mlir -emit=mlir-affine -opt 2&gt; ~/mlir-mytoy/test/cn5/cn5_affine-lowering.mlir.11.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_46"><b>git-commit</b></a> &ndash; &quot;ch5: Affine Optimization, before opt&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_2aa86234" href="#TOC_HEAD_2aa86234">5.6.2. add createLoopFusionPass</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>toyc.cpp
+
+if (enableOpt) {
+optPM.addPass(mlir::affine::createLoopFusionPass());
+}	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test affine&ndash;lowering.mlir &ndash; code update</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn5_affine-lowering.mlir -emit=mlir-affine -opt 2&gt; ~/mlir-mytoy/test/cn5/cn5_affine-lowering.mlir.11.dump
+
+Before:
+    affine.for %arg0 = 0 to 3 {
+    affine.for %arg1 = 0 to 2 {
+        %0 = affine.load %alloc_6[%arg1, %arg0] : memref&lt;2x3xf64&gt;
+        affine.store %0, %alloc_5[%arg0, %arg1] : memref&lt;3x2xf64&gt;
+    }
+    }
+    affine.for %arg0 = 0 to 3 {
+    affine.for %arg1 = 0 to 2 {
+        %0 = affine.load %alloc_5[%arg0, %arg1] : memref&lt;3x2xf64&gt;
+        %1 = arith.mulf %0, %0 : f64
+        affine.store %1, %alloc[%arg0, %arg1] : memref&lt;3x2xf64&gt;
+    }
+    }
+
+After:
+    affine.for %arg0 = 0 to 3 {
+    affine.for %arg1 = 0 to 2 {
+        %0 = affine.load %alloc_6[%arg1, %arg0] : memref&lt;2x3xf64&gt;
+        affine.store %0, %alloc_5[%arg0, %arg1] : memref&lt;3x2xf64&gt;
+        %1 = affine.load %alloc_5[%arg0, %arg1] : memref&lt;3x2xf64&gt;
+        %2 = arith.mulf %1, %1 : f64
+        affine.store %2, %alloc[%arg0, %arg1] : memref&lt;3x2xf64&gt;
+    }
+    }	</code></pre>
+	<li><a name="wd_ln_git-commit_47"><b>git-commit</b></a> &ndash; &quot;ch5: Affine Optimization, add createLoopFusionPass&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_c08fb73d" href="#TOC_HEAD_c08fb73d">5.6.3. add createAffineScalarReplacementPass</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>toyc.cpp
+
+optPM.addPass(mlir::affine::createAffineScalarReplacementPass());	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test affine&ndash;lowering.mlir &ndash; code update</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn5_affine-lowering.mlir -emit=mlir-affine -opt 2&gt; ~/mlir-mytoy/test/cn5/cn5_affine-lowering.mlir.12.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_48"><b>git-commit</b></a> &ndash; &quot;ch5: Affine Optimization, add createAffineScalarReplacementPass&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_d68d9eef_1" href="#TOC_HEAD_d68d9eef_1">5.7. merge all differences</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+toyc.cpp	</code></pre>
+	<li>buil succ &amp; all testcases passed</li>
+	<br />
+	<pre><code>./mytest.sh -r
+total 12, succ 12	</code></pre>
+	<li><a name="wd_ln_git-commit_49"><b>git-commit</b></a> &ndash; &quot;ch5: merge all differences&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_5d8b2a13" href="#TOC_HEAD_5d8b2a13">5.8. <strong><font color="red">compile failure when switch llvm&ndash;project to 17.x</font></strong> &ndash; why 2023/10/29</a> <a name="MARK_3" href="#TOC_MARK_3"><strong><font color="red">@TODO</font></strong></a></H3><ul></ul>
+<pre><code>mlir-mytoy/mlir/Dialect.cpp:353:21: note: no functions named ‘mlir::MutableOperandRange mlir::mytoy::GenericCallOp::getArgOperandsMutable()’</code></pre>
+<ul>
+	<li>compare <strong>mlir&ndash;mytoy</strong> to <strong>Ch5</strong> (17.x), remove <strong>getArgOperandsMutable</strong> in Dialect.cpp</li>
+	<br />
+	<li>buil succ &amp; all testcases passed</li>
+	<br />
+	<li><a name="wd_ln_git-commit_50"><b>git-commit</b></a> &ndash; &quot;ch5: compile failure when switch llvm&ndash;project to 17.x&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_a7359771" href="#TOC_HEAD_a7359771">6. Ch6 (Lowering to LLVM and CodeGeneration)</a></H2>
+	<H3><a name="HEAD_f2238d3" href="#TOC_HEAD_f2238d3">6.1. new pass ToyToLLVMLoweringPass</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+namespace {
+struct ToyToLLVMLoweringPass
+    : public PassWrapper&lt;ToyToLLVMLoweringPass, OperationPass&lt;ModuleOp&gt;&gt; {
+MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(ToyToLLVMLoweringPass)
+
+void getDependentDialects(DialectRegistry &registry) const override {
+    registry.insert&lt;LLVM::LLVMDialect, scf::SCFDialect&gt;();
+}
+void runOnOperation() final;
+};
+} // namespace
+
+void ToyToLLVMLoweringPass::runOnOperation() {
+
+}
+
+std::unique_ptr&lt;mlir::Pass&gt; mlir::toy::createLowerToLLVMPass() {
+return std::make_unique&lt;ToyToLLVMLoweringPass&gt;();
+}
+
+
+include/toy/Passes.h
+
+std::unique_ptr&lt;mlir::Pass&gt; createLowerToLLVMPass();
+
+CMakeLists.txt
+
+mlir/LowerToLLVM.cpp	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_51"><b>git-commit</b></a> &ndash; &quot;ch6: new pass ToyToLLVMLoweringPass&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_b088bc71" href="#TOC_HEAD_b088bc71">6.2. new option mlir&ndash;llvm</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>toyc.cpp
+
+
+cl::values(clEnumValN(DumpMLIRLLVM, "mlir-llvm",
+                    "output the MLIR dump after llvm lowering"))
+
+int dumpMLIR() {
+...
+bool isLoweringToLLVM = emitAction &gt;= Action::DumpMLIRLLVM;
+
+if (enableOpt || isLoweringToAffine || isLoweringToLLVM) {
+
+if (isLoweringToLLVM) {
+
+    pm.addPass(mlir::mytoy::createLowerToLLVMPass());
+}
+
+
+int main(int argc, char **argv) {
+...
+case Action::DumpMLIRLLVM:	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test llvm&ndash;lowering.mlir &ndash; not change (same to &ndash;emit=mlir&ndash;affine)</li>
+	<br />
+	<pre><code>cp ~/llvm-project/mlir/test/Examples/Toy/Ch6/llvm-lowering.mlir    ~/mlir-mytoy/test/cn6_llvm-lowering.mlir
+
+mytoy ~/mlir-mytoy/test/cn6_llvm-lowering.mlir -emit=mlir-affine 2&gt; ~/mlir-mytoy/test/cn6/cn6_llvm-lowering.mlir.0.dump
+mytoy ~/mlir-mytoy/test/cn6_llvm-lowering.mlir -emit=mlir-llvm   2&gt; ~/mlir-mytoy/test/cn6/cn6_llvm-lowering.mlir.1.dump
+
+diff ~/mlir-mytoy/test/cn6/cn6_llvm-lowering.mlir.0.dump ~/mlir-mytoy/test/cn6/cn6_llvm-lowering.mlir.1.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_52"><b>git-commit</b></a> &ndash; &quot;ch6: new option mlir&ndash;llvm&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_6384a6ad" href="#TOC_HEAD_6384a6ad">6.3. Conversion Patterns</a></H3>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_bc403508" href="#HEAD_bc403508">6.3.1. update ToyToLLVMLoweringPass::runOnOperation</a></li>
+	<li><a name="TOC_HEAD_67e767f8" href="#HEAD_67e767f8">6.3.2. add populateFuncToLLVMConversionPatterns</a></li>
+	<li><a name="TOC_HEAD_e618a0ce" href="#HEAD_e618a0ce">6.3.3. add populateArithToLLVMConversionPatterns</a></li>
+	<li><a name="TOC_HEAD_c5308630" href="#HEAD_c5308630">6.3.4. add populateFinalizeMemRefToLLVMConversionPatterns</a></li>
+	<li><a name="TOC_HEAD_39c0c679" href="#HEAD_39c0c679">6.3.5. add populateAffineToStdConversionPatterns</a></li>
+	<li><a name="TOC_HEAD_6098e95c" href="#HEAD_6098e95c">6.3.6. add populateSCFToControlFlowConversionPatterns</a></li>
+	<li><a name="TOC_HEAD_49d86fed" href="#HEAD_49d86fed">6.3.7. add populateControlFlowToLLVMConversionPatterns</a></li>
+	<li><a name="TOC_HEAD_86476730_0" href="#HEAD_86476730_0">6.3.8. add PrintOpLowering</a></li>
+</menu>
+
+</div>
+	<H4><a name="HEAD_bc403508" href="#TOC_HEAD_bc403508">6.3.1. update ToyToLLVMLoweringPass::runOnOperation</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+LLVMConversionTarget target(getContext());
+target.addLegalOp&lt;ModuleOp&gt;();
+
+RewritePatternSet patterns(&getContext());
+
+if (failed(applyFullConversion(module, target, std::move(patterns))))
+signalPassFailure();	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test llvm&ndash;lowering.mlir &ndash; failed to legalize operation &#039;func.func&#039;</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn6_llvm-lowering.mlir -emit=mlir-llvm   2&gt; ~/mlir-mytoy/test/cn6/cn6_llvm-lowering.mlir.2.dump^	</code></pre>
+	<li><a name="wd_ln_git-commit_53"><b>git-commit</b></a> &ndash; &quot;ch6: update ToyToLLVMLoweringPass::runOnOperation&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_67e767f8" href="#TOC_HEAD_67e767f8">6.3.2. add populateFuncToLLVMConversionPatterns</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+#include "mlir/Conversion/FuncToLLVM/ConvertFuncToLLVM.h"
+
+LLVMTypeConverter typeConverter(&getContext());
+populateFuncToLLVMConversionPatterns(typeConverter, patterns);	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test llvm&ndash;lowering.mlir &ndash; failed to legalize operation &#039;arith.constant&#039;</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn6_llvm-lowering.mlir -emit=mlir-llvm   2&gt; ~/mlir-mytoy/test/cn6/cn6_llvm-lowering.mlir.3.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_54"><b>git-commit</b></a> &ndash; &quot;ch6: add populateFuncToLLVMConversionPatterns&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_e618a0ce" href="#TOC_HEAD_e618a0ce">6.3.3. add populateArithToLLVMConversionPatterns</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+#include "mlir/Conversion/ArithToLLVM/ArithToLLVM.h"
+mlir::arith::populateArithToLLVMConversionPatterns(typeConverter, patterns);	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test llvm&ndash;lowering.mlir &ndash; failed to legalize operation &#039;memref.alloc&#039;</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn6_llvm-lowering.mlir -emit=mlir-llvm   2&gt; ~/mlir-mytoy/test/cn6/cn6_llvm-lowering.mlir.4.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_55"><b>git-commit</b></a> &ndash; &quot;ch6: add populateArithToLLVMConversionPatterns&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_c5308630" href="#TOC_HEAD_c5308630">6.3.4. add populateFinalizeMemRefToLLVMConversionPatterns</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+#include "mlir/Conversion/MemRefToLLVM/MemRefToLLVM.h"
+populateFinalizeMemRefToLLVMConversionPatterns(typeConverter, patterns);	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test llvm&ndash;lowering.mlir &ndash; failed to legalize operation &#039;affine.store&#039;</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn6_llvm-lowering.mlir -emit=mlir-llvm   2&gt; ~/mlir-mytoy/test/cn6/cn6_llvm-lowering.mlir.5.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_56"><b>git-commit</b></a> &ndash; &quot;ch6: add populateFinalizeMemRefToLLVMConversionPatterns&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_39c0c679" href="#TOC_HEAD_39c0c679">6.3.5. add populateAffineToStdConversionPatterns</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+#include "mlir/Conversion/AffineToStandard/AffineToStandard.h"
+populateAffineToStdConversionPatterns(patterns);	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test llvm&ndash;lowering.mlir &ndash; failed to legalize operation &#039;affine.for&#039;</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn6_llvm-lowering.mlir -emit=mlir-llvm   2&gt; ~/mlir-mytoy/test/cn6/cn6_llvm-lowering.mlir.6.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_57"><b>git-commit</b></a> &ndash; &quot;ch6: add populateAffineToStdConversionPatterns&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_6098e95c" href="#TOC_HEAD_6098e95c">6.3.6. add populateSCFToControlFlowConversionPatterns</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+#include "mlir/Conversion/SCFToControlFlow/SCFToControlFlow.h"
+populateSCFToControlFlowConversionPatterns(patterns);	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test llvm&ndash;lowering.mlir &ndash; failed to legalize operation &#039;affine.for&#039;</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn6_llvm-lowering.mlir -emit=mlir-llvm   2&gt; ~/mlir-mytoy/test/cn6/cn6_llvm-lowering.mlir.7.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_58"><b>git-commit</b></a> &ndash; &quot;ch6: add populateSCFToControlFlowConversionPatterns&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_49d86fed" href="#TOC_HEAD_49d86fed">6.3.7. add populateControlFlowToLLVMConversionPatterns</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+#include "mlir/Conversion/ControlFlowToLLVM/ControlFlowToLLVM.h"
+cf::populateControlFlowToLLVMConversionPatterns(typeConverter, patterns);	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test llvm&ndash;lowering.mlir &ndash; failed to legalize operation &#039;mytoy.print&#039;</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn6_llvm-lowering.mlir -emit=mlir-llvm   2&gt; ~/mlir-mytoy/test/cn6/cn6_llvm-lowering.mlir.8.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_59"><b>git-commit</b></a> &ndash; &quot;ch6: add populateControlFlowToLLVMConversionPatterns&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_86476730_0" href="#TOC_HEAD_86476730_0">6.3.8. add PrintOpLowering</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+
+#include "mlir/Dialect/Func/IR/FuncOps.h"
+#include "mlir/Dialect/MemRef/IR/MemRef.h"
+
+class PrintOpLowering : public ConversionPattern {
+
+patterns.add&lt;PrintOpLowering&gt;(&getContext());	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test llvm&ndash;lowering.mlir &ndash; succ</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn6_llvm-lowering.mlir -emit=mlir-llvm   2&gt; ~/mlir-mytoy/test/cn6/cn6_llvm-lowering.mlir.9.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_60"><b>git-commit</b></a> &ndash; &quot;ch6: add PrintOpLowering&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_750c0a82" href="#TOC_HEAD_750c0a82">6.4. new option llvm</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>toyc.cpp
+
+#include "mlir/ExecutionEngine/ExecutionEngine.h"
+#include "mlir/ExecutionEngine/OptUtils.h"
+#include "mlir/Target/LLVMIR/Dialect/Builtin/BuiltinToLLVMIRTranslation.h"
+#include "mlir/Target/LLVMIR/Dialect/LLVMIR/LLVMToLLVMIRTranslation.h"
+#include "mlir/Target/LLVMIR/Export.h"
+#include "llvm/Support/TargetSelect.h"
+
+cl::values(clEnumValN(DumpLLVMIR, "llvm", "output the LLVM IR dump"))
+
+int dumpLLVMIR(mlir::ModuleOp module) {
+...
+
+int dumpMLIR() {
+...
+bool isOutputingMLIR = emitAction &lt;= Action::DumpMLIRLLVM;
+bool isOutputingMLIR = emitAction &lt;= Action::DumpMLIRLLVM;
+if (isOutputingMLIR) {
+    module-&gt;dump();
+    return 0;
+}
+
+if (emitAction == Action::DumpLLVMIR)
+    return dumpLLVMIR(*module);
+
+
+int main(int argc, char **argv) {
+...
+case Action::DumpLLVMIR:
+
+
+CMakeLists.txt
+
+MLIRExecutionEngine	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test llvm&ndash;lowering.mlir &ndash; succ</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn6_llvm-lowering.mlir -emit=llvm       2&gt; ~/mlir-mytoy/test/cn6/cn6_llvm-lowering.mlir.10.dump
+mytoy ~/mlir-mytoy/test/cn6_llvm-lowering.mlir -emit=llvm -opt  2&gt; ~/mlir-mytoy/test/cn6/cn6_llvm-lowering.mlir.11.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_61"><b>git-commit</b></a> &ndash; &quot;ch6: new option llvm&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_8423aba5" href="#TOC_HEAD_8423aba5">6.5. add pass createDIScopeForLLVMFuncOpPass (debug information)</a></H3><ul><a href="../tags/LLVM-Debug.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-Debug</a>&nbsp;</ul>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>toyc.cpp
+
+#include "mlir/Dialect/LLVMIR/Transforms/Passes.h"
+
+pm.addNestedPass&lt;mlir::LLVM::LLVMFuncOp&gt;(
+    mlir::LLVM::createDIScopeForLLVMFuncOpPass());	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test llvm&ndash;lowering.mlir &ndash; succ</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn6_llvm-lowering.mlir -emit=llvm       2&gt; ~/mlir-mytoy/test/cn6/cn6_llvm-lowering.mlir.12.dump
+mytoy ~/mlir-mytoy/test/cn6_llvm-lowering.mlir -emit=llvm -opt  2&gt; ~/mlir-mytoy/test/cn6/cn6_llvm-lowering.mlir.13.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_62"><b>git-commit</b></a> &ndash; &quot;ch6: add pass createDIScopeForLLVMFuncOpPass (debug information)&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_d09b44e1" href="#TOC_HEAD_d09b44e1">6.6. Setting up a JIT</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>toyc.cpp
+
+cl::values(clEnumValN(RunJIT, "jit",
+                    "JIT the code and run it by invoking the main function"))
+
+
+int runJit(mlir::ModuleOp module) {
+...
+
+int dumpMLIR() {
+...
+if (emitAction == Action::RunJIT)
+    return runJit(*module);
+
+
+int main(int argc, char **argv) {
+...
+case Action::RunJIT:	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test llvm&ndash;lowering.mlir &ndash; succ</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn6_llvm-lowering.mlir -emit=jit
+mytoy ~/mlir-mytoy/test/cn6_llvm-lowering.mlir -emit=jit -opt
+
+1.000000 16.000000
+4.000000 25.000000
+9.000000 36.000000
+
+echo 'def main() { print([[1, 2], [3, 4]]); }' | mytoy -emit=jit
+
+1.000000 2.000000
+3.000000 4.000000	</code></pre>
+	<li><a name="wd_ln_git-commit_63"><b>git-commit</b></a> &ndash; &quot;ch6: Setting up a JIT&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_d68d9eef_2" href="#TOC_HEAD_d68d9eef_2">6.7. merge all differences</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>mlir/LowerToAffineLoops.cpp
+toyc.cpp	</code></pre>
+	<li>buil succ &amp; all testcases passed</li>
+	<br />
+	<pre><code>./mytest.sh -r
+total 14, succ 14	</code></pre>
+	<li><a name="wd_ln_git-commit_64"><b>git-commit</b></a> &ndash; &quot;ch6: merge all differences&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_f4a5f527" href="#TOC_HEAD_f4a5f527">7. Ch7 (Add type struct)</a></H2>
+	<H3><a name="HEAD_651612ab" href="#TOC_HEAD_651612ab">7.1. Update AST</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>cp ~/llvm-project/mlir/examples/toy/Ch7/include/toy/AST.h       ~/mlir-mytoy/include/toy/
+cp ~/llvm-project/mlir/examples/toy/Ch7/include/toy/Lexer.h     ~/mlir-mytoy/include/toy/
+cp ~/llvm-project/mlir/examples/toy/Ch7/include/toy/Parser.h    ~/mlir-mytoy/include/toy/
+cp ~/llvm-project/mlir/examples/toy/Ch7/parser/AST.cpp          ~/mlir-mytoy/parser/
+
+
+MLIRGen.cpp
+
+// for (FunctionAST &f : moduleAST)
+//   mlirGen(f);	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test struct&ndash;ast.toy &ndash; succ</li>
+	<br />
+	<pre><code>cp ~/llvm-project/mlir/test/Examples/Toy/Ch7/struct-ast.toy    ~/mlir-mytoy/test/cn7_struct-ast.toy
+mytoy ~/mlir-mytoy/test/cn7_struct-ast.toy -emit=ast 2&gt; ~/mlir-mytoy/test/cn7/cn7_struct-ast.toy.1.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_65"><b>git-commit</b></a> &ndash; &quot;ch7: Update AST&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_1f17c169" href="#TOC_HEAD_1f17c169">7.2. Defining the Type Class</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>include/toy/Dialect.h
+
+class StructType : public mlir::Type::TypeBase&lt;StructType, mlir::Type,
+...
+
+mlir/Dialect.cpp
+
+struct StructTypeStorage : public mlir::TypeStorage {
+...
+
+
+addTypes&lt;StructType&gt;();	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_66"><b>git-commit</b></a> &ndash; &quot;ch7: Defining the Type Class&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_c635a358" href="#TOC_HEAD_c635a358">7.3. Exposing to ODS</a></H3>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_ec426a7a" href="#HEAD_ec426a7a">7.3.1. Add Toy_Type</a></li>
+	<li><a name="TOC_HEAD_548654d0" href="#HEAD_548654d0">7.3.2. implementation of the printer</a></li>
+	<li><a name="TOC_HEAD_31d2ee1b" href="#HEAD_31d2ee1b">7.3.3. Update arguments &amp; arguments</a></li>
+	<li><a name="TOC_HEAD_8623d18d" href="#HEAD_8623d18d">7.3.4. Adding New Toy Operations</a></li>
+	<li><a name="TOC_HEAD_fe28dbf5" href="#HEAD_fe28dbf5">7.3.5. Update AST to MLIR code</a></li>
+</menu>
+
+</div>
+	<H4><a name="HEAD_ec426a7a" href="#TOC_HEAD_ec426a7a">7.3.1. Add Toy_Type</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>myops.td
+
+def Toy_StructType :
+    DialectType&lt;MyToyDialect, CPred&lt;"::llvm::isa&lt;StructType&gt;($_self)"&gt;,
+                "Toy struct type"&gt;;
+
+def Toy_Type : AnyTypeOf&lt;[F64Tensor, Toy_StructType]&gt;;	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_67"><b>git-commit</b></a> &ndash; &quot;ch7: Add Toy_Type&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_548654d0" href="#TOC_HEAD_548654d0">7.3.2. implementation of the printer</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>myops.td
+
+def MyToyDialect : Dialect {
+...
+let useDefaultTypePrinterParser = 1;
+
+
+mlir/Dialect.cpp
+
+#include "mlir/IR/DialectImplementation.h"
+
+StructType StructType::get(llvm::ArrayRef&lt;mlir::Type&gt; elementTypes) {
+llvm::ArrayRef&lt;mlir::Type&gt; StructType::getElementTypes() {
+mlir::Type MyToyDialect::parseType(mlir::DialectAsmParser &parser) const {
+void MyToyDialect::printType(mlir::Type type,	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test struct&ndash;ast.toy &ndash; empty result</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn7_struct-ast.toy -emit=mlir 2&gt; ~/mlir-mytoy/test/cn7/cn7_struct-ast.toy.2.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_68"><b>git-commit</b></a> &ndash; &quot;ch7: implementation of the printer&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_31d2ee1b" href="#TOC_HEAD_31d2ee1b">7.3.3. Update arguments &amp; arguments</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>myops.td
+
+GenericCallOp
+let arguments = (ins FlatSymbolRefAttr:$callee, Variadic&lt;Toy_Type&gt;:$inputs);
+let results = (outs Toy_Type);
+
+ReturnOp
+let arguments = (ins Variadic&lt;Toy_Type&gt;:$input);	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_69"><b>git-commit</b></a> &ndash; &quot;ch7: Update arguments &amp; arguments&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_8623d18d" href="#TOC_HEAD_8623d18d">7.3.4. Adding New Toy Operations</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>myops.td
+
+StructAccessOp      // remove hasFolder
+StructConstantOp    // remove hasFolder
+
+
+mlir/Dialect.cpp
+
+static mlir::LogicalResult verifyConstantForType(mlir::Type type,
+mlir::LogicalResult StructConstantOp::verify() {
+void StructAccessOp::build(mlir::OpBuilder &b, mlir::OperationState &state,
+mlir::LogicalResult StructAccessOp::verify() {	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li><a name="wd_ln_git-commit_70"><b>git-commit</b></a> &ndash; &quot;ch7: Adding New Toy Operations&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_fe28dbf5" href="#TOC_HEAD_fe28dbf5">7.3.5. Update AST to MLIR code</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>cp ~/llvm-project/mlir/examples/toy/Ch7/mlir/MLIRGen.cpp       ~/mlir-mytoy/mlir	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test struct&ndash;ast.toy &ndash; succ dump mlir, fail to dump mlir&ndash;llvm or opt</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn7_struct-ast.toy -emit=mlir           2&gt; ~/mlir-mytoy/test/cn7/cn7_struct-ast.toy.3.dump
+mytoy ~/mlir-mytoy/test/cn7_struct-ast.toy -emit=mlir -opt      2&gt; ~/mlir-mytoy/test/cn7/cn7_struct-ast.toy.4.dump
+mytoy ~/mlir-mytoy/test/cn7_struct-ast.toy -emit=mlir-llvm      2&gt; ~/mlir-mytoy/test/cn7/cn7_struct-ast.toy.5.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_71"><b>git-commit</b></a> &ndash; &quot;ch7: Update AST to MLIR code&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_baf1c982" href="#TOC_HEAD_baf1c982">7.4. Optimizing Operations on StructType</a></H3>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_a1730e9a" href="#HEAD_a1730e9a">7.4.1. add ConstantLike</a></li>
+	<li><a name="TOC_HEAD_d59cd588" href="#HEAD_d59cd588">7.4.2. Set the folder bit in ConstantOp</a></li>
+	<li><a name="TOC_HEAD_b411c0fd" href="#HEAD_b411c0fd">7.4.3. Set the folder bit in StructConstantOp</a></li>
+	<li><a name="TOC_HEAD_cc0c35a1" href="#HEAD_cc0c35a1">7.4.4. add ShapeInferenceOpInterface in ConstantOp</a></li>
+	<li><a name="TOC_HEAD_9bb358bd" href="#HEAD_9bb358bd">7.4.5. Set the folder bit in StructAccessOp</a></li>
+	<li><a name="TOC_HEAD_c7102444" href="#HEAD_c7102444">7.4.6. add hasConstantMaterializer</a></li>
+</menu>
+
+</div>
+	<H4><a name="HEAD_a1730e9a" href="#TOC_HEAD_a1730e9a">7.4.1. add ConstantLike</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>myops.td
+
+def ConstantOp : Toy_Op&lt;"constant", [ConstantLike, Pure]&gt; {	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test struct&ndash;ast.toy &ndash; same failure</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn7_struct-ast.toy -emit=mlir-llvm 2&gt; ~/mlir-mytoy/test/cn7/cn7_struct-ast.toy.6.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_72"><b>git-commit</b></a> &ndash; &quot;ch7: add ConstantLike&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_d59cd588" href="#TOC_HEAD_d59cd588">7.4.2. Set the folder bit in ConstantOp</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>myops.td
+
+def ConstantOp
+
+let hasFolder = 1;
+
+mlir/ToyCombine.cpp
+
+OpFoldResult ConstantOp::fold(FoldAdaptor adaptor) { return getValue(); }	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test struct&ndash;ast.toy &ndash; same failure</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn7_struct-ast.toy -emit=mlir-llvm 2&gt; ~/mlir-mytoy/test/cn7/cn7_struct-ast.toy.7.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_73"><b>git-commit</b></a> &ndash; &quot;ch7: Set the folder bit in ConstantOp&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_b411c0fd" href="#TOC_HEAD_b411c0fd">7.4.3. Set the folder bit in StructConstantOp</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>myops.td
+
+def StructConstantOp
+
+let hasFolder = 1;
+
+mlir/ToyCombine.cpp
+
+OpFoldResult StructConstantOp::fold(FoldAdaptor adaptor) { return getValue(); }	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test struct&ndash;ast.toy &ndash; fail &ndash; unable to infer shape of operation without shape inference interface</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn7_struct-ast.toy -emit=mlir-llvm 2&gt; ~/mlir-mytoy/test/cn7/cn7_struct-ast.toy.8.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_74"><b>git-commit</b></a> &ndash; &quot;ch7: Set the folder bit in StructConstantOp&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_cc0c35a1" href="#TOC_HEAD_cc0c35a1">7.4.4. add ShapeInferenceOpInterface in ConstantOp</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>myops.td
+
+def ConstantOp : Toy_Op&lt;"constant",
+[ConstantLike, Pure,
+DeclareOpInterfaceMethods&lt;ShapeInferenceOpInterface&gt;]&gt; {
+
+Dialect.cpp
+
+void ConstantOp::inferShapes() {
+getResult().setType(cast&lt;TensorType&gt;(getValue().getType()));
+}	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test struct&ndash;ast.toy &ndash; same failure</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn7_struct-ast.toy -emit=mlir-llvm 2&gt; ~/mlir-mytoy/test/cn7/cn7_struct-ast.toy.9.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_75"><b>git-commit</b></a> &ndash; &quot;ch7: add ShapeInferenceOpInterface in ConstantOp&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_9bb358bd" href="#TOC_HEAD_9bb358bd">7.4.5. Set the folder bit in StructAccessOp</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>myops.td
+
+def StructAccessOp
+    let hasFolder = 1;
+
+mlir/ToyCombine.cpp
+
+OpFoldResult StructAccessOp::fold(FoldAdaptor adaptor) {	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test struct&ndash;ast.toy &ndash; same failure</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn7_struct-ast.toy -emit=mlir-llvm 2&gt; ~/mlir-mytoy/test/cn7/cn7_struct-ast.toy.10.dump	</code></pre>
+	<li><a name="wd_ln_git-commit_76"><b>git-commit</b></a> &ndash; &quot;ch7: Set the folder bit in StructAccessOp&quot;</li>
+	<br />
+</ul>
+	<H4><a name="HEAD_c7102444" href="#TOC_HEAD_c7102444">7.4.6. add hasConstantMaterializer</a></H4>
+<ul>
+	<li>update code</li>
+	<br />
+	<pre><code>myops.td
+
+def MyToyDialect
+let hasConstantMaterializer = 1;
+
+Dialect.cpp
+
+mlir::Operation *MyToyDialect::materializeConstant(mlir::OpBuilder &builder,	</code></pre>
+	<li>build succ</li>
+	<br />
+	<li>test struct&ndash;ast.toy &ndash; succ</li>
+	<br />
+	<pre><code>mytoy ~/mlir-mytoy/test/cn7_struct-ast.toy -emit=mlir-llvm 2&gt; ~/mlir-mytoy/test/cn7/cn7_struct-ast.toy.11.dump
+mytoy ~/mlir-mytoy/test/cn7_struct-ast.toy -emit=mlir -opt 2&gt; ~/mlir-mytoy/test/cn7/cn7_struct-ast.toy.12.dump
+mytoy ~/mlir-mytoy/test/cn7_struct-ast.toy -emit=jit
+
+1.000000 16.000000
+4.000000 25.000000
+9.000000 36.000000	</code></pre>
+	<li><a name="wd_ln_git-commit_77"><b>git-commit</b></a> &ndash; &quot;ch7: add hasConstantMaterializer&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_d68d9eef_3" href="#TOC_HEAD_d68d9eef_3">7.5. merge all differences</a></H3>
+<ul>
+	<li>update code</li>
+	<br />
+	<li>buil succ &amp; all testcases passed</li>
+	<br />
+	<pre><code>cp ~/llvm-project/mlir/test/Examples/Toy/Ch7/struct-codegen.toy    ~/mlir-mytoy/test/cn7_struct-codegen.toy
+cp ~/llvm-project/mlir/test/Examples/Toy/Ch7/struct-opt.mlir       ~/mlir-mytoy/test/cn7_struct-opt.mlir
+
+
+./mytest.sh -r
+total 17, succ 17	</code></pre>
+	<li><a name="wd_ln_git-commit_78"><b>git-commit</b></a> &ndash; &quot;ch7: merge all differences&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_37088ec3" href="#TOC_HEAD_37088ec3">8. Add <strong>add</strong> 算子 &ndash; 2023/10/29</a> <a name="MARK_4" href="#TOC_MARK_4"><strong><font color="red">@TODO</font></strong></a></H2><ul></ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_961fee6b">refer &quot;2023&ndash;01&ndash;18 怎样去学习mlir这套框架 花椒拌饭 知乎.htm&quot;</li>
+	<li><a name="HEAD_HIDDEN_4a52446d">refer &quot;2023&ndash;07&ndash;18 关于MLIR的学习实践分析与思考 知乎.html&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_91ac9013" href="#TOC_HEAD_91ac9013">9. Refers</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_587591d2"><a href="https://mlir.llvm.org/docs/Tutorials/Toy/" target="_blank">Toy Tutorial &ndash; MLIR</a> &nbsp;<a href="../tags/MLIR-Beginner.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>MLIR-Beginner</a>&nbsp;<a href="../tags/MLIR-toy.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>MLIR-toy</a></li>
+	<li><a name="HEAD_HIDDEN_508e7f9a">&quot;2021&ndash;11&ndash;21 MLIR入门教程 hunterzju 知乎.html&quot;</li>
+	<li><a name="HEAD_HIDDEN_d070c2db">&quot;2023&ndash;08&ndash;15 深入解析 MLIR Toy Tutorial Chapter 5 Lowering 知乎.html&quot;</li>
+	<br />
+</ul>
+	<hr/>
+	<H2><a name="HEAD_4737b810" href="#TOC_HEAD_4737b810">10. Index (3)</a></H2>
+	<H3><a name="wd_def_build" href="#TOC_wd_def_build">10.1. build (2)</a></H3>
+	<ul>
+		<li><a href="#wd_ln_build_0" >build &ndash; mlir (LLVM 17)</a>
+		<li><a href="#wd_ln_build_1" >build mytoy</a>
+	</ul>
+	<H3><a name="wd_def_git-commit" href="#TOC_wd_def_git-commit">10.2. git&ndash;commit (79)</a></H3>
+	<ul>
+		<li><a href="#wd_ln_git-commit_0" >git-commit &ndash; ch1&ndash;setup</a>
+		<li><a href="#wd_ln_git-commit_1" >git-commit &ndash; ch1&ndash;test &amp; autotest script</a>
+		<li><a href="#wd_ln_git-commit_2" >git-commit &ndash; add cn1_empty.toy</a>
+		<li><a href="#wd_ln_git-commit_3" >git-commit &ndash; &quot;create empty myops.td&quot;</a>
+		<li><a href="#wd_ln_git-commit_4" >git-commit &ndash; &quot;cn2: copy files from Ch2&quot;</a>
+		<li><a href="#wd_ln_git-commit_5" >git-commit &ndash; &quot;cn2: fix compile errors&quot;</a>
+		<li><a href="#wd_ln_git-commit_6" >git-commit &ndash; &quot;cn2: fix link errors&quot;</a>
+		<li><a href="#wd_ln_git-commit_7" >git-commit &ndash; &quot;cn2: copy Dialect.cpp &amp; MLIRGen.cpp&quot;</a>
+		<li><a href="#wd_ln_git-commit_8" >git-commit &ndash; &quot;cn2: add FuncOp in td&quot;</a>
+		<li><a href="#wd_ln_git-commit_9" >git-commit &ndash; &quot;cn2: fix build error &amp; remove unused codes&quot;</a>
+		<li><a href="#wd_ln_git-commit_10" >git-commit &ndash; &quot;cn2: fix build error &amp; test cn2_empty_module.toy&quot;</a>
+		<li><a href="#wd_ln_git-commit_11" >git-commit &ndash; &quot;cn2: support var expr&quot;</a>
+		<li><a href="#wd_ln_git-commit_12" >git-commit &ndash; &quot;cn2: merge all differences from Ch2&quot;</a>
+		<li><a href="#wd_ln_git-commit_13" >git-commit &ndash; &quot;cn2: merge all testcase&quot;</a>
+		<li><a href="#wd_ln_git-commit_14" >git-commit &ndash; &quot;cn3: add transpose_transpose testcase&quot;</a>
+		<li><a href="#wd_ln_git-commit_15" >git-commit &ndash; &quot;cn3: add opt option in toyc.cpp&quot;</a>
+		<li><a href="#wd_ln_git-commit_16" >git-commit &ndash; &quot;cn3: add TransposeOp opt C++ code&quot;</a>
+		<li><a href="#wd_ln_git-commit_17" >git-commit &ndash; &quot;cn3: Test TransposeOp opt milr change&quot;</a>
+		<li><a href="#wd_ln_git-commit_18" >git-commit &ndash; &quot;cn3: add Pure in TransposeOp&quot;</a>
+		<li><a href="#wd_ln_git-commit_19" >git-commit &ndash; &quot;cn3: porting trivial_reshape testcase&quot;</a>
+		<li><a href="#wd_ln_git-commit_20" >git-commit &ndash; &quot;cn3: add ReshapeReshapeOptPattern&quot;</a>
+		<li><a href="#wd_ln_git-commit_21" >git-commit &ndash; &quot;cn3: add Pure in ReshapeOp&quot;</a>
+		<li><a href="#wd_ln_git-commit_22" >git-commit &ndash; &quot;cn3: add FoldConstantReshapeOptPattern opt&quot;</a>
+		<li><a href="#wd_ln_git-commit_23" >git-commit &ndash; &quot;cn3: merge all differences&quot;</a>
+		<li><a href="#wd_ln_git-commit_24" >git-commit &ndash; &quot;ch4: porting shape_inference.mlir testcase&quot;</a>
+		<li><a href="#wd_ln_git-commit_25" >git-commit &ndash; &quot;ch4: test cn4_shape_inference.mlir&quot;</a>
+		<li><a href="#wd_ln_git-commit_26" >git-commit &ndash; &quot;ch4: add struct ToyInlinerInterface&quot;</a>
+		<li><a href="#wd_ln_git-commit_27" >git-commit &ndash; &quot;ch4: update FuncOp &amp; GenericCallOp and provide a definition&quot;</a>
+		<li><a href="#wd_ln_git-commit_28" >git-commit &ndash; &quot;ch4: add the inliner pass to the pass manager&quot;</a>
+		<li><a href="#wd_ln_git-commit_29" >git-commit &ndash; &quot;ch4: add CastOp &amp; inline works&quot;</a>
+		<li><a href="#wd_ln_git-commit_30" >git-commit &ndash; &quot;ch4: add ShapeInferenceInterface&quot;</a>
+		<li><a href="#wd_ln_git-commit_31" >git-commit &ndash; &quot;ch4: add pass createShapeInferencePass but not work&quot;</a>
+		<li><a href="#wd_ln_git-commit_32" >git-commit &ndash; &quot;ch4: add pass createCSEPass, the milr be simplified&quot;</a>
+		<li><a href="#wd_ln_git-commit_33" >git-commit &ndash; &quot;ch4: change pass order, the milr be simplified further&quot;</a>
+		<li><a href="#wd_ln_git-commit_34" >git-commit &ndash; &quot;cn4: merge all differences &amp; fix all testcases&quot;</a>
+		<li><a href="#wd_ln_git-commit_35" >git-commit &ndash; &quot;ch5: Create empty ToyToAffineLoweringPass&quot;</a>
+		<li><a href="#wd_ln_git-commit_36" >git-commit &ndash; &quot;ch5: add option mlir&ndash;affine&quot;</a>
+		<li><a href="#wd_ln_git-commit_37" >git-commit &ndash; &quot;ch5: Conversion Target, add Legal/Illegal Dialects&quot;</a>
+		<li><a href="#wd_ln_git-commit_38" >git-commit &ndash; &quot;ch5: Conversion Patterns, empty&quot;</a>
+		<li><a href="#wd_ln_git-commit_39" >git-commit &ndash; &quot;ch5: Conversion Patterns, add FuncOpLowering&quot;</a>
+		<li><a href="#wd_ln_git-commit_40" >git-commit &ndash; &quot;ch5: Conversion Patterns, add ConstantOpLowering&quot;</a>
+		<li><a href="#wd_ln_git-commit_41" >git-commit &ndash; &quot;ch5: Conversion Patterns, add TransposeOpLowering&quot;</a>
+		<li><a href="#wd_ln_git-commit_42" >git-commit &ndash; &quot;ch5: Conversion Patterns, add AddOpLowering, MulOpLowering&quot;</a>
+		<li><a href="#wd_ln_git-commit_43" >git-commit &ndash; &quot;ch5: Conversion Patterns, add PrintOpLowering&quot;</a>
+		<li><a href="#wd_ln_git-commit_44" >git-commit &ndash; &quot;ch5: Conversion Patterns, add ReturnOpLowering&quot;</a>
+		<li><a href="#wd_ln_git-commit_45" >git-commit &ndash; &quot;ch5: Update toy.print to allow for operating on the lowered type&quot;</a>
+		<li><a href="#wd_ln_git-commit_46" >git-commit &ndash; &quot;ch5: Affine Optimization, before opt&quot;</a>
+		<li><a href="#wd_ln_git-commit_47" >git-commit &ndash; &quot;ch5: Affine Optimization, add createLoopFusionPass&quot;</a>
+		<li><a href="#wd_ln_git-commit_48" >git-commit &ndash; &quot;ch5: Affine Optimization, add createAffineScalarReplacementPass&quot;</a>
+		<li><a href="#wd_ln_git-commit_49" >git-commit &ndash; &quot;ch5: merge all differences&quot;</a>
+		<li><a href="#wd_ln_git-commit_50" >git-commit &ndash; &quot;ch5: compile failure when switch llvm&ndash;project to 17.x&quot;</a>
+		<li><a href="#wd_ln_git-commit_51" >git-commit &ndash; &quot;ch6: new pass ToyToLLVMLoweringPass&quot;</a>
+		<li><a href="#wd_ln_git-commit_52" >git-commit &ndash; &quot;ch6: new option mlir&ndash;llvm&quot;</a>
+		<li><a href="#wd_ln_git-commit_53" >git-commit &ndash; &quot;ch6: update ToyToLLVMLoweringPass::runOnOperation&quot;</a>
+		<li><a href="#wd_ln_git-commit_54" >git-commit &ndash; &quot;ch6: add populateFuncToLLVMConversionPatterns&quot;</a>
+		<li><a href="#wd_ln_git-commit_55" >git-commit &ndash; &quot;ch6: add populateArithToLLVMConversionPatterns&quot;</a>
+		<li><a href="#wd_ln_git-commit_56" >git-commit &ndash; &quot;ch6: add populateFinalizeMemRefToLLVMConversionPatterns&quot;</a>
+		<li><a href="#wd_ln_git-commit_57" >git-commit &ndash; &quot;ch6: add populateAffineToStdConversionPatterns&quot;</a>
+		<li><a href="#wd_ln_git-commit_58" >git-commit &ndash; &quot;ch6: add populateSCFToControlFlowConversionPatterns&quot;</a>
+		<li><a href="#wd_ln_git-commit_59" >git-commit &ndash; &quot;ch6: add populateControlFlowToLLVMConversionPatterns&quot;</a>
+		<li><a href="#wd_ln_git-commit_60" >git-commit &ndash; &quot;ch6: add PrintOpLowering&quot;</a>
+		<li><a href="#wd_ln_git-commit_61" >git-commit &ndash; &quot;ch6: new option llvm&quot;</a>
+		<li><a href="#wd_ln_git-commit_62" >git-commit &ndash; &quot;ch6: add pass createDIScopeForLLVMFuncOpPass (debug information)&quot;</a>
+		<li><a href="#wd_ln_git-commit_63" >git-commit &ndash; &quot;ch6: Setting up a JIT&quot;</a>
+		<li><a href="#wd_ln_git-commit_64" >git-commit &ndash; &quot;ch6: merge all differences&quot;</a>
+		<li><a href="#wd_ln_git-commit_65" >git-commit &ndash; &quot;ch7: Update AST&quot;</a>
+		<li><a href="#wd_ln_git-commit_66" >git-commit &ndash; &quot;ch7: Defining the Type Class&quot;</a>
+		<li><a href="#wd_ln_git-commit_67" >git-commit &ndash; &quot;ch7: Add Toy_Type&quot;</a>
+		<li><a href="#wd_ln_git-commit_68" >git-commit &ndash; &quot;ch7: implementation of the printer&quot;</a>
+		<li><a href="#wd_ln_git-commit_69" >git-commit &ndash; &quot;ch7: Update arguments &amp; arguments&quot;</a>
+		<li><a href="#wd_ln_git-commit_70" >git-commit &ndash; &quot;ch7: Adding New Toy Operations&quot;</a>
+		<li><a href="#wd_ln_git-commit_71" >git-commit &ndash; &quot;ch7: Update AST to MLIR code&quot;</a>
+		<li><a href="#wd_ln_git-commit_72" >git-commit &ndash; &quot;ch7: add ConstantLike&quot;</a>
+		<li><a href="#wd_ln_git-commit_73" >git-commit &ndash; &quot;ch7: Set the folder bit in ConstantOp&quot;</a>
+		<li><a href="#wd_ln_git-commit_74" >git-commit &ndash; &quot;ch7: Set the folder bit in StructConstantOp&quot;</a>
+		<li><a href="#wd_ln_git-commit_75" >git-commit &ndash; &quot;ch7: add ShapeInferenceOpInterface in ConstantOp&quot;</a>
+		<li><a href="#wd_ln_git-commit_76" >git-commit &ndash; &quot;ch7: Set the folder bit in StructAccessOp&quot;</a>
+		<li><a href="#wd_ln_git-commit_77" >git-commit &ndash; &quot;ch7: add hasConstantMaterializer&quot;</a>
+		<li><a href="#wd_ln_git-commit_78" >git-commit &ndash; &quot;ch7: merge all differences&quot;</a>
+	</ul>
+	<H3><a name="wd_def_test" href="#TOC_wd_def_test">10.3. test (1)</a></H3>
+	<ul>
+		<li><a href="#wd_ln_test_0" >test cn1_ast.toy</a>
+	</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    <b><a href="#HEAD_todo"><font color="red">TODO: 4</font></a></b><br>﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_ba968bbb" href="#HEAD_ba968bbb">1. Ch1 (source to ast)</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_e7fd2381" href="#HEAD_e7fd2381">1.1. <a name="wd_ln_build_0"><b>build</b></a> &ndash; mlir (LLVM 17)</a></li>
+		<li><a name="TOC_HEAD_6843a7d" href="#HEAD_6843a7d">1.2. setup</a></li>
+		<li><a name="TOC_HEAD_797a5b4b" href="#HEAD_797a5b4b">1.3. test cn1_ast.toy</a></li>
+		<li><a name="TOC_HEAD_601a0425" href="#HEAD_601a0425">1.4. add cn1_empty.toy</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_124f19af" href="#HEAD_124f19af">2. Ch2 (ast to mlir)</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_ea0d64ef" href="#HEAD_ea0d64ef">2.1. create empty myops.td</a></li>
+		<li><a name="TOC_HEAD_d2fb559e" href="#HEAD_d2fb559e">2.2. dump mlir &ndash; empty module</a></li>
+		<li><a name="TOC_HEAD_3d2687cd" href="#HEAD_3d2687cd">2.3. dump mlir &ndash; var expr</a></li>
+		<li><a name="TOC_HEAD_d68d9eef" href="#HEAD_d68d9eef">2.4. merge all differences</a></li>
+		<li><a name="TOC_HEAD_1a409949" href="#HEAD_1a409949">2.5. merge all testcase</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_e849cb91" href="#HEAD_e849cb91">3. Ch3 (opt by C++ and DRR)</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_a5f61373" href="#HEAD_a5f61373">3.1. support opt option</a></li>
+		<li><a name="TOC_HEAD_eb1aaffc" href="#HEAD_eb1aaffc">3.2. add TransposeOp opt C++ code</a></li>
+		<li><a name="TOC_HEAD_de512468" href="#HEAD_de512468">3.3. add Pure in TransposeOp </a></li>
+		<li><a name="TOC_HEAD_a2ba4906" href="#HEAD_a2ba4906">3.4. add ReshapeOp opt DRR code </a></li>
+		<li><a name="TOC_HEAD_6cfa8bd" href="#HEAD_6cfa8bd">3.5. add Pure in ReshapeOp</a></li>
+		<li><a name="TOC_HEAD_75accba" href="#HEAD_75accba">3.6. add FoldConstantReshapeOptPattern opt</a></li>
+		<li><a name="TOC_HEAD_d68d9eef_0" href="#HEAD_d68d9eef_0">3.7. merge all differences</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_2f58234" href="#HEAD_2f58234">4. Ch4 (Transform)</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_57c25908" href="#HEAD_57c25908">4.1. porting shape_inference.mlir testcase</a></li>
+		<li><a name="TOC_HEAD_1869e136" href="#HEAD_1869e136">4.2. Inlining</a></li>
+		<li><a name="TOC_HEAD_505de035" href="#HEAD_505de035">4.3. Intraprocedural Shape Inference</a></li>
+		<li><a name="TOC_HEAD_fb50553c" href="#HEAD_fb50553c">4.4. merge all differences &amp; fix all testcases</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_7426a65b" href="#HEAD_7426a65b">5. Ch5 (Conversion)</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_6123d19b" href="#HEAD_6123d19b">5.1. new pass ToyToAffineLoweringPass</a></li>
+		<li><a name="TOC_HEAD_42b3b599" href="#HEAD_42b3b599">5.2. new option <strong>mlir&ndash;affine</strong></a></li>
+		<li><a name="TOC_HEAD_8f5ec99b" href="#HEAD_8f5ec99b">5.3. Conversion Target, add Legal/Illegal Dialects</a></li>
+		<li><a name="TOC_HEAD_ea2fb50c" href="#HEAD_ea2fb50c">5.4. Conversion Patterns, empty</a></li>
+		<li><a name="TOC_HEAD_be6105f2" href="#HEAD_be6105f2">5.5. Update toy.print to allow for operating on the lowered type</a></li>
+		<li><a name="TOC_HEAD_8452488e" href="#HEAD_8452488e">5.6. Affine Optimization</a></li>
+		<li><a name="TOC_HEAD_d68d9eef_1" href="#HEAD_d68d9eef_1">5.7. merge all differences</a></li>
+		<li><a name="TOC_HEAD_5d8b2a13" href="#HEAD_5d8b2a13">5.8. <strong><font color="red">compile failure when switch llvm&ndash;project to 17.x</font></strong> &ndash; why 2023/10/29 &nbsp;<font color="red">@TODO</font></a></li>
+	</menu>
+	<b><a name="TOC_HEAD_a7359771" href="#HEAD_a7359771">6. Ch6 (Lowering to LLVM and CodeGeneration)</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_f2238d3" href="#HEAD_f2238d3">6.1. new pass ToyToLLVMLoweringPass</a></li>
+		<li><a name="TOC_HEAD_b088bc71" href="#HEAD_b088bc71">6.2. new option mlir&ndash;llvm</a></li>
+		<li><a name="TOC_HEAD_6384a6ad" href="#HEAD_6384a6ad">6.3. Conversion Patterns</a></li>
+		<li><a name="TOC_HEAD_750c0a82" href="#HEAD_750c0a82">6.4. new option llvm</a></li>
+		<li><a name="TOC_HEAD_8423aba5" href="#HEAD_8423aba5">6.5. add pass createDIScopeForLLVMFuncOpPass (debug information) </a></li>
+		<li><a name="TOC_HEAD_d09b44e1" href="#HEAD_d09b44e1">6.6. Setting up a JIT</a></li>
+		<li><a name="TOC_HEAD_d68d9eef_2" href="#HEAD_d68d9eef_2">6.7. merge all differences</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_f4a5f527" href="#HEAD_f4a5f527">7. Ch7 (Add type struct)</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_651612ab" href="#HEAD_651612ab">7.1. Update AST</a></li>
+		<li><a name="TOC_HEAD_1f17c169" href="#HEAD_1f17c169">7.2. Defining the Type Class</a></li>
+		<li><a name="TOC_HEAD_c635a358" href="#HEAD_c635a358">7.3. Exposing to ODS</a></li>
+		<li><a name="TOC_HEAD_baf1c982" href="#HEAD_baf1c982">7.4. Optimizing Operations on StructType</a></li>
+		<li><a name="TOC_HEAD_d68d9eef_3" href="#HEAD_d68d9eef_3">7.5. merge all differences</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_37088ec3" href="#HEAD_37088ec3">8. Add <strong>add</strong> 算子 &ndash; 2023/10/29 &nbsp;<font color="red">@TODO</font></a></b><br>
+	<b><a name="TOC_HEAD_91ac9013" href="#HEAD_91ac9013">9. Refers</a></b><br>
+	<b><a name="TOC_HEAD_4737b810" href="#HEAD_4737b810">10. Index (3)</a></b><br>
+	<menu>
+		<li><a name="TOC_wd_def_build" href="#wd_def_build">10.1. build (2) </a></li>
+		<li><a name="TOC_wd_def_git-commit" href="#wd_def_git-commit">10.2. git&ndash;commit (79) </a></li>
+		<li><a name="TOC_wd_def_test" href="#wd_def_test">10.3. test (1) </a></li>
+	</menu>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

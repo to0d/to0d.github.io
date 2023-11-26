@@ -1,0 +1,77 @@
+#in-container{   /* inote-container */
+    margin:0 auto;
+}
+
+#in-header{  /* inote-header */
+    margin:0 auto;
+    text-align:center;
+    background-color:#ccc;
+}
+
+#in-main{  /*inote-right-main-content */
+    position:absolute;
+    left:20%;
+    margin-left:2%;
+    top:0px;
+    width:78%;
+    z-index:2;
+    height:100%;
+    overflow-y: auto;
+    overflow-x: scroll;
+}
+
+#in-nav{    /* inote-left-nav */
+    position:fixed;
+    z-index:1;
+    left:10pt;
+    top:0;
+    width:20%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height:100%;
+}
+
+#in-footer{  /* inote-footer */
+    background:#90C;
+    margin-top:20px;
+}
+
+#inst   /* inote-status-table*/
+{
+    border:0;
+    width:100%;
+    background:#DAE0F1;
+    border-spacing:1;
+}
+
+#inst_trh  /* inote-status-table: tr Header */
+{
+    background:#E9EFFF;
+    height:28px;  
+    font-weight:bold;
+}
+
+#inst_tr  /* inote-status-table: tr */
+{
+    background:#FEFFFF;
+    height:20px;  
+}
+
+#inst_trt  /* inote-status-table: tr tail */
+{
+    background:#E9EFFF;
+    height:20px;  
+}
+
+#inst_tdd   /* note-status-table: td date */
+{
+    width:7%;
+    font-size:small;
+}
+
+#inst_tdn   /* note-status-table: td number */
+{
+    width:5%;
+    font-size:small;
+    text-align:right;
+}

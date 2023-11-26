@@ -1,0 +1,25 @@
+
+#inlntag   /* inote-list-note-tag */
+{
+    font-weight:bold;
+    font-size:small;
+}
+
+#in-ttb   /* inote-todo-toc-block */
+{
+    text-align:left;
+}
+
+#in-ttl   /* inote-todo-toc-line */
+{
+    font-weight:bold;
+    font-size:small;
+    color:red;
+}
+
+#in-tl
+{
+    text-align:left;
+    margin-left:25px;
+    font-size:small;
+}
