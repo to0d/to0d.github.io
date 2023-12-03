@@ -1,0 +1,146 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT056601.cpp (Reshape the Matrix)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT056601.cpp (Reshape the Matrix)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-01-09</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0566.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0566</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_825e777c" href="#TOC_HEAD_825e777c">Problem 0566 <strong>Reshape the Matrix</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/reshape-the-matrix/" target="_blank">https://leetcode.com/problems/reshape&ndash;the&ndash;matrix/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>87.37</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_49766936" href="#TOC_HEAD_49766936">LT056601.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_9ec6c414">LT0566 (name=Reshape the Matrix, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0566.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0566</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_e3566c83"><a href="https://leetcode.com/problems/reshape-the-matrix/" target="_blank">Reshape the Matrix &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0566.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0566</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_a796f83" href="#TOC_HEAD_a796f83">LT056601.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; matrixReshape(vector&lt;vector&lt;int&gt;&gt;& mat, int r, int c) {
+        int row = mat.size(), column = mat[0].size();
+        if( row == r || row*column != r*c)
+            return mat;
+        vector&lt;vector&lt;int&gt;&gt; rst;
+        vector&lt;int&gt; line;
+        for(int i = 0; i &lt; row; ++i)
+        {   vector&lt;int&gt;& data = mat[i];
+            for(int j = 0; j &lt; column; ++j)
+            {   line.push_back(data[j]);
+                if( line.size() == c )
+                {   rst.push_back(line);
+                    line.clear();
+                }
+            }
+        }
+        return rst;
+    }
+};
+
+
+
+void test(vector&lt;vector&lt;int&gt;&gt; mat, int r, int c)
+{
+    cout &lt;&lt; "input: r=" &lt;&lt; r &lt;&lt; ", c=" &lt;&lt; c &lt;&lt; ", mat=";
+    outputVector(mat);
+    vector&lt;vector&lt;int&gt;&gt; rr = Solution().matrixReshape(mat, r, c);
+    cout &lt;&lt; "; output: ";
+    outputVector(rr);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({{1,2},{3,4}}, 1, 4);
+}
+
+
+// Result
+//
+// 2023-01-09: Runtime 8ms 87.37% Memory 10.8MB 46.14%, https://leetcode.com/problems/reshape-the-matrix/submissions/874815235/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: r=1, c=4, mat=[[1,2],[3,4]]; output: [[1,2,3,4]];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

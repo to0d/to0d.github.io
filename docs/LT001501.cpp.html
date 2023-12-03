@@ -1,0 +1,194 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT001501.cpp (3Sum)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT001501.cpp (3Sum)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-09-16</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0015.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0015</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/xSum-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>xSum-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_e0e22a33" href="#TOC_HEAD_e0e22a33">Problem 0015 <strong>3Sum</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/3sum/description/" target="_blank">https://leetcode.com/problems/3sum/description/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>26.82</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_e58a5b15" href="#TOC_HEAD_e58a5b15">LT001501.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_dd06134b">LT0015 (name=3Sum, ptag=Leetcode) &nbsp;<a href="../tags/LT0015.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0015</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/xSum-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>xSum-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_f7400fb0"><a href="https://leetcode.com/problems/3sum/description/" target="_blank">3Sum &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0015.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0015</a></li>
+		<br />
+	</ul>
+</ul>
+<p>
+	Given an array nums of n integers, are there elements a, b, c in <strong>nums</strong> such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
+</p>
+<p>
+	<strong>Note:</strong>
+</p>
+<p>
+	The solution set must not contain duplicate triplets.
+</p>
+<p>
+	<strong>Example:</strong>
+</p>
+<pre><code>Given array nums = [-1, 0, 1, 2, -1, -4],
+
+A solution set is:
+[
+[-1, 0, 1],
+[-1, -1, 2]
+]</code></pre>
+	<H3><a name="HEAD_e8d728e2" href="#TOC_HEAD_e8d728e2">LT001501.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+// a + b + c = 0
+// a &lt;= b &lt;= c ==&gt;  a &lt;= 0
+//                  c &gt;= 0
+//
+//       x1, x2, x3 ......    xn    &lt;= ascending order numbers
+//       |                    |
+//  1)   v                    v
+//       a                    c
+class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; threeSum(vector&lt;int&gt;& nums) {
+        vector&lt;vector&lt;int&gt;&gt; rst;
+        std::sort(nums.begin(), nums.end(), std::less&lt;int&gt;());
+        int size = nums.size();
+        for(int i = 0; i &lt; size - 2; ++i){
+            if( i &gt; 0 && nums[i] == nums[i-1] )
+                continue;
+            int a = nums[i];
+            if( a &gt; 0 ) // a must &lt;= 0
+                break;
+            if( (a + nums[size-2] + nums[size-1]) &lt; 0 )
+                continue;
+            if( (a + nums[i+1] + nums[i+2]) &gt; 0 )
+                break;
+            for(int j = size-1; j &gt; (i+1) ; --j){
+                if( j &lt; (size-1) && nums[j] == nums[j+1] )
+                    continue;
+                int c = nums[j];
+                if( c &lt; 0 ) // c must &gt;= 0
+                    break;
+                int b = 0 - a - c;
+                if (b &lt; a || b &gt; c )
+                    continue;
+                int l = i+1, h = j - 1;
+                while(l &lt;= h ) {
+                    int m = (l+h)/2, r = nums[m];
+                    if( r == b ) {
+                        rst.push_back({a, b, c});
+                        break;
+                    }
+                    else if( r &lt; b)
+                        l = m + 1;
+                    else
+                        h = m - 1;
+                }
+            }
+        }
+        return rst;
+    }
+};
+
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    auto r = Solution().threeSum(nums);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({-1,0,1,2,-1,-4});
+}
+
+// Result
+//
+// 2022-11-03: Runtime 144ms 62.90% Memory 21.1MB 71.70%, https://leetcode.com/problems/3sum/submissions/836062856/
+// 2023-02-15: Runtime 185ms 50.17% Memory 24.2MB 45.15%, https://leetcode.com/problems/3sum/submissions/898544342/
+// 2023-03-13: Runtime 177ms 64.90% Memory 24.1MB 83.59%, https://leetcode.com/problems/3sum/submissions/914447893/
+// 2023-09-16: Runtime 168ms 26.82% Memory 23.1MB 19.18%, https://leetcode.cn/problems/3sum/submissions/466685247/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [-1,0,1,2,-1,-4]; output: [[-1,-1,2],[-1,0,1]]</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

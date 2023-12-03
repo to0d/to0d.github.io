@@ -1,0 +1,197 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT033101.cpp (Verify Preorder Serialization of a Binary Tree)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT033101.cpp (Verify Preorder Serialization of a Binary Tree)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-22</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0331.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0331</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_c649f871" href="#TOC_HEAD_c649f871">Problem 0331 <strong>Verify Preorder Serialization of a Binary Tree</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/verify-preorder-serialization-of-a-binary-tree/" target="_blank">https://leetcode.com/problems/verify&ndash;preorder&ndash;serialization&ndash;of&ndash;a&ndash;binary&ndash;tree/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>58.96</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_6ce3ee52" href="#TOC_HEAD_6ce3ee52">LT033101.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_fdc38fc9">LT0331 (name=Verify Preorder Serialization of a Binary Tree, ptag=Leetcode) &nbsp;<a href="../tags/LT0331.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0331</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_6668b7d"><a href="https://leetcode.com/problems/verify-preorder-serialization-of-a-binary-tree/" target="_blank">Verify Preorder Serialization of a Binary Tree &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0331.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0331</a></li>
+		<br />
+	</ul>
+	<p>
+		One way to serialize a binary tree is to use pre&ndash;order traversal. When we encounter a non&ndash;null node, we record the node&#039;s value. If it is a null node, we record using a sentinel value such as
+		<code>#</code> .
+	</p>
+	<pre><code>_9_
+/   \
+3     2
+/ \   / \
+4   1  #  6
+/ \ / \   / \
+# # # #   # #	</code></pre>
+	<p>
+		For example, the above binary tree can be serialized to the string
+		<code>&quot;9,3,4,#,#,1,#,#,2,#,6,#,#&quot;</code> , where
+		<code>#</code> represents a null node.
+	</p>
+	<p>
+		Given a string of comma separated values, verify whether it is a correct preorder traversal serialization of a binary tree. Find an algorithm without reconstructing the tree.
+	</p>
+	<p>
+		Each comma separated value in the string must be either an integer or a character
+		<code>&#039;#&#039;</code> representing
+		<code>null</code> pointer.
+	</p>
+	<p>
+		You may assume that the input format is always valid, for example it could never contain two consecutive commas such as
+		<code>&quot;1,,3&quot;</code> .
+	</p>
+	<p>
+		&lt;strong&gt;Example&amp;nbsp;1:&lt;/strong&gt;
+	</p>
+	<p>
+		<code>&quot;9,3,4,#,#,1,#,#,2,#,6,#,#&quot;</code>
+		Return
+		<code>true</code>
+	</p>
+	<p>
+		&lt;strong&gt;Example&amp;nbsp;2:&lt;/strong&gt;
+	</p>
+	<p>
+		<code>&quot;1,#&quot;</code>
+		Return
+		<code>false</code>
+	</p>
+	<p>
+		&lt;strong&gt;Example&amp;nbsp;3:&lt;/strong&gt;
+	</p>
+	<p>
+		<code>&quot;9,#,#,1&quot;</code>
+		Return
+		<code>false</code>
+	</p>
+</ul>
+	<H3><a name="HEAD_a1cde29f" href="#TOC_HEAD_a1cde29f">LT033101.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool isValidSerialization(string preorder) {
+        int len = preorder.size();
+        stack&lt;char&gt; s;
+
+        for(int pos = 0; pos &lt; len; ++pos)
+        {   char c = preorder.at(pos++);
+            while( !s.empty() && s.top() =='#' && c == '#')
+            {   s.pop(); // pop #
+                if( s.empty() || s.top() == '#' )
+                    return false;
+                s.pop();
+            }
+
+            s.push(c);
+            while( pos &lt; len && preorder.at(pos) != ',')
+                ++pos;
+        }
+
+        return s.size() == 1 && s.top() == '#';
+    }
+};
+
+
+
+void test(string preorder)
+{
+    cout &lt;&lt; "input: " &lt;&lt; preorder;
+    bool r = Solution().isValidSerialization(preorder);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test("9,3,4,#,#,1,#,#,2,#,6,#,#");
+}
+
+
+// Result
+//
+// 2022-11-22: Runtime 7ms 42.72% Memory 6.9MB 64.74%, https://leetcode.com/problems/verify-preorder-serialization-of-a-binary-tree/submissions/848111072/
+// 2023-02-22: Runtime 4ms 58.96% Memory 6.9MB 66.60%, https://leetcode.com/problems/verify-preorder-serialization-of-a-binary-tree/submissions/902749404/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 9,3,4,#,#,1,#,#,2,#,6,#,#; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

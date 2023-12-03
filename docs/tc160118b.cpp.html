@@ -1,0 +1,114 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC160118B.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC160118B.cpp</h1>
+            <h3>chapter 13 数据结构</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/45283a62.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>程序员面试宝典</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;iostream&gt;
+
+//#################################################################################
+//
+//
+//
+//#################################################################################
+
+using namespace std;
+
+void test_create_list();
+
+template&lt;class Ty&gt;
+struct Node
+{
+    typedef Node&lt;Ty&gt; 	this_type;
+    typedef this_type*  pointer_type;
+
+    Ty value;
+    pointer_type m_pNext;
+};
+
+
+template&lt;class Ty&gt;
+class  List
+{
+    typedef Node&lt;Ty&gt;* 	node_ptr;
+public:
+    List():pHead(NULL),pTail(NULL),m_nCount(0){}
+
+    int getCount() const { return m_nCount; }
+
+
+private:
+    List( const List& );
+    List& operator = (const List& );
+
+private:
+    node_ptr pHead;
+    node_ptr pTail;
+    int m_nCount;
+};
+
+template&lt;class Ty&gt;
+Node&lt;Ty&gt;* initList()
+{
+    Node&lt;Ty&gt;* pHead = new Node&lt;Ty&gt;();
+    pHead-&gt;m_pNext = pHead;
+    return pHead;
+}
+
+
+//template&lt;class Ty&gt;
+//void appendTailList(Node&lt;Ty&gt;* pHead, Ty v)
+//{
+//	
+//}
+
+int  main(void)
+{
+test_create_list();
+
+cout &lt;&lt; "output: done!" &lt;&lt; endl;
+
+return 0;
+}
+
+
+
+void test_create_list()
+{
+    cout &lt;&lt;"\n==&gt;  test_create_list: \n\n";
+
+    List&lt;int&gt; list;
+
+    Node&lt;int&gt;* pHead = initList&lt;int&gt;();
+    if(pHead == NULL)
+    {
+        cout &lt;&lt; "Fail to create head node" &lt;&lt; endl;
+    }
+    else
+    {
+        cout &lt;&lt; "succ to create head node, addr=" &lt;&lt;(void*)pHead &lt;&lt; endl;
+    }
+
+    cout &lt;&lt;"-----------------------------------------------\n\n";
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

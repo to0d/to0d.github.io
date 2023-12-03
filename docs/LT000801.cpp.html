@@ -1,0 +1,179 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT000801.cpp (String to Integer - atoi)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT000801.cpp (String to Integer - atoi)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-15</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0008.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0008</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/String-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>String-OJ</a>&nbsp;<a href="../tags/atoi.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>atoi</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_92bcb4ef" href="#TOC_HEAD_92bcb4ef">Problem 0008 <strong>String to Integer &ndash; atoi</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/string-to-integer-atoi" target="_blank">https://leetcode.com/problems/string&ndash;to&ndash;integer&ndash;atoi</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>59.10</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_9c86cdf9" href="#TOC_HEAD_9c86cdf9">LT000801.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_b01b787">LT0008 (name=String to Integer &ndash; atoi, ptag=Leetcode) &nbsp;<a href="../tags/LT0008.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0008</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/String-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>String-OJ</a>&nbsp;<a href="../tags/atoi.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>atoi</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<br />
+	<li><a name="HEAD_HIDDEN_1534ac64"><a href="https://leetcode.com/problems/string-to-integer-atoi" target="_blank">String to Integer &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0008.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0008</a></li>
+	<br />
+	<p>
+		Implement atoi to convert a string to an integer.
+	</p>
+	<p>
+		<strong>Hint:</strong> Carefully consider all possible input cases. If you want a challenge, please do not see below and ask yourself what are the possible input cases.
+	</p>
+	<p>
+		<strong>Notes:</strong> It is intended for this problem to be specified vaguely (ie, no given input specs). You are responsible to gather all the input requirements up front.
+	</p>
+	<p>
+		<strong>Requirements for atoi:</strong>
+	</p>
+	<p>
+		The function first discards as many whitespace characters as necessary until the first non&ndash;whitespace character is found. Then, starting from this character, takes an optional initial plus or minus sign followed by as many numerical digits as possible, and interprets them as a numerical value.
+	</p>
+	<p>
+		The string can contain additional characters after those that form the integral number, which are ignored and have no effect on the behavior of this function.
+	</p>
+	<p>
+		If the first sequence of non&ndash;whitespace characters in str is not a valid integral number, or if no such sequence exists because either str is empty or it contains only whitespace characters, no conversion is performed.
+	</p>
+	<p>
+		If no valid conversion could be performed, a zero value is returned. If the correct value is out of the range of representable values, INT_MAX (2147483647) or INT_MIN (&ndash;2147483648) is returned.
+	</p>
+	<li><strong>Better solution</strong></li>
+	<br />
+</ul>
+<blockquote>
+	<p>
+	<strong>Important enhancemt</strong><br/>
+	sign(&#039;+&#039;)<br/>
+	long long res(0)
+	</p>
+	<p>
+	</p>
+</blockquote>
+	<H3><a name="HEAD_1fa8adc6" href="#TOC_HEAD_1fa8adc6">LT000801.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int myAtoi(string str) {
+        int pos = 0, len = str.length();
+        while( pos &lt; len && str.at(pos) == ' ') // skip white space
+            ++pos;
+        char c, sign = '+';
+        if( pos &lt; len && ((c = str.at(pos)) == '+' || c == '-'))
+        {   sign = c;
+            ++pos;
+        }
+        long long res = 0, n = 0, over = sign == '+' ? 2147483647 : 2147483648; // INT_MIN (-2147483648), INT_MAX (2147483647)
+        for(; pos &lt; len && isdigit(c = str.at(pos)); ++pos)
+        {   res = res*10 + (c - '0');
+            ++n;
+            if( res &gt; over )
+                return sign == '+' ? INT_MAX : INT_MIN;
+        }
+        if(n == 0)
+            return 0;
+        return sign == '+' ? res : -res;
+    }
+};
+
+
+
+void test(string str)
+{
+    cout &lt;&lt; "input: " &lt;&lt; str;
+    int r = Solution().myAtoi(str);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("12345678");
+    test("  0000000000012345678");
+}
+
+// Result
+//
+// 2023-02-09: Runtime 4ms 61.65% Memory 7.1MB 19.55%, https://leetcode.com/problems/string-to-integer-atoi/submissions/894765461/
+// 2023-03-15: Runtime 4ms 59.10% Memory 6.9MB 93.3%, https://leetcode.com/problems/string-to-integer-atoi/submissions/915706679/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 12345678; output: 12345678;
+input:   0000000000012345678; output: 12345678;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

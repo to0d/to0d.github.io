@@ -1,0 +1,198 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>DBG: How to do frame unwind in gdb</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>DBG: How to do frame unwind in gdb</h1>
+        <h3>解栈</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-30</time>
+            <i><a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;<a href="../tags/frame-unwind.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>frame-unwind</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H2><a name="HEAD_1a39a116" href="#TOC_HEAD_1a39a116">1. Test program</a></H2>
+<pre><code>vi test.c
+
+#include &lt;stdio.h&gt;
+
+int func(int x)
+{
+    return x + 1;
+}
+
+void main()
+{
+    int y = 1, z;
+    z = func( y );
+    printf("hello, z=%d\n", z);
+}
+
+gcc -g test.c
+
+./a.out
+hello, z=2</code></pre>
+	<H2><a name="HEAD_8c8b43e0" href="#TOC_HEAD_8c8b43e0">2. get disassembly in gdb</a></H2><ul><a href="../tags/disassembly.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>disassembly</a>&nbsp;</ul>
+<pre><code>(gdb) disass/m main
+
+
+9       {
+0x000000000000115c &lt;+0&gt;:     endbr64
+0x0000000000001160 &lt;+4&gt;:     push   %rbp
+0x0000000000001161 &lt;+5&gt;:     mov    %rsp,%rbp
+0x0000000000001164 &lt;+8&gt;:     sub    $0x10,%rsp
+
+10          int y = 1, z;
+0x0000000000001168 &lt;+12&gt;:    movl   $0x1,-0x8(%rbp)
+
+11          z = func( y );
+0x000000000000116f &lt;+19&gt;:    mov    -0x8(%rbp),%eax
+0x0000000000001172 &lt;+22&gt;:    mov    %eax,%edi
+0x0000000000001174 &lt;+24&gt;:    callq  0x1149 &lt;func&gt;
+0x0000000000001179 &lt;+29&gt;:    mov    %eax,-0x4(%rbp)
+
+12          printf("hello, z=%d\n", z);
+0x000000000000117c &lt;+32&gt;:    mov    -0x4(%rbp),%eax
+0x000000000000117f &lt;+35&gt;:    mov    %eax,%esi
+0x0000000000001181 &lt;+37&gt;:    lea    0xe7c(%rip),%rdi        # 0x2004
+0x0000000000001188 &lt;+44&gt;:    mov    $0x0,%eax
+0x000000000000118d &lt;+49&gt;:    callq  0x1050 &lt;printf@plt&gt;
+
+13      }
+0x0000000000001192 &lt;+54&gt;:    nop
+0x0000000000001193 &lt;+55&gt;:    leaveq
+0x0000000000001194 &lt;+56&gt;:    retq</code></pre>
+	<H2><a name="HEAD_77642176" href="#TOC_HEAD_77642176">3. dwarf unwind 规则</a></H2>
+<blockquote>
+	<p>
+	以下两种格式是等价的
+	</p>
+	<p>
+	</p>
+</blockquote>
+	<H3><a name="HEAD_54bada" href="#TOC_HEAD_54bada">3.1. <code>readelf &ndash;wF a.out</code></a></H3><ul><a href="../tags/readelf.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>readelf</a>&nbsp;</ul>
+<pre><code>000000a8 000000000000001c 000000ac FDE cie=00000000 pc=000000000000115c..0000000000001195
+LOC           CFA      rbp   ra
+000000000000115c rsp+8    u     c-8
+0000000000001161 rsp+16   c-16  c-8
+0000000000001164 rbp+16   c-16  c-8
+0000000000001194 rsp+8    c-16  c-8</code></pre>
+	<H3><a name="HEAD_3cfff0ae" href="#TOC_HEAD_3cfff0ae">3.2. <code>llvm&ndash;dwarfdump &ndash;a a.out</code> (紧凑编码格式)</a></H3><ul><a href="../tags/llvm-dwarfdump.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>llvm-dwarfdump</a>&nbsp;</ul>
+<pre><code>000000a8 0000001c 000000ac FDE cie=000000ac pc=fffff04c...fffff085
+DW_CFA_advance_loc: 5
+DW_CFA_def_cfa_offset: +16
+DW_CFA_offset: reg6 -16
+DW_CFA_advance_loc: 3
+DW_CFA_def_cfa_register: reg6
+DW_CFA_advance_loc: 48
+DW_CFA_def_cfa: reg7 +8
+DW_CFA_nop:
+DW_CFA_nop:
+DW_CFA_nop:</code></pre>
+	<H3><a name="HEAD_19758452" href="#TOC_HEAD_19758452">3.3. GDB 如何解析这些规则</a></H3>
+<ul>
+	<li>dwarf2_frame_prev_register</li>
+	<ol>
+		<li>dwarf2_frame_cache</li>
+		<ul>
+			<li>execute_cfa_program // set dwarf ruless</li>
+			<ul>
+				<li><code>case DW_CFA_register:</code>  // defined in include\dwarf2.def</li>
+				<ul>
+					<li><code>fs&ndash;&gt;regs.reg[reg].how = DWARF2_FRAME_REG_SAVED_REG;</code> // defined in gdb\dwarf2\frame.c</li>
+					<br />
+				</ul>
+			</ul>
+		</ul>
+		<li><code>switch (cache&ndash;&gt;reg[regnum].how)</code></li>
+		<ul>
+			<li><code>case DWARF2_FRAME_REG_SAVED_REG:</code></li>
+			<ul>
+				<li>frame_unwind_got_register</li>
+				<br />
+			</ul>
+		</ul>
+	</ol>
+</ul>
+	<H2><a name="HEAD_91ac9013" href="#TOC_HEAD_91ac9013">4. Refers</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_9f7bf94"><a href="../refers/9862086639d25ed4c19d602bc184b7ef.htm" target="_blank">2021&ndash;10&ndash;09 gdb反汇编disassemble_gdb的disassemble&ndash;CSDN博客.htm</a></li>
+	<li><a name="HEAD_HIDDEN_2c80e250"><a href="../refers/a23cdc553f7c48caaa9c8f8f9c731c33.html" target="_blank">2020&ndash;12&ndash;03 linux 栈回溯 x86_64 知乎.html</a></li>
+	<li><a name="HEAD_HIDDEN_5bdb9f92"><a href="../refers/2b736431b6f6a2c9eaff5c2ef69e1fa8.html" target="_blank">2023&ndash;01&ndash;11 Stack Unwind 堆栈回溯 知乎.html</a></li>
+	<li><a name="HEAD_HIDDEN_a306524a"><a href="../refers/ac9234816eceea84c40af80036b4b4ee.html" target="_blank">2023&ndash;07&ndash;23 函数调用过程中栈到底是怎么压入和弹出的 阿管学习录 知乎.html</a></li>
+	<li><a name="HEAD_HIDDEN_9da54e18"><a href="../refers/572898d6c8879f99fc593417fe457056.html" target="_blank">2023&ndash;07&ndash;26 GDB 调试器如何通过调用帧信息来确定函数调用关系 Linux 中国 知乎.html</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_4cf5967" href="#TOC_HEAD_4cf5967">5. Terms</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_8fb82fee">CFI (name=Call Frame Information) &nbsp;<a href="../tags/CFI.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>CFI</a>&nbsp;<a href="../tags/frame-unwind.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>frame-unwind</a></li>
+	<br />
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

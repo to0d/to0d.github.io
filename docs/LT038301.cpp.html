@@ -1,0 +1,173 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT038301.cpp (Ransom Note)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT038301.cpp (Ransom Note)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-22</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0383.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0383</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_cb60355f" href="#TOC_HEAD_cb60355f">Problem 0383 <strong>Ransom Note</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/ransom-note/" target="_blank">https://leetcode.com/problems/ransom&ndash;note/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>97.69</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_bd258eaf" href="#TOC_HEAD_bd258eaf">LT038301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_ef8db491">LT0383 (name=Ransom Note, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0383.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0383</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_2944259c"><a href="https://leetcode.com/problems/ransom-note/" target="_blank">Ransom Note &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0383.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0383</a></li>
+		<br />
+	</ul>
+	<p>
+		Given two strings ransomNote and magazine, return true if ransomNote can be constructed by using the letters from magazine and false otherwise.
+	</p>
+	<p>
+		Each letter in magazine can only be used once in ransomNote.
+	</p>
+	<p>
+		 
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input: ransomNote = "a", magazine = "b"
+Output: false	</code></pre>
+	<p>
+		Example 2:
+	</p>
+	<pre><code>Input: ransomNote = "aa", magazine = "ab"
+Output: false	</code></pre>
+	<p>
+		Example 3:
+	</p>
+	<pre><code>Input: ransomNote = "aa", magazine = "aab"
+Output: true	</code></pre>
+	<p>
+		 
+	</p>
+	<p>
+		Constraints:
+	</p>
+	<pre><code>1 &lt;= ransomNote.length, magazine.length &lt;= 105
+ransomNote and magazine consist of lowercase English letters.	</code></pre>
+</ul>
+	<H3><a name="HEAD_1300397c" href="#TOC_HEAD_1300397c">LT038301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool canConstruct(string ransomNote, string magazine) {
+        int a[256] = {0}, b[256] = {0};
+
+        calculate(ransomNote, a);
+        calculate(magazine, b);
+
+        for(int i = 0; i &lt; 256; ++i)
+            if( a[i] &gt; b[i])
+                return false;
+
+        return true;
+    }
+
+    void calculate(string s, int* cm) {
+        int size = s.size();
+        for(int i = 0; i &lt; size; ++i)
+            cm[((int)s.at(i))]++;
+    }
+};
+
+
+
+void test(string r, string m)
+{
+    cout &lt;&lt; "input: r=" &lt;&lt; r &lt;&lt; ", m=" &lt;&lt; m &lt;&lt; "; output: ";
+    bool rr = Solution().canConstruct(r, m);
+    cout &lt;&lt; rr &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("aa", "aab");
+}
+
+// Result
+//
+// 2022-11-25: Runtime 41ms 17.75% Memory 9.3MB 7.6%, https://leetcode.com/problems/ransom-note/submissions/849522516/
+// 2023-02-22: Runtime 7ms 97.69% Memory 9.3MB 6.90%, https://leetcode.com/problems/ransom-note/submissions/902952827/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: r=aa, m=aab; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC180402E.py</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC180402E.py</h1>
+            <h3>RegEx Example</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/L180315A.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>L180315A</a>&nbsp;<a href="../tags/RegEx.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>RegEx</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+import re
+print(re.match('www', 'www.runoob.com').span())  # 在起始位置匹配
+print(re.match('com', 'www.runoob.com'))  # 不在起始位置匹配
+
+line = "Cats are smarter than dogs"
+
+matchObj = re.match( r'(.*) are (.*?) .*', line, re.RegexFlag.M|re.RegexFlag.I)
+
+if matchObj:
+    print ("matchObj.group() : ", matchObj.group())
+    print ("matchObj.group(1) : ", matchObj.group(1))
+    print ("matchObj.group(2) : ", matchObj.group(2))
+else:
+    print ("No match!!")
+
+
+print('output: done.');</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

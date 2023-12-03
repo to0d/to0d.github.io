@@ -1,0 +1,131 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT152801.cpp (Shuffle String)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT152801.cpp (Shuffle String)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-11</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1528.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1528</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_2030a5ad" href="#TOC_HEAD_2030a5ad">Problem 1528 <strong>Shuffle String</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/shuffle-string/" target="_blank">https://leetcode.com/problems/shuffle&ndash;string/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_365702db" href="#TOC_HEAD_365702db">LT152801.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_b126ac85">LT1528 (name=Shuffle String, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1528.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1528</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_9d1237b0"><a href="https://leetcode.com/problems/shuffle-string/" target="_blank">Shuffle String &ndash; Leetcode</a> &nbsp;<a href="../tags/LT1528.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1528</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_c90aa3a8" href="#TOC_HEAD_c90aa3a8">LT152801.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    string restoreString(string s, vector&lt;int&gt;& indices) {
+        static char buf[100];
+        int len = s.length();
+        for(int i = 0;i &lt; len; ++i)
+            buf[indices[i]] = s.at(i);
+        return string(buf, len);
+    }
+};
+
+
+
+void test(string s, vector&lt;int&gt; indices)
+{
+    cout &lt;&lt; "input: s=" &lt;&lt; s &lt;&lt; ", indices=";
+    outputVector(indices);
+    string r = Solution().restoreString(s, indices);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test("codeleet", {4,5,6,7,0,2,1,3});
+}
+
+
+// Result
+//
+// 2022-12-15: Runtime 7ms 83.19% Memory 15.1MB 94.71%, https://leetcode.com/problems/shuffle-string/submissions/859978785/
+// 2023-03-11: Runtime 0ms 100% Memory 15.2MB 80.80%, https://leetcode.com/problems/shuffle-string/submissions/912971646/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: s=codeleet, indices=[4,5,6,7,0,2,1,3]; output: leetcode;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

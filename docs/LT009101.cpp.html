@@ -1,0 +1,189 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT009101.cpp (Decode Way)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT009101.cpp (Decode Way)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-18</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0091.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0091</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_69e62de4" href="#TOC_HEAD_69e62de4">Problem 0091 <strong>Decode Way</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/decode-ways/" target="_blank">https://leetcode.com/problems/decode&ndash;ways/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>43</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_cf84bb09" href="#TOC_HEAD_cf84bb09">LT009101.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_74ce8fc">LT0091 (name=Decode Way, ptag=Leetcode) &nbsp;<a href="../tags/LT0091.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0091</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_3040a31f"><a href="https://leetcode.com/problems/decode-ways/" target="_blank">Decode Way &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0091.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0091</a></li>
+		<br />
+	</ul>
+	<p>
+		A message containing letters from
+		<code>A&ndash;Z</code> is being encoded to numbers using the following mapping:
+	</p>
+	<pre><code>'A' -&gt; 1
+'B' -&gt; 2
+...
+'Z' -&gt; 26	</code></pre>
+	<p>
+		Given an encoded message containing digits, determine the total number of ways to decode it.
+	</p>
+	<p>
+		For example,
+	</p>
+	<p>
+		Given encoded message
+		<code>&quot;12&quot;</code> ,
+		it could be decoded as
+		<code>&quot;AB&quot;</code> (1 2) or
+		<code>&quot;L&quot;</code> (12).
+	</p>
+	<p>
+		The number of ways decoding
+		<code>&quot;12&quot;</code> is 2.
+	</p>
+</ul>
+	<H3><a name="HEAD_5447a2d6" href="#TOC_HEAD_5447a2d6">LT009101.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+// **Deduce:**
+//
+//	S(n) = S(n-1)*Y(n) + S(n-2)*Y(n-1,n)
+//	S(0) = 1	
+//   S(1) = 1
+//   	Y(n) = 1  when char in string(n) is '1', '2', ...'9'
+//              0  others
+//   Y(n-1,n) = 1  when two-char in string(n-1) and string(n) is '10','11'..'26'
+//              0  others
+
+class Solution {
+public:
+    int numDecodings(string s) {
+        if( s.empty() )
+            return 0;
+        if( s.size() == 1 )
+            return canDecode(s.at(0)) ? 1 : 0;
+
+        char c1(s.at(0)),c2;
+        int s0(1), s1, s2;
+
+        s1 = canDecode(c1) ? 1 : 0;
+        for( size_t i = 1; i &lt; s.size(); ++i, s0=s1, s1=s2, c1=c2)
+        {   c2 = s.at(i);
+            s2  = canDecode(c2)? s1 : 0;
+            s2 += canDecode(c1,c2)? s0 : 0;
+        }
+
+        return s2;
+    }
+
+    bool canDecode(char c){
+        return c &gt;= '1' && c &lt;= '9';
+    }
+
+    bool canDecode( char c1 , char c2) {
+        return c2 &gt;= '0' && ((c1 == '1' && c2 &lt;= '9')||(c1 == '2' && c2 &lt;= '6'));
+    }
+};
+
+
+
+void test(string s)
+{
+    cout &lt;&lt; "input: " &lt;&lt; s;
+    int r = Solution().numDecodings(s);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("12");
+    test("226");
+    test("06");
+}
+
+// Result
+//
+// 2022-11-16: Runtime 4ms 43.49% Memory 6.2MB 78.56%, https://leetcode.com/problems/decode-ways/submissions/844609447/
+// 2023-02-18: Runtime 4ms 43% Memory 6.2MB 51.94%, https://leetcode.com/problems/decode-ways/submissions/900103891/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 12; output: 2;
+input: 226; output: 3;
+input: 06; output: 0;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

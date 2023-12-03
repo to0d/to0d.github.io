@@ -1,0 +1,102 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC151223A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC151223A.cpp</h1>
+            <h3>chapter 06</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/45283a62.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>程序员面试宝典</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+struct A
+{
+    long a1;
+    short a2;
+} a;
+
+struct B
+{
+    char   a1;  //1
+    int    a2;  //4
+    short  a3;  //2
+    char   a4;  //1
+    double a5;  //8
+} b;
+
+class EmptyClass
+{};
+
+struct EmptyStruct
+{};
+
+class BaseClassWithVirtualFunction
+{
+public:
+        virtual ~BaseClassWithVirtualFunction() = 0;
+};
+
+class BaseClassWithoutVirtualFunction
+{};
+
+class DerivedClassWithoutVirtualFunction1 : public BaseClassWithVirtualFunction
+{};
+
+class DerivedClassWithVirtualFunction2 : public BaseClassWithVirtualFunction
+{
+    public:
+        virtual void fun(){}
+};
+
+class VirtualDerivedClass : public virtual BaseClassWithoutVirtualFunction
+{};
+
+int main(void)
+{
+    cout &lt;&lt;"sizeof(char)  ="&lt;&lt; sizeof(char) &lt;&lt; endl;
+    cout &lt;&lt;"sizeof(short) ="&lt;&lt; sizeof(short) &lt;&lt; endl;
+    cout &lt;&lt;"sizeof(int)   ="&lt;&lt; sizeof(int) &lt;&lt; endl;
+    cout &lt;&lt;"sizeof(long)  ="&lt;&lt; sizeof(long) &lt;&lt; endl;
+    cout &lt;&lt;"sizeof(float) ="&lt;&lt; sizeof(float) &lt;&lt; endl;
+    cout &lt;&lt;"sizeof(double)="&lt;&lt; sizeof(double) &lt;&lt; endl;
+
+    cout &lt;&lt;"sizeof(A)="&lt;&lt; sizeof(A) &lt;&lt;", sizeof(B)="&lt;&lt; sizeof(B) &lt;&lt; endl;
+
+    cout &lt;&lt;"Offset B::a1 char  = "&lt;&lt; ( (long)&(b.a1) - (long)&(b)) &lt;&lt; endl;
+    cout &lt;&lt;"Offset B::a2 int   = "&lt;&lt; ( (long)&(b.a2) - (long)&(b)) &lt;&lt; endl;
+    cout &lt;&lt;"Offset B::a3 short = "&lt;&lt; ( (long)&(b.a3) - (long)&(b)) &lt;&lt; endl;
+    cout &lt;&lt;"Offset B::a4 char  = "&lt;&lt; ( (long)&(b.a4) - (long)&(b)) &lt;&lt; endl;
+    cout &lt;&lt;"Offset B::a5 doubl = "&lt;&lt; ( (long)&(b.a5) - (long)&(b)) &lt;&lt; endl &lt;&lt; endl;
+
+    cout &lt;&lt;"sizeof(EmptyClass)  = "&lt;&lt; sizeof(EmptyClass) &lt;&lt; endl;
+    cout &lt;&lt;"sizeof(EmptyStruct) = "&lt;&lt; sizeof(EmptyStruct) &lt;&lt; endl &lt;&lt; endl;
+
+    void* pVoid = NULL;
+
+    cout &lt;&lt;"sizeof(pVoid)       = "&lt;&lt; sizeof(pVoid) &lt;&lt; endl;
+    cout &lt;&lt;"sizeof(BaseClassWithVirtualFunction)        = "&lt;&lt; sizeof(BaseClassWithVirtualFunction) &lt;&lt; endl;
+    cout &lt;&lt;"sizeof(DerivedClassWithoutVirtualFunction1) = "&lt;&lt; sizeof(DerivedClassWithoutVirtualFunction1) &lt;&lt; endl;
+    cout &lt;&lt;"sizeof(DerivedClassWithVirtualFunction2)    = "&lt;&lt; sizeof(DerivedClassWithVirtualFunction2) &lt;&lt; endl;
+    cout &lt;&lt;"sizeof(BaseClassWithoutVirtualFunction)     = "&lt;&lt; sizeof(BaseClassWithoutVirtualFunction) &lt;&lt; endl;
+    cout &lt;&lt;"sizeof(VirtualDerivedClass)                 = "&lt;&lt; sizeof(VirtualDerivedClass) &lt;&lt; endl;
+
+    std::cout &lt;&lt; "output: done!" &lt;&lt; endl;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

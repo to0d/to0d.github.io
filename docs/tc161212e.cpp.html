@@ -1,0 +1,63 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161212E.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161212E.cpp</h1>
+            <h3>Shell Insert Sort</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/ShellInsertSort.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ShellInsertSort</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+void shellInsertSort(vector&lt;int&gt;& nums) {
+    static int ddnums [4] = {7,5,3,1};
+    int size = nums.size();
+    for(int dd : ddnums)
+    {   for(int i = 0; i &lt; dd; ++i)
+        {   for(int j = dd; j &lt; size; j += dd)
+            {   if( nums[j] &lt; nums[j - dd] )
+                {   int guard = nums[j], m = j - dd;
+                    for(; m &gt;= 0 && guard &lt; nums[m];  m -= dd)
+                        nums[m+dd] = nums[m];
+                    nums[m+dd] = guard;
+                }
+            }
+        }
+    }
+}
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    shellInsertSort(nums);
+    cout &lt;&lt; "; output: ";
+    outputVector(nums);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main( void )
+{
+    test({8,9,3,2,6,5,7,1,4});
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

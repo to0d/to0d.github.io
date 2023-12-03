@@ -1,0 +1,140 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>WSL Operations</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">WSL Operations</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2020-06-20</time>
+            <i><a href="../tags/Operation.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Operation</a>&nbsp;<a href="../tags/WSL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>WSL</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H2><a name="HEAD_4c14a5d" href="#TOC_HEAD_4c14a5d">1. Setup</a></H2>
+	<H3><a name="HEAD_a21c0267" href="#TOC_HEAD_a21c0267">1.1. 修改 WSL/Ubuntu 18.04 默认源为阿里云镜像</a></H3><ul><a href="../tags/Ubuntu.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Ubuntu</a>&nbsp;</ul>
+<ul>
+	<li>备份</li>
+	<br />
+	<pre><code>sudo cp /etc/apt/sources.list /etc/apt/sources.list.20181013	</code></pre>
+	<li>替换</li>
+	<br />
+	<pre><code>sudo vim /etc/apt/sources.list
+:%s/security.ubuntu/mirrors.aliyun/g
+:%s/archive.ubuntu/mirrors.aliyun/g	</code></pre>
+	<li>更新</li>
+	<br />
+	<pre><code>sudo apt update	</code></pre>
+</ul>
+	<H3><a name="HEAD_7e4d64ce" href="#TOC_HEAD_7e4d64ce">1.2. Install softwares on WSL/Ubuntu</a></H3><ul><a href="../tags/Ubuntu.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Ubuntu</a>&nbsp;</ul>
+<ul>
+	<li>Install gcc</li>
+	<br />
+	<pre><code>sudo apt-get install gcc
+sudo apt-get install make
+
+sudo apt-get remove gcc	</code></pre>
+	<li><a name="HEAD_HIDDEN_ae5f873b">Install sshpass on WSL/Ubuntu &nbsp;<a href="../tags/sshpass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>sshpass</a></li>
+	<br />
+	<pre><code>sudo apt-get install sshpass	</code></pre>
+	<li><a name="HEAD_HIDDEN_ee9f1aab">Install Emacs on WSL/Ubuntu &nbsp;<a href="../tags/Emacs.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Emacs</a></li>
+	<br />
+	<pre><code>sudo apt install emacs	</code></pre>
+</ul>
+	<H3><a name="HEAD_bda8d9a6" href="#TOC_HEAD_bda8d9a6">1.3. Install other tools</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_410f27af">&quot;Setup RS on WSL&quot;</li>
+	<li><a name="HEAD_HIDDEN_314306ba">&quot;Setup dt2 on WSL&quot;</li>
+	<li><a name="HEAD_HIDDEN_f5129d91">&quot;Setup s2 on WSL&quot;</li>
+	<li><a name="HEAD_HIDDEN_663bda81">&quot;Setup CTL on WSL&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_78b6aa3a" href="#TOC_HEAD_78b6aa3a">2. Troubleshooting</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_46f16c27"><a href="651926564690f34aac46ce162ca4ae66.html#Linux-Script-Issue-Syntax-dash-1" target="_blank">Syntax error: &quot;(&quot; unexpected &ndash; caused by <strong>dash</strong></a></li>
+	<li><a name="HEAD_HIDDEN_c578319b"><a href="../refers/35c342eeaffb87d355a49b554b85788d.html" target="_blank">2020&ndash;01&ndash;12 在WSL中 git status显示所有文件已修改的问题 简书.html</a></li>
+	<br />
+</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    ﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_4c14a5d" href="#HEAD_4c14a5d">1. Setup</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_a21c0267" href="#HEAD_a21c0267">1.1. 修改 WSL/Ubuntu 18.04 默认源为阿里云镜像 </a></li>
+		<li><a name="TOC_HEAD_7e4d64ce" href="#HEAD_7e4d64ce">1.2. Install softwares on WSL/Ubuntu </a></li>
+		<li><a name="TOC_HEAD_bda8d9a6" href="#HEAD_bda8d9a6">1.3. Install other tools</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_78b6aa3a" href="#HEAD_78b6aa3a">2. Troubleshooting</a></b><br>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>DBG: How ptrace works</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">DBG: How ptrace works</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-05-14</time>
+            <i><a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;<a href="../tags/ptrace.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ptrace</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">哪里进行权限检查? &ndash; 2023/09/12 </a></li>
+	<li><a name="TOC_MARK_2" href="#MARK_2" id="in-ttl">Update later &ndash; 2023/10/01 </a></li>
+</ol>
+</div>
+        <div class="entry-content">
+	<H2><a name="HEAD_de5b1ec3" href="#TOC_HEAD_de5b1ec3">Scenarios</a></H2>
+	<H3><a name="HEAD_88fb79de" href="#TOC_HEAD_88fb79de">Enable child process be debugged</a></H3><ul><a href="../tags/PTRACE_TRACEME.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PTRACE_TRACEME</a>&nbsp;</ul>
+<pre><code>+----------+                          +---------+
+| debugger |                          | debugee |
++----------+                          +---------+
+    |                                      |
+    |                                      |-&gt; ptrace(PTRACE_TRACEME)
+    |                                      |
+wait(&status)  &lt;--- signal(SIGTRAP &lt;- exec("program image")
+    |                                    (stop)
+WIFSTOPPED(status)</code></pre>
+<ul>
+	<li>debugee:</li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_ff777b60"><code>ptrace(PTRACE_TRACEME)</code> &ndash; allow the current process can be debugged &ndash; see <a href="72da594cb8763425b0b68dd954a018e2.html" target="_blank">ptrace.c</a>&nbsp;<a href="https://github.com/to0d/linux/blob/master/kernel/ptrace.c" title="https://github.com/to0d/linux/blob/master/kernel/ptrace.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+		<li><a name="HEAD_HIDDEN_1d2087fb">exec() &ndash; <code>signal SIGTRAP</code> &nbsp;<a href="../tags/SIGTRAP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>SIGTRAP</a></li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_7db94043">see <a href="exec.c.html#exec_binprm" target="_blank">function &ndash; exec_binprm</a>&nbsp;<a href="https://github.com/to0d/linux/blob/master/fs/exec.c" title="https://github.com/to0d/linux/blob/master/fs/exec.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<li><a name="HEAD_HIDDEN_69fdb16d">see <a href="include-linux-ptrace-h.html#ptrace_event" target="_blank">function &ndash; ptrace_event</a>&nbsp;<a href="https://github.com/to0d/linux/blob/master/include/linux/ptrace.h" title="https://github.com/to0d/linux/blob/master/include/linux/ptrace.h" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<li><a name="HEAD_HIDDEN_df72d2c0">see <a href="how-exec-works.html" target="_blank">How exec works</a></li>
+			<br />
+		</ul>
+	</ul>
+	<li>debugger:</li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_573beb81">Check &ndash; <code>WIFSTOPPED returns true if the child process was stopped by delivery of a signal</code> &nbsp;<a href="../tags/WIFSTOPPED.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>WIFSTOPPED</a></li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_7b607b39">WIFSTOPPED &ndash; see <a href="../refers/5fc71007ef7f3025d9346464b063be06.htm" target="_blank">2021&ndash;06&ndash;01 waitpid函数详解+应用示例 DeRoy的博客 CSDN.htm</a></li>
+			<br />
+		</ul>
+	</ul>
+	<li>refer</li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_757b8e5d"><a href="tc170514a.c.html" target="_blank">TC170514A.c</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_c1522191" href="#TOC_HEAD_c1522191">Read general register information</a></H3><ul><a href="../tags/PTRACE_GETREGS.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PTRACE_GETREGS</a>&nbsp;</ul>
+<pre><code>    +----------+                                        +---------+
+    | debugger |                                        | debugee |
+    +----------+                                        +---------+
+        |
+    ptrace(PTRACE_GETREGS)                               +--------+
+        -&gt; child = find_get_task_by_vpid(pid)  -----&gt;  |  Task  |
+        -&gt; ptrace_check_attach(child)                  +--------|
+            -&gt; arch_ptrace(child, PTRACE_GETREGS)
+            -&gt; copy_regset_to_user(child)</code></pre>
+<ul>
+	<li><a name="HEAD_HIDDEN_a5bf6570">哪里进行权限检查? &ndash; 2023/09/12  <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></li>
+	<br />
+	<li>refer</li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_757b8e5d_0"><a href="tc170514a.c.html" target="_blank">TC170514A.c</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_cd7157c4" href="#TOC_HEAD_cd7157c4">Set breakpoints</a></H3><ul><a href="../tags/PTRACE_POKETEXT.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PTRACE_POKETEXT</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_13c1f25f">Update later &ndash; 2023/10/01  <a name="MARK_2" href="#TOC_MARK_2"><strong><font color="red">@TODO</font></strong></a></li>
+	<br />
+	<li>refer</li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_7589a5de"><a href="tc170514b.c.html" target="_blank">TC170514B.c</a></li>
+		<br />
+	</ul>
+</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    <b><a href="#HEAD_todo"><font color="red">TODO: 2</font></a></b><br>﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_de5b1ec3" href="#HEAD_de5b1ec3">Scenarios</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_88fb79de" href="#HEAD_88fb79de">Enable child process be debugged </a></li>
+		<li><a name="TOC_HEAD_c1522191" href="#HEAD_c1522191">Read general register information </a></li>
+		<li><a name="TOC_HEAD_cd7157c4" href="#HEAD_cd7157c4">Set breakpoints </a></li>
+	</menu>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

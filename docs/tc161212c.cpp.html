@@ -1,0 +1,65 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161212C.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161212C.cpp</h1>
+            <h3>Binary Insert Sort</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/BinaryInsertSort.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>BinaryInsertSort</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+void binarayInsertSort(vector&lt;int&gt;& nums) {
+    int size = nums.size();
+    for(int i = 1; i &lt; size; ++i )
+    {   if ( nums[i] &lt; nums[i-1] )
+        {   int guard = nums[i], h = i - 1, l = 0;
+            while( l &lt;= h )
+            {   int m = (h + l)/2;
+                if( guard &lt; nums[m])
+                    h = m - 1;
+                else
+                    l = m + 1;
+            }
+            for(int j = i - 1 ; j &gt;= (h+1); --j)
+                nums[j+1] = nums[j];
+            nums[h+1] = guard;
+        }
+    }
+}
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    binarayInsertSort(nums);
+    cout &lt;&lt; "; output: ";
+    outputVector(nums);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main( void )
+{
+    test({8,9,3,2,6,5,7,1,4});
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

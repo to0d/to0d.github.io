@@ -1,0 +1,71 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC150327C.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC150327C.c</h1>
+            <h3>print process info</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Process.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Process</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;unistd.h&gt;
+#include &lt;pwd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(int argc,char **argv)
+{
+    pid_t my_pid,parent_pid;
+    uid_t my_uid,my_euid;
+    gid_t my_gid,my_egid;
+    struct passwd *my_info;
+
+    my_pid=getpid();
+    parent_pid=getppid();
+    my_uid=getuid();
+    my_euid=geteuid();
+    my_gid=getgid();
+    my_egid=getegid();
+    my_info=getpwuid(my_uid);
+
+    printf("%-20s%ld\n", "Process ID:", my_pid);
+    printf("%-20s%ld\n", "Parent ID:",parent_pid);
+    printf("%-20s%ld\n", "User ID:",my_uid);
+    printf("%-20s%ld\n", "Effective User ID:",my_euid);
+    printf("%-20s%ld\n", "Group ID:",my_gid);
+    printf("%-20s%ld\n", "Effective Group ID:",my_egid);
+
+    if(my_info)
+    {
+        printf("%-20s%s\n", "My Login Name", my_info-&gt;pw_name);
+        printf("%-20s%s\n", "My Password:", my_info-&gt;pw_passwd);
+        printf("%-20s%ld\n", "My User ID:", my_info-&gt;pw_uid);
+        printf("%-20s%ld\n", "My Group ID:", my_info-&gt;pw_gid);
+        printf("%-20s%s\n", "My Real Name:", my_info-&gt;pw_gecos);
+        printf("%-20s%s\n", "My Home Dir:", my_info-&gt;pw_dir);
+        printf("%-20s%s\n", "My Work Shell:", my_info-&gt;pw_shell);
+        printf("output: done.\n");
+    }
+    else
+    {
+        printf("output: !error");
+    }
+
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

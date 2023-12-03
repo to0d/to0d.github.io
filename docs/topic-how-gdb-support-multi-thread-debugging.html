@@ -1,0 +1,135 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>DBG: How gdb support multi-thread debugging</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>DBG: How gdb support multi-thread debugging</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-09-25</time>
+            <i><a href="../tags/Thread-Debug.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Thread-Debug</a>&nbsp;<a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;<a href="../tags/gdb.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H2><a name="HEAD_6504091f" href="#TOC_HEAD_6504091f">Main tips</a></H2>
+<ol>
+	<li><a name="HEAD_HIDDEN_c5e0cf4">By deafult, the gdb is in <strong>gdb&ndash;all&ndash;stop</strong> mode, all threads will be stopped once one breakpoint is hit in one thread. &nbsp;<a href="../tags/gdb-all-stop.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-all-stop</a></li>
+	<li><a name="HEAD_HIDDEN_757ad878">But in <strong>gdb&ndash;non&ndash;stop</strong> mode, the other threads will continue to run when one thread is debugging. &nbsp;<a href="../tags/gdb-non-stop.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-non-stop</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_165dee71">This may cause breakpoint be missed, refer <a href="gdb-internals-manual.html#GDB-INTERNAL-MANUAL-ISSUE-1" target="_blank">&quot;miss software breakpoints in multi&ndash;thread&quot;</a></li>
+	</ul>
+	<li><a name="HEAD_HIDDEN_768a83fe"><a href="tc170514c.c.html#TC170514C-1" target="_blank">So, by default, the other threads will <font color="red">not be stopped</font> when a thread hit a breakpoint, the gdb need to do something to stop other threads in <strong>all&ndash;stop</strong> mode</a></li>
+	<br />
+</ol>
+	<H3><a name="HEAD_f78f97c8" href="#TOC_HEAD_f78f97c8">How gdb suspend other threads in <strong>gdb&ndash;all&ndash;stop</strong> mode</a></H3><ul><a href="../tags/Thread-Debug.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Thread-Debug</a>&nbsp;<a href="../tags/gdb-all-stop.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-all-stop</a>&nbsp;</ul>
+<pre><code>+----------+              +----------+
+| Thread 1 |              |   gdb    |
++----------+              +----------+
+    |     int 3(interupt)      |
+(break)--------------------&gt;(wait)
+    |                          |
++----------+                    |
+| Thread 2 |&lt;-------------- kill(SIGSTOP)
++----------+</code></pre>
+<ul>
+	<li><a name="HEAD_HIDDEN_7a4cb052">When a thread hit a breakpoint, the gdb will be notified by <strong>wait</strong>, see <a href="1cd96890a50d7cee9f804ea20d629496.html#GDB-LINUX-NAT-WAIT-1" target="_blank">linux_nat_target::wait()</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/linux-nat.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/linux-nat.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<ul>
+		<li>linux_nat_target::wait</li>
+		<ul>
+			<li>linux_nat_wait_1</li>
+			<ul>
+				<li>stop_callback</li>
+				<ul>
+					<li>kill_lwp (ipd, <strong>SIGSTOP</strong> )</li>
+					<ul>
+						<li><a name="HEAD_HIDDEN_fed7546">syscall (__NR_tkill, lwpid, <strong>SIGSTOP</strong> ) &nbsp;<a href="../tags/SIGSTOP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>SIGSTOP</a></li>
+						<br />
+					</ul>
+				</ul>
+			</ul>
+		</ul>
+	</ul>
+</ul>
+	<H2><a name="HEAD_91ac9013" href="#TOC_HEAD_91ac9013">Refers</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_f86cd3ec"><a href="../refers/e8ae41dfb9e059cc5c64aeab0737820b.htm" target="_blank">2020&ndash;10&ndash;26 GDB non&ndash;stop模式 &ndash; 面具下的戏命师 &ndash; 博客园.htm</a></li>
+	<li><a name="HEAD_HIDDEN_e7b1797a"><a href="../refers/767554af21b09b9cbd79f0f747ab6a2d.html" target="_blank">2019&ndash;03&ndash;06 Linux下SIGSTOP的特殊特征和实现 tsecer 博客园.html</a></li>
+	<li><a name="HEAD_HIDDEN_e158fb46"><a href="374489b6133c93986c3e512859252233.html#INFRUN-ADD-NON-STOP-CMD-1" target="_blank">add <strong>set non&ndash;stop on/off</strong> command</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/infrun.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/infrun.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<li><a name="HEAD_HIDDEN_7597bd5f"><a href="tc170514c.c.html" target="_blank">TC170514C.c</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_4cf5967" href="#TOC_HEAD_4cf5967">Terms</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_6dd1c5fd">gdb&ndash;non&ndash;stop (ptag=gdb&ndash;mode) &nbsp;<a href="../tags/Thread-Debug.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Thread-Debug</a>&nbsp;<a href="../tags/gdb-non-stop.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-non-stop</a>&nbsp;<a href="../tags/gdb-mode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-mode</a></li>
+	<li><a name="HEAD_HIDDEN_b61d43a9">gdb&ndash;all&ndash;stop (ptag=gdb&ndash;mode) &nbsp;<a href="../tags/gdb-all-stop.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-all-stop</a>&nbsp;<a href="../tags/gdb-mode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-mode</a></li>
+	<li><a name="HEAD_HIDDEN_daa4d9c9">SIGSTOP (ptag=signal) &nbsp;<a href="../tags/SIGSTOP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>SIGSTOP</a>&nbsp;<a href="../tags/signal.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>signal</a></li>
+	<br />
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

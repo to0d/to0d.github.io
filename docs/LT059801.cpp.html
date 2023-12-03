@@ -1,0 +1,176 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT059801.cpp (Range Addition II)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT059801.cpp (Range Addition II)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-25</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0598.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0598</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_4491b8e6" href="#TOC_HEAD_4491b8e6">Problem 0598 <strong>Range Addition II</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/range-addition-ii/" target="_blank">https://leetcode.com/problems/range&ndash;addition&ndash;ii/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>58.54</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_8a54bed5" href="#TOC_HEAD_8a54bed5">LT059801.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_66044318">LT0598 (name=Range Addition II, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0598.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0598</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_dc3cfae7"><a href="https://leetcode.com/problems/range-addition-ii/" target="_blank">Range Addition II &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0598.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0598</a></li>
+		<br />
+	</ul>
+	<p>
+		Given an m * n matrix M initialized with all 0&#039;s and several update operations.
+	</p>
+	<p>
+		Operations are represented by a 2D array, and each operation is represented by an array with two positive integers a and b, which means M[i][j] should be added by one for all 0 &lt;= i &lt; a and 0 &lt;= j &lt; b.
+	</p>
+	<p>
+		You need to count and return the number of maximum integers in the matrix after performing all the operations.
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input:
+m = 3, n = 3
+operations = [[2,2],[3,3]]
+Output: 4
+Explanation:
+Initially, M =
+[[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0]]
+
+After performing [2,2], M =
+[[1, 1, 0],
+[1, 1, 0],
+[0, 0, 0]]
+
+After performing [3,3], M =
+[[2, 2, 1],
+[2, 2, 1],
+[1, 1, 1]]
+
+So the maximum integer in M is 2, and there are four of it in M. So return 4.	</code></pre>
+	<p>
+		Note:
+	</p>
+	<ul>
+		<li>The range of m and n is [1,40000].</li>
+		<li>The range of a is [1,m], and the range of b is [1,n].</li>
+		<li>The range of operations size won&#039;t exceed 10,000.</li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_abe96ca2" href="#TOC_HEAD_abe96ca2">LT059801.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int maxCount(int m, int n, vector&lt;vector&lt;int&gt;&gt;& ops) {
+        int row = ops.size(), minM = m, minN = n;
+        for( int i = 0; i &lt; row; ++i )
+        {   vector&lt;int&gt;& op = ops[i];
+            minM = std::min(minM, op[0]);
+            minN = std::min(minN, op[1]);
+        }
+
+        return minM*minN;
+    }
+};
+
+
+
+void test(int m, int n, vector&lt;vector&lt;int&gt;&gt; ops)
+{
+    cout &lt;&lt; "input: m=" &lt;&lt; m &lt;&lt; ", n=" &lt;&lt; n &lt;&lt; ", ops=";
+    outputVector(ops);
+    int r = Solution().maxCount(m, n, ops);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(3, 3, {{2,2},{3,3}});
+}
+
+// Result
+//
+// 2022-11-22: Runtime 20ms 6.67% Memory 7.4MB 33.33%, https://leetcode.com/problems/range-addition-ii/submissions/847785646/
+// 2023-02-25: Runtime 12ms 58.54% Memory 11.1MB 65.45%, https://leetcode.com/problems/range-addition-ii/submissions/904437155/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: m=3, n=3, ops=[[2,2],[3,3]]; output: 4;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

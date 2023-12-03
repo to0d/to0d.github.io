@@ -1,0 +1,67 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161212F.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161212F.cpp</h1>
+            <h3>Bubble Sort</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/BubbleSort.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>BubbleSort</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+static void swap(vector&lt;int&gt;& nums, int a, int b) {
+    int t   = nums[a];
+    nums[a] = nums[b];
+    nums[b] = t;
+}
+
+void bubbleSort(vector&lt;int&gt;& nums) {
+    int size = nums.size();
+    for(int i = size - 1; i &gt; 0; --i )
+    {   int update = 0;
+        for(int j = 0; j &lt; i; ++j )
+        {   if( nums[j] &gt; nums[j+1] )
+            {   swap(nums, j, j+1);
+                update++;
+            }
+        }
+        if( update == 0 )
+            break;
+    }
+}
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    bubbleSort(nums);
+    cout &lt;&lt; "; output: ";
+    outputVector(nums);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main( void )
+{
+    test({8,9,3,2,6,5,7,1,4});
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

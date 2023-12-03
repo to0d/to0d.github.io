@@ -1,0 +1,129 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC160106A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC160106A.cpp</h1>
+            <h3>chapter 12 位运算与嵌入式编程</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/45283a62.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>程序员面试宝典</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;cstdio&gt;
+#include &lt;bitset&gt;
+#include &lt;cstdlib&gt;
+
+//#################################################################################
+//
+//
+//
+//#################################################################################
+
+using namespace std;
+
+void test_union();
+void test_set_bit();
+void test_swap_word();
+void test_malloc_0();
+
+int  main(void)
+{
+test_union();
+test_set_bit();
+test_swap_word();
+test_malloc_0();
+
+cout &lt;&lt; "output: done!" &lt;&lt; endl;
+
+return 0;
+}
+
+union
+{
+    unsigned char a;
+    unsigned int i;
+} u;
+
+
+void test_union()
+{
+    std::cout &lt;&lt;"\n==&gt;  test_union: \n\n";
+
+    cout &lt;&lt; "TEST 01: " &lt;&lt; endl;
+    printf("%f\n",5);
+    printf("%d\n",5.01);
+    cout &lt;&lt; endl &lt;&lt; endl;
+
+    cout &lt;&lt; "TEST 06: " &lt;&lt; endl;
+    u.i = 0xf1f2f3f4;
+
+    cout &lt;&lt; hex &lt;&lt; u.i &lt;&lt; endl;
+    cout &lt;&lt; hex &lt;&lt; int(u.a) &lt;&lt; endl;
+    cout &lt;&lt; endl &lt;&lt; endl;
+
+    std::cout &lt;&lt;"-----------------------------------------------\n\n";
+}
+
+#define BIT_ON_3 (1&lt;&lt;3)
+
+void test_set_bit()
+{
+    std::cout &lt;&lt;"\n==&gt;  test_set_bit: set bit on 3 pos \n\n";
+
+    int a = 0x00F1;
+    cout &lt;&lt; "1st:" &lt;&lt; bitset&lt;16&gt;(a) &lt;&lt; endl;
+    a |= BIT_ON_3;
+    cout &lt;&lt; "2st:" &lt;&lt; bitset&lt;16&gt;(a) &lt;&lt;" set 1 on 3" &lt;&lt;  endl;
+    a &=~BIT_ON_3;
+    cout &lt;&lt; "3st:" &lt;&lt; bitset&lt;16&gt;(a) &lt;&lt;" set 0 on 3" &lt;&lt;  endl;
+
+    std::cout &lt;&lt;"-----------------------------------------------\n\n";
+}
+
+void test_swap_word()
+{
+    std::cout &lt;&lt;"\n==&gt;  test_swap_word: \n\n";
+
+    int word = 0xabcd;
+    cout &lt;&lt; "input : " &lt;&lt; hex &lt;&lt; word &lt;&lt; endl;
+
+    word = (( word & 0xFF00 ) &gt;&gt; 8 ) | (( word & 0x00FF ) &lt;&lt; 8 );
+    cout &lt;&lt; "output: " &lt;&lt; hex &lt;&lt; word &lt;&lt; endl;
+
+    std::cout &lt;&lt;"-----------------------------------------------\n\n";
+}
+
+void test_malloc_0()
+{
+    std::cout &lt;&lt;"\n==&gt;  test_malloc_0: \n\n";
+
+    char* ptr;
+    if( (ptr = (char*) malloc(0)) == NULL)
+    {
+    cout &lt;&lt; "Got a null pointer by malloc(0) " &lt;&lt; endl;
+    }
+    else
+    {
+    cout &lt;&lt; "Got a invaild pointer by malloc(0) " &lt;&lt; endl;
+    }
+
+
+    std::cout &lt;&lt;"-----------------------------------------------\n\n";
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

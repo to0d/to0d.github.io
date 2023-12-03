@@ -1,0 +1,187 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT010101.cpp (Symmetric Tree)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT010101.cpp (Symmetric Tree)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-08</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0101.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0101</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_fa054e64" href="#TOC_HEAD_fa054e64">Problem 0101 <strong>Symmetric Tree</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/symmetric-tree/" target="_blank">https://leetcode.com/problems/symmetric&ndash;tree/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>88.60</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_78c8f133" href="#TOC_HEAD_78c8f133">LT010101.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_3b66b4fc">LT0101 (name=Symmetric Tree, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0101.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0101</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_f98cc990"><a href="https://leetcode.com/problems/symmetric-tree/" target="_blank">Symmetric Tree &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0101.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0101</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+	</p>
+	<p>
+		For example, this binary tree is symmetric:
+	</p>
+	<pre><code>1
+/ \
+2   2
+/ \ / \
+3  4 4  3	</code></pre>
+	<p>
+		But the following is not:
+	</p>
+	<pre><code>1
+/ \
+2   2
+\   \
+3    3	</code></pre>
+	<p>
+		<strong>Note:</strong>
+	</p>
+	<p>
+		Bonus points if you could solve it both recursively and iteratively.
+	</p>
+	<p>
+		confused what
+		<code>&quot;{1,#,2,3}&quot;</code> means?
+		<a href="#" >&gt; read more on how binary tree is serialized on OJ.</a>
+	</p>
+	<p>
+		<strong>OJ&#039;s Binary Tree Serialization:</strong>
+	</p>
+	<p>
+		The serialization of a binary tree follows a level order traversal, where &#039;#&#039; signifies a path terminator where no node exists below.
+	</p>
+	<p>
+		Here&#039;s an example:
+	</p>
+	<pre><code>1
+/ \
+2   3
+/
+4
+\
+5	</code></pre>
+	<p>
+		The above binary tree is serialized as
+		<code>&quot;{1,2,3,#,#,4,#,#,5}&quot;</code> .
+	</p>
+</ul>
+	<H3><a name="HEAD_41a17e00" href="#TOC_HEAD_41a17e00">LT010101.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        return root == NULL || isMirror(root-&gt;left, root-&gt;right);
+    }
+
+    bool isMirror(TreeNode* a, TreeNode* b){
+        if( a == NULL )
+            return b == NULL;
+        if( b == NULL || a-&gt;val != b-&gt;val )
+            return false;
+        return isMirror(a-&gt;left, b-&gt;right) && isMirror(a-&gt;right, b-&gt;left);
+    }
+};
+
+
+
+void test(TreeNode* root)
+{
+    cout &lt;&lt; "input: ";
+    outputTree(root);
+    bool r = Solution().isSymmetric(root);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(makeTree("{1,2,2,3,4,4,3}"));
+}
+
+// Result
+//
+// 2022-11-23: Runtime 18ms 6.92% Memory 16.3MB 95.89%, https://leetcode.com/problems/symmetric-tree/submissions/848481741/
+// 2023-02-22: Runtime 4ms 72.3% Memory 16.4MB 83.76%, https://leetcode.com/problems/symmetric-tree/submissions/902637317/
+// 2023-03-08: Runtime 3ms 88.60% Memory 16.4MB 58.69%, https://leetcode.com/problems/symmetric-tree/submissions/911337325/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [1,2,2,3,4,4,3]; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

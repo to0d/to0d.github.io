@@ -1,0 +1,165 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT063701.cpp (Average of Levels in Binary Tree)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT063701.cpp (Average of Levels in Binary Tree)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-01-10</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0637.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0637</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/LevelOrder.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LevelOrder</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_345a3622" href="#TOC_HEAD_345a3622">Problem 0637 <strong>Average of Levels in Binary Tree</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/average-of-levels-in-binary-tree/" target="_blank">https://leetcode.com/problems/average&ndash;of&ndash;levels&ndash;in&ndash;binary&ndash;tree/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>95.22</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_b5c9325b" href="#TOC_HEAD_b5c9325b">LT063701.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_827f117a">LT0637 (name=Average of Levels in Binary Tree, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0637.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0637</a>&nbsp;<a href="../tags/LevelOrder.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LevelOrder</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_48dbdb10"><a href="https://leetcode.com/problems/average-of-levels-in-binary-tree/" target="_blank">Average of Levels in Binary Tree &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0637.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0637</a></li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_a07bbd51"><a href="LT051501.cpp.html" target="_blank">LT051501.cpp</a> &nbsp;<a href="../tags/LT0637.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0637</a>&nbsp;<a href="../tags/Ref.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Ref</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_9c009328" href="#TOC_HEAD_9c009328">LT063701.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+
+class Solution {
+public:
+    vector&lt;double&gt; averageOfLevels(TreeNode* root) {
+        vector&lt;double&gt; rst;
+        queue&lt;TreeNode*&gt; nodeQueue;
+        nodeQueue.push( root );
+        nodeQueue.push( NULL );
+        double sum = 0;
+        int count = 0;
+
+        while( !nodeQueue.empty() )
+        {
+            TreeNode* node = nodeQueue.front();
+            nodeQueue.pop();
+            if( node == NULL )
+            {   if( count &gt; 0 )
+                {   rst.push_back( sum/count );
+                    count = 0;
+                    sum   = 0;
+                    nodeQueue.push( NULL );
+                }
+                else
+                break;
+            }
+            else
+            {   sum += node-&gt;val;
+                count++;
+                if( node-&gt;left != NULL )
+                    nodeQueue.push( node-&gt;left );
+                if( node-&gt;right != NULL )
+                    nodeQueue.push( node-&gt;right );
+            }
+        }
+
+        return rst;
+    }
+};
+
+
+
+void test(TreeNode* root)
+{
+    cout &lt;&lt; "input: ";
+    outputTree(root);
+    vector&lt;double&gt; r = Solution().averageOfLevels(root);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(makeTree("{3,9,20,null,null,15,7}"));
+}
+
+// Result
+//
+// 2023-01-10: Runtime 11ms 95.22% Memory 22.5MB 75.50%, https://leetcode.com/problems/average-of-levels-in-binary-tree/submissions/875480527/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [3,9,20,null,null,15,7]; output: [3,14.5,11];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

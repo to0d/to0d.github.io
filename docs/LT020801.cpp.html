@@ -1,0 +1,169 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT020801.cpp (Implement Prefix Tree)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT020801.cpp (Implement Prefix Tree)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-12</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0208.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0208</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_118ac1ba" href="#TOC_HEAD_118ac1ba">Problem 0208 <strong>Implement Prefix Tree</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/implement-trie-prefix-tree/" target="_blank">https://leetcode.com/problems/implement&ndash;trie&ndash;prefix&ndash;tree/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>72.55</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_798cdafb" href="#TOC_HEAD_798cdafb">LT020801.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_89ef6c">LT0208 (name=Implement Prefix Tree, ptag=Leetcode) &nbsp;<a href="../tags/LT0208.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0208</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_420b9366"><a href="https://leetcode.com/problems/implement-trie-prefix-tree/" target="_blank">Implement Prefix Tree &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0208.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0208</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_48318bc8" href="#TOC_HEAD_48318bc8">LT020801.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+struct TrieNode{
+    char val;
+    bool word;
+    TrieNode* child[26];
+    TrieNode() : val(0), word(false) { memset(child, 0, sizeof(child)); }
+    TrieNode(char c) : val(c), word(false) { memset(child, 0, sizeof(child)); }
+};
+
+class Trie {
+public:
+    Trie() {}
+    void insert(string word) { _insert(&m_root, word.c_str(), word.length(), 0); }
+    bool search(string word) { return _search(&m_root, word.c_str(), word.length(), 0); }
+    bool startsWith(string prefix) { return _startsWith(&m_root, prefix.c_str(), prefix.length(), 0); }
+
+private:
+    void _insert(TrieNode* node, const char* word, int len, int idx){
+        if( idx == len )
+        {   node-&gt;word = true;
+            return;
+        }
+        char c = word[idx];
+        int childIndex = c-'a';
+        TrieNode* child = node-&gt;child[childIndex];
+        if( child == NULL )
+        {   child = new TrieNode(c);
+            node-&gt;child[childIndex] = child;
+        }
+        _insert(child, word, len, idx+1);
+    }
+
+    bool _search(TrieNode* node, const char* word, int len, int idx) {
+        if( idx == len )
+            return node-&gt;word;
+        char c = word[idx];
+        int childIndex = c-'a';
+        TrieNode* child = node-&gt;child[childIndex];
+        if( child == NULL )
+            return false;
+        return _search(child, word, len, idx+1);
+    }
+
+    bool _startsWith(TrieNode* node, const char* word, int len, int idx) {
+        if( idx == len )
+            return true;
+        char c = word[idx];
+        int childIndex = c-'a';
+        TrieNode* child = node-&gt;child[childIndex];
+        if( child == NULL )
+            return false;
+        return _startsWith(child, word, len, idx+1);
+    }
+
+    TrieNode m_root;
+};
+
+
+
+
+int main(void)
+{
+    cout &lt;&lt; "output: done!;" &lt;&lt; endl;
+}
+
+// Result
+//
+// 2023-02-02: Runtime 52ms 94.7% Memory 45.1MB 57.50%, https://leetcode.com/problems/implement-trie-prefix-tree/submissions/890114889/
+// 2023-03-12: Runtime 62ms 72.55% Memory 45MB 72.82%, https://leetcode.com/problems/implement-trie-prefix-tree/submissions/913854938/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>output: done!;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<html>
+	<head>
+		<meta charset="UTF-8"></meta>
+		<title>How&nbsp;To&nbsp;Exclude&nbsp;Specific&nbsp;Directories&nbsp;From&nbsp;Copying&nbsp;In&nbsp;Linux&nbsp;&ndash;&nbsp;OSTechNix</title>
+	</head>
+	<body data-rsssl=1 class="post-template-default single single-post postid-8829 single-format-image soledad-ver-8-2-9 pclight-mode pcmn-drdw-style-slide_down pchds-default has-ftoc">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2016. All rights reserved - to0d@outlook.com, at Wed Jan 11 10:56:07 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://ostechnix.com/exclude-specific-directories-copying-linux/" target="_blank">
+				<font color="red" size="3">How&nbsp;To&nbsp;Exclude&nbsp;Specific&nbsp;Directories&nbsp;From&nbsp;Copying&nbsp;In&nbsp;Linux&nbsp;&ndash;&nbsp;OSTechNix</font>
+			</a>
+			<p></p>
+		</body>
+
+		<div class="wrapper-boxed header-style-header-3 penci-hlogo-center header-search-style-default">
+
+			<div >
+				<div>
+					<div class="container container-single penci_sidebar  penci-enable-lightbox">
+						<div id="main" class="penci-main-sticky-sidebar">
+							<div class="theiaStickySidebar">
+								<article id="post-8829" class="post type-post status-publish">
+									<div class="header-standard header-classic single-header">
+
+										<h1 class="post-title single-post-title entry-title">How&nbsp;To&nbsp;Exclude&nbsp;Specific&nbsp;Directories&nbsp;From&nbsp;Copying&nbsp;In&nbsp;Linux</h1>
+
+
+									</div>
+									<div class="post-entry blockquote-style-2">
+										<div class="inner-post-entry entry-content" id="penci-post-entry-inner">
+											<div id="ftwp-postcontent">
+												<p>A&nbsp;while&nbsp;ago,&nbsp;we&nbsp;discussed&nbsp;how&nbsp;to
+													<a href="https://ostechnix.com/exclude-certain-size-files-copying-linux/" target="_blank" rel="noopener noreferrer">
+														<strong>exclude&nbsp;certain&nbsp;size&nbsp;files&nbsp;from&nbsp;copying</strong>
+													</a>
+													 using
+													<strong>rsync</strong>
+													in&nbsp;Unix&ndash;like&nbsp;systems.&nbsp;That&nbsp;method&nbsp;helped&nbsp;us&nbsp;to&nbsp;exclude&nbsp;the&nbsp;big&nbsp;sized&nbsp;files&nbsp;or&nbsp;less&nbsp;important&nbsp;files&nbsp;in&nbsp;order&nbsp;to&nbsp;complete&nbsp;the&nbsp;copy&nbsp;process&nbsp;as&nbsp;soon&nbsp;as&nbsp;possible.&nbsp;So,&nbsp;we&nbsp;can&nbsp;copy&nbsp;the&nbsp;remaining&nbsp;files&nbsp;later&nbsp;when&nbsp;we&nbsp;have&nbsp;free&nbsp;time.&nbsp;Today,&nbsp;in&nbsp;this&nbsp;brief&nbsp;guide,&nbsp;we&nbsp;will&nbsp;see&nbsp;how&nbsp;to&nbsp;exclude&nbsp;specific&nbsp;directories&nbsp;from&nbsp;copying&nbsp;using
+													<strong>Rsync</strong>
+													and
+													<strong>cp</strong>
+													commands&nbsp;in&nbsp;Linux.
+												</p>
+												<div id="ftwp-container-outer" class="ftwp-in-post ftwp-float-none">
+													<div id="ftwp-container" class="ftwp-wrap ftwp-hidden-state ftwp-minimize ftwp-middle-left">
+														<button type="button" id="ftwp-trigger" class="ftwp-shape-round ftwp-border-medium" title="click To Maximize The Table Of Contents">
+															<span class="ftwp-trigger-icon ftwp-icon-number"></span>
+														</button>
+														<nav id="ftwp-contents" class="ftwp-shape-round ftwp-border-thin">
+															<header id="ftwp-header" class="ftwp-header-clickable">
+																<span id="ftwp-header-control" class="ftwp-icon-number"></span>
+																<button type="button" id="ftwp-header-minimize" class="ftwp-icon-expand" aria-labelledby="ftwp-header-title" aria-label="Expand or collapse"></button>
+																<h3 id="ftwp-header-title">Contents</h3>
+															</header>
+															<ol id="ftwp-list" class="ftwp-liststyle-circle-o ftwp-effect-bounce-to-right ftwp-list-nest ftwp-strong-first ftwp-colexp ftwp-colexp-icon">
+																<li class="ftwp-item ftwp-has-sub ftwp-expand">
+																	<button type="button" aria-label="Expand or collapse" class="ftwp-icon-expand"></button>
+																	<a class="ftwp-anchor" href="#exclude-specific-directories-from-copying-in-linux">
+																		<span class="ftwp-text">Exclude&nbsp;Specific&nbsp;Directories&nbsp;From&nbsp;Copying&nbsp;In&nbsp;Linux</span>
+																	</a>
+																	<ol class="ftwp-sub">
+																		<li class="ftwp-item">
+																			<a class="ftwp-anchor" href="#method-1-using-rsync-command">
+																				<span class="ftwp-text">Method&nbsp;1&ndash;&nbsp;using&nbsp;rsync&nbsp;command</span>
+																			</a>
+																		</li>
+																		<li class="ftwp-item">
+																			<a class="ftwp-anchor" href="#method-2-using-cp-command">
+																				<span class="ftwp-text">Method&nbsp;2&nbsp;&ndash;&nbsp;Using&nbsp;cp&nbsp;command</span>
+																			</a>
+																		</li>
+																		<li class="ftwp-item">
+																			<a class="ftwp-anchor" href="#help-us-to-help-you">
+																				<span class="ftwp-text">Help&nbsp;us&nbsp;to&nbsp;help&nbsp;you:</span>
+																			</a>
+																		</li>
+																	</ol>
+																</li>
+															</ol>
+														</nav>
+													</div>
+												</div>
+												<h2 id="exclude-specific-directories-from-copying-in-linux" class="ftwp-heading">Exclude&nbsp;Specific&nbsp;Directories&nbsp;From&nbsp;Copying&nbsp;In&nbsp;Linux</h2>
+												<p>There&nbsp;could&nbsp;be&nbsp;many&nbsp;ways&nbsp;to&nbsp;do&nbsp;this&nbsp;task.&nbsp;I&nbsp;am&nbsp;aware&nbsp;of&nbsp;following&nbsp;two&nbsp;methods.</p>
+												<div>
+													<div class="penci-custom-html-inside-content">
+														<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6701402139964678" data-ad-slot="6620160421" data-ad-format="auto" data-full-width-responsive="true"></ins>
+													</div>
+												</div>
+												<h4 id="method-1-using-rsync-command" class="ftwp-heading">
+													<strong>Method&nbsp;1&ndash;&nbsp;using
+														<em>rsync</em>
+														command
+													</strong>
+												</h4>
+												<p>As&nbsp;you&nbsp;may&nbsp;already&nbsp;know,&nbsp;Rsync&nbsp;is&nbsp;a&nbsp;fast&nbsp;and&nbsp;versatile&nbsp;tool&nbsp;to copy&nbsp;files&nbsp;and&nbsp;folders&nbsp;locally,&nbsp;or&nbsp;to/from&nbsp;another&nbsp;host&nbsp;over&nbsp;any&nbsp;remote&nbsp;shell,&nbsp;or&nbsp;to/from&nbsp;a&nbsp;remote&nbsp;rsync&nbsp;daemon.&nbsp;Rsync&nbsp;has&nbsp;lot&nbsp;useful&nbsp;options.&nbsp;One&nbsp;of&nbsp;the&nbsp;useful&nbsp;option&nbsp;is
+													<em>&ndash;&ndash;exclude</em>
+													.&nbsp;Using
+													<em>exclude</em>
+													option,&nbsp;we&nbsp;can&nbsp;exclude&nbsp;certain&nbsp;files/directories&nbsp;from&nbsp;copying.&nbsp;Let&nbsp;us&nbsp;see&nbsp;how&nbsp;to&nbsp;do&nbsp;it&nbsp;with&nbsp;an&nbsp;example.
+												</p>
+												<p>Let&nbsp;us&nbsp;say&nbsp;you&nbsp;have&nbsp;a&nbsp;folder&nbsp;called
+													<strong>ostechnix</strong>
+													.&nbsp;Inside&nbsp;the&nbsp;directory&nbsp;ostechnix,&nbsp;there&nbsp;are&nbsp;three&nbsp;sub&ndash;directories&nbsp;namely
+													<strong>dir1</strong>
+													, 
+													<strong>dir2</strong>
+													,&nbsp;and
+													<strong>dir3</strong>
+													.
+												</p>
+												<pre><strong>$ ls ostechnix/</strong>
+dir1 dir2 dir3</pre>
+												<p>You&nbsp;want&nbsp;to&nbsp;copy
+													<strong>dir1</strong>
+													 and
+													<strong>dir3</strong>
+													to&nbsp;different&nbsp;location,&nbsp;but&nbsp;not
+													<strong>dir2</strong>
+													.&nbsp;How?&nbsp;Here&nbsp;is&nbsp;where&nbsp;rsync&nbsp;comes&nbsp;in&nbsp;help.
+												</p>
+												<p>To&nbsp;exclude&nbsp;a&nbsp;specific&nbsp;directory&nbsp;from&nbsp;copying&nbsp;using&nbsp;rsync&nbsp;command,&nbsp;just&nbsp;run:</p>
+												<pre>$ rsync -av --progress ostechnix/ backup/ --exclude dir2</pre>
+												<p>Sample&nbsp;output&nbsp;would&nbsp;be:</p>
+												<pre>
+sending incremental file list
+./
+dir1/
+dir1/file1.pdf
+ 6,152,611 100% 58.36MB/s 0:00:00 (xfr#1, to-chk=7/11)
+dir1/file2
+ 2,597,261 100% 14.83MB/s 0:00:00 (xfr#2, to-chk=6/11)
+dir1/file3.doc
+ 88,143 100% 470.37kB/s 0:00:00 (xfr#3, to-chk=5/11)
+dir1/file4.txt
+ 66,374 100% 330.71kB/s 0:00:00 (xfr#4, to-chk=4/11)
+dir3/
+dir3/file1.pdf
+ 6,152,611 100% 18.39MB/s 0:00:00 (xfr#5, to-chk=3/11)
+dir3/file2
+ 2,597,261 100% 6.68MB/s 0:00:00 (xfr#6, to-chk=2/11)
+dir3/file3.doc
+ 88,143 100% 224.16kB/s 0:00:00 (xfr#7, to-chk=1/11)
+dir3/file4.txt
+ 66,374 100% 164.10kB/s 0:00:00 (xfr#8, to-chk=0/11)
+
+sent 17,813,759 bytes received 187 bytes 11,875,964.00 bytes/sec
+total size is 17,808,778 speedup is 1.00
+												</pre>
+												<p>The&nbsp;above&nbsp;command&nbsp;will&nbsp;copy&nbsp;all&nbsp;contents&nbsp;of&nbsp;the&nbsp;folder
+													<strong>ostechnix</strong>
+													to&nbsp;a&nbsp;folder&nbsp;namely
+													<strong>backup</strong>
+													,&nbsp;and&nbsp;it&nbsp;will&nbsp;exclude&nbsp;the&nbsp;directory
+													<strong>dir2</strong>
+													from&nbsp;copying.
+												</p>
+												<p>Alternatively,&nbsp;you&nbsp;can&nbsp;use&nbsp;the&nbsp;same&nbsp;command&nbsp;as&nbsp;below.</p>
+												<pre>$ rsync -av --progress --exclude="folder_to_exclude" source_dirctory dest_directory</pre>
+												<p>
+													<strong>Example:</strong>
+												</p>
+												<pre>$ rsync -av --progress --exclude="dir2" ostechnix/ backup/</pre>
+												<p>It&nbsp;is&nbsp;actually&nbsp;a&nbsp;good&nbsp;idea&nbsp;to&nbsp;omit&nbsp;or&nbsp;exclude&nbsp;some&nbsp;big&nbsp;or&nbsp;less&nbsp;important&nbsp;directories&nbsp;from&nbsp;copying&nbsp;while&nbsp;backup&nbsp;your&nbsp;system&nbsp;using&nbsp;rsync&nbsp;in&nbsp;order&nbsp;to&nbsp;save&nbsp;your&nbsp;time.</p>
+												<p>For&nbsp;more&nbsp;details,&nbsp;check&nbsp;man&nbsp;pages.</p>
+												<pre>$ man rsync</pre>
+												<hr></hr>
+												<p>Also read:</p>
+												<ul>
+													<li>
+														<a href="https://ostechnix.com/quickly-transfer-large-files-network-linux-unix/" target="_blank" rel="noopener noreferrer">
+															<strong>How&nbsp;To&nbsp;Quickly&nbsp;Transfer&nbsp;Large&nbsp;Files&nbsp;Over&nbsp;Network&nbsp;In&nbsp;Linux&nbsp;And&nbsp;Unix</strong>
+														</a>
+													</li>
+													<li>
+														<a href="https://ostechnix.com/find-size-directory-linux/" target="_blank" rel="noopener noreferrer">
+															<strong>How&nbsp;to&nbsp;find&nbsp;the&nbsp;size&nbsp;of&nbsp;a&nbsp;directory&nbsp;in&nbsp;Linux&nbsp;from&nbsp;command&nbsp;line</strong>
+														</a>
+													</li>
+												</ul>
+												<hr></hr>
+												<h4 id="method-2-using-cp-command" class="ftwp-heading">Method&nbsp;2&nbsp;&ndash;&nbsp;Using
+													<em>cp</em>
+													command
+												</h4>
+												<p>We&nbsp;can&nbsp;also&nbsp;use
+													<strong>cp</strong>
+													command&nbsp;to&nbsp;copy&nbsp;folders&nbsp;from&nbsp;one&nbsp;location&nbsp;to&nbsp;another&nbsp;excluding&nbsp;specific&nbsp;directories.
+												</p>
+												<p>Go&nbsp;your&nbsp;source&nbsp;directory&nbsp;i.e&nbsp;ostechnix&nbsp;in&nbsp;our&nbsp;case.</p>
+												<pre>$ cd ostechnix/</pre>
+												<p>And,&nbsp;run&nbsp;the&nbsp;following&nbsp;command:</p>
+												<pre>$ cp -r `ls -A | grep -v "dir2"` /home/sk/backup/</pre>
+												<p>The&nbsp;above&nbsp;command&nbsp;will&nbsp;copy&nbsp;all&nbsp;contents&nbsp;of&nbsp;the&nbsp;current&nbsp;folder
+													<strong>ostechnix</strong>
+													except&nbsp;the&nbsp;sub&ndash;directory
+													<strong>dir2</strong>
+													and&nbsp;saves&nbsp;them&nbsp;to
+													<strong>/home/sk/backup/</strong>
+													 directory.
+												</p>
+												<p>Even&nbsp;simpler,&nbsp;we&nbsp;can&nbsp;do&nbsp;this&nbsp;as&nbsp;follows.</p>
+												<pre>$ cp -r !(dir2) /home/sk/backup/</pre>
+												<p>For&nbsp;more&nbsp;details,&nbsp;check&nbsp;man&nbsp;pages.</p>
+												<pre>$ man cp</pre>
+											</div>
+							
+										</div>
+									</div>
+								 </article>
+							</div>
+						</div>
+						</div>
+				</div>
+			</div>
+			 </div>
+ 
+ 
+
+	</body>
+</html>

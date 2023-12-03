@@ -1,0 +1,40 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>如何处理当前Git分支为 no branch 的情况</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>如何处理当前Git分支为 no branch 的情况</h1>
+            <h3></h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Git-branch.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git-branch</a>&nbsp;<a href="../tags/HowTo.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>HowTo</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    <pre><code>有时候我们打开一个工程就开始写代码，等到提交的时候的时候才发现处于no branch。
+即Not currently on any branch.那现在我们怎么切换到分支并提交代码呢。
+
+什么叫no branch：即游离状态,HEAD指针没有指向任何分支，而是直接指向一个commit对象。
+
+    当你commit后会提示当前处于游离状态并给出id值
+
+    [detached HEAD 486cc01] add readme
+    0 files changed
+    create mode 100644 READNE
+
+或者 git reflog查看最近的提交id
+然后 git checkout -b master 创建并切换到当前分支
+然后 git merge 486cc01 合并上一次的提交(只需要fast forward前进)</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

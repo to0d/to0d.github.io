@@ -1,0 +1,128 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC150520B.rb</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC150520B.rb</h1>
+            <h3>ruby basic example</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> </li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#!/usr/bin/ruby -w
+
+puts "Hello, Ruby!";
+
+print &lt;&lt;EOF
+
+    This is the first way of creating
+    here document ie. multiple line string.
+EOF
+
+print &lt;&lt;"EOF";                # ��������ͬ
+
+    This is the second way of creating
+    here document ie. multiple line string.
+EOF
+
+print &lt;&lt;`EOC`                 # ִ������
+    echo hi there
+    echo lo there
+EOC
+
+print &lt;&lt;"foo", &lt;&lt;"bar"	      # �����԰����ǽ��жѵ�
+    I said foo.
+foo
+    I said bar.
+
+bar
+
+=begin
+����ע�͡�
+��Ҳ��ע�͡�
+��Ҳ��ע�͡�
+�⻹��ע�͡�
+=end
+
+END {
+puts "Terminating Ruby Program"
+}
+
+BEGIN {
+puts "Initializing Ruby Program"
+}
+
+#���� Integer ������һЩ����������
+#��������literal�����������ܼ�����ֵ����ֵ��boolֵ���ַ����ȶ���������
+#�����µ�0,1_000_000,0xa��
+a1=0
+
+#��ǧ�ַ�������
+a2=1_000_000
+
+#�������Ƶı�ʾ
+a3=0xa
+puts a1,a2
+puts a3
+
+#puts print ���������̨��ӡ�ַ�������puts���س����з�
+=begin
+����ע�ͣ�������Ƕ��ʽ�ĵ�ע��
+����C#�е�/**/
+=end
+
+
+#������
+f1=0.0
+f2=2.1
+f3=1000000.1
+puts f3
+
+#ָ������
+puts 2**(1/4)#1��4����Ϊ0��Ȼ��2��0�η�Ϊ1
+puts 16**(1/4.0)#1��4.0����Ϊ0.25���ķ�֮һ����Ȼ���Ĵη���
+
+puts 'escape using "\\"';
+puts 'That\'s right';
+
+puts "Multiplication Value : #{24*60*60}";
+
+name="Ruby"
+puts name
+puts "#{name+",ok"}"
+
+ary = [  "fred", 10, 3.14, "This is a string", "last element", ]
+ary.each do |i|
+puts i
+end
+
+puts ""
+
+hsh = { "red" =&gt; 0xf00, "green" =&gt; 0x0f0, "blue" =&gt; 0x00f }
+hsh.each do |key, value|
+print key, " is ", value, "\n"
+end
+
+puts ""
+
+(10..15).each do |n|
+print n, ' '
+end
+
+puts ""</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

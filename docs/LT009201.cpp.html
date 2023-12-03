@@ -1,0 +1,167 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT009201.cpp (Reverse Linked List II)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT009201.cpp (Reverse Linked List II)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-05</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0092.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0092</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/List-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>List-OJ</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Reverse-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Reverse-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_539fcfff" href="#TOC_HEAD_539fcfff">Problem 0092 <strong>Reverse Linked List II</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/reverse-linked-list-ii/" target="_blank">https://leetcode.com/problems/reverse&ndash;linked&ndash;list&ndash;ii/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_64696dca" href="#TOC_HEAD_64696dca">LT009201.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_835e2bd7">LT0092 (name=Reverse Linked List II, ptag=Leetcode) &nbsp;<a href="../tags/LT0092.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0092</a>&nbsp;<a href="../tags/List-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>List-OJ</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Reverse-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Reverse-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_8dcc1f02"><a href="https://leetcode.com/problems/reverse-linked-list-ii/" target="_blank">Reverse Linked List II &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0092.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0092</a></li>
+		<br />
+	</ul>
+	<p>
+		Given the head of a singly linked list and two integers left and right where left &lt;= right, reverse the nodes of the list from position left to position right, and return the reversed list.
+	</p>
+	<p>
+		Constraints:
+	</p>
+	<pre><code>The number of nodes in the list is n.
+1 &lt;= n &lt;= 500
+-500 &lt;= Node.val &lt;= 500
+1 &lt;= left &lt;= right &lt;= n	</code></pre>
+</ul>
+	<H3><a name="HEAD_892dde17" href="#TOC_HEAD_892dde17">LT009201.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    ListNode* reverseBetween(ListNode* head, int m, int n) {
+        if( head== NULL || head-&gt;next == NULL || m == n)
+            return head;
+
+        ListNode *pmp = NULL, *p = head;
+        int pos = 1;
+        for(; pos &lt; m; ++pos)
+        {   pmp = p;
+            p = p-&gt;next;
+        }
+
+        ListNode* pm = p, *pn = p;
+        p = p-&gt;next;
+        for(; pos &lt; n; ++pos)
+        {   ListNode* p2 = p;
+            p  = p-&gt;next;
+            p2-&gt;next = pn;
+            pn = p2;
+        }
+
+        pm-&gt;next = p;
+
+        if( pmp != NULL )
+            pmp-&gt;next = pn;
+        else
+            head = pn;
+
+        return head;
+    }
+};
+
+
+
+void test(ListNode* list, int m, int n)
+{
+    cout &lt;&lt; "input: list=";
+    outputList(list);
+    cout &lt;&lt; ", m=" &lt;&lt; m &lt;&lt; ", n=" &lt;&lt; n;
+    ListNode* r = Solution().reverseBetween(list, m, n);
+    cout &lt;&lt; "; output: ";
+    outputList(r);
+    cout &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(makeList(5,1,2,3,4,5), 2, 4);
+}
+
+// Result
+//
+// 2022-11-08: Runtime 4ms 38.51% Memory 7.5MB 22.61%, https://leetcode.com/problems/reverse-linked-list-ii/submissions/839084341/
+// 2023-02-18: Runtime 0ms 100% Memory 7.5MB 67.98%, https://leetcode.com/problems/reverse-linked-list-ii/submissions/900109551/
+// 2023-03-05: Runtime 0ms 100% Memory 7.4MB 68.41%, https://leetcode.com/problems/reverse-linked-list-ii/submissions/909003328/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: list=[1-&gt;2-&gt;3-&gt;4-&gt;5], m=2, n=4; output: [1-&gt;4-&gt;3-&gt;2-&gt;5]</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

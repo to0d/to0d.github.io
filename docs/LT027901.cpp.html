@@ -1,0 +1,155 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT027901.cpp (Perfect Squares)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT027901.cpp (Perfect Squares)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-12</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/DP-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DP-OJ</a>&nbsp;<a href="../tags/LT0279.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0279</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_f3836da8" href="#TOC_HEAD_f3836da8">Problem 0279 <strong>Perfect Squares</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/perfect-squares/" target="_blank">https://leetcode.com/problems/perfect&ndash;squares/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>13</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_444d1355" href="#TOC_HEAD_444d1355">LT027901.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_7ec3ff9a">LT0279 (name=Perfect Squares, ptag=Leetcode) &nbsp;<a href="../tags/DP-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DP-OJ</a>&nbsp;<a href="../tags/LT0279.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0279</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_2d271510"><a href="https://leetcode.com/problems/perfect-squares/" target="_blank">Perfect Squares &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0279.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0279</a></li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_ae2e7beb"><a href="LT032201.cpp.html" target="_blank">LT032201.cpp</a> &nbsp;<a href="../tags/LT0279.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0279</a>&nbsp;<a href="../tags/Ref.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Ref</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_54400122" href="#TOC_HEAD_54400122">LT027901.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int numSquares(int n) {
+        vector&lt;int&gt; squares;
+        for(int i = 1; i &lt;= n; ++i)
+        {   long square = i*i;
+            if( square &lt;= n )
+                squares.push_back(square);
+            else
+                break;
+        }
+        return coinChange(squares, n);  // refer LT032201.cpp
+    }
+
+    // f(n, m) = f(n-1, m)                              when coins[n-1] &gt; m
+    //         = min(f(n-1, m),  f(n, m-coins[n-1]))    otherwise
+#define dpf(i, j) dp[(i)*(amount+1) + (j)]
+    int coinChange(vector&lt;int&gt;& coins, int amount) {
+        int size = coins.size();
+        vector&lt;int&gt; dp( (size+1)*(amount+1), 0);
+        for(int i = 0; i &lt;= size; ++i)
+            dpf(i, 0) = 0;
+        for(int j = 0; j &lt;= amount; ++j)
+            dpf(0, j) = INT_MAX-1;
+        for(int i = 1; i &lt;= size; ++i)
+            for(int j = 1; j &lt;= amount; ++j)
+                if( coins[i-1] &gt; j )
+                    dpf(i, j) = dpf(i-1, j);
+                else
+                    dpf(i, j) = min(dpf(i-1, j), 1 + dpf(i, j - coins[i-1]));
+        int rst = dpf(size, amount);
+        return rst == INT_MAX-1 ? -1 : rst;
+    }
+};
+
+
+
+void test(int n)
+{
+    cout &lt;&lt; "input: " &lt;&lt; n;
+    int r = Solution().numSquares(n);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test(12);
+}
+
+
+// Result
+//
+// 2023-03-12: Runtime 514ms 13% Memory 137.3MB 7.30%, https://leetcode.com/problems/perfect-squares/submissions/913669926/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 12; output: 3;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

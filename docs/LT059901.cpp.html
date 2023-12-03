@@ -1,0 +1,160 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT059901.cpp (Minimum Index Sum of Two Lists)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT059901.cpp (Minimum Index Sum of Two Lists)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-25</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0599.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0599</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_44b38427" href="#TOC_HEAD_44b38427">Problem 0599 <strong>Minimum Index Sum of Two Lists</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/minimum-index-sum-of-two-lists/" target="_blank">https://leetcode.com/problems/minimum&ndash;index&ndash;sum&ndash;of&ndash;two&ndash;lists/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>83.38</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_1f397196" href="#TOC_HEAD_1f397196">LT059901.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_e53f4cff">LT0599 (name=Minimum Index Sum of Two Lists, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0599.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0599</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_1ae60cb0"><a href="https://leetcode.com/problems/minimum-index-sum-of-two-lists/" target="_blank">Minimum Index Sum of Two Lists &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0599.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0599</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_e0cfa7e3" href="#TOC_HEAD_e0cfa7e3">LT059901.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    vector&lt;string&gt; findRestaurant(vector&lt;string&gt;& list1, vector&lt;string&gt;& list2) {
+        if( list1.size() &gt; list2.size())
+            return findRestaurant(list2, list1);
+
+        vector&lt;string&gt; rst;
+        if(list1.empty() || list2.empty())
+            return rst;
+
+        unordered_map&lt;string,int&gt; _map1;
+        int idx = 0;
+        for(auto s : list1)
+            _map1[s] = idx++;
+
+        idx = 0;
+        int minIdx = list1.size() + list2.size();
+        for(auto s : list2)
+        {   auto iter = _map1.find(s);
+            if( iter != _map1.end() )
+            {   int sum = iter-&gt;second + idx;
+                if( sum &lt; minIdx )
+                {   rst.clear();
+                    minIdx = sum;
+                }
+                if( sum == minIdx )
+                    rst.push_back(s);
+            }
+            ++idx;
+        }
+
+        return rst;
+    }
+};
+
+
+
+void test(vector&lt;string&gt; list1, vector&lt;string&gt; list2)
+{
+    cout &lt;&lt; "input: l1=";
+    outputVector(list1);
+    cout &lt;&lt; ", l2=";
+    outputVector(list2);
+    vector&lt;string&gt; r = Solution().findRestaurant(list1, list2);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({"happy","sad","good"}, {"sad","happy","good"});
+}
+
+
+// Result
+//
+// 2022-11-28: Runtime 216ms 25.61% Memory 37.4MB 31.21%, https://leetcode.com/problems/minimum-index-sum-of-two-lists/submissions/850963261/
+// 2023-02-25: Runtime 88ms 83.38% Memory 37.7MB 30.31%, https://leetcode.com/problems/minimum-index-sum-of-two-lists/submissions/904435634/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: l1=[happy,sad,good], l2=[sad,happy,good]; output: [sad,happy];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

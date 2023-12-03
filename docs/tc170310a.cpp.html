@@ -1,0 +1,80 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC170310A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC170310A.cpp</h1>
+            <h3>vector 下标越界</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/std-out_of_range.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-out_of_range</a>&nbsp;<a href="../tags/std-vector.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-vector</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/std-out_of_range.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-out_of_range</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<H4><a name="HEAD_44146e1b" href="#TOC_HEAD_44146e1b">vector 下标越界</a></H4><ul><a href="../tags/std-out_of_range.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-out_of_range</a>&nbsp;</ul>
+<blockquote>
+	<p>
+	当要获取 std::vector 的第 n 个元素，下面几种方式都可以：
+	</p>
+	<p>
+	</p>
+</blockquote>
+<pre><code>    std::vector&lt;int&gt; vec;
+    size_t n = 1;
+    int & i = vec[n];
+    int & j = *(vec.begin() + n);
+    int & k = vec.at(n);</code></pre>
+<blockquote>
+	<p>
+	但是如果 n 超过了 vector 的下标范围，在几种方式的结果就有区别了。<br/>
+	</p>
+	<p>
+	在 linux 平台只有 at(n) 会抛出 std::out_of_range 异常，而其他两个都不会。
+	</p>
+	<p>
+	</p>
+</blockquote>
+	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+int main()
+{
+    vector&lt;int&gt; v;
+
+    //2) push_back
+    for(int i =0; i&lt; 3; i++)
+        v.push_back(i);
+
+    cout &lt;&lt; "initialize: " &lt;&lt; endl;
+    cout &lt;&lt; "vector : size=" &lt;&lt; v.size() &lt;&lt; ", content=";
+    copy(v.begin(),v.end(),ostream_iterator&lt;int&gt;(cout,","));
+    cout &lt;&lt; endl;
+
+    //3) out_of_range :
+    // cout &lt;&lt; "=&gt; v[3] not exception: " &lt;&lt; v[3] &lt;&lt;" : ";
+    // cout &lt;&lt; "pass" &lt;&lt; "\n" &lt;&lt; endl;
+
+    try {
+        cout &lt;&lt; "output: v.at(3) exception: out_of_range: ";
+        cout &lt;&lt; v.at(3);
+    }
+    catch (const out_of_range& oor) {
+        //cerr &lt;&lt; "Out of Range error: " &lt;&lt; oor.what() &lt;&lt; '\n';
+        cout &lt;&lt; "pass" &lt;&lt; endl;
+    }
+
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

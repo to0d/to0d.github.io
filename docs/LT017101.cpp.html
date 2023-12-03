@@ -1,0 +1,148 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT017101.cpp (Excel Sheet Column Number)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT017101.cpp (Excel Sheet Column Number)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-26</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0171.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0171</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_a9776d65" href="#TOC_HEAD_a9776d65">Problem 0171 <strong>Excel Sheet Column Number</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/excel-sheet-column-number/" target="_blank">https://leetcode.com/problems/excel&ndash;sheet&ndash;column&ndash;number/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_aea476cc" href="#TOC_HEAD_aea476cc">LT017101.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_94cdccd7">LT0171 (name=Excel Sheet Column Number, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0171.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0171</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_a4eb0764"><a href="https://leetcode.com/problems/excel-sheet-column-number/" target="_blank">Excel Sheet Column Number &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0171.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0171</a></li>
+		<br />
+	</ul>
+	<p>
+		Related to question
+		<a href="https://leetcode.com/problems/excel-sheet-column-title/" target="_blank">Excel Sheet Column Title</a>
+	</p>
+	<p>
+		Given a column title as appear in an Excel sheet, return its corresponding column number.
+	</p>
+	<p>
+		For example:
+	</p>
+	<pre><code>A -&gt; 1
+B -&gt; 2
+C -&gt; 3
+...
+Z -&gt; 26
+AA -&gt; 27
+AB -&gt; 28	</code></pre>
+</ul>
+	<H3><a name="HEAD_18c9b819" href="#TOC_HEAD_18c9b819">LT017101.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+class Solution {
+public:
+    int titleToNumber(string columnTitle) {
+        int val = 0;
+        for(char c : columnTitle)
+            val = val*26 + (int)(c - 'A') + 1;
+        return val;
+    }
+};
+
+
+void test(string s)
+{
+    cout &lt;&lt; "input: " &lt;&lt; s;
+    int r = Solution().titleToNumber(s);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("A");
+    test("AB");
+}
+
+// Result
+//
+// 2022-11-21: Runtime 3ms 58.89% Memory 6MB 72%, https://leetcode.com/problems/excel-sheet-column-number/submissions/847495718/
+// 2023-07-26: Runtime 0ms 100% Memory 5.65MB 66.72%, https://leetcode.cn/problems/excel-sheet-column-number/submissions/450339235/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: A; output: 1;
+input: AB; output: 28;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

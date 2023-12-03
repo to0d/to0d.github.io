@@ -1,0 +1,190 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT102001.cpp (Number of Enclaves)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT102001.cpp (Number of Enclaves)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-01-31</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT1020.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1020</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_d4afbd09" href="#TOC_HEAD_d4afbd09">Problem 1020 <strong>Number of Enclaves</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/number-of-enclaves/" target="_blank">https://leetcode.com/problems/number&ndash;of&ndash;enclaves/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>15.84</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_e6a24c4e" href="#TOC_HEAD_e6a24c4e">LT102001.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_4e5b9ae1">LT1020 (name=Number of Enclaves, ptag=Leetcode) &nbsp;<a href="../tags/LT1020.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1020</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_2f9365dd"><a href="https://leetcode.com/problems/number-of-enclaves/" target="_blank">Number of Enclaves &ndash; Leetcode</a> &nbsp;<a href="../tags/LT1020.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1020</a></li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_d7abf90a"><a href="LT069501.cpp.html" target="_blank">LT069501.cpp</a> &nbsp;<a href="../tags/LT1020.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1020</a>&nbsp;<a href="../tags/Ref.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Ref</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_3c829e9b" href="#TOC_HEAD_3c829e9b">LT102001.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+public:
+    int numEnclaves(vector&lt;vector&lt;int&gt;&gt;& grid) {
+        int row = grid.size(), column = grid[0].size();
+
+        // remove all other land on boundary
+        queue&lt;int&gt; rq, cq;
+        for(int i = 0; i &lt; row; ++i)
+        {   rq.push(i); cq.push(0);
+            rq.push(i); cq.push(column-1);
+        }
+        for(int i = 0; i &lt; column; ++i)
+        {   rq.push(0); cq.push(i);
+            rq.push(row-1); cq.push(i);
+        }
+        while( !rq.empty() )
+        {   int r = rq.front(); rq.pop();
+            int c = cq.front(); cq.pop();
+            if( grid[r][c] == 0 )
+                continue;
+            // cout &lt;&lt; "remove: r=" &lt;&lt; r &lt;&lt; ", c=" &lt;&lt; c &lt;&lt; endl;
+            grid[r][c] = 0;
+            for( int i = 0; i &lt; 4; ++i )
+            {  int xxr = r + addR[i];
+            int xxc = c + addC[i];
+            if( xxr &lt; row && xxr &gt;= 0 && xxc &lt; column && xxc &gt;= 0)
+            {   rq.push(xxr); cq.push(xxc);
+            }
+            }
+        }
+        int count = 0;
+        for(int i = 0; i &lt; row; ++i )
+        {   for(int j = 0; j &lt; column; ++j )
+            {   if( grid[i][j] == 1 )
+                    count += _areaOf(grid, row, column, i, j);
+            }
+        }
+        return count;
+    }
+
+    int _areaOf(vector&lt;vector&lt;int&gt;&gt;& grid, int row, int column, int r, int c)
+    {   queue&lt;int&gt; rq, cq;
+        rq.push(r); cq.push(c);
+        int count = 0;
+        while( !rq.empty() )
+        {   int rr = rq.front(); rq.pop();
+            int cc = cq.front(); cq.pop();
+            if( rr &lt; 0 || rr &gt;= row || cc &lt; 0 || cc &gt;= column )
+                continue;
+            if( grid[rr][cc] == 0 )
+                continue;
+            grid[rr][cc] = 0;
+            ++count;
+            rq.push(rr); cq.push(cc+1);
+            rq.push(rr); cq.push(cc-1);
+            rq.push(rr+1); cq.push(cc);
+            rq.push(rr-1); cq.push(cc);
+        }
+        return count;
+    }
+
+    static int addR[4];
+    static int addC[4];
+};
+
+int Solution::addR[4] = {1,0,-1,0};
+int Solution::addC[4] = {0,1,0,-1};
+
+
+void test(vector&lt;vector&lt;int&gt;&gt; grid)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(grid);
+    int r = Solution().numEnclaves(grid);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({{0,0,0,0},{1,0,1,0},{0,1,1,0},{0,0,0,0}});
+}
+
+// Result
+//
+// 2023-01-31: Runtime 158ms 15.84% Memory 71.8MB 5.2%, https://leetcode.com/problems/number-of-enclaves/submissions/888706253/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [[0,0,0,0],[1,0,1,0],[0,1,1,0],[0,0,0,0]]; output: 3;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<html>
+	<head>
+		<meta charset="utf-8"></meta>
+		<title>Linux下运行&nbsp;UNIX环境高级编程&nbsp;undefined&nbsp;reference&nbsp;to&nbsp;err_quit&nbsp;编译出错的处理方法&nbsp;李学文&nbsp;博客园</title>
+	</head>
+	<body class="skin-simplememory has-navbar has-bannerbar">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Tue Aug 22 11:36:06 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://www.cnblogs.com/BinBinStory/p/7508049.html" target="_blank">
+				<font color="red" size="3">Linux下运行《UNIX环境高级编程》undefined&nbsp;reference&nbsp;to&nbsp;`err_quit&nbsp;编译出错的处理方法&nbsp;&ndash;&nbsp;李学文&nbsp;&ndash;&nbsp;博客园</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="post">
+			<h1 class = "postTitle">
+				<a id="cb_post_title_url" href class="postTitle2 vertical-middle">
+					<span role="heading" aria-level="2">Linux下运行《UNIX环境高级编程》undefined&nbsp;reference&nbsp;to&nbsp;`err_quit&nbsp;编译出错的处理方法</span>
+				</a>
+			</h1>
+			<div class="clear"></div>
+			<div class="postBody">
+				<div id="cnblogs_post_body" class="blogpost-body blogpost-body-html">
+					<p>错误信息：</p>
+					<p>
+						<strong>:&nbsp;undefined&nbsp;reference&nbsp;to&nbsp;`err_quit&#039;
+							<br>:&nbsp;undefined&nbsp;reference&nbsp;to&nbsp;`err_sys&#039;
+
+						</strong>
+					</p>
+					<hr></hr>
+					<p>&nbsp;</p>
+					<p>
+						<strong>解决方法：</strong>
+					</p>
+					<p>因为err_quit跟err_sys是作者自己定义的错误处理函数。所以最简单的解决办法是修改下apue.h文件，如下</p>
+					<div class="cnblogs_code">
+						<pre>
+<span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)">
+ * Our own header, to be included before all standard system headers.
+ </span><span style="color: rgba(0, 128, 0, 1)">*/</span><span style="color: rgba(0, 0, 0, 1)">
+#ifndef    _APUE_H
+</span><span style="color: rgba(0, 0, 255, 1)">#define</span>    _APUE_H
+
+<span style="color: rgba(0, 0, 255, 1)">#define</span> _POSIX_C_SOURCE 200809L
+
+<span style="color: rgba(0, 0, 255, 1)">#if</span> defined(SOLARIS)        /* Solaris 10 */
+<span style="color: rgba(0, 0, 255, 1)">#define</span> _XOPEN_SOURCE 600
+<span style="color: rgba(0, 0, 255, 1)">#else</span>
+<span style="color: rgba(0, 0, 255, 1)">#define</span> _XOPEN_SOURCE 700
+<span style="color: rgba(0, 0, 255, 1)">#endif</span><span style="color: rgba(0, 0, 0, 1)">
+
+#include </span>&lt;sys/types.h&gt;        <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> some systems still require this </span><span style="color: rgba(0, 128, 0, 1)">*/</span><span style="color: rgba(0, 0, 0, 1)">
+#include </span>&lt;sys/stat.h&gt;<span style="color: rgba(0, 0, 0, 1)">
+#include </span>&lt;sys/termios.h&gt;    <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> for winsize </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">#if</span> defined(MACOS) || !defined(TIOCGWINSZ)<span style="color: rgba(0, 0, 0, 1)">
+#include </span>&lt;sys/ioctl.h&gt;
+<span style="color: rgba(0, 0, 255, 1)">#endif</span><span style="color: rgba(0, 0, 0, 1)">
+
+#include </span>&lt;stdio.h&gt;        <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> for convenience </span><span style="color: rgba(0, 128, 0, 1)">*/</span><span style="color: rgba(0, 0, 0, 1)">
+#include </span>&lt;stdlib.h&gt;        <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> for convenience </span><span style="color: rgba(0, 128, 0, 1)">*/</span><span style="color: rgba(0, 0, 0, 1)">
+#include </span>&lt;stddef.h&gt;        <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> for offsetof </span><span style="color: rgba(0, 128, 0, 1)">*/</span><span style="color: rgba(0, 0, 0, 1)">
+#include </span>&lt;<span style="color: rgba(0, 0, 255, 1)">string</span>.h&gt;        <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> for convenience </span><span style="color: rgba(0, 128, 0, 1)">*/</span><span style="color: rgba(0, 0, 0, 1)">
+#include </span>&lt;unistd.h&gt;        <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> for convenience </span><span style="color: rgba(0, 128, 0, 1)">*/</span><span style="color: rgba(0, 0, 0, 1)">
+#include </span>&lt;signal.h&gt;        <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> for SIG_ERR </span><span style="color: rgba(0, 128, 0, 1)">*/</span><span style="color: rgba(0, 0, 0, 1)">
+#include </span>&lt;errno.h&gt;<span style="color: rgba(0, 0, 0, 1)">
+#include </span>&lt;stdarg.h&gt;
+
+<span style="color: rgba(0, 0, 255, 1)">#define</span>    MAXLINE    4096            /* max line length */
+
+<span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)">
+ * Default file access permissions for new files.
+ </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">#define</span>    FILE_MODE    (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
+
+<span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)">
+ * Default permissions for new directories.
+ </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">#define</span>    DIR_MODE    (FILE_MODE | S_IXUSR | S_IXGRP | S_IXOTH)<span style="color: rgba(0, 0, 0, 1)">
+
+typedef    </span><span style="color: rgba(0, 0, 255, 1)">void</span>    Sigfunc(<span style="color: rgba(0, 0, 255, 1)">int</span>);    <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> for signal handlers </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+
+<span style="color: rgba(0, 0, 255, 1)">#define</span>    min(a,b)    ((a) &lt; (b) ? (a) : (b))
+<span style="color: rgba(0, 0, 255, 1)">#define</span>    max(a,b)    ((a) &gt; (b) ? (a) : (b))
+
+<span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)">
+ * Prototypes for our own functions.
+ </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">char</span>    *path_alloc(size_t *);                <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog pathalloc} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">long</span>     open_max(<span style="color: rgba(0, 0, 255, 1)">void</span>);                    <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog openmax} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+
+<span style="color: rgba(0, 0, 255, 1)">int</span>         set_cloexec(<span style="color: rgba(0, 0, 255, 1)">int</span>);                    <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog setfd} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">void</span>     clr_fl(<span style="color: rgba(0, 0, 255, 1)">int</span>, <span style="color: rgba(0, 0, 255, 1)">int</span><span style="color: rgba(0, 0, 0, 1)">);
+</span><span style="color: rgba(0, 0, 255, 1)">void</span>     set_fl(<span style="color: rgba(0, 0, 255, 1)">int</span>, <span style="color: rgba(0, 0, 255, 1)">int</span>);                    <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog setfl} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+
+<span style="color: rgba(0, 0, 255, 1)">void</span>     pr_exit(<span style="color: rgba(0, 0, 255, 1)">int</span>);                        <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog prexit} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+
+<span style="color: rgba(0, 0, 255, 1)">void</span>     pr_mask(<span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *);                <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog prmask} </span><span style="color: rgba(0, 128, 0, 1)">*/</span><span style="color: rgba(0, 0, 0, 1)">
+Sigfunc    </span>*signal_intr(<span style="color: rgba(0, 0, 255, 1)">int</span>, Sigfunc *);        <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog signal_intr_function} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+
+<span style="color: rgba(0, 0, 255, 1)">void</span>     daemonize(<span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *);            <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog daemoninit} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+
+<span style="color: rgba(0, 0, 255, 1)">void</span>     sleep_us(unsigned <span style="color: rgba(0, 0, 255, 1)">int</span>);            <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Ex sleepus} </span><span style="color: rgba(0, 128, 0, 1)">*/</span><span style="color: rgba(0, 0, 0, 1)">
+ssize_t     readn(</span><span style="color: rgba(0, 0, 255, 1)">int</span>, <span style="color: rgba(0, 0, 255, 1)">void</span> *, size_t);        <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog readn_writen} </span><span style="color: rgba(0, 128, 0, 1)">*/</span><span style="color: rgba(0, 0, 0, 1)">
+ssize_t     writen(</span><span style="color: rgba(0, 0, 255, 1)">int</span>, <span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">void</span> *, size_t);    <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog readn_writen} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+
+<span style="color: rgba(0, 0, 255, 1)">int</span>         fd_pipe(<span style="color: rgba(0, 0, 255, 1)">int</span> *);                    <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog sock_fdpipe} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">int</span>         recv_fd(<span style="color: rgba(0, 0, 255, 1)">int</span>, ssize_t (*func)(<span style="color: rgba(0, 0, 255, 1)">int</span><span style="color: rgba(0, 0, 0, 1)">,
+                 </span><span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">void</span> *, size_t));    <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog recvfd_sockets} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">int</span>         send_fd(<span style="color: rgba(0, 0, 255, 1)">int</span>, <span style="color: rgba(0, 0, 255, 1)">int</span>);                    <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog sendfd_sockets} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">int</span>         send_err(<span style="color: rgba(0, 0, 255, 1)">int</span>, <span style="color: rgba(0, 0, 255, 1)">int</span><span style="color: rgba(0, 0, 0, 1)">,
+                  </span><span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *);            <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog senderr} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">int</span>         serv_listen(<span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *);            <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog servlisten_sockets} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">int</span>         serv_accept(<span style="color: rgba(0, 0, 255, 1)">int</span>, uid_t *);            <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog servaccept_sockets} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">int</span>         cli_conn(<span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *);            <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog cliconn_sockets} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">int</span>         buf_args(<span style="color: rgba(0, 0, 255, 1)">char</span> *, <span style="color: rgba(0, 0, 255, 1)">int</span> (*func)(<span style="color: rgba(0, 0, 255, 1)">int</span><span style="color: rgba(0, 0, 0, 1)">,
+                  </span><span style="color: rgba(0, 0, 255, 1)">char</span> **));                <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog bufargs} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+
+<span style="color: rgba(0, 0, 255, 1)">int</span>         tty_cbreak(<span style="color: rgba(0, 0, 255, 1)">int</span>);                    <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog raw} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">int</span>         tty_raw(<span style="color: rgba(0, 0, 255, 1)">int</span>);                        <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog raw} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">int</span>         tty_reset(<span style="color: rgba(0, 0, 255, 1)">int</span>);                    <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog raw} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">void</span>     tty_atexit(<span style="color: rgba(0, 0, 255, 1)">void</span>);                    <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog raw} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">struct</span> termios    *tty_termios(<span style="color: rgba(0, 0, 255, 1)">void</span>);            <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog raw} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+
+<span style="color: rgba(0, 0, 255, 1)">int</span>         ptym_open(<span style="color: rgba(0, 0, 255, 1)">char</span> *, <span style="color: rgba(0, 0, 255, 1)">int</span>);            <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog ptyopen} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">int</span>         ptys_open(<span style="color: rgba(0, 0, 255, 1)">char</span> *);                    <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog ptyopen} </span><span style="color: rgba(0, 128, 0, 1)">*/</span><span style="color: rgba(0, 0, 0, 1)">
+#ifdef    TIOCGWINSZ
+pid_t     pty_fork(</span><span style="color: rgba(0, 0, 255, 1)">int</span> *, <span style="color: rgba(0, 0, 255, 1)">char</span> *, <span style="color: rgba(0, 0, 255, 1)">int</span>, <span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">struct</span> termios *<span style="color: rgba(0, 0, 0, 1)">,
+                  </span><span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">struct</span> winsize *);    <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog ptyfork} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">#endif</span>
+
+<span style="color: rgba(0, 0, 255, 1)">int</span>        lock_reg(<span style="color: rgba(0, 0, 255, 1)">int</span>, <span style="color: rgba(0, 0, 255, 1)">int</span>, <span style="color: rgba(0, 0, 255, 1)">int</span>, off_t, <span style="color: rgba(0, 0, 255, 1)">int</span>, off_t); <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog lockreg} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+
+<span style="color: rgba(0, 0, 255, 1)">#define</span>    read_lock(fd, offset, whence, len) \<span style="color: rgba(0, 0, 0, 1)">
+            lock_reg((fd), F_SETLK, F_RDLCK, (offset), (whence), (len))
+</span><span style="color: rgba(0, 0, 255, 1)">#define</span>    readw_lock(fd, offset, whence, len) \<span style="color: rgba(0, 0, 0, 1)">
+            lock_reg((fd), F_SETLKW, F_RDLCK, (offset), (whence), (len))
+</span><span style="color: rgba(0, 0, 255, 1)">#define</span>    write_lock(fd, offset, whence, len) \<span style="color: rgba(0, 0, 0, 1)">
+            lock_reg((fd), F_SETLK, F_WRLCK, (offset), (whence), (len))
+</span><span style="color: rgba(0, 0, 255, 1)">#define</span>    writew_lock(fd, offset, whence, len) \<span style="color: rgba(0, 0, 0, 1)">
+            lock_reg((fd), F_SETLKW, F_WRLCK, (offset), (whence), (len))
+</span><span style="color: rgba(0, 0, 255, 1)">#define</span>    un_lock(fd, offset, whence, len) \<span style="color: rgba(0, 0, 0, 1)">
+            lock_reg((fd), F_SETLK, F_UNLCK, (offset), (whence), (len))
+
+pid_t    lock_test(</span><span style="color: rgba(0, 0, 255, 1)">int</span>, <span style="color: rgba(0, 0, 255, 1)">int</span>, off_t, <span style="color: rgba(0, 0, 255, 1)">int</span>, off_t);        <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {Prog locktest} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+
+<span style="color: rgba(0, 0, 255, 1)">#define</span>    is_read_lockable(fd, offset, whence, len) \<span style="color: rgba(0, 0, 0, 1)">
+            (lock_test((fd), F_RDLCK, (offset), (whence), (len)) </span>== <span style="color: rgba(128, 0, 128, 1)">0</span><span style="color: rgba(0, 0, 0, 1)">)
+</span><span style="color: rgba(0, 0, 255, 1)">#define</span>    is_write_lockable(fd, offset, whence, len) \<span style="color: rgba(0, 0, 0, 1)">
+            (lock_test((fd), F_WRLCK, (offset), (whence), (len)) </span>== <span style="color: rgba(128, 0, 128, 1)">0</span><span style="color: rgba(0, 0, 0, 1)">)
+
+</span><span style="color: rgba(0, 0, 255, 1)">void</span>    err_msg(<span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *, ...);            <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {App misc_source} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">void</span>    err_dump(<span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">, ...) __attribute__((noreturn));
+</span><span style="color: rgba(0, 0, 255, 1)">void</span>    err_quit(<span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">, ...) __attribute__((noreturn));
+</span><span style="color: rgba(0, 0, 255, 1)">void</span>    err_cont(<span style="color: rgba(0, 0, 255, 1)">int</span>, <span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">, ...);
+</span><span style="color: rgba(0, 0, 255, 1)">void</span>    err_exit(<span style="color: rgba(0, 0, 255, 1)">int</span>, <span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">, ...) __attribute__((noreturn));
+</span><span style="color: rgba(0, 0, 255, 1)">void</span>    err_ret(<span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">, ...);
+</span><span style="color: rgba(0, 0, 255, 1)">void</span>    err_sys(<span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">, ...) __attribute__((noreturn));
+
+</span><span style="color: rgba(0, 0, 255, 1)">void</span>    log_msg(<span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *, ...);            <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> {App misc_source} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">void</span>    log_open(<span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *, <span style="color: rgba(0, 0, 255, 1)">int</span>, <span style="color: rgba(0, 0, 255, 1)">int</span><span style="color: rgba(0, 0, 0, 1)">);
+</span><span style="color: rgba(0, 0, 255, 1)">void</span>    log_quit(<span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">, ...) __attribute__((noreturn));
+</span><span style="color: rgba(0, 0, 255, 1)">void</span>    log_ret(<span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">, ...);
+</span><span style="color: rgba(0, 0, 255, 1)">void</span>    log_sys(<span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">, ...) __attribute__((noreturn));
+</span><span style="color: rgba(0, 0, 255, 1)">void</span>    log_exit(<span style="color: rgba(0, 0, 255, 1)">int</span>, <span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">, ...) __attribute__((noreturn));
+
+</span><span style="color: rgba(0, 0, 255, 1)">void</span>    TELL_WAIT(<span style="color: rgba(0, 0, 255, 1)">void</span>);        <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> parent/child from {Sec race_conditions} </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+<span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)">    TELL_PARENT(pid_t);
+</span><span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)">    TELL_CHILD(pid_t);
+</span><span style="color: rgba(0, 0, 255, 1)">void</span>    WAIT_PARENT(<span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)">);
+</span><span style="color: rgba(0, 0, 255, 1)">void</span>    WAIT_CHILD(<span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)">);
+
+
+</span><span style="color: rgba(0, 0, 255, 1)">static</span> <span style="color: rgba(0, 0, 255, 1)">void</span> err_doit(<span style="color: rgba(0, 0, 255, 1)">int</span>, <span style="color: rgba(0, 0, 255, 1)">int</span>, <span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">, va_list);  
+  
+</span><span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)">  
+ *  * Nonfatal error related to a system call.  
+ *  * Print a message and return.  
+ *  </span><span style="color: rgba(0, 128, 0, 1)">*/</span>  
+<span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)">  
+err_ret(</span><span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">fmt, ...)  
+{  
+        va_list     ap;  
+          
+        va_start(ap, fmt);  
+        err_doit(</span><span style="color: rgba(128, 0, 128, 1)">1</span><span style="color: rgba(0, 0, 0, 1)">, errno, fmt, ap);  
+        va_end(ap);  
+}  
+  
+</span><span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)">  
+ *  * Fatal error related to a system call.  
+ *  * Print a message and terminate.  
+ *  </span><span style="color: rgba(0, 128, 0, 1)">*/</span>  
+<span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)">  
+err_sys(</span><span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">fmt, ...)  
+{  
+        va_list     ap;  
+          
+        va_start(ap, fmt);  
+        err_doit(</span><span style="color: rgba(128, 0, 128, 1)">1</span><span style="color: rgba(0, 0, 0, 1)">, errno, fmt, ap);  
+        va_end(ap);  
+        exit(</span><span style="color: rgba(128, 0, 128, 1)">1</span><span style="color: rgba(0, 0, 0, 1)">);  
+}  
+  
+</span><span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)">  
+ *  * Fatal error unrelated to a system call.  
+ *  * Error code passed as explict parameter.  
+ *  * Print a message and terminate.  
+ *  </span><span style="color: rgba(0, 128, 0, 1)">*/</span>  
+<span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)">  
+err_exit(</span><span style="color: rgba(0, 0, 255, 1)">int</span> error, <span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">fmt, ...)  
+{  
+        va_list     ap;  
+          
+        va_start(ap, fmt);  
+        err_doit(</span><span style="color: rgba(128, 0, 128, 1)">1</span><span style="color: rgba(0, 0, 0, 1)">, error, fmt, ap);  
+        va_end(ap);  
+        exit(</span><span style="color: rgba(128, 0, 128, 1)">1</span><span style="color: rgba(0, 0, 0, 1)">);  
+}  
+  
+</span><span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)">  
+ *  * Fatal error related to a system call.  
+ *  * Print a message, dump core, and terminate.  
+ *  </span><span style="color: rgba(0, 128, 0, 1)">*/</span>  
+<span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)">  
+err_dump(</span><span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">fmt, ...)  
+{  
+        va_list     ap;  
+          
+        va_start(ap, fmt);  
+        err_doit(</span><span style="color: rgba(128, 0, 128, 1)">1</span><span style="color: rgba(0, 0, 0, 1)">, errno, fmt, ap);  
+        va_end(ap);  
+        abort();        </span><span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> dump core and terminate </span><span style="color: rgba(0, 128, 0, 1)">*/</span><span style="color: rgba(0, 0, 0, 1)">  
+        exit(</span><span style="color: rgba(128, 0, 128, 1)">1</span>);        <span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> shouldn't get here </span><span style="color: rgba(0, 128, 0, 1)">*/</span><span style="color: rgba(0, 0, 0, 1)">  
+}  
+  
+</span><span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)">  
+ *  * Nonfatal error unrelated to a system call.  
+ *  * Print a message and return.  
+ *  </span><span style="color: rgba(0, 128, 0, 1)">*/</span>  
+<span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)">  
+err_msg(</span><span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">fmt, ...)  
+{  
+        va_list     ap;  
+          
+        va_start(ap, fmt);  
+        err_doit(</span><span style="color: rgba(128, 0, 128, 1)">0</span>, <span style="color: rgba(128, 0, 128, 1)">0</span><span style="color: rgba(0, 0, 0, 1)">, fmt, ap);  
+        va_end(ap);  
+}  
+  
+</span><span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)">  
+ *  * Fatal error unrelated to a system call.  
+ *  * Print a message and terminate.  
+ *  </span><span style="color: rgba(0, 128, 0, 1)">*/</span>  
+<span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)">  
+err_quit(</span><span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">fmt, ...)  
+{  
+        va_list     ap;  
+          
+        va_start(ap, fmt);  
+        err_doit(</span><span style="color: rgba(128, 0, 128, 1)">0</span>, <span style="color: rgba(128, 0, 128, 1)">0</span><span style="color: rgba(0, 0, 0, 1)">, fmt, ap);  
+        va_end(ap);  
+        exit(</span><span style="color: rgba(128, 0, 128, 1)">1</span><span style="color: rgba(0, 0, 0, 1)">);  
+}  
+  
+</span><span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)">  
+ *  * Print a message and return to caller.  
+ *  * Caller specifies "errnoflag".  
+ *  </span><span style="color: rgba(0, 128, 0, 1)">*/</span>  
+<span style="color: rgba(0, 0, 255, 1)">static</span> <span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)">  
+err_doit(</span><span style="color: rgba(0, 0, 255, 1)">int</span> errnoflag, <span style="color: rgba(0, 0, 255, 1)">int</span> error, <span style="color: rgba(0, 0, 255, 1)">const</span> <span style="color: rgba(0, 0, 255, 1)">char</span> *<span style="color: rgba(0, 0, 0, 1)">fmt, va_list ap)  
+{  
+        </span><span style="color: rgba(0, 0, 255, 1)">char</span><span style="color: rgba(0, 0, 0, 1)">    buf[MAXLINE];  
+        vsnprintf(buf, MAXLINE, fmt, ap);  
+        </span><span style="color: rgba(0, 0, 255, 1)">if</span><span style="color: rgba(0, 0, 0, 1)"> (errnoflag)  
+        snprintf(buf</span>+strlen(buf), MAXLINE-strlen(buf), <span style="color: rgba(128, 0, 0, 1)">"</span><span style="color: rgba(128, 0, 0, 1)">: %s</span><span style="color: rgba(128, 0, 0, 1)">"</span><span style="color: rgba(0, 0, 0, 1)">,strerror(error));  
+        strcat(buf, </span><span style="color: rgba(128, 0, 0, 1)">"</span> <span style="color: rgba(128, 0, 0, 1)">"</span><span style="color: rgba(0, 0, 0, 1)">);  
+        fflush(stdout);     </span><span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> in case stdout and stderr are the same </span><span style="color: rgba(0, 128, 0, 1)">*/</span><span style="color: rgba(0, 0, 0, 1)">  
+        fputs(buf, stderr);  
+        fflush(NULL);       </span><span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)"> flushes all stdio output streams </span><span style="color: rgba(0, 128, 0, 1)">*/</span><span style="color: rgba(0, 0, 0, 1)">  
+}
+
+
+</span><span style="color: rgba(0, 0, 255, 1)">#endif</span>    /* _APUE_H */
+						</pre>
+					</div>
+					<p>&nbsp;</p>
+				</div>
+				<div id="MySignature" role="contentinfo">BinBin&nbsp;Learns&nbsp;To&nbsp;Develop</div>
+				<div class="clear"></div>
+				<div id="blog_post_info_block" role="contentinfo">
+					<div id="blog_post_info"></div>
+					<div class="clear"></div>
+					<div id="post_next_prev"></div>
+				</div>
+			</div>
+			<div class="postDesc">posted&nbsp;@
+				<span id="post-date" data-last-update-days="2170.464606615838" data-date-created="BlogServer.Application.Dto.BlogPost.BlogPostDto" data-date-updated="2017-09-12 00:27">2017&ndash;09&ndash;12&nbsp;00:27</span>
+				&nbsp;
+				<a href="../">李学文</a>
+				&nbsp;
+阅读(
+				<span id="post_view_count">4324</span>
+				)&nbsp;
+评论(
+				<span id="post_comment_count">0</span>
+				)&nbsp;
+				<a href="https://i.cnblogs.com/EditPosts.aspx?postid=7508049" rel="nofollow">编辑</a>
+				&nbsp;
+				<a href="javascript:void(0)" onclick="AddToWz(7508049);return false;">收藏</a>
+				&nbsp;
+				<a href="javascript:void(0)" onclick="reportManager.report({ currentUserId: '', targetType: 'blogPost', targetId: '7508049', targetLink: 'https://www.cnblogs.com/BinBinStory/p/7508049.html', title: 'Linux下运行《UNIX环境高级编程》undefined reference to `err_quit 编译出错的处理方法' })">举报</a>
+			</div>
+		</div>
+	</body>
+</html>

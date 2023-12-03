@@ -1,0 +1,59 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC180402C.py</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC180402C.py</h1>
+            <h3>Class Example</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/L180315A.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>L180315A</a>&nbsp;<a href="../tags/Python-Class.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Python-Class</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+
+class Parent:        # 定义父类
+    parentAttr = 100
+    def __init__(self):
+        print ("调用父类构造函数")
+
+    def parentMethod(self):
+        print ('调用父类方法')
+
+    def setAttr(self, attr):
+        Parent.parentAttr = attr
+
+    def getAttr(self):
+        print ("父类属性 :", Parent.parentAttr)
+
+class Child(Parent): # 定义子类
+    def __init__(self):
+        print ("调用子类构造方法")
+
+    def childMethod(self):
+        print ('调用子类方法')
+
+c = Child()          # 实例化子类
+c.childMethod()      # 调用子类的方法
+c.parentMethod()     # 调用父类方法
+c.setAttr(200)       # 再次调用父类的方法 - 设置属性值
+c.getAttr()          # 再次调用父类的方法 - 获取属性值
+
+print('output: done.');</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

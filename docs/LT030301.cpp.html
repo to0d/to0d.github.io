@@ -1,0 +1,114 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT030301.cpp (Range Sum Query - Immutable)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT030301.cpp (Range Sum Query - Immutable)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-22</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0303.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0303</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_39f888a6" href="#TOC_HEAD_39f888a6">Problem 0303 <strong>Range Sum Query &ndash; Immutable</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/range-sum-query-immutable/" target="_blank">https://leetcode.com/problems/range&ndash;sum&ndash;query&ndash;immutable/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>51.26</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_7f9863b7" href="#TOC_HEAD_7f9863b7">LT030301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_2ce52198">LT0303 (name=Range Sum Query &ndash; Immutable, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0303.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0303</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_e9ace35f"><a href="https://leetcode.com/problems/range-sum-query-immutable/" target="_blank">Range Sum Query &ndash; Immutable &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0303.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0303</a></li>
+		<br />
+	</ul>
+	<p>
+		Given an integer array nums, handle multiple queries of the following type:
+	</p>
+	<pre><code>Calculate the sum of the elements of nums between indices left and right inclusive where left &lt;= right.	</code></pre>
+	<p>
+		Implement the NumArray class:
+	</p>
+	<pre><code>NumArray(int[] nums) Initializes the object with the integer array nums.
+int sumRange(int left, int right) Returns the sum of the elements of nums between indices left and right inclusive (i.e. nums[left] + nums[left + 1] + ... + nums[right]).	</code></pre>
+	<p>
+		 
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input
+["NumArray", "sumRange", "sumRange", "sumRange"]
+[[[-2, 0, 3, -5, 2, -1]], [0, 2], [2, 5], [0, 5]]\\\            Output\\\            [null, 1, -1, -3]\\\\\\            Explanation\\\            NumArray numArray = new NumArray([-2, 0, 3, -5, 2, -1]);\\\            numArray.sumRange(0, 2); // return (-2) + 0 + 3 = 1\\\            numArray.sumRange(2, 5); // return 3 + (-5) + 2 + (-1) = -1\\\            numArray.sumRange(0, 5); // return (-2) + 0 + 3 + (-5) + 2 + (-1) = -3\\\\\\     \\\\\\    Constraints:\\\\\\            1 &lt;= nums.length &lt;= 104\\\            -105 &lt;= nums[i] &lt;= 105\\\            0 &lt;= left &lt;= right &lt; nums.length\\\            At most 104 calls will be made to sumRange.\\\\\\### LT030301.cpp\\\\\\        #include &lt;lt_help/lt.h&gt;\\\        \\\        class NumArray {\\\        public:\\\            NumArray(vector&lt;int&gt;& nums){\\\                int sum = 0;\\\                for(auto num : nums)\\\                {   sum += num;\\\                    sumArray.push_back(sum);\\\                }\\\            }\\\        \\\            int sumRange(int i, int j){   \\\                return getSum(j) - getSum(i-1); \\\            }\\\            \\\            int getSum(int i){  \\\                return i &lt; 0 ? 0 : sumArray[i]; \\\            }\\\            \\\            vector&lt;int&gt; sumArray;\\\        };\\\        \\\         \\\        vector&lt;int&gt; nums1 = {-2, 0, 3, -5, 2, -1};\\\        NumArray numArray(nums1);\\\        \\\        void test(int i, int j)\\\        {\\\            cout &lt;&lt; "input: i=" &lt;&lt; i &lt;&lt; ", j=" &lt;&lt; j;\\\            int r = numArray.sumRange(i, j); \\\            cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;\\\        }\\\        \\\        int main(void)\\\        {\\\            test(0, 2);\\\            test(2, 5);\\\            test(0, 5);\\\        }\\\        \\\        // Result \\\        //\\\        // 2022-11-22: Runtime 46ms 39.87% Memory 17.1MB 77.24%, https://leetcode.com/problems/range-sum-query-immutable/submissions/847764646/\\\        // 2023-02-22: Runtime 30ms 51.26% Memory 17.1MB 38.4%, https://leetcode.com/problems/range-sum-query-immutable/submissions/902738048/\\\        \\\        \\\\\\\\\### Output:\\\\\\        input: i=0, j=2; output: 1;\\\        input: i=2, j=5; output: -1;\\\        input: i=0, j=5; output: -3;\\\	</code></pre>
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

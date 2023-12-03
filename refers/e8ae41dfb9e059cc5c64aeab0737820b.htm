@@ -1,0 +1,108 @@
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8"></meta>
+		<meta charset="utf-8"></meta>
+		<title>GDB&nbsp;non&ndash;stop模式&nbsp;&ndash;&nbsp;面具下的戏命师&nbsp;&ndash;&nbsp;博客园</title>
+	</head>
+	<body class="skin-kjc has-navbar" data-new-gr-c-s-check-loaded="8.907.0" data-gr-ext-installed="">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Sun Oct 01 10:29:07 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://www.cnblogs.com/jkin/p/13865298.html" target="_blank">
+				<font color="red" size="3">GDB&nbsp;non&ndash;stop模式&nbsp;&ndash;&nbsp;面具下的戏命师&nbsp;&ndash;&nbsp;博客园</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="post">
+			<div class="posthead">
+				<h2>
+					<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/jkin/p/13865298.html">
+						<span role="heading" aria-level="2">GDB&nbsp;non&ndash;stop模式</span>
+					</a>
+				</h2>
+			</div>
+			<div class="postbody">
+				<div id="cnblogs_post_body" class="blogpost-body blogpost-body-html">
+ 
+					<p>对于调试多线程程序，GDB&nbsp;默认采用的是&nbsp;all&ndash;stop&nbsp;模式，即只要有一个线程暂停执行，所有线程都随即暂停。这种调试模式可以适用于大部分场景的需要，借助适当数量的断点，我们可以清楚地监控到各个线程的具体执行过程。</p>
+					<p>但在某些场景中，我们可能需要调试个别的线程，并且不想在调试过程中，影响其它线程的运行。这种情况下，可以将&nbsp;GDB&nbsp;的调试模式由&nbsp;all&ndash;stop&nbsp;模式更改为&nbsp;non&ndash;stop&nbsp;模式，该模式下调试多线程程序，当某一线程暂停运行时，其它线程仍可以继续执行。</p>
+					<p>也就是说，non&ndash;stop&nbsp;模式下可以进行&nbsp;all&ndash;stop&nbsp;模式无法做到的调试工作，例如：</p>
+					<ul>
+						<li>保持其它线程继续执行的状态下，单独调试某个线程；</li>
+						<li>在所有线程都暂停执行的状态下，单步调试某个线程；</li>
+						<li>单独执行多个线程等等。</li>
+					</ul>
+					<p>另外还有一点和&nbsp;all&ndash;stop&nbsp;模式不同的是，在&nbsp;all&ndash;stop&nbsp;模式下，continue、next、step&nbsp;命令的作用对象并不是当前线程，而是所有的线程；但在&nbsp;non&ndash;stop&nbsp;模式下，continue、next、step&nbsp;命令只作用于当前线程。</p>
+					<p>在&nbsp;non&ndash;stop&nbsp;模式下，如果想要&nbsp;continue&nbsp;命令作用于所有线程，可以为&nbsp;continue&nbsp;命令添加一个&nbsp;&ndash;a&nbsp;选项，即执行&nbsp;continue&nbsp;&ndash;a&nbsp;或者&nbsp;c&nbsp;&ndash;a&nbsp;命令，即可实现令所有线程继续执行的目的。</p>
+					<p>GDB&nbsp;调试多线程程序时，由&nbsp;all&ndash;stop&nbsp;模式转换到&nbsp;non&ndash;stop&nbsp;模式，未启动程序前执行如下命令即可：</p>
+					<div class="cnblogs_code">
+						<pre>(gdb) <span style="color: rgba(0, 0, 255, 1)">set</span> non-stop mode</pre>
+					</div>
+					<p>其中，mode&nbsp;参数的值有&nbsp;2&nbsp;种，分别是&nbsp;on&nbsp;和&nbsp;off，on&nbsp;表示启用&nbsp;non&ndash;stop&nbsp;模式；off&nbsp;表示禁用&nbsp;non&ndash;stop&nbsp;模式。</p>
+					<p>示例代码：</p>
+					<div class="cnblogs_code">
+						<div class="cnblogs_code_toolbar">
+							<span class="cnblogs_code_copy">
+								<a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码">
+									<img src="GDB non-stop模式 - 面具下的戏命师 - 博客园_files/copycode.gif" alt="复制代码"></img>
+								</a>
+							</span>
+						</div>
+						<pre>
+#include &lt;stdio.h&gt;<span style="color: rgba(0, 0, 0, 1)">
+#include </span>&lt;pthread.h&gt;
+<span style="color: rgba(0, 0, 255, 1)">static</span> <span style="color: rgba(0, 0, 255, 1)">void</span> *<span style="color: rgba(0, 0, 0, 1)">thread1_job()
+{
+    printf(</span><span style="color: rgba(128, 0, 0, 1)">"</span><span style="color: rgba(128, 0, 0, 1)">this is 1\n</span><span style="color: rgba(128, 0, 0, 1)">"</span><span style="color: rgba(0, 0, 0, 1)">);
+}
+</span><span style="color: rgba(0, 0, 255, 1)">static</span> <span style="color: rgba(0, 0, 255, 1)">void</span> *<span style="color: rgba(0, 0, 0, 1)">thread2_job()
+{
+    printf(</span><span style="color: rgba(128, 0, 0, 1)">"</span><span style="color: rgba(128, 0, 0, 1)">this is 2\n</span><span style="color: rgba(128, 0, 0, 1)">"</span><span style="color: rgba(0, 0, 0, 1)">);
+}
+</span><span style="color: rgba(0, 0, 255, 1)">int</span><span style="color: rgba(0, 0, 0, 1)"> main()
+{
+    pthread_t tid1,tid2;
+    pthread_create(</span>&amp;<span style="color: rgba(0, 0, 0, 1)">tid1, NULL, thread1_job, NULL);
+    pthread_create(</span>&amp;<span style="color: rgba(0, 0, 0, 1)">tid2, NULL, thread2_job, NULL);
+    pthread_join(tid1,NULL);
+    pthread_join(tid2,NULL);
+    printf(</span><span style="color: rgba(128, 0, 0, 1)">"</span><span style="color: rgba(128, 0, 0, 1)">this is main\n</span><span style="color: rgba(128, 0, 0, 1)">"</span><span style="color: rgba(0, 0, 0, 1)">);
+    </span><span style="color: rgba(0, 0, 255, 1)">return</span> <span style="color: rgba(128, 0, 128, 1)">0</span><span style="color: rgba(0, 0, 0, 1)">;
+}</span>
+						</pre>
+						<div class="cnblogs_code_toolbar">
+							<span class="cnblogs_code_copy">
+								<a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码">
+									<img src="GDB non-stop模式 - 面具下的戏命师 - 博客园_files/copycode.gif" alt="复制代码"></img>
+								</a>
+							</span>
+						</div>
+					</div>
+					<p>可以看到，程序中包含有&nbsp;3&nbsp;个线程，分别为&nbsp;main&nbsp;主线程、thread1_job&nbsp;子线程和&nbsp;thread2_job&nbsp;子线程。在此基础上，下面开始演示在&nbsp;non&ndash;stop&nbsp;模式下调试多线程程序：</p>
+					<p>
+						<img src="files/61e6e9dd8052357d006ddfba57e9d7a.png" alt="" width="817" height="273" loading="lazy" class="medium-zoom-image"></img>
+					</p>
+					<p>可以看到，如果在&nbsp;all&ndash;stop&nbsp;模式下，thread1_job&nbsp;线程的暂停执行势必会导致&nbsp;main&nbsp;主线程和&nbsp;thread2_job&nbsp;
+线程暂停执行；但在&nbsp;non&ndash;stop&nbsp;模式下却完全相反，thread1_job&nbsp;线程的暂停，并未影响到&nbsp;main&nbsp;主线程和&nbsp;
+thread2_job&nbsp;线程，其中&nbsp;thread2_job&nbsp;线程执行完毕后自动退出，而&nbsp;main&nbsp;主线程一直在运行（等待&nbsp;thread1_job
+&nbsp;线程执行结束）。
+						<br>另外通过这个实例，还可以发现一点&nbsp;non&ndash;stop&nbsp;模式和&nbsp;all&ndash;stop&nbsp;模式的不同。在&nbsp;all&ndash;stop&nbsp;
+模式下，当某一线程暂停执行时，GDB&nbsp;调试器会自行将其切换为当前线程；而在&nbsp;non&ndash;stop&nbsp;模式下不会。这也就解释了上面实例中，当&nbsp;
+thread1_job&nbsp;因断点暂停时当前线程仍为&nbsp;main&nbsp;主线程。
+
+					</p>
+					<p>除此之外，通过执行&nbsp;show&nbsp;non&ndash;stop&nbsp;命令，可以查看&nbsp;non&ndash;stop&nbsp;模式是否开启。例如:</p>
+					<p>
+						<img src="files/3f1d3af88b3271e8ae7eb4527f19afb0.png" alt="" loading="lazy" class="medium-zoom-image"></img>
+					</p>
+					<p>注意，借助&nbsp;set&nbsp;non&ndash;stop&nbsp;或者&nbsp;show&nbsp;non&ndash;stop&nbsp;命令，也只能判断出&nbsp;non&ndash;stop&nbsp;
+模式是否开启，并不意味着当前执行的程序一定以&nbsp;non&ndash;stop&nbsp;模式运行。原因很简单，并非所有的调试环境都支持&nbsp;non&ndash;stop&nbsp;模式，即便借助
+&nbsp;set&nbsp;non&ndash;step&nbsp;命令启动了该模式，GDB&nbsp;调试器也可能会自动切换至&nbsp;all&ndash;stop&nbsp;模式。</p>
+				</div>
+			 </div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,150 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT032601.cpp (Power of Three)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT032601.cpp (Power of Three)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-22</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0326.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0326</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Power-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Power-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_7dfd1fe8" href="#TOC_HEAD_7dfd1fe8">Problem 0326 <strong>Power of Three</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/power-of-three/" target="_blank">https://leetcode.com/problems/power&ndash;of&ndash;three/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>58.94</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_4da9c6b8" href="#TOC_HEAD_4da9c6b8">LT032601.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_b90baa00">LT0326 (name=Power of Three, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0326.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0326</a>&nbsp;<a href="../tags/Power-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Power-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_2c70a6bd"><a href="https://leetcode.com/problems/power-of-three/" target="_blank">Power of Three &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0326.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0326</a></li>
+		<br />
+	</ul>
+	<p>
+		Given an integer, write a function to determine if it is a power of three.
+	</p>
+	<p>
+		<strong>Follow up:</strong>
+	</p>
+	<p>
+		Could you do it without using any loop / recursion?<br/>
+	</p>
+	<li><a name="HEAD_HIDDEN_7ff816bd">Solution from other people: 49 ms &ndash; beats 65%** &nbsp;<a href="../tags/LT0326.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0326</a></li>
+	<br />
+	<pre><code>static int Max3PowerInt = 1162261467; // 3^19, 3^20 = 3486784401 &gt; MaxInt32
+static int MaxInt32     = 2147483647; // 2^31 - 1
+
+bool isPowerOfThree(int n)
+{
+    return n &gt; 0 && n &lt;= Max3PowerInt && ( Max3PowerInt % n ) == 0;
+}	</code></pre>
+</ul>
+	<H3><a name="HEAD_426bde05" href="#TOC_HEAD_426bde05">LT032601.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool isPowerOfThree(int n) {
+        for(; n &gt; 1; n = n/3)
+            if( n%3 != 0 )
+                return false;
+        return n == 1;
+    }
+};
+
+
+
+void test(int n)
+{
+    cout &lt;&lt; "input: " &lt;&lt; n &lt;&lt; "; output: ";
+    bool r = Solution().isPowerOfThree(n);
+    cout &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(27);
+    test(0);
+}
+
+// Result
+//
+// 2022-11-21: Runtime 39ms 19.64% Memory 6MB 63.27%, https://leetcode.com/problems/power-of-three/submissions/847194236/
+// 2023-02-22: Runtime 24ms 58.94% Memory 6MB 63.68%, https://leetcode.com/problems/power-of-three/submissions/902745098/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 27; output: 1;
+input: 0; output: 0;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

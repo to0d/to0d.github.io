@@ -1,0 +1,54 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC150328A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC150328A.cpp</h1>
+            <h3>test c++ array</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Array.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Array</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+int main(void)
+{
+    int a1 [] = {1,2};
+    int a2 [][3] = {{1,2},{3,4,5}};
+    // int a2 [][] = {{1,2},{3,4,5}};       //��������˵�һ�±�������±��Զ��ƶ�
+    int a3 [2][3][2] = {{{1,2},{3,4},{5,6}},{{7,8},{9,10},{11,12}}};
+
+    std::cout &lt;&lt;"a1: ";   outputArray(a1); std::cout &lt;&lt; endl;
+    std::cout &lt;&lt;"a2: ";   outputArray(a2); std::cout &lt;&lt; endl;
+    std::cout &lt;&lt;"a3: ";   outputArray(a3); std::cout &lt;&lt; endl;
+
+    char s1[] = {'a','b','c'};
+    char s2[] = "abc";                      //�������ַ������ʽ��ϵͳ�Զ���'\0'
+    char s3[][4] = {"abc","ef","x"};
+    char s4[][2][2] = {"a","b","c","d"};
+
+    std::cout &lt;&lt;"s1: ";   outputArray(s1);  std::cout &lt;&lt; endl;
+    std::cout &lt;&lt;"s2: ";   outputArray(s2);  std::cout &lt;&lt; endl;
+    std::cout &lt;&lt;"s3: ";   outputArray(s3);  std::cout &lt;&lt; endl;
+    std::cout &lt;&lt;"s4: ";   outputArray(s4);  std::cout &lt;&lt; endl;
+
+    std::cout &lt;&lt; "output: done!" &lt;&lt; endl;
+
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

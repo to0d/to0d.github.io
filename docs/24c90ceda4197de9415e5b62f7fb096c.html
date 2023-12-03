@@ -1,0 +1,58 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>2021-04-11 一口气看完45个寄存器 CPU核心技术大揭秘 知乎.html</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>2021-04-11 一口气看完45个寄存器 CPU核心技术大揭秘 知乎.html</h1>
+            <h3></h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/163e0d4.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>寄存器</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/Register-EBP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Register-EBP</a>&nbsp;<a href="../tags/Register-EIP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Register-EIP</a>&nbsp;<a href="../tags/Register-ESP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Register-ESP</a>&nbsp;<a href="../tags/Register-RIP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Register-RIP</a>&nbsp;<a href="../tags/x86.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>x86</a>&nbsp;<a href="../tags/37f2ca36.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>硬件断点</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<H2><a name="HEAD_254c6dc6" href="#TOC_HEAD_254c6dc6">通用寄存器</a></H2>
+<ul>
+	<li>eax : 通常用来执行加法，函数调用的返回值一般也放在这里面</li>
+	<li>ebx : 数据存取</li>
+	<li>ecx : 通常用来作为计数器，比如for循环</li>
+	<li>edx : 读写I/O端口时，edx用来存放端口号</li>
+	<li><a name="HEAD_HIDDEN_f794ca71">esp : 栈顶指针，指向栈的顶部 &nbsp;<a href="../tags/Register-ESP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Register-ESP</a></li>
+	<li><a name="HEAD_HIDDEN_aca8bd09">ebp : 栈底指针，指向栈的底部，通常用 ebp+偏移量 的形式来定位函数存放在栈中的局部变量 &nbsp;<a href="../tags/Register-EBP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Register-EBP</a></li>
+	<li>esi : 字符串操作时，用于存放数据源的地址</li>
+	<li>edi : 字符串操作时，用于存放目的地址的，和esi两个经常搭配一起使用，执行字符串的复制等操作</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_e6e3ea24" href="#TOC_HEAD_e6e3ea24">标志寄存器</a></H2>
+	<H2><a name="HEAD_98b9fef7" href="#TOC_HEAD_98b9fef7">指令寄存器</a></H2>
+<ul>
+	<li><a name="CPU-45-Register-EIP-TO-RIP">在x64架构下，32位的eip升级为64位的rip寄存器 &nbsp;<a href="../tags/Register-EIP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Register-EIP</a>&nbsp;<a href="../tags/Register-RIP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Register-RIP</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_462542fd">Register&ndash;EIP (ptag=Register) &nbsp;<a href="../tags/Register-EIP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Register-EIP</a>&nbsp;<a href="../tags/x86.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>x86</a>&nbsp;<a href="../tags/Register.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Register</a></li>
+		<li><a name="HEAD_HIDDEN_27d9b7b7">Register&ndash;RIP (name=Instruction pointer, ptag=Register) &nbsp;<a href="../tags/Register-RIP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Register-RIP</a>&nbsp;<a href="../tags/x86.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>x86</a>&nbsp;<a href="../tags/Register.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Register</a></li>
+		<br />
+	</ul>
+</ul>
+	<H2><a name="HEAD_3259dcff" href="#TOC_HEAD_3259dcff">段寄存器</a></H2>
+	<H2><a name="HEAD_a30b1305" href="#TOC_HEAD_a30b1305">控制寄存器</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_6f1cadea">你需要一种新的断点： 硬件断点 &nbsp;<a href="../tags/37f2ca36.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>硬件断点</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_f5f91b62" href="#TOC_HEAD_f5f91b62">调试寄存器</a></H2>
+	<H2><a name="HEAD_76b6896f" href="#TOC_HEAD_76b6896f">描述符寄存器</a></H2>
+	<H2><a name="HEAD_7fedd80e" href="#TOC_HEAD_7fedd80e">任务寄存器</a></H2>
+	<H2><a name="HEAD_12e69a9" href="#TOC_HEAD_12e69a9">模型特定寄存器</a></H2>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

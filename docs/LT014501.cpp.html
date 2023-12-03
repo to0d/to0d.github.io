@@ -1,0 +1,190 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT014501.cpp (Binary Tree Postorder Traversal)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT014501.cpp (Binary Tree Postorder Traversal)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-08</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0145.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0145</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Postorder.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Postorder</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_612ccaac" href="#TOC_HEAD_612ccaac">Problem 0145 <strong>Binary Tree Postorder Traversal</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/binary-tree-postorder-traversal/" target="_blank">https://leetcode.com/problems/binary&ndash;tree&ndash;postorder&ndash;traversal/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_eb2251b3" href="#TOC_HEAD_eb2251b3">LT014501.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_dea18c9e">LT0145 (name=Binary Tree Postorder Traversal, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0145.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0145</a>&nbsp;<a href="../tags/Postorder.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Postorder</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_317b3ca4"><a href="https://leetcode.com/problems/binary-tree-postorder-traversal/" target="_blank">Binary Tree Postorder Traversal &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0145.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0145</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a binary tree, return the
+		<em>postorder</em> traversal of its nodes&#039; values.
+	</p>
+	<p>
+		For example:
+	</p>
+	<p>
+		Given binary tree
+		<code>{1,#,2,3}</code> ,
+	</p>
+	<pre><code>1
+\
+2
+/
+3	</code></pre>
+	<p>
+		return
+		<code>[3,2,1]</code> .
+	</p>
+	<p>
+		<strong>Note:</strong>
+		Recursive solution is trivial, could you do it iteratively?
+	</p>
+</ul>
+	<H3><a name="HEAD_b4bf1e80" href="#TOC_HEAD_b4bf1e80">LT014501.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+// class Solution {
+// public:
+//     vector&lt;int&gt; postorderTraversal(TreeNode* root) {
+//         vector&lt;int&gt; res;
+//         stack&lt;TreeNode*&gt; s;
+//         TreeNode *node = root, *previsited= NULL;
+//         while (node != NULL || !s.empty() )
+//         {   for(; node != NULL ; node = node-&gt;left)
+//                 s.push(node);
+//             node = s.top();
+//             if( node-&gt;right == NULL || previsited == node-&gt;right )
+//             {   res.push_back(node-&gt;val);
+//                 s.pop();
+//                 previsited = node;
+//                 node = NULL;
+//             }
+//             else
+//                 node = node-&gt;right;
+//         }
+//         return res;
+//     }
+// };
+
+class Solution {
+public:
+    vector&lt;int&gt; postorderTraversal(TreeNode* root) {
+        vector&lt;int&gt; res;
+        _postorderTraversal(root, res);
+        return res;
+    }
+
+    void _postorderTraversal(TreeNode* node, vector&lt;int&gt;& res) {
+        if(node == NULL)
+            return;
+        if(node-&gt;left != NULL)
+            _postorderTraversal(node-&gt;left, res);
+        if(node-&gt;right != NULL)
+            _postorderTraversal(node-&gt;right, res);
+        res.push_back(node-&gt;val);
+    }
+};
+
+
+
+void test(TreeNode* root)
+{
+    cout &lt;&lt; "input: ";
+    outputTree(root);
+    vector&lt;int&gt; r = Solution().postorderTraversal(root);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(makeTree("{1,null,2,3}"));
+}
+
+// Result
+//
+// 2022-11-23: Runtime 6ms 20.13% Memory 8.4MB 90.65%, https://leetcode.com/problems/binary-tree-postorder-traversal/submissions/848470783/
+// 2023-02-22: Runtime 3ms 51.39% Memory 8.3MB 90.76%, https://leetcode.com/problems/binary-tree-postorder-traversal/submissions/902641971/
+// 2023-03-08: Runtime 0ms 100% Memory 8.5MB 73.40%, https://leetcode.com/problems/binary-tree-postorder-traversal/submissions/911507128/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [1,null,2,3]; output: [3,2,1];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

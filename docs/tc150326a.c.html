@@ -1,0 +1,96 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC150326A.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC150326A.c</h1>
+            <h3>fork, create child process</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Process.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Process</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;math.h&gt;
+#include &lt;string.h&gt;
+
+int main(void)
+{
+    pid_t child;
+    int status;
+    printf("This will demostrate how to get child status\n");
+
+    // function fork
+    //-1:      invoke fork fail
+    // 0:      This is child process
+    // other:  This is parent process
+    if((child=fork())==-1)
+    {
+        printf("Fork Error :%s\n",strerror(errno));
+        return(1);
+    }
+
+    //Child process
+    if( child == 0 )
+    {
+        int i;
+        printf("Child: %ld\n",getpid());
+        for(i=0;i&lt;1000000;i++) sin(i);
+
+        i=5;
+        printf("Child: exit with %d\n",i);
+        return(i);
+    }
+
+
+    // function: wait
+    // wait ϵͳ���û�ʹ����������ֱ��һ���ӽ��̽��������Ǹ����̽��ܵ���һ���ź�
+    // ���û�и�����û���ӽ��̻��������ӽ����Ѿ�������wait ����������
+    // �ɹ������ӽ��̵�ID,���򷵻�-1
+    // errno == EINTR �ж�
+
+    //parent process wait the end of child process
+    printf("Parent: waiting the end of child\n");
+    while(((child = wait(&status))== -1 ) & ( errno == EINTR))
+        ;
+
+    if(child == -1 )
+    {
+        printf("Parent: Wait Error.%s\n",strerror(errno));
+    }
+    else if(!status)
+    {
+        printf("Parent: Child %ld terminated normally return status is zero\n", child);
+    }
+    else if(WIFEXITED(status))
+    {
+        printf("Parent: Child %ld terminated normally return status is %d\n",child,WEXITSTATUS(status));
+    }
+    else if(WIFSIGNALED(status))
+    {
+        printf("Parent: Child %ld terminated due to signal %d znot caught\n",child,WTERMSIG(status));
+    }
+
+    printf("output: done.\n");
+
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,161 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT092901.cpp (Unique Email Addresses)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT092901.cpp (Unique Email Addresses)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-12-04</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0929.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0929</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/String-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>String-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_305176de" href="#TOC_HEAD_305176de">Problem 0929 <strong>Unique Email Addresses</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/unique-email-addresses/" target="_blank">https://leetcode.com/problems/unique&ndash;email&ndash;addresses/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>64.76</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_a36a0601" href="#TOC_HEAD_a36a0601">LT092901.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_7e1a43f6">LT0929 (name=Unique Email Addresses, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0929.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0929</a>&nbsp;<a href="../tags/String-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>String-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_b939ed37"><a href="https://leetcode.com/problems/unique-email-addresses/" target="_blank">Unique Email Addresses &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0929.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0929</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_5ab929ce" href="#TOC_HEAD_5ab929ce">LT092901.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+public:
+    int numUniqueEmails(vector&lt;string&gt;& emails) {
+        unordered_set&lt;string&gt; _set;
+        for(string email : emails)
+        {   email = _validEmail(email);
+            if(email.length() != 0)
+                _set.insert(email);
+        }
+        return _set.size();
+    }
+
+    string _validEmail(string email)
+    {   static char buf[100];
+        int buf_len = 0;
+        int len = email.length();
+        int stage = 0;
+        for(int i = 0; i &lt; len;++i )
+        {   char c = email.at(i);
+            if( stage == 0 )  // local name
+            {   switch(c)
+                {   case '+': stage = 1; break;
+                    case '@': buf[buf_len++] = c; stage = 2; break;
+                    case '.': break;
+                    default : buf[buf_len++] = c; break;
+                }
+            } else if ( stage == 1 )
+            {   if(c == '@')
+                {   buf[buf_len++] = c;
+                    stage = 2;
+                }
+            } else // stage = 2
+            {   buf[buf_len++] = c;
+            }
+        }
+
+        return stage == 2 ? string(buf, buf_len) : "";
+    }
+};
+
+
+
+void test(vector&lt;string&gt; emails)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(emails);
+    int r = Solution().numUniqueEmails(emails);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test({"a.x@bc.c", "ax@bc.c"});
+}
+
+
+// Result
+//
+// 2022-12-04: Runtime 27ms 64.76% Memory 14.9MB 28.66%, https://leetcode.com/problems/unique-email-addresses/submissions/854377745/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [a.x@bc.c,ax@bc.c]; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

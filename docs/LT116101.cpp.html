@@ -1,0 +1,157 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT116101.cpp (Maximum Level Sum of a Binary Tree)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT116101.cpp (Maximum Level Sum of a Binary Tree)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-09</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT1161.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1161</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/LevelOrder.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LevelOrder</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_7d60df0a" href="#TOC_HEAD_7d60df0a">Problem 1161 <strong>Maximum Level Sum of a Binary Tree</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/maximum-level-sum-of-a-binary-tree/" target="_blank">https://leetcode.com/problems/maximum&ndash;level&ndash;sum&ndash;of&ndash;a&ndash;binary&ndash;tree/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>62.25</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_88d09b0c" href="#TOC_HEAD_88d09b0c">LT116101.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_1d623022">LT1161 (name=Maximum Level Sum of a Binary Tree, ptag=Leetcode) &nbsp;<a href="../tags/LT1161.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1161</a>&nbsp;<a href="../tags/LevelOrder.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LevelOrder</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_60ed463"><a href="https://leetcode.com/problems/maximum-level-sum-of-a-binary-tree/" target="_blank">Maximum Level Sum of a Binary Tree &ndash; Leetcode</a> &nbsp;<a href="../tags/LT1161.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1161</a></li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_9bd2342b"><a href="LT010201.cpp.html" target="_blank">LT010201.cpp</a> &nbsp;<a href="../tags/LT1161.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1161</a>&nbsp;<a href="../tags/Ref.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Ref</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_a531fc59" href="#TOC_HEAD_a531fc59">LT116101.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int maxLevelSum(TreeNode* root) { // refer LT010201.cpp
+        int sum = 0, count = 0, level = 1, maxSum = INT_MIN, maxLevel = -1;
+        queue&lt;TreeNode*&gt; nq;
+        nq.push(root);
+        nq.push(NULL);
+        while( !nq.empty() )
+        {   TreeNode* node = nq.front(); nq.pop();
+            if( node == NULL )
+            {   if( count == 0 )
+                    break;
+                if( sum &gt; maxSum )
+                {   maxSum = sum;
+                    maxLevel = level;
+                }
+                count = 0;
+                sum   = 0;
+                level ++;
+                nq.push(NULL);
+            }
+            else
+            {   sum += node-&gt;val;
+                count++;
+                if( node-&gt;left != NULL )
+                    nq.push(node-&gt;left );
+                if( node-&gt;right != NULL )
+                    nq.push(node-&gt;right );
+            }
+        }
+        return maxLevel;
+    }
+};
+
+
+
+void test(TreeNode* root)
+{
+    cout &lt;&lt; "input: ";
+    outputTree(root);
+    int r = Solution().maxLevelSum(root);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(makeTree("{1,7,0,7,-8,null,null}"));
+}
+
+// Result
+//
+// 2023-01-13: Runtime 194ms 82.93% Memory 107.3MB 74.12%, https://leetcode.com/problems/maximum-level-sum-of-a-binary-tree/submissions/877497449/
+// 2023-03-09: Runtime 202ms 62.25% Memory 107.4MB 47.55%, https://leetcode.com/problems/maximum-level-sum-of-a-binary-tree/submissions/911585674/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [1,7,0,7,-8]; output: 2;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

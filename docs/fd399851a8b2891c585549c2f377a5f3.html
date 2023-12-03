@@ -1,0 +1,39 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>elfread.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>elfread.c</h1>
+            <h3></h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/ELF.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ELF</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/sym_fns.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>sym_fns</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<H3><a name="HEAD_3fc3ac85" href="#TOC_HEAD_3fc3ac85">symbol functions used for elf format</a></H3><ul><a href="../tags/sym_fns.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>sym_fns</a>&nbsp;</ul>
+<pre><code>static const struct sym_fns elf_sym_fns =
+{
+elf_new_init,			/* init anything gbl to entire symtab */
+elf_symfile_init,		/* read initial info, setup for sym_read() */
+elf_symfile_read,		/* read a symbol file into symtab */
+elf_symfile_finish,		/* finished with file, cleanup */
+default_symfile_offsets,	/* Translate ext. to int. relocation */
+elf_symfile_segments,		/* Get segment information from a file.  */
+NULL,
+default_symfile_relocate,	/* Relocate a debug section.  */
+&elf_probe_fns,		/* sym_probe_fns */
+};</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

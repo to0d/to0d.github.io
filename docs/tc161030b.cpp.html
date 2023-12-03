@@ -1,0 +1,122 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161030B.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161030B.cpp</h1>
+            <h3>test overload new operator</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Cxx-new.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-new</a>&nbsp;<a href="../tags/overload.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>overload</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    <pre><code>sizeof(class A)=8
+sizeof(int)=4
+
+A::A(204)
+00000     D88E0408 CC000000 ........ ........   - ................
+
+A::~A()</code></pre>
+	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+#include &lt;lfc/trace/lfc_dump_mem_hex.h&gt;
+#include "new_1.h"
+#include "new_2.h"
+
+using namespace std;
+
+class A
+{
+public:
+
+    A()
+    { cout &lt;&lt; "A::A()" &lt;&lt; endl;}
+
+    A(int v) : value(v)
+    { cout &lt;&lt; "A::A("&lt;&lt;v&lt;&lt;")" &lt;&lt; endl;}
+
+    ~A()
+    { cout &lt;&lt; "A::~A()" &lt;&lt; endl;}
+
+    int value;
+
+    virtual void fun()
+    {}
+};
+
+int main(void)
+{
+    /* *********************************************** */
+    /*  Usage about new operator                       */
+    /* *********************************************** */
+    {
+        cout &lt;&lt; "---------------------------------------------\n"
+            &lt;&lt; "Test 01: Usage about new operator \n";
+
+        cout &lt;&lt; " sizeof(class A)=" &lt;&lt;  sizeof(A) &lt;&lt; endl;
+        cout &lt;&lt; " sizeof(int)=" &lt;&lt;  sizeof(int) &lt;&lt; endl;
+
+        A* pA = new A(204); // HEX CC
+        lfc_dump_memory_hex((void *) pA, sizeof(A));
+        delete pA;
+
+        /* HEX OUTPUT:                                  */
+        /*  sizeof(class A)=8                           */
+        /*  sizeof(int)=4                               */
+        /* A::A(204) ==&gt; HEX CC                         */
+        /*    00000     D88E0408 CC000000 ........ .....*/
+        /*              -------- --------               */
+        /*                  |       |                   */
+        /*                  V       V                   */
+        /*                V Table  A.value              */
+        /*               (virtual)                      */
+    }
+
+    {
+        cout &lt;&lt; "---------------------------------------------\n"
+            &lt;&lt; "Test 02: Usage about new operator \n";
+
+        char buf[8] = {0};
+        cout &lt;&lt; "1st HEX of buf:\n";
+        lfc_dump_memory_hex((void *) buf, sizeof(buf));
+
+        A* pA = new(buf) A;
+        pA-&gt;value = 0XF1F1F1F1;
+        printf("pA-&gt;value=%x\n", pA-&gt;value);
+
+        cout &lt;&lt; "2st HEX of buf:\n";
+        lfc_dump_memory_hex((void *) buf, sizeof(buf));
+
+        // delete pA; will lead to "Segmentation fault"
+    }
+
+    {
+        cout &lt;&lt; "---------------------------------------------\n"
+            &lt;&lt; "Test 03: override new operator - void* operator new (size_t sz)\n";
+        test_new_operator_1();
+    }
+
+    {
+        cout &lt;&lt; "---------------------------------------------\n"
+            &lt;&lt; "Test 04: override replacement new operator - void* class::operator new (size_t sz, void* ptr)\n";
+        test_new_operator_2();
+    }
+
+    std::cout &lt;&lt; "output: ";
+
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

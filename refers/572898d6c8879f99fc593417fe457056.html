@@ -1,0 +1,443 @@
+<html>
+	<head>
+		<meta charSet="utf-8"></meta>
+		<title data-rh="true">GDB&nbsp;调试器如何通过调用帧信息来确定函数调用关系&nbsp;Linux&nbsp;中国&nbsp;知乎</title>
+	</head>
+	<body class="WhiteBg-body PostIndex-body">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Sat Nov 04 17:49:44 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://zhuanlan.zhihu.com/p/645936453" target="_blank">
+				<font color="red" size="3">GDB&nbsp;调试器如何通过调用帧信息来确定函数调用关系&nbsp;|&nbsp;Linux&nbsp;中国&nbsp;&ndash;&nbsp;知乎</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="RichText ztext Post-RichText css-117anjg" options="[object Object]">
+			<blockquote data-first-child data-pid="A7_ohwfK">从调试器中获取函数调用关系。</blockquote>
+			<ul>
+				<li data-pid="HEzH_MqP">来源：
+					<a href="https://link.zhihu.com/?target=https%3A//linux.cn/article-16033-1.html" class=" external" target="_blank" rel="nofollow noreferrer">
+						<span class="invisible">https://</span>
+						<span class="visible">linux.cn/article&ndash;16033&ndash;</span>
+						<span class="invisible">1.html</span>
+						<span class="ellipsis"></span>
+					</a>
+				</li>
+				<li data-pid="I1lhpTMP">作者：Will&nbsp;Cohen</li>
+				<li data-pid="T0f-3EAB">译者：jrg</li>
+			</ul>
+			<p data-pid="2QIDb_V5">
+				<i>（本文字数：8252，阅读时长大约：11&nbsp;分钟）</i>
+			</p>
+			<p data-pid="tI4P4tsC">在我的
+				<a href="https://link.zhihu.com/?target=https%3A//opensource.com/article/23/2/compiler-optimization-debugger-line-information" class=" wrap external" target="_blank" rel="nofollow noreferrer">上一篇文章</a>
+				中，我展示了如何使用
+				<code>debuginfo</code>
+				在当前指令指针（IP）和包含它的函数或行之间进行映射。该信息对于显示&nbsp;CPU&nbsp;当前正在执行的代码很有帮助。不过，如果能显示更多的有关当前函数调用栈及其正在执行语句的上下文对我们定位问题来说也是十分有助的。
+			</p>
+			<p data-pid="lR8P77Cr">例如，将空指针作为参数传递到函数中而导致非法内存访问的问题，只需查看当前执行函数行，即可发现该错误是由尝试通过空指针进行访问而触发的。但是，你真正想知道的是导致空指针访问的函数调用的完整上下文，以便确定该空指针最初是如何传递到该函数中的。此上下文信息由回溯提供，可以让你确定哪些函数可能对空指针参数负责。</p>
+			<p data-pid="_K1arsCC">有一点是肯定的：确定当前活动的函数调用栈不是一项简单的操作。</p>
+			<h2>函数激活记录</h2>
+			<p data-pid="U9w2bl5U">现代编程语言具有局部变量，并允许函数可以调用自身的递归。此外，并发程序具有多个线程，这些线程可能同时运行相同的函数。在这些情况下，局部变量不能存储在全局位置。对于函数的每次调用，局部变量的位置必须是唯一的。它的工作原理如下：</p>
+			<ul>
+				<li data-pid="65v1paim">每次调用函数时，编译器都会生成函数激活记录，以将局部变量存储在唯一位置。</li>
+				<li data-pid="NsvDZAMp">为了提高效率，处理器堆栈用于存储函数激活记录。</li>
+				<li data-pid="elP04tGu">当函数被调用时，会在处理器堆栈的顶部为该函数创建一条新的函数激活记录。</li>
+				<li data-pid="G7O9OuiY">如果该函数调用另一个函数，则新的函数激活记录将放置在现有函数激活记录之上。</li>
+				<li data-pid="LbRP99W6">每次函数返回时，其函数激活记录都会从堆栈中删除。</li>
+			</ul>
+			<p data-pid="CBfHMwqQ">函数激活记录的创建是由函数中称为&ldquo;
+				<i>序言(prologue)</i>
+				&rdquo;的代码创建的。函数激活记录的删除由函数&ldquo;
+				<i>尾声(epilogue)</i>
+				&rdquo;处理。函数体可以利用堆栈上为其预留的内存来存储临时值和局部变量。
+			</p>
+			<p data-pid="7Xv0PrR8">函数激活记录的大小可以是可变的。对于某些函数，不需要空间来存储局部变量。理想情况下，函数激活记录只需要存储调用
+				<i>该</i>
+				函数的函数的返回地址。对于其他函数，除了返回地址之外，可能还需要大量空间来存储函数的本地数据结构。帧大小的可变导致编译器使用帧指针来跟踪函数激活帧的开始。函数序言代码具有在为当前函数创建新帧指针之前存储旧帧指针的额外任务，并且函数尾声必须恢复旧帧指针值。
+			</p>
+			<p data-pid="soA9JENG">函数激活记录的布局方式、调用函数的返回地址和旧帧指针是相对于当前帧指针的恒定偏移量。通过旧的帧指针，可以定位堆栈上下一个函数的激活帧。重复此过程，直到检查完所有函数激活记录为止。</p>
+			<h2>优化复杂性</h2>
+			<p data-pid="o4euoRKp">在代码中使用显式帧指针有几个缺点。在某些处理器上，可用的寄存器相对较少。具有显式帧指针会导致使用更多内存操作。生成的代码速度较慢，因为帧指针必须位于寄存器中。具有显式帧指针可能会限制编译器可以生成的代码，因为编译器可能不会将函数序言和尾声代码与函数体混合。</p>
+			<p data-pid="x41dCW4X">编译器的目标是尽可能生成快速代码，因此编译器通常会从生成的代码中省略帧指针。正如
+				<a href="https://link.zhihu.com/?target=https%3A//www.phoronix.com/review/fedora-frame-pointer" class=" wrap external" target="_blank" rel="nofollow noreferrer">Phoronix&nbsp;的基准测试</a>
+				所示，保留帧指针会显着降低性能。不过省略帧指针也有缺点，查找前一个调用函数的激活帧和返回地址不再是相对于帧指针的简单偏移。
+			</p>
+			<h2>调用帧信息</h2>
+			<p data-pid="a95hAW4b">为了帮助生成函数回溯，编译器包含&nbsp;DWARF&nbsp;调用帧信息（CFI）来重建帧指针并查找返回地址。此补充信息存储在执行的
+				<code>.eh_frame</code>
+				部分中。与传统的函数和行位置信息的
+				<code>debuginfo</code>
+				不同，即使生成的可执行文件没有调试信息，或者调试信息已从文件中删除，
+				<code>.eh_frame</code>
+				部分也位于可执行文件中。&nbsp;调用帧信息对于&nbsp;C++&nbsp;中的
+				<code>throw&ndash;catch</code>
+				等语言结构的操作至关重要。
+			</p>
+			<p data-pid="sKZuB8cK">CFI&nbsp;的每个功能都有一个帧描述条目（FDE）。作为其步骤之一，回溯生成过程为当前正在检查的激活帧找到适当的&nbsp;FDE。将&nbsp;FDE&nbsp;视为一张表，每一行代表一个或多个指令，并具有以下列：</p>
+			<ul>
+				<li data-pid="I_g5vC5D">规范帧地址（CFA），帧指针指向的位置</li>
+				<li data-pid="DYSCGn1T">返回地址</li>
+				<li data-pid="pGnhH3rn">有关其他寄存器的信息</li>
+			</ul>
+			<p data-pid="GL-QUJQH">FDE&nbsp;的编码旨在最大限度地减少所需的空间量。FDE&nbsp;描述了行之间的变化，而不是完全指定每一行。为了进一步压缩数据，多个&nbsp;FDE&nbsp;共有的起始信息被分解出来并放置在通用信息条目（CIE）中。&nbsp;这使得&nbsp;FDE&nbsp;更加紧凑，但也需要更多的工作来计算实际的&nbsp;CFA&nbsp;并找到返回地址位置。该工具必须从未初始化状态启动。它逐步遍历&nbsp;CIE&nbsp;中的条目以获取函数条目的初始状态，然后从&nbsp;FDE&nbsp;的第一个条目开始继续处理&nbsp;FDE，并处理操作，直到到达覆盖当前正在分析的指令指针的行。</p>
+			<h2>调用帧信息使用实例</h2>
+			<p data-pid="Uji4jYsw">从一个简单的示例开始，其中包含将华氏温度转换为摄氏度的函数。&nbsp;内联函数在&nbsp;CFI&nbsp;中没有条目，因此
+				<code>f2c</code>
+				函数的
+				<code>__attribute__((noinline))</code>
+				确保编译器将
+				<code>f2c</code>
+				保留为真实函数。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">#include &lt;stdio.h&gt;
+
+int __attribute__ ((noinline)) f2c(int f)
+{
+    int c;
+    printf(&#34;converting\n&#34;);
+    c = (f-32.0) * 5.0 /9.0;
+    return c;
+}
+
+int main (int argc, char *argv[])
+{
+    int f;
+    scanf(&#34;%d&#34;, &amp;f);
+    printf (&#34;%d Fahrenheit = %d Celsius\n&#34;,
+            f, f2c(f));
+    return 0;
+}</code>
+				</pre>
+			</div>
+			<p data-pid="1ENRdLiU">编译代码：</p>
+			<div class="highlight">
+				<pre><code class="language-text">$ gcc -O2 -g -o f2c f2c.c</code></pre>
+			</div>
+			<p data-pid="vhb0OzfQ">
+				<code>.eh_frame</code>
+				部分展示如下:
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">$ eu-readelf -S f2c |grep eh_frame
+[17] .eh_frame_hdr  PROGBITS   0000000000402058 00002058 00000034  0 A  0   0  4
+[18] .eh_frame      PROGBITS   0000000000402090 00002090 000000a0  0 A  0   0  8</code>
+				</pre>
+			</div>
+			<p data-pid="fEOUtAhH">我们可以通过以下方式获取&nbsp;CFI&nbsp;信息：</p>
+			<div class="highlight">
+				<pre><code class="language-text">$ readelf --debug-dump=frames  f2c &gt; f2c.cfi</code></pre>
+			</div>
+			<p data-pid="l7EvQc56">生成
+				<code>f2c</code>
+				可执行文件的反汇编代码，这样你可以查找
+				<code>f2c</code>
+				和
+				<code>main</code>
+				函数：
+			</p>
+			<div class="highlight">
+				<pre><code class="language-text">$ objdump -d f2c &gt; f2c.dis</code></pre>
+			</div>
+			<p data-pid="AN8cFg_3">在
+				<code>f2c.dis</code>
+				中找到以下信息来看看
+				<code>f2c</code>
+				和
+				<code>main</code>
+				函数的执行位置：
+			</p>
+			<div class="highlight">
+				<pre><code class="language-text">0000000000401060 &lt;main&gt;:
+0000000000401190 &lt;f2c&gt;:</code></pre>
+			</div>
+			<p data-pid="O7gfDAXM">在许多情况下，二进制文件中的所有函数在执行函数的第一条指令之前都使用相同的&nbsp;CIE&nbsp;来定义初始条件。&nbsp;在此示例中，
+				<code>f2c</code>
+				和
+				<code>main</code>
+				都使用以下&nbsp;CIE：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">00000000 0000000000000014 00000000 CIE
+  Version:                   1
+  Augmentation:              &#34;zR&#34;
+  Code alignment factor: 1
+  Data alignment factor: -8
+  Return address column: 16
+  Augmentation data:         1b
+  DW_CFA_def_cfa: r7 (rsp) ofs 8
+  DW_CFA_offset: r16 (rip) at cfa-8
+  DW_CFA_nop
+  DW_CFA_nop</code>
+				</pre>
+			</div>
+			<p data-pid="Es1uP1ah">本示例中，不必担心增强或增强数据条目。由于&nbsp;x86_64&nbsp;处理器具有&nbsp;1&nbsp;到&nbsp;15&nbsp;字节大小的可变长度指令，因此&nbsp;&ldquo;代码对齐因子&rdquo;&nbsp;设置为&nbsp;1。在只有&nbsp;32&nbsp;位（4&nbsp;字节指令）的处理器上，&ldquo;代码对齐因子&rdquo;&nbsp;设置为&nbsp;4，并且允许对一行状态信息适用的字节数进行更紧凑的编码。类似地，还有&nbsp;&ldquo;数据对齐因子&rdquo;&nbsp;来使&nbsp;CFA&nbsp;所在位置的调整更加紧凑。在&nbsp;x86_64&nbsp;上，堆栈槽的大小为&nbsp;8&nbsp;个字节。</p>
+			<p data-pid="-YnIk6Jw">虚拟表中保存返回地址的列是&nbsp;16。这在&nbsp;CIE&nbsp;尾部的指令中使用。&nbsp;有四个
+				<code>DW_CFA</code>
+				指令。第一条指令
+				<code>DW_CFA_def_cfa</code>
+				描述了如果代码具有帧指针，如何计算帧指针将指向的规范帧地址（CFA）。&nbsp;在这种情况下，CFA&nbsp;是根据
+				<code>r7&nbsp;(rsp)</code>
+				和
+				<code>CFA=rsp+8</code>
+				计算的。
+			</p>
+			<p data-pid="bJIuN4rC">第二条指令
+				<code>DW_CFA_offset</code>
+				定义从哪里获取返回地址
+				<code>CFA&ndash;8</code>
+				。在这种情况下，返回地址当前由堆栈指针
+				<code>(rsp+8)&ndash;8</code>
+				指向。CFA&nbsp;从堆栈返回地址的正上方开始。
+			</p>
+			<p data-pid="H5AIy1mK">CIE&nbsp;末尾的
+				<code>DW_CFA_nop</code>
+				进行填充以保持&nbsp;DWARF&nbsp;信息的对齐。&nbsp;FDE&nbsp;还可以在末尾添加填充以进行对齐。
+			</p>
+			<p data-pid="wZvt8C4C">在
+				<code>f2c.cfi</code>
+				中找到
+				<code>main</code>
+				的&nbsp;FDE，它涵盖了从
+				<code>0x40160</code>
+				到（但不包括）
+				<code>0x401097</code>
+				的
+				<code>main</code>
+				函数：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">00000084 0000000000000014 00000088 FDE cie=00000000 pc=0000000000401060..0000000000401097
+  DW_CFA_advance_loc: 4 to 0000000000401064
+  DW_CFA_def_cfa_offset: 32
+  DW_CFA_advance_loc: 50 to 0000000000401096
+  DW_CFA_def_cfa_offset: 8
+  DW_CFA_nop</code>
+				</pre>
+			</div>
+			<p data-pid="qCWD5Yld">在执行函数中的第一条指令之前，CIE&nbsp;描述调用帧状态。然而，当处理器执行函数中的指令时，细节将会改变。&nbsp;首先，指令
+				<code>DW_CFA_advance_loc</code>
+				和
+				<code>DW_CFA_def_cfa_offset</code>
+				与
+				<code>main</code>
+				中
+				<code>401060</code>
+				处的第一条指令匹配。&nbsp;这会将堆栈指针向下调整
+				<code>0x18</code>
+				（24&nbsp;个字节）。&nbsp;CFA&nbsp;没有改变位置，但堆栈指针改变了，因此&nbsp;CFA&nbsp;在
+				<code>401064</code>
+				处的正确计算是
+				<code>rsp+32</code>
+				。&nbsp;这就是这段代码中序言指令的范围。&nbsp;以下是
+				<code>main</code>
+				中的前几条指令：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">0000000000401060 &lt;main&gt;:
+  401060:    48 83 ec 18      sub        $0x18,%rsp
+  401064:    bf 1b 20 40 00   mov        $0x40201b,%edi</code>
+				</pre>
+			</div>
+			<p data-pid="TRrlot5O">
+				<code>DW_CFA_advance_loc</code>
+				使当前行应用于函数中接下来的&nbsp;50&nbsp;个字节的代码，直到
+				<code>401096</code>
+				。CFA&nbsp;位于
+				<code>rsp+32</code>
+				，直到
+				<code>401092</code>
+				处的堆栈调整指令完成执行。
+				<code>DW_CFA_def_cfa_offset</code>
+				将&nbsp;CFA&nbsp;的计算更新为与函数入口相同。这是预期之中的，因为
+				<code>401096</code>
+				处的下一条指令是返回指令
+				<code>ret</code>
+				，并将返回值从堆栈中弹出。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">401090:    31 c0        xor        %eax,%eax
+  401092:    48 83 c4 18  add        $0x18,%rsp
+  401096:    c3           ret</code>
+				</pre>
+			</div>
+			<p data-pid="vhGMX_Y8">
+				<code>f2c</code>
+				函数的&nbsp;FDE&nbsp;使用与
+				<code>main</code>
+				函数相同的&nbsp;CIE，并覆盖
+				<code>0x41190</code>
+				到
+				<code>0x4011c3</code>
+				的范围：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">00000068 0000000000000018 0000006c FDE cie=00000000 pc=0000000000401190..00000000004011c3
+  DW_CFA_advance_loc: 1 to 0000000000401191
+  DW_CFA_def_cfa_offset: 16
+  DW_CFA_offset: r3 (rbx) at cfa-16
+  DW_CFA_advance_loc: 29 to 00000000004011ae
+  DW_CFA_def_cfa_offset: 8
+  DW_CFA_nop
+  DW_CFA_nop
+  DW_CFA_nop</code>
+				</pre>
+			</div>
+			<p data-pid="Y28KOgX_">可执行文件中
+				<code>f2c</code>
+				函数的
+				<code>objdump</code>
+				输出：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">0000000000401190 &lt;f2c&gt;:
+  401190:	53                   	push   %rbx
+  401191:	89 fb                	mov    %edi,%ebx
+  401193:	bf 10 20 40 00       	mov    $0x402010,%edi
+  401198:	e8 93 fe ff ff       	call   401030 &lt;puts@plt&gt;
+  40119d:	66 0f ef c0          	pxor   %xmm0,%xmm0
+  4011a1:	f2 0f 2a c3          	cvtsi2sd %ebx,%xmm0
+  4011a5:	f2 0f 5c 05 93 0e 00 	subsd  0xe93(%rip),%xmm0        # 402040 &lt;__dso_handle+0x38&gt;
+  4011ac:	00 
+  4011ad:	5b                   	pop    %rbx
+  4011ae:	f2 0f 59 05 92 0e 00 	mulsd  0xe92(%rip),%xmm0        # 402048 &lt;__dso_handle+0x40&gt;
+  4011b5:	00 
+  4011b6:	f2 0f 5e 05 92 0e 00 	divsd  0xe92(%rip),%xmm0        # 402050 &lt;__dso_handle+0x48&gt;
+  4011bd:	00 
+  4011be:	f2 0f 2c c0          	cvttsd2si %xmm0,%eax
+  4011c2:	c3                   	ret</code>
+				</pre>
+			</div>
+			<p data-pid="eLMn1qpe">在
+				<code>f2c</code>
+				的&nbsp;FDE&nbsp;中，函数开头有一个带有
+				<code>DW_CFA_advance_loc</code>
+				的单字节指令。在高级操作之后，还有两个附加操作。
+				<code>DW_CFA_def_cfa_offset</code>
+				将&nbsp;CFA&nbsp;更改为
+				<code>%rsp+16</code>
+				，
+				<code>DW_CFA_offset</code>
+				表示
+				<code>%rbx</code>
+				中的初始值现在位于
+				<code>CFA&ndash;16</code>
+				（堆栈顶部）。
+			</p>
+			<p data-pid="HoPBIKOj">查看这个
+				<code>fc2</code>
+				反汇编代码，可以看到
+				<code>push</code>
+				用于将
+				<code>%rbx</code>
+				保存到堆栈中。&nbsp;在代码生成中省略帧指针的优点之一是可以使用
+				<code>push</code>
+				和
+				<code>pop</code>
+				等紧凑指令在堆栈中存储和检索值。&nbsp;在这种情况下，保存
+				<code>%rbx</code>
+				是因为
+				<code>%rbx</code>
+				用于向
+				<code>printf</code>
+				函数传递参数（实际上转换为
+				<code>puts</code>
+				调用），但需要保存传递到函数中的
+				<code>f</code>
+				初始值以供后面的计算使用。
+				<code>4011ae</code>
+				的
+				<code>DW_CFA_advance_loc</code>
+				29字节显示了
+				<code>pop&nbsp;%rbx</code>
+				之后的下一个状态变化，它恢复了
+				<code>%rbx</code>
+				的原始值。
+				<code>DW_CFA_def_cfa_offset</code>
+				指出&nbsp;pop&nbsp;将&nbsp;CFA&nbsp;更改为
+				<code>%rsp+8</code>
+				。
+			</p>
+			<h2>GDB&nbsp;使用调用帧信息</h2>
+			<p data-pid="jtZBqnO2">有了&nbsp;CFI&nbsp;信息，
+				<a href="https://link.zhihu.com/?target=https%3A//opensource.com/article/21/3/debug-code-gdb" class=" wrap external" target="_blank" rel="nofollow noreferrer">GNU&nbsp;调试器（GDB）</a>
+				和其他工具就可以生成准确的回溯。如果没有&nbsp;CFI&nbsp;信息，GDB&nbsp;将很难找到返回地址。如果在
+				<code>f2c.c</code>
+				的第&nbsp;7&nbsp;行设置断点，可以看到&nbsp;GDB&nbsp;使用此信息。GDB在
+				<code>f2c</code>
+				函数中的
+				<code>pop&nbsp;%rbx</code>
+				完成且返回值不在栈顶之前放置了断点。
+			</p>
+			<p data-pid="rQS-00Eq">GDB&nbsp;能够展开堆栈，并且作为额外收获还能够获取当前保存在堆栈上的参数
+				<code>f</code>
+				：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">$ gdb f2c
+[...]
+(gdb) break f2c.c:7
+Breakpoint 1 at 0x40119d: file f2c.c, line 7.
+(gdb) run
+Starting program: /home/wcohen/present/202207youarehere/f2c
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library &#34;/lib64/libthread_db.so.1&#34;.
+98
+converting
+
+Breakpoint 1, f2c (f=98) at f2c.c:8
+8            return c;
+(gdb) where
+#0  f2c (f=98) at f2c.c:8
+#1  0x000000000040107e in main (argc=&lt;optimized out&gt;, argv=&lt;optimized out&gt;)
+        at f2c.c:15</code>
+				</pre>
+			</div>
+			<h2>调用帧信息</h2>
+			<p data-pid="Fbj3DOnl">DWARF&nbsp;调用帧信息为编译器提供了一种灵活的方式来包含用于准确展开堆栈的信息。这使得可以确定当前活动的函数调用。我在本文中提供了简要介绍，但有关&nbsp;DWARF&nbsp;如何实现此机制的更多详细信息，请参阅
+				<a href="https://link.zhihu.com/?target=https%3A//dwarfstd.org/Download.php" class=" wrap external" target="_blank" rel="nofollow noreferrer">DWARF&nbsp;规范</a>
+				。
+			</p>
+			<p data-pid="8-CYnxIa">
+				<i>（题图：MJ/4004d7c7&ndash;8407&ndash;40bd&ndash;8aa8&ndash;92404601dba0）</i>
+			</p>
+			<hr></hr>
+			<p data-pid="RACM6Yfx">via:
+				<a href="https://link.zhihu.com/?target=https%3A//opensource.com/article/23/3/gdb-debugger-call-frame-active-function-calls" class=" external" target="_blank" rel="nofollow noreferrer">
+					<span class="invisible">https://</span>
+					<span class="visible">opensource.com/article/</span>
+					<span class="invisible">23/3/gdb&ndash;debugger&ndash;call&ndash;frame&ndash;active&ndash;function&ndash;calls</span>
+					<span class="ellipsis"></span>
+				</a>
+			</p>
+			<p data-pid="0BJcwUd6">作者：
+				<a href="https://link.zhihu.com/?target=https%3A//opensource.com/users/wcohen" class=" wrap external" target="_blank" rel="nofollow noreferrer">Will&nbsp;Cohen</a>
+				选题：
+				<a href="https://link.zhihu.com/?target=https%3A//github.com/lkxed/" class=" wrap external" target="_blank" rel="nofollow noreferrer">lkxed</a>
+				译者：
+				<a href="https://link.zhihu.com/?target=https%3A//github.com/jrglinux" class=" wrap external" target="_blank" rel="nofollow noreferrer">jrglinux</a>
+				校对：
+				<a href="https://link.zhihu.com/?target=https%3A//github.com/wxy" class=" wrap external" target="_blank" rel="nofollow noreferrer">wxy</a>
+			</p>
+			<p data-pid="i4BNJYld">本文由
+				<a href="https://link.zhihu.com/?target=https%3A//github.com/LCTT/TranslateProject" class=" wrap external" target="_blank" rel="nofollow noreferrer">LCTT</a>
+				原创编译，
+				<a href="https://link.zhihu.com/?target=https%3A//linux.cn/" class=" wrap external" target="_blank" rel="nofollow noreferrer">Linux中国</a>
+				荣誉推出
+			</p>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,62 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>read.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>read.c</h1>
+            <h3>todo(1)</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> </li><li><strong>BLOCK TAGS: </strong> <a href="../tags/DWARF-section.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DWARF-section</a>&nbsp;</li></ul>
+            <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">what is the different between <strong>dwarf2_debug_sections</strong> and <strong>dwarf_debug_section</strong> &ndash; 2023/10/04  </a></li>
+</ol>
+</div>
+            <hr/>
+        </div>
+    
+    	<H3><a name="HEAD_33f26584" href="#TOC_HEAD_33f26584">DWARF section defination</a></H3><ul><a href="../tags/DWARF-section.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DWARF-section</a>&nbsp;</ul>
+<pre><code>const struct dwarf2_debug_sections dwarf2_elf_names =
+{
+{ ".debug_info", ".zdebug_info" },
+{ ".debug_abbrev", ".zdebug_abbrev" },
+{ ".debug_line", ".zdebug_line" },
+{ ".debug_loc", ".zdebug_loc" },
+{ ".debug_loclists", ".zdebug_loclists" },
+{ ".debug_macinfo", ".zdebug_macinfo" },
+{ ".debug_macro", ".zdebug_macro" },
+{ ".debug_str", ".zdebug_str" },
+{ ".debug_str_offsets", ".zdebug_str_offsets" },
+{ ".debug_line_str", ".zdebug_line_str" },
+{ ".debug_ranges", ".zdebug_ranges" },
+{ ".debug_rnglists", ".zdebug_rnglists" },
+{ ".debug_types", ".zdebug_types" },
+{ ".debug_addr", ".zdebug_addr" },
+{ ".debug_frame", ".zdebug_frame" },
+{ ".eh_frame", NULL },
+{ ".gdb_index", ".zgdb_index" },
+{ ".debug_names", ".zdebug_names" },
+{ ".debug_aranges", ".zdebug_aranges" },
+23
+};</code></pre>
+<ul>
+	<li><a name="HEAD_HIDDEN_729bd783">what is the different between <strong>dwarf2_debug_sections</strong> and <strong>dwarf_debug_section</strong> &ndash; 2023/10/04  &nbsp;<a href="../tags/DWARF-section.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DWARF-section</a> <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_19387b0b">dwarf2_debug_sections &ndash; read.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/read.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/read.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+		<li><a name="HEAD_HIDDEN_c8625120">dwarf_debug_section  &ndash; <a href="6495876c76e00e1caf674ddf6a2fe3a9.html" target="_blank">dwarf2.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/dwarf2.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/dwarf2.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+		<br />
+	</ul>
+</ul>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

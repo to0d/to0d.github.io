@@ -1,0 +1,167 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT088901.cpp (Construct Binary Tree from Preorder and Postorder Traversal)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT088901.cpp (Construct Binary Tree from Preorder and Postorder Traversal)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-25</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0889.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0889</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Postorder.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Postorder</a>&nbsp;<a href="../tags/Preorder.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Preorder</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_f9f5a542" href="#TOC_HEAD_f9f5a542">Problem 0889 <strong>Construct Binary Tree from Preorder and Postorder Traversal</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/construct-binary-tree-from-preorder-and-postorder-traversal/" target="_blank">https://leetcode.com/problems/construct&ndash;binary&ndash;tree&ndash;from&ndash;preorder&ndash;and&ndash;postorder&ndash;traversal/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>44.32</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_e310dfba" href="#TOC_HEAD_e310dfba">LT088901.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_feb64fb4">LT0889 (name=Construct Binary Tree from Preorder and Postorder Traversal, ptag=Leetcode) &nbsp;<a href="../tags/LT0889.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0889</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Postorder.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Postorder</a>&nbsp;<a href="../tags/Preorder.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Preorder</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_2e213300"><a href="https://leetcode.com/problems/construct-binary-tree-from-preorder-and-postorder-traversal/" target="_blank">Construct Binary Tree from Preorder and Postorder Traversal &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0889.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0889</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_35bbc807" href="#TOC_HEAD_35bbc807">LT088901.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    TreeNode* constructFromPrePost(vector&lt;int&gt;& preorder, vector&lt;int&gt;& postorder) {
+        m_preIndexMap.clear();
+        m_postRightMap.clear();
+        _buildIndexMap(preorder, m_preIndexMap);
+        _buildIndexMap(postorder, m_postRightMap);
+        return _constructFromPrePost(preorder, 0, postorder, 0, postorder.size());
+    }
+
+    TreeNode* _constructFromPrePost(vector&lt;int&gt;& preorder, int preIndex, vector&lt;int&gt;& postorder, int postIndex, int size) {
+        if( size == 0 )
+            return NULL;
+
+        TreeNode* root = new TreeNode(preorder[preIndex]);
+        if( size == 1 )
+            return root;
+
+        int val1 = preorder[preIndex+1], val2 = postorder[postIndex+size-2];
+        if( val1 == val2 )
+            root-&gt;left = _constructFromPrePost(preorder, preIndex+1, postorder, postIndex, size-1);
+        else
+        {   int preIdx2  = m_preIndexMap[val2];
+            int postIdx1 = m_postRightMap[val1];
+            int leftSize = preIdx2-preIndex-1;
+            root-&gt;left   = _constructFromPrePost(preorder, preIndex+1, postorder, postIndex, leftSize);
+            root-&gt;right  = _constructFromPrePost(preorder, preIdx2, postorder, postIdx1+1, size - 1 - leftSize);
+        }
+
+        return root;
+    }
+
+    void _buildIndexMap(vector&lt;int&gt;& vec, unordered_map&lt;int, int&gt;& idxMap){
+        int idx = 0;
+        for(int val : vec)
+            idxMap[val] = idx++;
+    }
+
+    unordered_map&lt;int, int&gt; m_preIndexMap;
+    unordered_map&lt;int, int&gt; m_postRightMap;
+};
+
+
+
+void test(vector&lt;int&gt; preorder, vector&lt;int&gt; postorder)
+{
+    cout &lt;&lt; "input: pre=";
+    outputVector(preorder);
+    cout &lt;&lt; ", post=";
+    outputVector(postorder);
+    TreeNode* r = Solution().constructFromPrePost(preorder, postorder);
+    cout &lt;&lt; "; output: ";
+    outputTree(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test({1,2,4,5,3,6,7}, {4,5,2,6,7,3,1});
+}
+
+// Result
+//
+// 2023-01-13: Runtime 23ms 22.15% Memory 27.5MB 11.75%, https://leetcode.com/problems/construct-binary-tree-from-preorder-and-postorder-traversal/submissions/877178475/
+// 2023-02-25: Runtime 17ms 44.32% Memory 27.4MB 11.4%, https://leetcode.com/problems/construct-binary-tree-from-preorder-and-postorder-traversal/submissions/904428410/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: pre=[1,2,4,5,3,6,7], post=[4,5,2,6,7,3,1]; output: [1,2,3,4,5,6,7];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

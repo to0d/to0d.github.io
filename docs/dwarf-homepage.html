@@ -1,0 +1,249 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>DWARF Homepage</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">DWARF Homepage</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-06-12</time>
+            <i><a href="../tags/DWARF.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DWARF</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+<ul>
+	<li><a name="HEAD_HIDDEN_d283a040"><a href="https://dwarfstd.org/" target="_blank">DWARF Homepage</a> &nbsp;<a href="../tags/DWARF.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DWARF</a></li>
+	<br />
+</ul>
+	<H1><a name="HEAD_2268ff" href="#TOC_HEAD_2268ff">Home</a></H1>
+<ul>
+	<li>Welcome to the DWARF Debugging Standard Website</li>
+	<br />
+	<p>
+		DWARF is a debugging information file format used by many compilers and debuggers to support source level debugging. It addresses the requirements of a number of procedural languages, such as C, C++, and Fortran, and is designed to be extensible to other languages. DWARF is architecture independent and applicable to any processor or operating system. It is widely used on Unix, Linux and other operating systems, as well as in stand&ndash;alone environments.
+	</p>
+	<li>DWARF Version 5</li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_1cfdde69"><a href="https://dwarfstd.org/dwarf5std.html" target="_blank">DWARF Debugging Information Format Standard</a> &nbsp;<a href="../tags/DWARFv5.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DWARFv5</a></li>
+		<br />
+	</ul>
+	<p>
+		Version 5 of the <a href="https://dwarfstd.org/dwarf5std.html" target="_blank">DWARF Debugging Information Format Standard</a> is now available.
+	</p>
+	<p>
+		While each revision of the standard documents the DWARF language codes that had been assigned as of the publication date, support for new languages may be added between revisions. View the up&ndash;to&ndash;date list of <a href="https://dwarfstd.org/languages.html" target="_blank">assigned language codes</a> .
+	</p>
+	<li>Public Comments</li>
+	<br />
+	<p>
+		The DWARF Committee welcomes contributions of all forms.
+	</p>
+	<p>
+		To ask questions and participate in discussions about the DWARF format, please join the <a href="https://lists.dwarfstd.org/mailman/listinfo/dwarf-discuss" target="_blank">dwarf&ndash;discuss</a> mailing list.
+	</p>
+	<p>
+		To submit a comment or suggestion for changing the standard, please go to the <a href="https://dwarfstd.org/comment.html" target="_blank">Public Comments</a> page.
+	</p>
+	<li>DWARF Introduction</li>
+	<br />
+	<p>
+		For a quick introduction to DWARF, read Introduction to the DWARF Debugging Format (PDF, revised 2012), by Michael Eager.
+	</p>
+	<li>About the DWARF Committee</li>
+	<br />
+	<p>
+		The DWARF standard is maintained by the DWARF Debugging Information Format Committee, with <a href="https://dwarfstd.org/members.html" target="_blank">members</a> representing many companies working on compilers and debuggers.
+	</p>
+	<p>
+		Committee bylaws and other organizational documents can be found here.
+	</p>
+</ul>
+	<H1><a name="HEAD_d861882a" href="#TOC_HEAD_d861882a">The DWARF Standard</a></H1>
+	<H2><a name="HEAD_a1dccef" href="#TOC_HEAD_a1dccef">DWARF Version 5</a></H2><ul><a href="../tags/DWARFv5.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DWARFv5</a>&nbsp;</ul>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_DWARF-HOME-DWARF5-1" href="#DWARF-HOME-DWARF5-1">DWARF Version 5 Standard Released </a></li>
+</menu>
+
+</div>
+<p>
+	The DWARF Version 5 Debugging Format Standard is based on the DWARF Version 4 Standard. It is an upward compatible extension to the previous version of the standard.
+</p>
+<p>
+	Download the DWARF Version 5 Standard PDF .
+</p>
+<p>
+	The major enhancements in DWARF Version 5 are:
+</p>
+<ul>
+	<li>Description of the objectives and rationale for the design and evolution of the DWARF Standard.</li>
+	<li>Merge <code>.debug_types</code> into <code>.debug_info</code> section.</li>
+	<li>Support collecting common debug information into a single supplementary object file.</li>
+	<li>Replace the line number program header allowing better data compression and source validation.</li>
+	<li>Support split object file and package representations to allow DWARF info to be kept separate from executable files.</li>
+	<li>Replace <code>.debug_macinfo</code> with <code>.debug_macro</code> representation allowing much more compact representation of C/C++ macros.</li>
+	<li><a name="HEAD_HIDDEN_c4ed17c0">Replace <code>.debug_pubnames</code> and <code>.debug_pubtypes</code> with much more functional .debug_names section. &nbsp;<a href="../tags/debug_names-section.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>debug_names-section</a></li>
+	<li>Replace location list ( <code>.debug_loc</code> ) and range list ( <code>.debug_ranges</code> ) sections with new sections ( <code>.debug_loclists</code> and <code>.debug_rnglists</code> ) allowing more compact representation and eliminating relocations.</li>
+	<li><a name="HEAD_HIDDEN_b9baa8b2">Add new TAG to describe call site information, including tail call and tail recursion. &nbsp;<a href="../tags/TailCall.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>TailCall</a></li>
+	<li>Improve support for FORTRAN assumend rank arrays, dynamic rank arrays, and co&ndash;arrays.</li>
+	<li>Add new operators which support a DWARF expression stack containing typed values.</li>
+	<li>Add support for C++ auto return type, deleted member functions, and defaulted constructors and destructors.</li>
+	<li>Add new attribute to identify a subprogram which does not return to its caller.</li>
+	<li>Add language codes for C 2011, C++ 2003, C++ 2011, C++ 2014, Dylan, Fortran 2003, Fortran 2008, Go, Haskell, Julia, Modula 3, Ocaml, OpenCL, Rust, Swift, and BLISS.</li>
+	<li>Numerous minor additions to improve functionality and performance.</li>
+	<br />
+</ul>
+<p>
+	The DWARF Version 5 Standard is compatible with DWARF Version 4 except as follows:
+</p>
+<ul>
+	<li>The compilation unit header (in the .debug_info section) has a new unit_type field.</li>
+	<li>New operand forms for attribute values are defined ( <code>DW_FORM_addrx*, DW_FORM_data16, DW_FORM_implicit_const, DW_FORM_line_strp, DW_FORM_loclistx, DW_FORM_rnglistx, DW_FORM_ref_sup*, DW_FORM_strp_sup and DW_FORM_strx*</code> ).</li>
+	<li>The line number table header is substantially revised.</li>
+	<li>A location list entry with the address range (0, maximum&ndash;address) is defined as the new default location list entry.</li>
+	<li>In a string type, the <code>DW_AT_byte_size</code> attribute is re&ndash;defined to always describe the size of the string type. (Previously it described the size of the optional string length data field if the <code>DW_AT_string_length</code> attribute was also present.)</li>
+	<li>New representations for macro definitions, symbol lookup, location lists and range lists.</li>
+	<br />
+</ul>
+	<H3><a name="DWARF-HOME-DWARF5-1" href="#TOC_DWARF-HOME-DWARF5-1">DWARF Version 5 Standard Released</a></H3><ul><a href="../tags/DWARFv5.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DWARFv5</a>&nbsp;</ul>
+<p>
+	<strong>February 15, 2017</strong>
+</p>
+<p>
+	The DWARF Debugging Information Format Standards Committee is pleased to announce the availability of Version 5 of the DWARF Debugging Format Standard.   The DWARF Debugging Format is used to communicate debugging information between a compiler and debugger to make it easier for programmers to develop, test, and debug programs.
+</p>
+<p>
+	DWARF is used by a wide range of compilers and debuggers, both proprietary and open source, to support debugging of Ada, C, C++, Cobol, FORTRAN, Java, and other programming languages. DWARF V5 adds support for new languages like Rust, Swift, Ocaml, Go, and Haskell, as well as support for new features in older languages. DWARF can be used with a wide range of processor architectures, such as x86, ARM, PowerPC, from 8&ndash;bit to 64&ndash;bit.
+</p>
+<p>
+	DWARF is the standard debugging format for Linux and several versions of Unix and is widely used with embedded processors. DWARF is designed to be extended easily to support new languages and new architectures.
+</p>
+<ul>
+	<li><a name="DWARF-HOME-DWARF5-2">The DWARF Version 5 Standard has been in development for six years. DWARF Committee members include representatives from over a dozen major companies with extensive experience in compiler and debugger development. Version 5 incorporates improvements in many areas: better data compression, separation of debugging data from executable files, improved description of macros and source files, faster searching for symbols, improved debugging of optimized code, as well as numerous improvements in functionality and <strong>performance</strong> . </li>
+	<br />
+</ul>
+<p>
+	The DWARF Version 5 Standard can be downloaded without charge from the DWARF website (dwarfstd.org). Additional information about DWARF, including how to subscribe to the DWARF mailing list, can also be found on the website.
+</p>
+	<H2><a name="HEAD_acadadd0" href="#TOC_HEAD_acadadd0">Assigned Language Codes</a></H2>
+<p>
+	<a href="https://dwarfstd.org/languages.html" target="_blank">Assigned Language Codes</a>
+</p>
+	<H2><a name="HEAD_c5b068cb" href="#TOC_HEAD_c5b068cb">Downloads</a></H2>
+	<H1><a name="HEAD_1b44e817" href="#TOC_HEAD_1b44e817">Revising the Standard</a></H1>
+	<H2><a name="HEAD_8207cd13" href="#TOC_HEAD_8207cd13">Mailing List</a></H2>
+	<H2><a name="HEAD_26e19b98" href="#TOC_HEAD_26e19b98">Submit a Comment</a></H2>
+	<H2><a name="HEAD_222e6b81" href="#TOC_HEAD_222e6b81">Current Issues</a></H2>
+<p>
+	<a href="https://dwarfstd.org/issues.html" target="_blank">Current Issues</a>
+</p>
+	<H1><a name="HEAD_6fd9fa9d" href="#TOC_HEAD_6fd9fa9d">About the DWARF Committee</a></H1>
+	<H2><a name="HEAD_9bc760f9" href="#TOC_HEAD_9bc760f9">Members</a></H2>
+<p>
+	<a href="https://dwarfstd.org/members.html" target="_blank">Members</a>
+</p>
+<ul>
+	<li>Members</li>
+	<ul>
+		<li>...</li>
+		<li><a name="HEAD_HIDDEN_20125d8e">Jian Xu (IBM) &nbsp;<a href="../tags/@jianxu.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>@jianxu</a></li>
+		<br />
+	</ul>
+</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    ﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_2268ff" href="#HEAD_2268ff">Home</a></b><br>
+	<b><a name="TOC_HEAD_d861882a" href="#HEAD_d861882a">The DWARF Standard</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_a1dccef" href="#HEAD_a1dccef">DWARF Version 5 </a></li>
+		<li><a name="TOC_HEAD_acadadd0" href="#HEAD_acadadd0">Assigned Language Codes</a></li>
+		<li><a name="TOC_HEAD_c5b068cb" href="#HEAD_c5b068cb">Downloads</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_1b44e817" href="#HEAD_1b44e817">Revising the Standard</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_8207cd13" href="#HEAD_8207cd13">Mailing List</a></li>
+		<li><a name="TOC_HEAD_26e19b98" href="#HEAD_26e19b98">Submit a Comment</a></li>
+		<li><a name="TOC_HEAD_222e6b81" href="#HEAD_222e6b81">Current Issues</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_6fd9fa9d" href="#HEAD_6fd9fa9d">About the DWARF Committee</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_9bc760f9" href="#HEAD_9bc760f9">Members</a></li>
+	</menu>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161029A.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161029A.c</h1>
+            <h3>lfc_dump_memory_hex testcase</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/lfc_dump_memory_hex.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>lfc_dump_memory_hex</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include "stdio.h"
+#include &lt;lfc/lfc.h&gt;
+
+int main( void )
+{
+    char test[10] = {"ABCDEFGH"};
+    char other[90] = {"Others"};
+    other[88] = 'a';
+
+    lfc_dump_memory_hex((void*)test, 100);
+
+    printf( "output: done.\n" );
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

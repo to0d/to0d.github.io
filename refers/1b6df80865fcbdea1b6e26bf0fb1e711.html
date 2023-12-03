@@ -1,0 +1,125 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>
+X86调用约定
+</title>
+
+</head>
+<body onmouseup="setDragEnd()" onclick="delAllDiv(event)">
+ 
+            <a href="http://www.360doc.com/content/14/0115/12/9200790_345431023.shtml" target="_blank">
+                <font color="red" size="3">X86调用约定 - 360doc</font>
+            </a>
+
+<h2 id="titiletext">X86调用约定</h2>
+ 
+<div  >
+<table>
+<tbody>
+<tr>
+<td id="artContent" width="656">
+ 
+<div dir="ltr" lang="zh-CN"><p>这里描述了在x86芯片架构上的调用约定(calling conventions)。 调用约定描述了被调用代码的接口：</p>
+<ul><li>原子(标量)参数，或复杂参数独立部分的分配顺序;</li><li>参数是如何被传递的(放置在栈上，或是寄存器中，亦或两者混合);</li><li>被调用者应保存调用者的哪个<a href="http://zh.wikipedia.org/wiki/%E5%AF%84%E5%AD%98%E5%99%A8" title="寄存器">寄存器</a>;</li><li>调用<a href="http://zh.wikipedia.org/wiki/%E5%AD%90%E7%A8%8B%E5%BA%8F" title="子程序">函数</a>时如何为任务准备<a href="http://zh.wikipedia.org/wiki/%E5%A0%86%E6%A0%88" title="堆栈">堆栈</a>，以及任务完成如何恢复;</li></ul>
+<p>这与<a href="http://zh.wikipedia.org/wiki/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80" title="编程语言">编程语言</a>中对于大小和格式的分配紧密相关。另一个密切相关的是名称修饰，这决定了代码中的符号名称如何映射到链接器中的符号名。调用约定，类型表示和名称修饰这三者的统称，即是众所周知的应用二进制接口(ABI)。 不同编译器在实现这些约定总是有细微的差别存在，所以在不同编译器编译出来的代码很难接合起来。另一方面，有些约定被当作一种API标准(如stdcall)，编译器实现都较为一致。</p>
+<div>
+<div>
+<h2>目录</h2>
+<span>&nbsp;[<a href="">隐藏</a>]&nbsp;</span></div>
+<ul><li><a href=""><span>1</span> <span>历史背景</span></a></li><li><a href=""><span>2</span> <span>调用者清理</span></a>
+<ul><li><a href=""><span>2.1</span> <span>cdecl</span></a></li><li><a href=""><span>2.2</span> <span>syscall</span></a></li><li><a href=""><span>2.3</span> <span>optlink</span></a></li></ul>
+</li><li><a href=""><span>3</span> <span>被调用者清理</span></a>
+<ul><li><a href=""><span>3.1</span> <span>pascal</span></a></li><li><a href=""><span>3.2</span> <span>register</span></a></li><li><a href=""><span>3.3</span> <span>stdcall</span></a></li><li><a href=""><span>3.4</span> <span>fastcall</span></a>
+<ul><li><a href=""><span>3.4.1</span> <span>Microsoft fastcall</span></a></li><li><a href=""><span>3.4.2</span> <span>Borland fastcall</span></a></li></ul>
+</li></ul>
+</li><li><a href=""><span>4</span> <span>调用者或被调用者清理</span></a>
+<ul><li><a href=""><span>4.1</span> <span>thiscall</span></a></li></ul>
+</li><li><a href=""><span>5</span> <span>Intel ABI</span></a></li><li><a href=""><span>6</span> <span>x86-64调用约定</span></a>
+<ul><li><a href=""><span>6.1</span> <span>微软x64调用约定</span></a></li><li><a href=""><span>6.2</span> <span>System V AMD64 ABI</span></a></li></ul>
+</li></ul>
+</div>
+<h2><span>历史背景</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=1" title="编辑段落：历史背景">编辑</a><span>]</span></span></h2>
+<p>在微机出现之前，计算机厂商几都会提供一份操作系统和为不同编程语言编写的编译器。平台所使用的调用约定都是由厂商的软件实现定义的。 在Apple Ⅱ出现之前的早期微机几乎都是“裸机”，少有一份OS或编译器的，即是IBM PC也是如此。IBM PC兼容机的唯一的硬件标准是由Intel处理器(8086, 80386)定义的，并由IBM分发出去。硬件扩展和所有的软件标准(BIOS调用约定)都开放有市场竞争。 一群独立的软件公司提供了操作系统，不同语言的编译器以及一些应用软件。基于不同的需求，历史实践和开发人员的创造力，这些公司都使用了各自不同的调用约定，往往差异很大。 在IBM兼容机市场洗牌后，微软操作系统和编程工具(有不同的调用约定)占据了统治地位，此时位于第二层次的公司如Borland和Novell，以及开源项目如GCC，都还各自维护自己的标准。互操作性的规定最终被硬件供应商和软件产品所采纳，简化了选择可行标准的问题。</p>
+<h2><span>调用者清理</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=2" title="编辑段落：调用者清理">编辑</a><span>]</span></span></h2>
+<p>在这些约定中，调用者自己清理栈上的变元(arguments)，这样就运行了可变参数列表的实现，如printf()。</p>
+<h3><span>cdecl</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=3" title="编辑段落：cdecl">编辑</a><span>]</span></span></h3>
+<p>cdecl(C declaration，即C声明)是源起C语言的一种调用约定，x86架构上的许多C编译器都使用这个约定。在cdecl中，子例程变元是在栈上传递的。EAX寄存器返回整型值和内存地址，浮点数则是在ST0 x87寄存器上。EAX, ECX和EDX寄存器是由调用者保存的，其余的寄存器由被调用者保存。当调用一个新函数时，x87浮点寄存器ST0到ST7都必须为空(弹出或释放掉)，而且在退出函数时ST1到ST7也必须为空。 在C语言中，函数参数是以相反顺序推入栈的。在GNU/Linux GCC，把这一约定做为事实上的标准。GCC自4.5版本开始，调用函数时，堆栈上的数据必须以16B对齐(之前的版本只需要4B对齐即可)。 考虑下面的C代码片段：</p>
+<pre> int callee(int, int, int);
+ int caller(void)
+ {
+     register int ret;
+     
+     ret = callee(1, 2, 3);
+     ret += 5;
+     return ret;
+ }
+</pre>
+<p>在x86上， 会产生如下汇编代码(AT&amp;T 语法)：</p>
+<pre>       .globl  caller
+ caller:
+       pushl   %ebp
+       movl    %esp,%ebp
+       pushl   $3
+       pushl   $2
+       pushl   $1
+       call    callee
+       addl    $12,%esp
+       addl    $5,%eax
+       leave
+       ret
+</pre>
+<p>在函数返回后，调用的函数清理了堆栈。 在cdecl的理解上存在一些不同，尤其是在如何返回值的问题上。结果，x86程序经过不同OS平台的不同编译器编译后，会有不兼容的情况，即使它们使用的都是“cdecl”规则并且不会使用系统调用。某些编译器返回简单的数据结构，长度大致占用两个寄存器，放在寄存器对EAX:EDX中；大点的结构和类对象需要异常处理器的一些特殊处理(如一个定义的构造函数，析构函数或赋值)，存放在内存上。为了放置在内存上，调用者需要分配一些内存，并且让一个指针指向这块内存，这个指针就作为隐藏的第一个参数；被调用者使用这块内存并返回指针----返回时弹出隐藏的指针。 在Linux/GCC，浮点数值通过x87伪栈被推入栈。像这样：</p>
+<pre>       sub esp, 8      ; 给double值一点空间
+       fld [ebp + x]   ; 加载double值到浮点栈上
+       fstp [esp]      ; 推入栈
+       call funct
+       add esp, 8
+</pre>
+<p>使用这种方法确保能以正确的格式推入栈。 cdecl调用约定通常作为x86 C编译器的默认调用规则，许多编译器也提供了自动切换调用约定的选项。如果需要手动指定调用规则为cdecl，编译器可能会支持如下语法：</p>
+<pre> void _cdecl funct();
+</pre>
+<p>其中_cdecl修饰符需要在函数原型中给出，在函数声明中会覆盖掉其他的设置。</p>
+<h3><span>syscall</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=4" title="编辑段落：syscall">编辑</a><span>]</span></span></h3>
+<p>与cdecl类似，变元被从右到左推入栈中。EAX, ECX和EDX不会保留值。参数列表的大小被放置在AL寄存器中(?)。 syscall是32位OS/2 API的标准。</p>
+<h3><span>optlink</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=5" title="编辑段落：optlink">编辑</a><span>]</span></span></h3>
+<p>变元也是从右到左被推入栈。从最左边开始的三个字符变元会被放置在EAX, EDX和ECX中，最多四个浮点变元会被传入ST(0)到ST(3)中----虽然这四个参数的空间也会在参数列表的栈上保留。函数的返回值在EAX或ST(0)中。保留的寄存器有EBP, EBX, ESI和EDI。 optlink在IBM VisualAge编译器中被使用。</p>
+<h2><span>被调用者清理</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=6" title="编辑段落：被调用者清理">编辑</a><span>]</span></span></h2>
+<p>如果被调用者要清理栈上的参数，需要在编译阶段知道栈上有多少字节要处理。因此，此类的调用约定并不能兼容于可变参数列表，如printf()。然而，这种调用约定也许会更有效率，因为需要解堆栈的代码不要在每次调用时都生成一遍。 使用此规则的函数容易在asm代码被认出，因为它们会在返回前解堆栈。x86 ret指令允许一个可选的16位参数说明栈字节数，用来在返回给调用者之前解堆栈。代码类似如下：</p>
+<pre> ret 12
+</pre>
+<h3><span>pascal</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=7" title="编辑段落：pascal">编辑</a><span>]</span></span></h3>
+<p>基于Pascal语言的调用约定，参数从左至右入栈(与cdecl相反)。被调用者负责在返回前清理堆栈。 此调用约定常见在如下16-bit API中：OS/2 1.x，微软Windows 3.x，以及Borland Delphi版本1.x。</p>
+<h3><span>register</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=8" title="编辑段落：register">编辑</a><span>]</span></span></h3>
+<p>Borland fastcall的别名而已。</p>
+<h3><span>stdcall</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=9" title="编辑段落：stdcall">编辑</a><span>]</span></span></h3>
+<p>这个一个Pascal调用约定的变体，被调用者依旧负责清理堆栈，但是参数从右往左入栈----与cdecl一致。寄存器EAX, ECX和EDX被指定在函数中使用，返回值放置在EAX中。 stdcall对于微软Win32 API和Open Watcom C++是标准。</p>
+<h3><span>fastcall</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=10" title="编辑段落：fastcall">编辑</a><span>]</span></span></h3>
+<p>此约定还未被标准化，不同编译器的实现也不一致。 典型的fastcall约定会传递一个或多个变元到寄存器上，减少对内存的访问。</p>
+<h4><span>Microsoft fastcall</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=11" title="编辑段落：Microsoft fastcall">编辑</a><span>]</span></span></h4>
+<p>Microsoft或GCC的__fastcall约定(也即__msfastcall)传入头两个变元(从左至右)到ECX和EDX中，剩下的变元从右至左推入栈上。</p>
+<h4><span>Borland fastcall</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=12" title="编辑段落：Borland fastcall">编辑</a><span>]</span></span></h4>
+<p>从左至右，传入三个参数至EAX, EDX和ECX中。剩下的参数推入栈，也是从左至右。 在32位编译器Embarcadero Delphi中，这是缺省调用约定，在编译器中以register形式为人知。 在i386上的某些版本<a href="http://zh.wikipedia.org/wiki/Linux" title="Linux">Linux</a>也使用了此约定。</p>
+<h2><span>调用者或被调用者清理</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=13" title="编辑段落：调用者或被调用者清理">编辑</a><span>]</span></span></h2>
+<h3><span>thiscall</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=14" title="编辑段落：thiscall">编辑</a><span>]</span></span></h3>
+<p>在调用<a href="http://zh.wikipedia.org/wiki/C%2B%2B" title="C++">C++</a>非静态成员函数时使用此约定。基于所使用的编译器和函数是否使用可变参数，有两个主流版本的thiscall。 对于GCC编译器，thiscall几乎与cdecl等同：调用者清理堆栈，参数从右到左传递。差别在于this指针，thiscall会在最后把指针推入栈中，虽然在函数原型中它是隐式的第一个参数。 在<a href="http://zh.wikipedia.org/wiki/%E5%BE%AE%E8%BD%AF" title="微软">微软</a><a href="http://zh.wikipedia.org/wiki/Visual_C%2B%2B" title="Visual C++">Visual C++</a><a href="http://zh.wikipedia.org/wiki/%E7%BC%96%E8%AF%91%E5%99%A8" title="编译器">编译器</a>中，this指针被传到ECX寄存器上，被调用者负责清理堆栈，其余同此编译器的C版本和Windows API函数使用的stdcall约定。当函数使用可变参数，此时调用者负责清理堆栈(参考cdecl)。 thiscall约定只在微软Visual C++ 2005及其之后的版本被显式指定。其他编译器中，thiscall并不是一个关键字(反汇编器如IDA使用__thiscall)。</p>
+<h2><span>Intel ABI</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=15" title="编辑段落：Intel ABI">编辑</a><span>]</span></span></h2>
+<p>根据Intel ABI，EAX、EDX及ECX可以自由在过程或函数中使用，不需要保留。</p>
+<h2><span>x86-64调用约定</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=16" title="编辑段落：x86-64调用约定">编辑</a><span>]</span></span></h2>
+<p>x86-64调用约定得益于更多的寄存器可以用来传参。而且，不兼容的调用约定也更少了，不过还是有2种主流的规则。</p>
+<h3><span>微软x64调用约定</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=17" title="编辑段落：微软x64调用约定">编辑</a><span>]</span></span></h3>
+<p>微软x64调用约定使用RCX, RDX, R8, R9这四个寄存器传递头四个整型或指针变量(从左到右)，使用XMM0, XMM1, XMM2, XMM3来传递浮点变量。其他的参数直接入栈(从右至左)。整型返回值放置在RAX中，浮点返回值在XMM0中。少于64位的参数并没有做零扩展，此时高位充斥着垃圾。 在Windows x64环境下编译代码时，只有一种调用约定----就是上面描述的约定，也就是说，32位下的各种约定在64位下统一成一种了。 在微软x64调用约定中，调用者的一个职责是在调用函数之前(无论实际的传参使用多大空间)，在栈上分配一个32B的“影子空间”；并且在调用之后用弹出此堆栈。影子空间是用来给RCX, RDX, R8和R9提供溢出空间的(?)，即使是对于少于四个参数的函数而言。 例如， 一个函数拥有5个整型参数，第一个到第四个放在寄存器中，第五个就被推到影子空间栈顶上。当函数被调用，此栈用来组成返回值----影子空间32位+第五个参数。 在x86-64体系下，Visual Studio 2008在XMM6和XMM7中(同样的有XMM8到XMM15)存储浮点数。结果对于用户写的汇编语言例程，必须保存XMM6和XMM7(x86不用保存这两个寄存器)，这也就是说，在x86和x86-64之间移植汇编例程时，需要注意在函数调用之前/之后，要保存/恢复XMM6和XMM7。</p>
+<h3><span>System V AMD64 ABI</span><span><span>[</span><a href="http://zh.wikipedia.org/w/index.php?title=X86%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A&amp;action=edit&amp;section=18" title="编辑段落：System V AMD64 ABI">编辑</a><span>]</span></span></h3>
+<p>此约定主要在Solaris，GNU/Linux，FreeBSD和其他非微软OS上使用。头六个整型参数放在寄存器RDI, RSI, RDX, RCX, R8和R9上；同时XMM0到XMM7用来放置浮点变元。对于系统调用，R10用来替代RCX。同微软x64约定一样，其他额外的参数推入栈，返回值保存在RAX中。 与微软不同的是，不需要提供影子空间。在函数入口，返回值与栈上第七个整型参数相邻。</p></div></div>
+</td>
+ 
+</tr>
+</tbody>
+</table>
+ 
+ 
+</body>
+</html>

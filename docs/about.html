@@ -1,0 +1,112 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>about</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <br/><br/>
+        <div class="entry-content">
+<p>
+	Greetings from Todd.
+</p>
+<p>
+	First of all, this blog is only used for my personal technical records and sharing.
+</p>
+<p>
+	I am a software engineer in the compiler area and am interested in AI technology. And I like to learn something new in my personal time. As a pessimist, I have a philosophy, &quot;do not trust anything, especially the human brain&quot;. People will forget most of their memory when they are old. That is the nature design that keeps us from crazy. I have a long&ndash;term plan that makes a tool that keeps my knowledge and memory like Wikipedia. And more, it is not used in public and keeps your idea private. Actually, I already make a toy project called <a href="../tags/iNote.html" target="_blank"><i class="fa fa-tags fa-fw"></i>iNote</a> , it is keep updating for the last several years. I think it would be good for me to make a summary and may help others. In fact, these blog pages that you are seeing are automatically built by this tool. As a part of its function, it can convert MD files to static HTML files. It is a &quot;clean&quot; java project and has not any dependency on any 3rd party library.
+</p>
+<p>
+	Another long&ndash;term project I am working on is the RULP(Rule&ndash;based Lisp Processor). Its purpose is to make a lisp style of language that supports the rule reasoning. The reasoner will work like Jena but the reason rule is written in its native language, just like function or operator in other languages. And the interpreter is running on JVM and can leverage the existing technology in JVM to improve the code running efficiencies, such as better GC algorithm, JIT, and others.
+</p>
+<p>
+	I will open source these codes once some experiment codes are refined. The code will be shared in <a href="https://github.com/to0d/" target="_blank">GitHub</a>. You can also contact me via <a href="mailto:to0d@outlook.com" target="_blank">my mail</a>.
+</p>
+<p>
+	<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>
+ LIU,YAN. Senior Software engineer, with 10+ years of work experience in the Toolchain area.
+</p>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+
+</body>
+</html>

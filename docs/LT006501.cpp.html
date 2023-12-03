@@ -1,0 +1,239 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT006501.cpp (Valid Number)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT006501.cpp (Valid Number)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-18</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/DFA.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DFA</a>&nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0065.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0065</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_1c1a61cd" href="#TOC_HEAD_1c1a61cd">Problem 0065 <strong>Valid Number</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/valid-number/" target="_blank">https://leetcode.com/problems/valid&ndash;number/</a></li>
+	<li>Difficulty <strong>Hard</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_c0295f0" href="#TOC_HEAD_c0295f0">LT006501.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_126277e5">LT0065 (name=Valid Number, ptag=Leetcode) &nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0065.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0065</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_432d1550"><a href="https://leetcode.com/problems/valid-number/" target="_blank">Valid Number &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0065.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0065</a></li>
+		<br />
+	</ul>
+</ul>
+<p>
+	A valid number can be split up into these components (in order):
+</p>
+<pre><code>A decimal number or an integer.
+(Optional) An 'e' or 'E', followed by an integer.</code></pre>
+<p>
+	A decimal number can be split up into these components (in order):
+</p>
+<pre><code>(Optional) A sign character (either '+' or '-').
+One of the following formats:
+One or more digits, followed by a dot '.'.
+One or more digits, followed by a dot '.', followed by one or more digits.
+A dot '.', followed by one or more digits.</code></pre>
+<p>
+	An integer can be split up into these components (in order):
+</p>
+<pre><code>(Optional) A sign character (either '+' or '-').
+One or more digits.</code></pre>
+<p>
+	For example, all the following are valid numbers: [&quot;2&quot;, &quot;0089&quot;, &quot;&ndash;0.1&quot;, &quot;+3.14&quot;, &quot;4.&quot;, &quot;&ndash;.9&quot;, &quot;2e10&quot;, &quot;&ndash;90E3&quot;, &quot;3e+7&quot;, &quot;+6e&ndash;1&quot;, &quot;53.5e93&quot;, &quot;&ndash;123.456e789&quot;], while the following are not valid numbers: [&quot;abc&quot;, &quot;1a&quot;, &quot;1e&quot;, &quot;e3&quot;, &quot;99e2.5&quot;, &quot;&ndash;&ndash;6&quot;, &quot;&ndash;+3&quot;, &quot;95a54e53&quot;].
+</p>
+<p>
+	Given a string s, return true if s is a valid number.
+</p>
+<p>
+	 
+	Example 1:
+</p>
+<pre><code>Input: s = "0"
+Output: true</code></pre>
+<p>
+	Example 2:
+</p>
+<pre><code>Input: s = "e"
+Output: false</code></pre>
+<p>
+	Example 3:
+</p>
+<pre><code>Input: s = "."
+Output: false</code></pre>
+<p>
+	 
+</p>
+<p>
+	Constraints:
+</p>
+<pre><code>1 &lt;= s.length &lt;= 20
+s consists of only English letters (both uppercase and lowercase), digits (0-9), plus '+', minus '-', or dot '.'.</code></pre>
+	<H3><a name="HEAD_f03d093d" href="#TOC_HEAD_f03d093d">LT006501.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+#define CT_CHARE        0           // character e
+#define CT_NUM          1           // number
+#define CT_PERIOD       2           // Symbol .
+#define CT_MINUS        3           // Symbol -
+#define CT_OTHER        4           // Other Symbol
+
+    bool isNumber(string s){
+        int size = s.size(), cur_state = 0, last_state  = 0, num1 = 0, num2 = 0, pos = 0;
+
+        while(pos &lt; size && s.at(pos) == ' ')
+            ++pos;
+
+        while(pos &lt; size && s.at(size - 1) == ' ')
+            --size;
+
+        if( pos &gt;= size)
+            return false;
+
+        // +3.5e+3
+        // 1234567
+        static int DFA_SCAN_STATE[8][5] = {
+            //-E -N- "."  -+
+            { -1, 2,  3,  1 }, // 0
+            { -1, 2,  3, -1 }, // 1  +-
+            {  5, 2,  3, -1 }, // 2  3
+            {  5, 4, -1, -1 }, // 3  .
+            {  5, 4, -1, -1 }, // 4  5
+            { -1, 7, -1,  6 }, // 5  e
+            { -1, 7, -1, -1 }, // 6  +-
+            { -1, 7, -1, -1 }, // 7  3
+        };
+
+        for(; pos &lt; size; ++pos, last_state = cur_state)
+        {   int char_type = charTypeOf(s.at(pos));
+            if (char_type == CT_OTHER)
+                return false;
+
+            cur_state = DFA_SCAN_STATE[last_state][char_type];
+            if( cur_state == -1 )
+                return false;
+
+            if( char_type == CT_NUM)
+            {   if( cur_state &lt; 5 )
+                    ++num1;
+                else
+                    ++num2;
+            }
+        }
+
+        if( num1 == 0 || (last_state &gt; 5 && num2 == 0))
+            return false;
+
+        return last_state  == 2 || last_state == 3 || last_state == 4 || last_state == 7 || last_state == 9 || last_state == 10;
+    }
+
+    int charTypeOf(char c){
+        if( isdigit(c) )
+            return CT_NUM;
+        switch( c)
+        {   case 'e':
+            case 'E': return CT_CHARE;
+            case '.': return CT_PERIOD;
+            case '-':
+            case '+': return CT_MINUS;
+            default:
+                return CT_OTHER;
+        }
+    }
+};
+
+
+
+void test(string s)
+{
+    cout &lt;&lt; "input: " &lt;&lt; s &lt;&lt; "; output: ";
+    bool r = Solution().isNumber(s);
+    cout &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("0");
+}
+
+// Result
+//
+// 2022-11-18: Runtime 7ms 26.88% Memory 6MB 47.37%, https://leetcode.com/problems/valid-number/submissions/845892136/
+// 2023-02-18: Runtime 0ms 100% Memory 6.1MB 47.29%, https://leetcode.com/problems/valid-number/submissions/900081688/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 0; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

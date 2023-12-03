@@ -1,0 +1,164 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>DBG: How gdb load symbol table</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>DBG: How gdb load symbol table</h1>
+        <h3>todo(2)</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-09-24</time>
+            <i><a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;<a href="../tags/gdb.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb</a>&nbsp;<a href="../tags/symtab.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>symtab</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">Read detail code later &ndash; 2023/10/04 </a></li>
+	<li><a name="TOC_MARK_2" href="#MARK_2" id="in-ttl">Load full symbol tables &ndash; 2023/10/04 </a></li>
+</ol>
+</div>
+        <div class="entry-content">
+	<H2><a name="HEAD_b202420" href="#TOC_HEAD_b202420">1. Load symbol table</a></H2>
+	<H3><a name="HEAD_302611e6" href="#TOC_HEAD_302611e6">1.1. Add <strong>file</strong> command</a></H3><ul><a href="../tags/gdb-file.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-file</a>&nbsp;</ul>
+<ul>
+	<li><strong>file_command</strong></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_b05ce7d3">exec_file_command &ndash; <a href="exec.c.html" target="_blank">exec.c</a>&nbsp;<a href="https://github.com/to0d/linux/blob/master/fs/exec.c" title="https://github.com/to0d/linux/blob/master/fs/exec.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+		<ul>
+			<li>set current_program_space <strong>bfd</strong></li>
+			<li>set current_inferior <strong>gdbarch</strong></li>
+			<br />
+		</ul>
+		<li><a name="HEAD_HIDDEN_5fd2e4c0">symbol_file_command &ndash; <a href="symfile.html" target="_blank">symfile.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_9ba98757">Refer <a href="1b05b9e4c1ad959a6c62935b03056a77.html#EXEC-ADD-FILE-CMD" target="_blank">add &quot;file&quot; command</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/exec.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/exec.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_90a39bef" href="#TOC_HEAD_90a39bef">1.2. Create objfile</a></H3><ul><a href="../tags/objfile.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>objfile</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_940a2c80"><strong>symbol_file_command</strong> &ndash; <a href="symfile.html" target="_blank">symfile.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<ul>
+		<li>create <strong>objfile</strong> and add it to <strong>current_program_space</strong></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_5c6d3ab" href="#TOC_HEAD_5c6d3ab">1.3. Load minimal symbol tables ( <font color="red">non&ndash;debugging symbols</font> from <strong>symtab</strong> section)</a></H3><ul><a href="../tags/msymtabs.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>msymtabs</a>&nbsp;</ul>
+<p>
+	<img src="files/bfecebbe29b47e1262ab462d5189962c.jpg" />
+</p>
+<ul>
+	<li><a name="HEAD_HIDDEN_f661626f"><strong>elf_symfile_read</strong> &ndash; <a href="fd399851a8b2891c585549c2f377a5f3.html" target="_blank">elfread.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/elfread.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/elfread.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<br />
+	<ul>
+		<li><a name="HEAD_HIDDEN_9e9f155c">read all symbols from ELF <strong>symtab</strong> section &nbsp;<a href="../tags/symtab-section.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>symtab-section</a></li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_6f10e351">elf_slurp_symbol_table &ndash; elfcode.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/elfcode.h" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/elfcode.h" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<br />
+		</ul>
+		<li>build hash table, map symbol names to addresses</li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_b133c7b">minimal_symbol_reader::install &ndash; minsyms.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/minsyms.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/minsyms.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<ul>
+				<li><a name="HEAD_HIDDEN_600c75eb">build <strong>hash_values</strong> in <font color="red">multi thread</font> &nbsp;<a href="../tags/symtab-MultiThreadlLoad.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>symtab-MultiThreadlLoad</a></li>
+				<br />
+			</ul>
+		</ul>
+	</ul>
+	<li><a name="HEAD_HIDDEN_f8f57a0e">Refer <a href="symfile.html#SYMFILE-ELF-SYMFILE-READ-1" target="_blank">elf_symfile_read &ndash; <a href="fd399851a8b2891c585549c2f377a5f3.html" target="_blank">elfread.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/elfread.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/elfread.c" target="_blank"><font color="red"><i>link</i></font></a></a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<li><a name="HEAD_HIDDEN_93838c16">Refer <a href="tc231004a.sh.html#TC231004A-1" target="_blank"><strong><font color="red">调试变量符号可能不在 .symtab 段中</font></strong></a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_4ffa7574" href="#TOC_HEAD_4ffa7574">1.4. Load partial symbol tables ( <font color="red">debugging symbols</font> from <strong>dwarf_xxx</strong> section)</a></H3><ul><a href="../tags/psymtabs.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>psymtabs</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_90316905"><strong>objfile::require_partial_symbols</strong> &ndash; symfile&ndash;debug.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile-debug.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile-debug.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_8db4a32c">cooked_index_functions::read_partial_symbols &ndash; <a href="c1594637a873080b5232f35081360bf3.html" target="_blank">read.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/read.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/read.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+		<ul>
+			<li>dwarf2_has_info</li>
+			<li>dwarf2_build_psymtabs</li>
+			<ul>
+				<li>dwarf2_build_psymtabs_hard</li>
+				<ul>
+					<li><a name="HEAD_HIDDEN_e6a74f6b">call process_psymtab_comp_unit in <font color="red">multi thread</font> &nbsp;<a href="../tags/symtab-MultiThreadlLoad.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>symtab-MultiThreadlLoad</a></li>
+					<br />
+				</ul>
+			</ul>
+		</ul>
+	</ul>
+	<li><a name="HEAD_HIDDEN_315b77b9">Read detail code later &ndash; 2023/10/04  <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_f4118521" href="#TOC_HEAD_f4118521">1.5. Load full symbol tables &ndash; 2023/10/04</a> <a name="MARK_2" href="#TOC_MARK_2"><strong><font color="red">@TODO</font></strong></a></H3><ul><a href="../tags/fsymtabs.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>fsymtabs</a>&nbsp;</ul>
+	<H2><a name="HEAD_4b2fc60" href="#TOC_HEAD_4b2fc60">2. Refer</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_abbe643b"><a href="../refers/8a8f0249cd82343372a0c3837fba70a1.html" target="_blank">2015&ndash;02&ndash;15 How gdb loads symbol files GDB Wiki.html</a></li>
+	<li><a name="HEAD_HIDDEN_a422cc20"><a href="symfile.html#SYMFILE-ADD-SYMBOL-FILE-CMD" target="_blank">add &quot;symbol&ndash;file&quot; command</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<br />
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

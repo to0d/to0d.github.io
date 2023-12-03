@@ -1,0 +1,216 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC150513A.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC150513A.c</h1>
+            <h3>UDP, sigio example|todo(1)</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Socket.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Socket</a>&nbsp;<a href="../tags/UDP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>UDP</a>&nbsp;<a href="../tags/sigio.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>sigio</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">build err &ndash; 2023/07/06 </a></li>
+</ol>
+</div>
+            <hr/>
+        </div>
+    
+    <ul>
+	<li><a name="HEAD_HIDDEN_ecc21e1e">build err &ndash; 2023/07/06  <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></li>
+	<br />
+	<pre><code>/usr/bin/ld: TC150513A.o: in function `main':
+/mnt/c/data/public/cppt/TC150513A/TC150513A.c:61: undefined reference to `err_sys'
+/usr/bin/ld: /mnt/c/data/public/cppt/TC150513A/TC150513A.c:69: undefined reference to `startClientThread'
+/usr/bin/ld: /mnt/c/data/public/cppt/TC150513A/TC150513A.c:78: undefined reference to `pthread_join'
+/usr/bin/ld: /mnt/c/data/public/cppt/TC150513A/TC150513A.c:79: undefined reference to `err_sys'
+/usr/bin/ld: TC150513A.o: in function `startServiceThread':
+/mnt/c/data/public/cppt/TC150513A/TC150513A.c:98: undefined reference to `service_thread'
+/usr/bin/ld: /mnt/c/data/public/cppt/TC150513A/TC150513A.c:98: undefined reference to `pthread_create'
+/usr/bin/ld: /mnt/c/data/public/cppt/TC150513A/TC150513A.c:99: undefined reference to `err_sys'
+collect2: error: ld returned 1 exit status
+make: *** [makefile:3: a.out] Error 1	</code></pre>
+</ul>
+	<hr/>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;netinet/in.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;signal.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;strings.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;signal.h&gt;
+
+
+/*
+
+Socket Linux IOģ����̸��6�� �ź�����IOģ�� ������ ����԰.html
+
+    �ź�����IOģ����Ҫ����UDP�׽�����ʹ�ã�
+    ��TCP�׽����ϼ�����û��ʲôʹ�õġ�
+
+    struct sigaction
+    {
+    ����void (*sa_handler) (int);
+    ����sigset_t sa_mask;
+    ����int sa_flags;
+    ����void (*sa_restorer) (void);
+    }
+
+*/
+
+void err_sys(const char *fmt, ...);
+
+void* service_thread(void *arg);
+void* clinet_thread(void *arg);
+
+pthread_t *thread;
+int* threadIds;
+int curThIndex;
+int portnumber;
+int listenfd1;
+
+#define MAX_COUNT		10
+#define CLINET_COUNT	1
+
+void startWorkThread();
+void startClientThread();
+void startUDP();
+void stopUDP();
+
+
+int main( void )
+{
+    curThIndex = 0;
+    portnumber = 4025;
+
+    /* Golobal var initialization */
+    if((( thread=(pthread_t* )malloc(sizeof(pthread_t)*MAX_COUNT))==NULL)
+    ||(( threadIds=(int* )malloc(sizeof(int)*MAX_COUNT))==NULL ))
+        err_sys("main: Out Of Memory!\n");
+
+    for(int i = 0; i&lt; MAX_COUNT; ++i)
+        threadIds[i] = 0;
+
+    startUDP();
+
+    for(int i = 0; i &lt; CLINET_COUNT; ++i)
+        startClientThread();
+
+    printf("main: Waiting all thread end:\n");
+    for(int i = 0; i&lt; MAX_COUNT; ++i)
+    {
+        char* pRet;
+
+        if(threadIds[i] != 0)
+        {
+            if(pthread_join(thread[i],(void **)&pRet)!= 0)
+                err_sys("main: join Thread[%d] Error��%s\n",i,strerror(errno));
+
+            printf("main: Thread[%i] end, message=%s\n",i,pRet);
+            free(pRet);
+        }
+    }
+
+    free(thread);
+    free(threadIds);
+    stopUDP();
+    return 0;
+}
+
+void startServiceThread()
+{
+    int thid = curThIndex++;
+    threadIds[thid] = thid + 1;
+    pthread_t *pServiceThread = &(thread[thid]);
+
+    if(pthread_create(pServiceThread,NULL,service_thread,(void *)&(threadIds[thid]) )!=0)
+        err_sys("main: Create serivce Thread[%d] Error��%s\n",threadIds[thid],strerror(errno));
+}
+
+void do_sigio(int sig)
+{
+    int clifd, clilen;
+    struct sockaddr_in cli_addr;
+    char buffer[256];
+
+    clifd = accept(listenfd1, (struct sockaddr *) &cli_addr, &clilen);
+
+    bzero(buffer, 256);
+    read(clifd, buffer, 255);
+
+    printf("Server: receive message: %s\n", buffer);
+}
+
+void startUDP()
+{
+    //�󶨼���7779�˿ڵ�fd
+    struct sockaddr_in serv_addr1;
+    listenfd1 = socket(AF_INET, SOCK_DGRAM, 0);
+
+    bzero((char *) &serv_addr1, sizeof(serv_addr1));
+    serv_addr1.sin_family = AF_INET;
+    serv_addr1.sin_port = htons(7779);
+    serv_addr1.sin_addr.s_addr = INADDR_ANY;
+
+    struct sigaction sigio_action;
+    memset(&sigio_action, 0, sizeof(sigio_action));
+    sigio_action.sa_flags = 0;
+    sigio_action.sa_handler = do_sigio;
+
+    sigaction(SIGIO, &sigio_action, NULL);
+
+    fcntl(listenfd1, F_SETOWN, getpid());   //�����첽I/O����Ȩ
+
+    //�����ļ�״̬���
+    //  O_ASYNC     ��I/O���õ�ʱ������SIGIO�źŷ��͵�������
+    //  O_NONBLOCK  ������I/O
+
+    int flags;
+    flags = fcntl(listenfd1, F_GETFL, 0);
+    flags |= O_ASYNC | O_NONBLOCK;
+    fcntl(listenfd1, F_SETFL, flags);
+
+    bind(listenfd1, (struct sockaddr *) &serv_addr1, sizeof(serv_addr1));
+}
+
+void stopUDP()
+{
+    close(listenfd1);
+}
+
+void* clinet_thread(void *arg)
+{
+    int thId = *((int*) arg);
+    printf("Client[%d]: starting��\n",thId);
+
+    int socketfd, n;
+    socketfd = socket(AF_INET, SOCK_DGRAM, 0);
+
+    struct sockaddr_in serv_addr;
+
+    bzero((char *)&serv_addr, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(7779);
+
+    connect(socketfd,(struct sockaddr *)  &serv_addr, sizeof(serv_addr));
+
+    write(socketfd, "client message", 14);
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,114 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>How to copy large git local repository in Linux</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>How to copy large git local repository in Linux</h1>
+        <h3>todo(1)</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-01-11</time>
+            <i><a href="../tags/Git.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">如何避免忽略深层次 &quot;build&quot; 和 &quot;install&quot; 目录 &ndash; 2023&ndash;01&ndash;11 </a></li>
+</ol>
+</div>
+        <div class="entry-content">
+<ol>
+	<li>Check the size of source repository</li>
+	<br />
+	<pre><code>&gt; du -h --max-depth=1 llvm-project --exclude="install" --exclude="build"
+...
+3.1G    llvm-project	</code></pre>
+	<li><a name="HEAD_HIDDEN_f2596f56">Copy project by rsync &nbsp;<a href="../tags/rsync.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>rsync</a></li>
+	<br />
+	<pre><code>&gt; rsync -a --info=progress2 llvm-project/ llvm-project2/ --exclude install --exclude build
+3,071,369,917  99%    7.31MB/s    0:06:40 (xfr#111105, to-chk=0/122852)	</code></pre>
+	<ul>
+		<li><a name="HEAD_HIDDEN_f54e3c5c">如何避免忽略深层次 &quot;build&quot; 和 &quot;install&quot; 目录 &ndash; 2023&ndash;01&ndash;11  <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></li>
+		<br />
+	</ul>
+	<li>Check the size of target repository</li>
+	<br />
+	<pre><code>&gt; du -h --max-depth=1 llvm-project2 --exclude="install" --exclude="build"
+...
+3.1G    llvm-project	</code></pre>
+	<li>Check git status of target repository</li>
+	<br />
+	<pre><code>&gt; git status            // 7 mins
+&gt; git checkout *        // rollback	</code></pre>
+</ol>
+	<H2><a name="HEAD_675ec80" href="#TOC_HEAD_675ec80">refer</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_f2146eca"><a href="../refers/c768f5b8e8b190394aa90951694887db.htm" target="_blank">2019&ndash;06&ndash;03 How To Exclude Specific Directories From Copying In Linux &ndash; OSTechNix.htm</a></li>
+	<li><a name="HEAD_HIDDEN_7196b51d"><a href="../refers/97e147d6288039cca6ff3832f6080eb9.htm" target="_blank">2022&ndash;06&ndash;10 Show File Transfer Progress With Rsync Command.htm</a></li>
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

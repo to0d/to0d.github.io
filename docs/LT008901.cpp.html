@@ -1,0 +1,165 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT008901.cpp (Gray Code)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT008901.cpp (Gray Code)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-18</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0089.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0089</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_91480d6c" href="#TOC_HEAD_91480d6c">Problem 0089 <strong>Gray Code</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/gray-code/" target="_blank">https://leetcode.com/problems/gray&ndash;code/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>47.50</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_6ef8abb2" href="#TOC_HEAD_6ef8abb2">LT008901.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_c9780b9e">LT0089 (name=Gray Code, ptag=Leetcode) &nbsp;<a href="../tags/LT0089.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0089</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_31990a88"><a href="https://leetcode.com/problems/gray-code/" target="_blank">Gray Code &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0089.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0089</a></li>
+		<br />
+	</ul>
+	<p>
+		The gray code is a binary numeral system where two successive values differ in only one bit.
+	</p>
+	<p>
+		Given a non&ndash;negative integer <em>n</em> representing the total number of bits in the code, print the sequence of gray code. A gray code sequence must begin with 0.
+	</p>
+	<p>
+		For example, given
+		<em>n</em> = 2, return
+		<code>[0,1,3,2]</code> . Its gray code sequence is:
+	</p>
+	<pre><code>00 - 0
+01 - 1
+11 - 3
+10 - 2	</code></pre>
+	<p>
+		<strong>Note:</strong>
+	</p>
+	<p>
+		For a given
+		<em>n</em> , a gray code sequence is not uniquely defined.
+	</p>
+	<p>
+		For example,
+		<code>[0,2,3,1]</code> is also a valid gray code sequence according to the above definition.
+	</p>
+	<p>
+		For now, the judge is able to judge based on one instance of gray code sequence. Sorry about that.
+	</p>
+</ul>
+	<H3><a name="HEAD_93984fff" href="#TOC_HEAD_93984fff">LT008901.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    vector&lt;int&gt; grayCode(int n) {
+        vector&lt;int&gt; res;
+        res.push_back(0);
+        for(int i = 0; i &lt; n; ++i)
+        {   int add = ( 1 &lt;&lt; i );
+            for(int j = res.size() - 1; j &gt;= 0; --j)
+                res.push_back( add + res[j] );
+        }
+
+        return res;
+    }
+};
+
+
+
+void test(int n)
+{
+    cout &lt;&lt; "input: " &lt;&lt; n;
+    vector&lt;int&gt; r = Solution().grayCode(n);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(2);
+}
+
+// Result
+//
+// 2022-11-23: Runtime 17ms 25.2% Memory 11.8MB 78.28%, https://leetcode.com/problems/gray-code/submissions/848360872/
+// 2023-02-18: Runtime 12ms 47.50% Memory 11.8MB 61.84%, https://leetcode.com/problems/gray-code/submissions/900102390/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 2; output: [0,1,3,2];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

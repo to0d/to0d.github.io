@@ -1,0 +1,156 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT141701.cpp (Reformat The String)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT141701.cpp (Reformat The String)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-25</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1417.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1417</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_5161e1a0" href="#TOC_HEAD_5161e1a0">Problem 1417 <strong>Reformat The String</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/reformat-the-string/" target="_blank">https://leetcode.com/problems/reformat&ndash;the&ndash;string/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>72.83</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ab3da43a" href="#TOC_HEAD_ab3da43a">LT141701.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_b04a3092">LT1417 (name=Reformat The String, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1417.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1417</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_ed718423"><a href="https://leetcode.com/problems/reformat-the-string/" target="_blank">Reformat The String &ndash; Leetcode</a> &nbsp;<a href="../tags/LT1417.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1417</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_97fecc87" href="#TOC_HEAD_97fecc87">LT141701.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    string reformat(string s) {
+        static char buf[500];
+        int len = s.length(), al = 0, nl = 0;
+        for(int i = 0;i &lt; len ; ++i)
+        {   char c = s.at(i);
+            if( _type(c) == 0 )
+                buf[len- ++nl] = c;
+            else
+                buf[al++] = c;
+        }
+
+        if( std::abs(al-nl) &gt; 1)
+            return "";
+
+        static char buf2[500];  // optimize, can use only one buffer - 2022/12/14 @TODO
+        int buf_len = 0, pos1 = 0, pos2 = len - nl;
+        if( al &lt; nl )
+            buf2[buf_len++] = buf[pos2++];
+
+        while( pos2 &lt; len )
+        {   buf2[buf_len++] = buf[pos1++];
+            buf2[buf_len++] = buf[pos2++];
+        }
+
+        if( pos1 &lt; al )
+            buf2[buf_len++] = buf[pos1++];
+
+        return string(buf2, buf_len);
+    }
+
+    static int _type(char c) {
+        return c &gt;= '0' && c &lt;= '9' ? 0 : 1;
+    }
+};
+
+
+
+void test(string s)
+{
+    cout &lt;&lt; "input: " &lt;&lt; s;
+    string r = Solution().reformat(s);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test("a0b1c2");
+}
+
+
+// Result
+//
+// 2022-12-14: Runtime 8ms 36.40% Memory 7.1MB 90.79%, https://leetcode.com/problems/reformat-the-string/submissions/859468029/
+// 2023-02-25: Runtime 4ms 72.83% Memory 7.2MB 90.55%, https://leetcode.com/problems/reformat-the-string/submissions/904214846/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: a0b1c2; output: a2b1c0;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

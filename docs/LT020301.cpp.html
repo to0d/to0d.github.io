@@ -1,0 +1,151 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT020301.cpp (Remove Linked List Elements)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT020301.cpp (Remove Linked List Elements)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-04</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0203.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0203</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/List-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>List-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_f77ff74" href="#TOC_HEAD_f77ff74">Problem 0203 <strong>Remove Linked List Elements</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/remove-linked-list-elements/" target="_blank">https://leetcode.com/problems/remove&ndash;linked&ndash;list&ndash;elements/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>72.76</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_91155d36" href="#TOC_HEAD_91155d36">LT020301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_dbfc8066">LT0203 (name=Remove Linked List Elements, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0203.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0203</a>&nbsp;<a href="../tags/List-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>List-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_fe4e9be0"><a href="https://leetcode.com/problems/remove-linked-list-elements/" target="_blank">Remove Linked List Elements &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0203.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0203</a></li>
+		<br />
+	</ul>
+	<p>
+		Remove all elements from a linked list of integers that have value <em>val</em> .
+	</p>
+	<p>
+		<strong>Example</strong>
+	</p>
+	<p>
+		<strong>Given:</strong> 1 &ndash;&ndash;&gt; 2 &ndash;&ndash;&gt; 6 &ndash;&ndash;&gt; 3 &ndash;&ndash;&gt; 4 &ndash;&ndash;&gt; 5 &ndash;&ndash;&gt; 6, <em>val</em> = 6
+	</p>
+	<p>
+		<strong>Return:</strong> 1 &ndash;&ndash;&gt; 2 &ndash;&ndash;&gt; 3 &ndash;&ndash;&gt; 4 &ndash;&ndash;&gt; 5
+	</p>
+</ul>
+	<H3><a name="HEAD_3fb26383" href="#TOC_HEAD_3fb26383">LT020301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        ListNode tmp(0);
+        ListNode* tail = &tmp;
+        for(; head != NULL; head = head-&gt;next)
+            if( head-&gt;val != val )
+            {   tail-&gt;next = head;
+                tail = head;
+            }
+
+        tail-&gt;next = NULL;
+        return tmp.next;
+    }
+};
+
+
+
+void test(ListNode* head, int val)
+{
+    cout &lt;&lt; "input: val=" &lt;&lt; val &lt;&lt; ", head=";
+    outputList(head);
+    ListNode* r = Solution().removeElements(head, val);
+    cout &lt;&lt; "; output: ";
+    outputList(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(makeList(7, 1,2,6,3,4,5,6), 6);
+}
+
+// Result
+//
+// 2022-11-21: Runtime 29ms 40.55% Memory 15MB 52.89%, https://leetcode.com/problems/remove-linked-list-elements/submissions/847505150/
+// 2023-02-22: Runtime 23ms 77.76% Memory 15.1MB 53.46%, https://leetcode.com/problems/remove-linked-list-elements/submissions/902717957/
+// 2023-03-04: Runtime 24ms 72.76% Memory 14.9MB 85.1%, https://leetcode.com/problems/remove-linked-list-elements/submissions/908952336/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: val=6, head=[1-&gt;2-&gt;6-&gt;3-&gt;4-&gt;5-&gt;6]; output: [1-&gt;2-&gt;3-&gt;4-&gt;5];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

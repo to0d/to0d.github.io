@@ -1,0 +1,197 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT003801.cpp (Count and Say)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT003801.cpp (Count and Say)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-31</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0038.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0038</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_7bb21b57" href="#TOC_HEAD_7bb21b57">Problem 0038 <strong>Count and Say</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/count-and-say/" target="_blank">https://leetcode.com/problems/count&ndash;and&ndash;say/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>100.00</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_b39bbe16" href="#TOC_HEAD_b39bbe16">LT003801.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_47aa39c9">LT0038 (name=Count and Say, ptag=Leetcode) &nbsp;<a href="../tags/LT0038.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0038</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_4db59771"><a href="https://leetcode.com/problems/count-and-say/" target="_blank">Count and Say &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0038.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0038</a></li>
+		<br />
+	</ul>
+	<p>
+		The count&ndash;and&ndash;say sequence is the sequence of integers beginning as follows:
+	</p>
+	<p>
+		<code>1, 11, 21, 1211, 111221, ...</code>
+	</p>
+	<p>
+		<code>1</code> is read off as
+		<code>&quot;one 1&quot;</code> or
+		<code>11</code> .
+	</p>
+	<p>
+		<code>11</code> is read off as
+		<code>&quot;two 1s&quot;</code> or
+		<code>21</code> .
+	</p>
+	<p>
+		<code>21</code> is read off as
+		<code>&quot;one 2</code> , then
+		<code>one 1&quot;</code> or
+		<code>1211</code> .
+	</p>
+	<p>
+		Given an integer
+		<em>n</em> , generate the
+		&lt;sup&gt;th&lt;/sup&gt;
+		<em>n</em> sequence.
+	</p>
+	<p>
+		Note: The sequence of integers will be represented as a string.
+	</p>
+</ul>
+	<H3><a name="HEAD_574c3463" href="#TOC_HEAD_574c3463">LT003801.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    string countAndSay(int n) {
+        vector&lt;int&gt; rst = {1};
+        for(int i = 1; i &lt; n; ++i)
+        {  int val = 0, count = 0, size = rst.size();
+            vector&lt;int&gt; rst2;
+            for(int num : rst)
+            {   if( num == val )
+                    count++;
+                else
+                {   push_vec(rst2, count, val);
+                    val   = num;
+                    count = 1;
+                }
+            }
+            push_vec(rst2, count, val);
+            rst.swap(rst2);
+        }
+
+        string str;
+        for(int val : rst )
+            str.push_back( '0'+ val);
+
+        return str;
+    }
+
+    void push_vec(vector&lt;int&gt;& vec, int count, int val){
+        if( count &lt;= 0 )
+            return;
+        if( count &lt; 10 )
+            vec.push_back(count);
+        else
+        {   static int stack[10];
+            int len = 0;
+            for(; count &gt; 0; count /= 10 )
+                stack[len++] = count % 10;
+            for(int i = len-1; i &gt;= 0; --i)
+                vec.push_back(stack[i]);
+        }
+        vec.push_back(val);
+    }
+};
+
+
+
+void test(int n)
+{
+    cout &lt;&lt; "input: " &lt;&lt; n &lt;&lt; "; output=";
+    string r = Solution().countAndSay(n);
+    cout &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(1);
+    test(4);
+}
+
+// Result
+//
+// 2022-11-16: Runtime 7ms 76.87% Memory 6.9MB 38.97%, https://leetcode.com/problems/count-and-say/submissions/844551294/
+// 2023-02-17: Runtime 7ms 76.42% Memory 7MB 35.55%, https://leetcode.com/problems/count-and-say/submissions/899508875/
+// 2023-07-31: Runtime 0ms 100.00% Memory 7.17MB 17.45%, https://leetcode.cn/problems/count-and-say/submissions/451862812/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 1; output=1;
+input: 4; output=1211;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

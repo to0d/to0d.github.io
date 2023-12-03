@@ -1,0 +1,40 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC230310D.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC230310D.cpp</h1>
+            <h3>C11 begin() end()</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Cxxv11.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxxv11</a>&nbsp;<a href="../tags/std-begin-end.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-begin-end</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+using namespace std;
+
+int main(void)
+{
+    int a1 [] = {1,2,3,4};
+    int total = 0;
+
+    std::for_each( begin(a1), end(a1), [&total](int x) { total += x; });
+    cout &lt;&lt; "output: total=" &lt;&lt; total &lt;&lt; endl;
+
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

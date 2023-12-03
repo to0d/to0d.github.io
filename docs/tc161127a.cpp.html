@@ -1,0 +1,115 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161127A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161127A.cpp</h1>
+            <h3>求解图 最短路径 问题</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Dijkstra.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Dijkstra</a>&nbsp;<a href="../tags/Graph.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Graph</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/Dijkstra.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Dijkstra</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    <ul>
+	<li><a name="HEAD_HIDDEN_4630b219">refer <a href="../refers/b3d402e87f9f9509e15372bc2000a063.html" target="_blank">点缀星辰 算法系列 &ndash; 4 Dijkstra algorithm 讨论</a>&nbsp;<a href="74d68bd9ce848fb7b440034a1971b33e.html" title="2014-06-29 点缀星辰 算法系列 ITeye.html" target="_blank"><font color="red"><i>ext</i></font></a> &nbsp;<a href="../tags/Dijkstra.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Dijkstra</a></li>
+	<br />
+</ul>
+	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+int findShortPath_dijkstra(vector&lt;vector&lt;int&gt;&gt;& graph, int from, int to, vector&lt;int&gt;& path) {
+    int size = graph.size();
+    if( from == to || size &lt;= 1)
+        return 0;
+
+    vector&lt;int&gt; index_queue, weigth_to, edge_to;
+    for(int i = 0; i &lt; size ; ++i)
+    {   int v = graph[from][i];
+        if( v == -1 )
+            v = INT_MAX;
+        weigth_to.push_back(v);
+        edge_to.push_back(from);
+        if( i != from )
+            index_queue.push_back(i);
+    }
+
+    vector&lt;int&gt; rst;
+    while( !index_queue.empty())
+    {   int qsize = index_queue.size();
+        // bubble sort, find the shortest node
+        for(int i = 1; i &lt; qsize; ++i)
+        {   if( weigth_to[index_queue[i-1]] &lt; weigth_to[index_queue[i]])
+            {   int v = index_queue[i-1];
+                index_queue[i-1] = index_queue[i];
+                index_queue[i] = v;
+            }
+        }
+
+        int pos = index_queue.back();
+        index_queue.pop_back();
+
+        int v = weigth_to[pos];
+        if( v == INT_MAX )
+            break;
+
+        if( pos == to )
+        {   path.clear();
+            for(int k = to;  k != from; k = edge_to[k])
+                path.push_back(k);
+            path.push_back(from);
+            std::reverse(path.begin(), path.end());
+            return v;
+        }
+
+        for(int i = 0; i &lt; qsize; ++i)
+        {   int t = index_queue[i];
+            int k = graph[pos][t];
+            if( k &gt; 0 &&( weigth_to[t] &gt; ( v + k )) )
+            {   weigth_to[t] = v + k;
+                edge_to[t] = pos;
+            }
+        }
+    }
+
+    return -1;
+}
+
+void test(vector&lt;vector&lt;int&gt;&gt; graph, int from, int to)
+{
+    cout &lt;&lt; "input: from=" &lt;&lt; from &lt;&lt; ", to=" &lt;&lt; to &lt;&lt; ", graph=";
+    outputVector(graph);
+    vector&lt;int&gt; path;
+    int r = findShortPath_dijkstra(graph, from, to, path);
+    cout &lt;&lt; "; output: r=" &lt;&lt; r &lt;&lt; ", path";
+    outputVector(path);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main( void )
+{
+    test(
+        {
+            {  0 ,100,  10,  30,  -1, },
+            {  -1,  0,  -1,  -1,  -1, },
+            {  -1, -1,   0,  -1,  20, },
+            {  -1, 10,  -1,   0,   8, },
+            {  -1,  5,  -1,  -1,   0, },
+        }, 0, 1
+    );
+
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

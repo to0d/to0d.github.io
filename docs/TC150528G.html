@@ -1,0 +1,217 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC150528G</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>TC150528G</h1>
+        <h3>flex Yacc example 7</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2015-05-28</time>
+            <i><a href="../tags/Yacc.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Yacc</a>&nbsp;<a href="../tags/flex.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>flex</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H1><a name="HEAD_53a29da9" href="#TOC_HEAD_53a29da9">TC150528G</a></H1>
+	<H2><a name="HEAD_f7f779fd" href="#TOC_HEAD_f7f779fd">example.flex</a></H2>
+	<hr/>
+<pre><code>%{
+    #include &lt;stdio.h&gt;
+    #include &lt;string.h&gt;
+    #include "y.tab.h"
+%}
+
+%%
+[0-9]+          yylval.number=atoi(yytext); return NUMBER;
+heater          return TOKHEATER;
+heat            return TOKHEAT;
+on|off          yylval.number = strcmp(yytext, "on"); return STATE;
+target          return TOKTARGET;
+temperature     return TOKTEMPERATURE;
+[a-z0-9]+       yylval.string = strdup(yytext); return WORD;
+\n              /* ignore end of line */
+[ \t]+          /* ignore whitespace */
+%%</code></pre>
+	<H2><a name="HEAD_f7fff36c" href="#TOC_HEAD_f7fff36c">example.yacc</a></H2>
+	<hr/>
+<pre><code>%{
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+static char* heater;
+
+    int yywrap()
+    {
+        return  1;
+    }
+
+    void yyerror()
+    {
+        printf(" parse error\n");
+    }
+
+    main()
+    {
+        yyparse();
+    }
+%}
+
+
+%token  NUMBER TOKHEAT STATE TOKTARGET TOKTEMPERATURE TOKHEATER
+%union
+{
+    int number;
+    char *string;
+}
+
+%token &lt;number&gt; STATE
+%token &lt;number&gt; NUMBER
+%token &lt;string&gt; WORD
+
+%%
+
+commands
+    : /* empty */
+    | commands command
+;
+
+command
+    : heat_switch
+    | target_set
+    | heater_select
+;
+
+heat_switch
+    : TOKHEAT STATE
+        {
+            printf("\tHeat turned on or off\n");
+        }
+;
+
+heater_select :
+        TOKHEATER WORD
+        {
+
+        printf("\tSelected heater '%s'\n", $2);
+        heater = $2;
+        }
+;
+
+target_set:
+    TOKTARGET TOKTEMPERATURE NUMBER
+    {
+    printf("\tHeater '%s' temperature set to %d\n", heater, $3);
+    }
+;
+
+%%</code></pre>
+	<H2><a name="HEAD_272546a" href="#TOC_HEAD_272546a">makefile</a></H2>
+	<hr/>
+<pre><code>CPPFLAGS=-I ../include/ctl -g -lfl
+x.main.ctl.x: y.tab.o lex.yy.o
+    gcc -o $@ $^ -lstdc++ -lfl	
+    mv lex.yy.c lex.yy.c.tmp
+    mv y.tab.c  y.tab.c.tmp
+    mv y.tab.h  y.tab.h.tmp
+    mv y.tab.o  y.tab.o.tmp
+    mv lex.yy.o lex.yy.o.tmp
+
+lex.yy.o:
+    flex example.flex
+    gcc -g -c lex.yy.c
+
+y.tab.o:
+    byacc -d  example.yacc
+    gcc -g -c y.tab.c
+
+clean:
+    rm -f *.o
+    rm -f *.tmp
+    rm -f *.x</code></pre>
+	<H2><a name="HEAD_b8c9d0ba" href="#TOC_HEAD_b8c9d0ba">TC150528G.sh</a></H2>
+	<hr/>
+<pre><code>#/bin/sh
+
+echo "---------- LEX Content ----------"
+cat example.flex
+echo ""
+
+echo "---------- TEST Content ----------"
+cat test.src
+echo ""
+
+echo "---------- Parse ----------"
+cat test.src | ./x.main.ctl.x
+echo ""
+
+echo "output: done!"</code></pre>
+	<H2><a name="HEAD_a9b57c1a" href="#TOC_HEAD_a9b57c1a">TC150528G.sh.out</a></H2>
+	<H2><a name="HEAD_bb945288" href="#TOC_HEAD_bb945288">test.src</a></H2>
+	<H2><a name="HEAD_38021426" href="#TOC_HEAD_38021426">x.main.ctl.x</a></H2>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

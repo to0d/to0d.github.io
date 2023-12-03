@@ -1,0 +1,63 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161030C.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161030C.c</h1>
+            <h3>test OS - Big-Endian or Little-Endian</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Endian.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Endian</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include "stdio.h"
+
+typedef union _X
+{
+    int x;
+    char y[4];
+} X;
+
+// Little-Endian output
+//
+// x.x=11223344
+// x.y=44332211
+
+int main(void)
+{
+    {
+        X x;
+        x.x = 0x11223344;
+
+        printf("x.x=%x\n", x.x);
+        printf("x.y=%x%x%x%x\n", x.y[0], x.y[1], x.y[2], x.y[3] );
+    }
+
+    {
+
+        int i = 1;
+        char *p = (char*)(&i);
+
+        if( *p == 1)
+            printf( "output: Little Endian.\n");
+        else
+            printf( "output: Big Endian. \n" );
+    }
+
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

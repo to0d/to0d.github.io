@@ -1,0 +1,153 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT069501.cpp (Max Area of Island)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT069501.cpp (Max Area of Island)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-25</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0695.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0695</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_1a1e5424" href="#TOC_HEAD_1a1e5424">Problem 0695 <strong>Max Area of Island</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/max-area-of-island/" target="_blank">https://leetcode.com/problems/max&ndash;area&ndash;of&ndash;island/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>58.17</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ba29ad13" href="#TOC_HEAD_ba29ad13">LT069501.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_de10a13c">LT0695 (name=Max Area of Island, ptag=Leetcode) &nbsp;<a href="../tags/LT0695.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0695</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_4f45990"><a href="https://leetcode.com/problems/max-area-of-island/" target="_blank">Max Area of Island &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0695.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0695</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_a17b29e0" href="#TOC_HEAD_a17b29e0">LT069501.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int maxAreaOfIsland(vector&lt;vector&lt;int&gt;&gt;& grid) {
+        int row = grid.size(), column = grid[0].size(), maxArea = 0;
+        for(int i = 0; i &lt; row; ++i )
+            for(int j = 0; j &lt; column; ++j )
+                if( grid[i][j] == 1 )
+                    maxArea = std::max(maxArea, _areaOf(grid, row, column, i, j));
+        return maxArea;
+    }
+
+    int _areaOf(vector&lt;vector&lt;int&gt;&gt;& grid, int row, int column, int r, int c) {
+        queue&lt;int&gt; rq, cq;
+        rq.push(r); cq.push(c);
+        int count = 0;
+        while( !rq.empty() )
+        {   int rr = rq.front(); rq.pop();
+            int cc = cq.front(); cq.pop();
+            if( rr &lt; 0 || rr &gt;= row || cc &lt; 0 || cc &gt;= column )
+                continue;
+            if( grid[rr][cc] == 0 )
+                continue;
+            grid[rr][cc] = 0;
+            ++count;
+            rq.push(rr); cq.push(cc+1);
+            rq.push(rr); cq.push(cc-1);
+            rq.push(rr+1); cq.push(cc);
+            rq.push(rr-1); cq.push(cc);
+        }
+        return count;
+    }
+};
+
+
+
+void test(vector&lt;vector&lt;int&gt;&gt; grid)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(grid);
+    int r = Solution().maxAreaOfIsland(grid);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({{0,1,1,0}, {0,0,1,0}});
+}
+
+// Result
+//
+// 2023-01-19: Runtime 31ms 29.81% Memory 30.9MB 6.76%, https://leetcode.com/problems/max-area-of-island/submissions/880970748/
+// 2023-02-25: Runtime 23ms 58.17% Memory 30.8MB 6.27%, https://leetcode.com/problems/max-area-of-island/submissions/904432298/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [[0,1,1,0],[0,0,1,0]]; output: 3;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

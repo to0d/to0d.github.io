@@ -1,0 +1,2628 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>LLVM: How to support riscv in LLVM</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">LLVM: How to support riscv in LLVM</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-29</time>
+            <i><a href="../tags/LLVM.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM</a>&nbsp;<a href="../tags/RISCV.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>RISCV</a>&nbsp;<a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H2><a name="HEAD_c0b68c76" href="#TOC_HEAD_c0b68c76">1. RISCV Backend 相关代码</a></H2>
+	<H3><a name="HEAD_f95a6f55" href="#TOC_HEAD_f95a6f55">1.1. Query (LLVM 17, before 2019)</a></H3>
+<ul>
+	<li>Run</li>
+	<br />
+	<pre><code>~/llvm-project
+git checkout 17.x
+./llvm-query-commit-riscv.sh	</code></pre>
+	<li><a name="HEAD_HIDDEN_b843876c">see <a href="c64d091d0a2c4f0ea745cdcb058f3ac5.html" target="_blank">llvm&ndash;query&ndash;commit&ndash;riscv.sh</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_d0479e" href="#TOC_HEAD_d0479e">1.2. result (249 commits, 445 sources)</a></H3>
+<ol>
+	<li>bolt/lib/Core/Relocation.cpp</li>
+	<li>bolt/lib/Rewrite/RewriteInstance.cpp</li>
+	<li>bolt/lib/Target/RISCV/RISCVMCPlusBuilder.cpp</li>
+	<li>clang/Driver/riscv&ndash;abi.c</li>
+	<li>clang/Driver/riscv&ndash;arch.c</li>
+	<li>clang/Driver/riscv&ndash;features.c</li>
+	<li>clang/Driver/riscv&ndash;gnutools.c</li>
+	<li>clang/Driver/riscv32&ndash;toolchain.c</li>
+	<li>clang/Driver/riscv64&ndash;toolchain.c</li>
+	<li>clang/docs/ReleaseNotes.rst</li>
+	<li>clang/docs/ShadowCallStack.rst</li>
+	<li>clang/include/clang/AST/ASTContext.h</li>
+	<li>clang/include/clang/AST/Type.h</li>
+	<li>clang/include/clang/Basic/Attr.td</li>
+	<li>clang/include/clang/Basic/AttrDocs.td</li>
+	<li>clang/include/clang/Basic/BuiltinsRISCV.def</li>
+	<li>clang/include/clang/Basic/BuiltinsRISCVVector.def</li>
+	<li>clang/include/clang/Basic/CMakeLists.txt</li>
+	<li>clang/include/clang/Basic/DiagnosticDriverKinds.td</li>
+	<li>clang/include/clang/Basic/DiagnosticSemaKinds.td</li>
+	<li>clang/include/clang/Basic/RISCVVTypes.def</li>
+	<li>clang/include/clang/Basic/TargetInfo.h</li>
+	<li>clang/include/clang/Basic/TargetOptions.h</li>
+	<li>clang/include/clang/Basic/TokenKinds.def</li>
+	<li>clang/include/clang/Basic/riscv_sifive_vector.td</li>
+	<li>clang/include/clang/Basic/riscv_vector.td</li>
+	<li>clang/include/clang/Basic/riscv_vector_common.td</li>
+	<li>clang/include/clang/Driver/Options.td</li>
+	<li>clang/include/clang/Parse/Parser.h</li>
+	<li>clang/include/clang/Sema/Overload.h</li>
+	<li>clang/include/clang/Sema/RISCVIntrinsicManager.h</li>
+	<li>clang/include/clang/Sema/Sema.h</li>
+	<li>clang/include/clang/Serialization/ASTBitCodes.h</li>
+	<li>clang/include/clang/Support/RISCVVIntrinsicUtils.h</li>
+	<li>clang/lib/AST/ASTContext.cpp</li>
+	<li>clang/lib/AST/ItaniumMangle.cpp</li>
+	<li>clang/lib/AST/JSONNodeDumper.cpp</li>
+	<li>clang/lib/AST/TextNodeDumper.cpp</li>
+	<li>clang/lib/AST/Type.cpp</li>
+	<li>clang/lib/AST/TypePrinter.cpp</li>
+	<li>clang/lib/Analysis/UninitializedValues.cpp</li>
+	<li>clang/lib/Basic/CMakeLists.txt</li>
+	<li>clang/lib/Basic/Targets.cpp</li>
+	<li>clang/lib/Basic/Targets/Mips.h</li>
+	<li>clang/lib/Basic/Targets/RISCV.cpp</li>
+	<li>clang/lib/Basic/Targets/RISCV.h</li>
+	<li>clang/lib/CMakeLists.txt</li>
+	<li>clang/lib/CodeGen/ABIInfoImpl.cpp</li>
+	<li>clang/lib/CodeGen/ABIInfoImpl.h</li>
+	<li>clang/lib/CodeGen/BackendUtil.cpp</li>
+	<li>clang/lib/CodeGen/CGBuiltin.cpp</li>
+	<li>clang/lib/CodeGen/CGCall.cpp</li>
+	<li>clang/lib/CodeGen/CodeGenModule.cpp</li>
+	<li>clang/lib/CodeGen/CodeGenTypes.cpp</li>
+	<li>clang/lib/CodeGen/TargetInfo.cpp</li>
+	<li>clang/lib/CodeGen/Targets/RISCV.cpp</li>
+	<li>clang/lib/Driver/CMakeLists.txt</li>
+	<li>clang/lib/Driver/Driver.cpp</li>
+	<li>clang/lib/Driver/SanitizerArgs.cpp</li>
+	<li>clang/lib/Driver/ToolChains/Arch/RISCV.cpp</li>
+	<li>clang/lib/Driver/ToolChains/Arch/RISCV.h</li>
+	<li>clang/lib/Driver/ToolChains/BareMetal.cpp</li>
+	<li>clang/lib/Driver/ToolChains/Clang.cpp</li>
+	<li>clang/lib/Driver/ToolChains/Clang.h</li>
+	<li>clang/lib/Driver/ToolChains/CommonArgs.cpp</li>
+	<li>clang/lib/Driver/ToolChains/Flang.cpp</li>
+	<li>clang/lib/Driver/ToolChains/Fuchsia.cpp</li>
+	<li>clang/lib/Driver/ToolChains/Gnu.cpp</li>
+	<li>clang/lib/Driver/ToolChains/Linux.cpp</li>
+	<li>clang/lib/Driver/ToolChains/RISCV.cpp</li>
+	<li>clang/lib/Driver/ToolChains/RISCV.h</li>
+	<li>clang/lib/Driver/ToolChains/RISCVToolchain.cpp</li>
+	<li>clang/lib/Driver/ToolChains/RISCVToolchain.h</li>
+	<li>clang/lib/Frontend/CompilerInvocation.cpp</li>
+	<li>clang/lib/Headers/CMakeLists.txt</li>
+	<li>clang/lib/Headers/riscv_ntlh.h</li>
+	<li>clang/lib/Headers/sifive_vector.h</li>
+	<li>clang/lib/Parse/ParsePragma.cpp</li>
+	<li>clang/lib/Sema/CMakeLists.txt</li>
+	<li>clang/lib/Sema/Sema.cpp</li>
+	<li>clang/lib/Sema/SemaCast.cpp</li>
+	<li>clang/lib/Sema/SemaChecking.cpp</li>
+	<li>clang/lib/Sema/SemaDecl.cpp</li>
+	<li>clang/lib/Sema/SemaDeclAttr.cpp</li>
+	<li>clang/lib/Sema/SemaExpr.cpp</li>
+	<li>clang/lib/Sema/SemaExprCXX.cpp</li>
+	<li>clang/lib/Sema/SemaLookup.cpp</li>
+	<li>clang/lib/Sema/SemaOverload.cpp</li>
+	<li>clang/lib/Sema/SemaRISCVVectorLookup.cpp</li>
+	<li>clang/lib/Sema/SemaType.cpp</li>
+	<li>clang/lib/Serialization/ASTReader.cpp</li>
+	<li>clang/lib/Support/CMakeLists.txt</li>
+	<li>clang/lib/Support/RISCVVIntrinsicUtils.cpp</li>
+	<li>clang/utils/TableGen/CMakeLists.txt</li>
+	<li>clang/utils/TableGen/RISCVVEmitter.cpp</li>
+	<li>clang/utils/TableGen/TableGen.cpp</li>
+	<li>clang/utils/TableGen/TableGenBackends.h</li>
+	<li>compiler&ndash;rt/cmake/Modules/AllSupportedArchDefs.cmake</li>
+	<li>compiler&ndash;rt/lib/builtins/CMakeLists.txt</li>
+	<li>compiler&ndash;rt/lib/builtins/riscv/fp_mode.c</li>
+	<li>compiler&ndash;rt/lib/sanitizer_common/sanitizer_stacktrace.h</li>
+	<li>libc/cmake/modules/LLVMLibCFlagRules.cmake</li>
+	<li>libc/cmake/modules/LLVMLibCObjectRules.cmake</li>
+	<li>libc/config/linux/riscv64/entrypoints.txt</li>
+	<li>libc/docs/math/index.rst</li>
+	<li>libc/src/__support/macros/properties/cpu_features.h</li>
+	<li>libcxxabi/src/demangle/ItaniumDemangle.h</li>
+	<li>libunwind/include/libunwind.h</li>
+	<li>libunwind/src/Registers.hpp</li>
+	<li>lld/ELF/Arch/RISCV.cpp</li>
+	<li>lld/ELF/Config.h</li>
+	<li>lld/ELF/Driver.cpp</li>
+	<li>lld/ELF/InputSection.cpp</li>
+	<li>lld/ELF/InputSection.h</li>
+	<li>lld/ELF/Options.td</li>
+	<li>lld/ELF/Symbols.cpp</li>
+	<li>lld/ELF/Symbols.h</li>
+	<li>lld/ELF/Writer.cpp</li>
+	<li>lld/docs/ld.lld.1</li>
+	<li>lldb/source/Host/common/HostInfoBase.cpp</li>
+	<li>lldb/source/Host/common/NativeProcessProtocol.cpp</li>
+	<li>lldb/source/Plugins/Instruction/CMakeLists.txt</li>
+	<li>lldb/source/Plugins/Instruction/RISCV/CMakeLists.txt</li>
+	<li>lldb/source/Plugins/Instruction/RISCV/EmulateInstructionRISCV.cpp</li>
+	<li>lldb/source/Plugins/Instruction/RISCV/EmulateInstructionRISCV.h</li>
+	<li>lldb/source/Plugins/Instruction/RISCV/RISCVCInstructions.h</li>
+	<li>lldb/source/Plugins/Instruction/RISCV/RISCVInstructions.h</li>
+	<li>lldb/source/Plugins/Process/Linux/CMakeLists.txt</li>
+	<li>lldb/source/Plugins/Process/Linux/NativeProcessLinux.cpp</li>
+	<li>lldb/source/Plugins/Process/Linux/NativeRegisterContextLinux_riscv64.cpp</li>
+	<li>lldb/source/Plugins/Process/Linux/NativeRegisterContextLinux_riscv64.h</li>
+	<li>lldb/source/Plugins/Process/Utility/CMakeLists.txt</li>
+	<li>lldb/source/Plugins/Process/Utility/NativeProcessSoftwareSingleStep.cpp</li>
+	<li>lldb/source/Plugins/Process/Utility/RegisterContextPOSIX_riscv64.cpp</li>
+	<li>lldb/source/Plugins/Process/Utility/RegisterContextPOSIX_riscv64.h</li>
+	<li>lldb/source/Plugins/Process/Utility/RegisterInfoPOSIX_riscv64.cpp</li>
+	<li>lldb/source/Plugins/Process/Utility/RegisterInfoPOSIX_riscv64.h</li>
+	<li>lldb/source/Plugins/Process/Utility/RegisterInfos_riscv64.h</li>
+	<li>lldb/source/Plugins/Process/Utility/lldb&ndash;riscv&ndash;register&ndash;enums.h</li>
+	<li>lldb/source/Plugins/TypeSystem/Clang/TypeSystemClang.cpp</li>
+	<li>lldb/source/Target/Platform.cpp</li>
+	<li>lldb/source/Utility/RISCV_DWARF_Registers.h</li>
+	<li>lldb/tools/lldb&ndash;server/CMakeLists.txt</li>
+	<li>lldb/tools/lldb&ndash;server/SystemInitializerLLGS.cpp</li>
+	<li>llvm/CMakeLists.txt</li>
+	<li>llvm/CODE_OWNERS.TXT</li>
+	<li>llvm/docs/Atomics.rst</li>
+	<li>llvm/docs/CommandGuide/llvm&ndash;mca.rst</li>
+	<li>llvm/docs/CommandGuide/tblgen.rst</li>
+	<li>llvm/docs/CompilerWriterInfo.rst</li>
+	<li>llvm/docs/LangRef.rst</li>
+	<li>llvm/docs/RISCVUsage.rst</li>
+	<li>llvm/docs/ReleaseNotes.rst</li>
+	<li>llvm/include/llvm/ADT/Triple.h</li>
+	<li>llvm/include/llvm/Analysis/TargetLibraryInfo.h</li>
+	<li>llvm/include/llvm/Analysis/TargetTransformInfo.h</li>
+	<li>llvm/include/llvm/Analysis/TargetTransformInfoImpl.h</li>
+	<li>llvm/include/llvm/BinaryFormat/ELF.h</li>
+	<li>llvm/include/llvm/BinaryFormat/ELFRelocs/RISCV.def</li>
+	<li>llvm/include/llvm/CodeGen/CallingConvLower.h</li>
+	<li>llvm/include/llvm/CodeGen/MachineCombinerPattern.h</li>
+	<li>llvm/include/llvm/CodeGen/MachineFrameInfo.h</li>
+	<li>llvm/include/llvm/CodeGen/MachineInstr.h</li>
+	<li>llvm/include/llvm/CodeGen/SelectionDAG.h</li>
+	<li>llvm/include/llvm/CodeGen/SelectionDAGISel.h</li>
+	<li>llvm/include/llvm/CodeGen/TargetInstrInfo.h</li>
+	<li>llvm/include/llvm/CodeGen/TargetLowering.h</li>
+	<li>llvm/include/llvm/Demangle/ItaniumDemangle.h</li>
+	<li>llvm/include/llvm/ExecutionEngine/JITLink/ELF_riscv.h</li>
+	<li>llvm/include/llvm/ExecutionEngine/JITLink/JITLink.h</li>
+	<li>llvm/include/llvm/ExecutionEngine/JITLink/riscv.h</li>
+	<li>llvm/include/llvm/IR/Instructions.h</li>
+	<li>llvm/include/llvm/IR/Intrinsics.td</li>
+	<li>llvm/include/llvm/IR/IntrinsicsRISCV.td</li>
+	<li>llvm/include/llvm/IR/IntrinsicsRISCVXTHead.td</li>
+	<li>llvm/include/llvm/IR/IntrinsicsRISCVXsf.td</li>
+	<li>llvm/include/llvm/IR/VPIntrinsics.def</li>
+	<li>llvm/include/llvm/MC/MCAsmBackend.h</li>
+	<li>llvm/include/llvm/MC/MCAssembler.h</li>
+	<li>llvm/include/llvm/MC/MCFixup.h</li>
+	<li>llvm/include/llvm/MC/MCFragment.h</li>
+	<li>llvm/include/llvm/MC/MCInst.h</li>
+	<li>llvm/include/llvm/MC/MCObjectStreamer.h</li>
+	<li>llvm/include/llvm/MC/SubtargetFeature.h</li>
+	<li>llvm/include/llvm/MC/TargetRegistry.h</li>
+	<li>llvm/include/llvm/MCA/CustomBehaviour.h</li>
+	<li>llvm/include/llvm/MCA/InstrBuilder.h</li>
+	<li>llvm/include/llvm/Object/COFF.h</li>
+	<li>llvm/include/llvm/Object/ELFObjectFile.h</li>
+	<li>llvm/include/llvm/Object/MachO.h</li>
+	<li>llvm/include/llvm/Object/ObjectFile.h</li>
+	<li>llvm/include/llvm/Object/Wasm.h</li>
+	<li>llvm/include/llvm/Object/XCOFFObjectFile.h</li>
+	<li>llvm/include/llvm/Support/ELF.h</li>
+	<li>llvm/include/llvm/Support/ELFRelocs/RISCV.def</li>
+	<li>llvm/include/llvm/Support/Host.h</li>
+	<li>llvm/include/llvm/Support/RISCVISAInfo.h</li>
+	<li>llvm/include/llvm/Support/RISCVTargetParser.def</li>
+	<li>llvm/include/llvm/Support/RISCVVIntrinsicUtils.h</li>
+	<li>llvm/include/llvm/Support/TargetParser.h</li>
+	<li>llvm/include/llvm/Target/Target.td</li>
+	<li>llvm/include/llvm/TargetParser/RISCVTargetParser.h</li>
+	<li>llvm/include/llvm/module.modulemap</li>
+	<li>llvm/lib/Analysis/TargetLibraryInfo.cpp</li>
+	<li>llvm/lib/Analysis/TargetTransformInfo.cpp</li>
+	<li>llvm/lib/Analysis/ValueTracking.cpp</li>
+	<li>llvm/lib/CodeGen/AtomicExpandPass.cpp</li>
+	<li>llvm/lib/CodeGen/CodeGenPrepare.cpp</li>
+	<li>llvm/lib/CodeGen/InterleavedAccessPass.cpp</li>
+	<li>llvm/lib/CodeGen/MachineCombiner.cpp</li>
+	<li>llvm/lib/CodeGen/MachineCopyPropagation.cpp</li>
+	<li>llvm/lib/CodeGen/MachineFrameInfo.cpp</li>
+	<li>llvm/lib/CodeGen/MachineInstr.cpp</li>
+	<li>llvm/lib/CodeGen/RegisterScavenging.cpp</li>
+	<li>llvm/lib/CodeGen/SelectionDAG/DAGCombiner.cpp</li>
+	<li>llvm/lib/CodeGen/SelectionDAG/FunctionLoweringInfo.cpp</li>
+	<li>llvm/lib/CodeGen/SelectionDAG/LegalizeDAG.cpp</li>
+	<li>llvm/lib/CodeGen/SelectionDAG/LegalizeIntegerTypes.cpp</li>
+	<li>llvm/lib/CodeGen/SelectionDAG/LegalizeTypes.cpp</li>
+	<li>llvm/lib/CodeGen/SelectionDAG/LegalizeTypes.h</li>
+	<li>llvm/lib/CodeGen/SelectionDAG/LegalizeVectorOps.cpp</li>
+	<li>llvm/lib/CodeGen/SelectionDAG/LegalizeVectorTypes.cpp</li>
+	<li>llvm/lib/CodeGen/SelectionDAG/SelectionDAG.cpp</li>
+	<li>llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp</li>
+	<li>llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.h</li>
+	<li>llvm/lib/CodeGen/SelectionDAG/SelectionDAGISel.cpp</li>
+	<li>llvm/lib/CodeGen/SelectionDAG/TargetLowering.cpp</li>
+	<li>llvm/lib/DebugInfo/LogicalView/Readers/LVELFReader.cpp</li>
+	<li>llvm/lib/ExecutionEngine/JITLink/ELF_riscv.cpp</li>
+	<li>llvm/lib/ExecutionEngine/JITLink/JITLink.cpp</li>
+	<li>llvm/lib/ExecutionEngine/JITLink/riscv.cpp</li>
+	<li>llvm/lib/IR/AutoUpgrade.cpp</li>
+	<li>llvm/lib/IR/Instructions.cpp</li>
+	<li>llvm/lib/IR/Verifier.cpp</li>
+	<li>llvm/lib/MC/MCAsmBackend.cpp</li>
+	<li>llvm/lib/MC/MCAssembler.cpp</li>
+	<li>llvm/lib/MC/MCELFStreamer.cpp</li>
+	<li>llvm/lib/MC/MCExpr.cpp</li>
+	<li>llvm/lib/MC/MCInst.cpp</li>
+	<li>llvm/lib/MC/MCObjectStreamer.cpp</li>
+	<li>llvm/lib/MC/SubtargetFeature.cpp</li>
+	<li>llvm/lib/MCA/CustomBehaviour.cpp</li>
+	<li>llvm/lib/MCA/InstrBuilder.cpp</li>
+	<li>llvm/lib/Object/ELF.cpp</li>
+	<li>llvm/lib/Object/ELFObjectFile.cpp</li>
+	<li>llvm/lib/Object/WasmObjectFile.cpp</li>
+	<li>llvm/lib/Object/XCOFFObjectFile.cpp</li>
+	<li>llvm/lib/ObjectYAML/ELFYAML.cpp</li>
+	<li>llvm/lib/Support/CMakeLists.txt</li>
+	<li>llvm/lib/Support/Host.cpp</li>
+	<li>llvm/lib/Support/RISCVISAInfo.cpp</li>
+	<li>llvm/lib/Support/RISCVVIntrinsicUtils.cpp</li>
+	<li>llvm/lib/Support/TargetParser.cpp</li>
+	<li>llvm/lib/Support/Triple.cpp</li>
+	<li>llvm/lib/TableGen/Record.cpp</li>
+	<li>llvm/lib/TableGen/TGParser.cpp</li>
+	<li>llvm/lib/Target/AArch64/AArch64ISelLowering.cpp</li>
+	<li>llvm/lib/Target/AArch64/AArch64TargetTransformInfo.cpp</li>
+	<li>llvm/lib/Target/ARM/ARMISelDAGToDAG.cpp</li>
+	<li>llvm/lib/Target/ARM/ARMInstrInfo.td</li>
+	<li>llvm/lib/Target/CSKY/AsmParser/CSKYAsmParser.cpp</li>
+	<li>llvm/lib/Target/Hexagon/Hexagon.td</li>
+	<li>llvm/lib/Target/Hexagon/HexagonISelDAGToDAG.cpp</li>
+	<li>llvm/lib/Target/Hexagon/HexagonISelDAGToDAG.h</li>
+	<li>llvm/lib/Target/Hexagon/MCTargetDesc/HexagonAsmBackend.cpp</li>
+	<li>llvm/lib/Target/LLVMBuild.txt</li>
+	<li>llvm/lib/Target/LoongArch/AsmParser/LoongArchAsmParser.cpp</li>
+	<li>llvm/lib/Target/LoongArch/LoongArch.td</li>
+	<li>llvm/lib/Target/LoongArch/LoongArchISelLowering.cpp</li>
+	<li>llvm/lib/Target/M68k/M68kSubtarget.cpp</li>
+	<li>llvm/lib/Target/M68k/M68kSubtarget.h</li>
+	<li>llvm/lib/Target/RISCV/AsmParser/CMakeLists.txt</li>
+	<li>llvm/lib/Target/RISCV/AsmParser/LLVMBuild.txt</li>
+	<li>llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp</li>
+	<li>llvm/lib/Target/RISCV/CMakeLists.txt</li>
+	<li>llvm/lib/Target/RISCV/Disassembler/CMakeLists.txt</li>
+	<li>llvm/lib/Target/RISCV/Disassembler/LLVMBuild.txt</li>
+	<li>llvm/lib/Target/RISCV/Disassembler/RISCVDisassembler.cpp</li>
+	<li>llvm/lib/Target/RISCV/GISel/RISCVCallLowering.cpp</li>
+	<li>llvm/lib/Target/RISCV/GISel/RISCVCallLowering.h</li>
+	<li>llvm/lib/Target/RISCV/GISel/RISCVInstructionSelector.cpp</li>
+	<li>llvm/lib/Target/RISCV/GISel/RISCVLegalizerInfo.cpp</li>
+	<li>llvm/lib/Target/RISCV/GISel/RISCVLegalizerInfo.h</li>
+	<li>llvm/lib/Target/RISCV/GISel/RISCVRegisterBankInfo.cpp</li>
+	<li>llvm/lib/Target/RISCV/GISel/RISCVRegisterBankInfo.h</li>
+	<li>llvm/lib/Target/RISCV/GISel/RISCVRegisterBanks.td</li>
+	<li>llvm/lib/Target/RISCV/InstPrinter/CMakeLists.txt</li>
+	<li>llvm/lib/Target/RISCV/InstPrinter/LLVMBuild.txt</li>
+	<li>llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.cpp</li>
+	<li>llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.h</li>
+	<li>llvm/lib/Target/RISCV/LLVMBuild.txt</li>
+	<li>llvm/lib/Target/RISCV/MCA/CMakeLists.txt</li>
+	<li>llvm/lib/Target/RISCV/MCA/RISCVCustomBehaviour.cpp</li>
+	<li>llvm/lib/Target/RISCV/MCA/RISCVCustomBehaviour.h</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/CMakeLists.txt</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/LLVMBuild.txt</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.h</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVBaseInfo.cpp</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVBaseInfo.h</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFObjectWriter.cpp</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFStreamer.cpp</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFStreamer.h</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVFixupKinds.h</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVInstPrinter.cpp</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVInstPrinter.h</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCAsmInfo.cpp</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCAsmInfo.h</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCCodeEmitter.cpp</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCExpr.cpp</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCExpr.h</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCObjectFileInfo.cpp</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCObjectFileInfo.h</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCPseudoExpansion.cpp</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCPseudoExpansion.h</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCTargetDesc.cpp</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCTargetDesc.h</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVMatInt.cpp</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVMatInt.h</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVTargetStreamer.cpp</li>
+	<li>llvm/lib/Target/RISCV/MCTargetDesc/RISCVTargetStreamer.h</li>
+	<li>llvm/lib/Target/RISCV/RISCV.h</li>
+	<li>llvm/lib/Target/RISCV/RISCV.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVAsmPrinter.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVCallingConv.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVCodeGenPrepare.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVExpandAtomicPseudoInsts.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVExpandPseudoInsts.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVFeatures.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVFrameLowering.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVFrameLowering.h</li>
+	<li>llvm/lib/Target/RISCV/RISCVGatherScatterLowering.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVISelDAGToDAG.h</li>
+	<li>llvm/lib/Target/RISCV/RISCVISelLowering.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVISelLowering.h</li>
+	<li>llvm/lib/Target/RISCV/RISCVInsertNTLHInsts.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVInsertReadWriteCSR.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVInsertVSETVLI.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrFormats.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrFormatsC.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrFormatsV.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfo.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfo.h</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfo.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoA.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoC.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoD.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoF.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoM.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoV.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoVPseudos.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoVSDPatterns.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoVVLPatterns.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoXCV.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoXSf.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoXTHead.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoXVentana.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoZb.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoZc.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoZfa.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoZfbfmin.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoZfh.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoZicbo.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoZicond.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoZihintntl.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoZk.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoZvfbf.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVInstrInfoZvk.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVMCInstLower.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVMachineFunctionInfo.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVMachineFunctionInfo.h</li>
+	<li>llvm/lib/Target/RISCV/RISCVMacroFusion.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVMacroFusion.h</li>
+	<li>llvm/lib/Target/RISCV/RISCVMakeCompressible.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVMergeBaseOffset.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVMoveMerger.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVOptWInstrs.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVProcessors.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVPushPopOptimizer.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVRVVInitUndef.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVRedundantCopyElimination.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVRegisterInfo.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVRegisterInfo.h</li>
+	<li>llvm/lib/Target/RISCV/RISCVRegisterInfo.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVSExtWRemoval.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVSchedRocket.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVSchedSiFive7.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVSchedSyntacoreSCR1.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVSchedule.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVScheduleB.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVScheduleV.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVScheduleZb.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVStripWSuffix.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVSubtarget.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVSubtarget.h</li>
+	<li>llvm/lib/Target/RISCV/RISCVSystemOperands.td</li>
+	<li>llvm/lib/Target/RISCV/RISCVTargetMachine.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVTargetMachine.h</li>
+	<li>llvm/lib/Target/RISCV/RISCVTargetObjectFile.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVTargetObjectFile.h</li>
+	<li>llvm/lib/Target/RISCV/RISCVTargetTransformInfo.cpp</li>
+	<li>llvm/lib/Target/RISCV/RISCVTargetTransformInfo.h</li>
+	<li>llvm/lib/Target/RISCV/TargetInfo/CMakeLists.txt</li>
+	<li>llvm/lib/Target/RISCV/TargetInfo/LLVMBuild.txt</li>
+	<li>llvm/lib/Target/RISCV/TargetInfo/RISCVTargetInfo.cpp</li>
+	<li>llvm/lib/Target/RISCV/TargetInfo/RISCVTargetInfo.h</li>
+	<li>llvm/lib/Target/RISCV/Utils/CMakeLists.txt</li>
+	<li>llvm/lib/Target/RISCV/Utils/LLVMBuild.txt</li>
+	<li>llvm/lib/Target/RISCV/Utils/RISCVBaseInfo.cpp</li>
+	<li>llvm/lib/Target/RISCV/Utils/RISCVBaseInfo.h</li>
+	<li>llvm/lib/Target/RISCV/Utils/RISCVMatInt.cpp</li>
+	<li>llvm/lib/Target/RISCV/Utils/RISCVMatInt.h</li>
+	<li>llvm/lib/Target/SystemZ/SystemZISelLowering.cpp</li>
+	<li>llvm/lib/Target/WebAssembly/WebAssemblyTargetTransformInfo.cpp</li>
+	<li>llvm/lib/Target/X86/X86ISelLowering.cpp</li>
+	<li>llvm/lib/Target/X86/X86TargetTransformInfo.cpp</li>
+	<li>llvm/lib/Target/X86/X86TargetTransformInfo.h</li>
+	<li>llvm/lib/TargetParser/CMakeLists.txt</li>
+	<li>llvm/lib/TargetParser/RISCVISAInfo.cpp</li>
+	<li>llvm/lib/TargetParser/RISCVTargetParser.cpp</li>
+	<li>llvm/lib/Transforms/Utils/BuildLibCalls.cpp</li>
+	<li>llvm/lib/Transforms/Vectorize/LoopVectorize.cpp</li>
+	<li>llvm/lib/Transforms/Vectorize/SLPVectorizer.cpp</li>
+	<li>llvm/tools/llvm&ndash;cfi&ndash;verify/lib/FileAnalysis.cpp</li>
+	<li>llvm/tools/llvm&ndash;mca/CodeRegion.cpp</li>
+	<li>llvm/tools/llvm&ndash;mca/CodeRegion.h</li>
+	<li>llvm/tools/llvm&ndash;mca/CodeRegionGenerator.cpp</li>
+	<li>llvm/tools/llvm&ndash;mca/CodeRegionGenerator.h</li>
+	<li>llvm/tools/llvm&ndash;mca/llvm&ndash;mca.cpp</li>
+	<li>llvm/tools/llvm&ndash;objdump/llvm&ndash;objdump.cpp</li>
+	<li>llvm/tools/llvm&ndash;profgen/ProfiledBinary.cpp</li>
+	<li>llvm/tools/llvm&ndash;readobj/ELFDumper.cpp</li>
+	<li>llvm/utils/TableGen/AsmWriterEmitter.cpp</li>
+	<li>llvm/utils/TableGen/CMakeLists.txt</li>
+	<li>llvm/utils/TableGen/CodeGenDAGPatterns.cpp</li>
+	<li>llvm/utils/TableGen/CodeGenHwModes.cpp</li>
+	<li>llvm/utils/TableGen/CodeGenHwModes.h</li>
+	<li>llvm/utils/TableGen/CodeGenRegisters.cpp</li>
+	<li>llvm/utils/TableGen/CompressInstEmitter.cpp</li>
+	<li>llvm/utils/TableGen/RISCVCompressInstEmitter.cpp</li>
+	<li>llvm/utils/TableGen/RISCVTargetDefEmitter.cpp</li>
+	<li>llvm/utils/TableGen/RegisterInfoEmitter.cpp</li>
+	<li>llvm/utils/TableGen/TableGen.cpp</li>
+	<li>llvm/utils/TableGen/TableGenBackends.h</li>
+	<br />
+</ol>
+	<H3><a name="HEAD_f47f3f86" href="#TOC_HEAD_f47f3f86">1.3. Summary</a></H3>
+<ul>
+	<li>一半以上为 RISCV 后端文件 (143 files) : <code>llvm/lib/Target/RISCV/*</code></li>
+	<li>其他涉及组件 (302 files)</li>
+	<ol>
+		<li>bolt</li>
+		<li>clang</li>
+		<li>compiler&ndash;rt</li>
+		<li>libc</li>
+		<li>libcxxabi</li>
+		<li>libunwind</li>
+		<li>lld/ELF</li>
+		<li>lldb</li>
+		<li>llvm/lib/CodeGen</li>
+		<li>llvm/lib/DebugInfo</li>
+		<li>llvm/lib/ExecutionEngine</li>
+		<li>llvm/lib/IR</li>
+		<li>llvm/lib/MC</li>
+		<li>llvm/lib/MCA</li>
+		<li>llvm/lib/Object</li>
+		<li>llvm/lib/Support</li>
+		<li>llvm/lib/TableGen</li>
+		<li>llvm/lib/TargetParser</li>
+		<li>llvm/lib/Transforms</li>
+		<li>llvm/tools/llvm&ndash;mca</li>
+		<li>llvm/tools/llvm&ndash;objdump</li>
+		<li>llvm/tools/llvm&ndash;profgen</li>
+		<li>llvm/tools/llvm&ndash;readobj</li>
+		<li>llvm/utils/TableGen</li>
+		<br />
+	</ol>
+</ul>
+	<H2><a name="HEAD_f9d66c3f" href="#TOC_HEAD_f9d66c3f">2. Main steps to add RISCV backend</a></H2>
+	<H3><a name="HEAD_cc6a0c5e" href="#TOC_HEAD_cc6a0c5e">2.1. triple</a></H3>
+<pre><code>commit: b6e784a240fa3f62874c457afa43be37278cfa2d
+title:  [RISCV] Recognise riscv32 and riscv64 in triple parsing code
+llvm/include/llvm/ADT/Triple.h
+llvm/lib/Support/Triple.cpp
+llvm/unittests/ADT/TripleTest.cpp</code></pre>
+	<H3><a name="HEAD_10c7f" href="#TOC_HEAD_10c7f">2.2. ELF</a></H3>
+<pre><code>commit: 1524f62b975523ce2bec5ad82873303e8e2e0dbc
+title:  [RISCV] Add RISC-V ELF defines
+llvm/include/llvm/Object/ELFObjectFile.h
+llvm/include/llvm/Support/ELF.h
+llvm/lib/Object/ELF.cpp
+llvm/lib/ObjectYAML/ELFYAML.cpp
+llvm/tools/llvm-objdump/llvm-objdump.cpp
+llvm/tools/llvm-readobj/ELFDumper.cpp
+
+commit: acf6c82de2c5a4c3f3552cce36765ec0253ff9e0
+title:  [RISCV] Add missing RISCV.def
+llvm/include/llvm/Support/ELFRelocs/RISCV.def</code></pre>
+	<H3><a name="HEAD_3ba51d22" href="#TOC_HEAD_3ba51d22">2.3. stub backend</a></H3>
+<pre><code>commit: b2e5472d854365ee26a24c7fe3ec6adfc2362ae4
+title:  [RISCV] Add stub backend
+llvm/CMakeLists.txt
+llvm/CODE_OWNERS.TXT
+llvm/docs/CompilerWriterInfo.rst
+llvm/lib/Target/LLVMBuild.txt
+llvm/lib/Target/RISCV/CMakeLists.txt
+llvm/lib/Target/RISCV/LLVMBuild.txt
+llvm/lib/Target/RISCV/RISCVTargetMachine.cpp
+llvm/lib/Target/RISCV/RISCVTargetMachine.h
+llvm/lib/Target/RISCV/TargetInfo/CMakeLists.txt
+llvm/lib/Target/RISCV/TargetInfo/LLVMBuild.txt
+llvm/lib/Target/RISCV/TargetInfo/RISCVTargetInfo.cpp
+
+
+commit: 0b02945c9808f00c5954832bf300531f0427ad63
+title:  [RISCV] Add RISCV.def to module.modulemap
+llvm/include/llvm/module.modulemap</code></pre>
+	<H3><a name="HEAD_f86148c7" href="#TOC_HEAD_f86148c7">2.4. td files</a></H3>
+<pre><code>commit: 24d9b13b36bdd14a4bc7ad29f6715bd9ebbdfed8
+title:  [RISCV 4/10] Add basic RISCV{InstrFormats,InstrInfo,RegisterInfo,}.td
+llvm/lib/Target/RISCV/CMakeLists.txt
+llvm/lib/Target/RISCV/RISCV.td
+llvm/lib/Target/RISCV/RISCVInstrFormats.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVRegisterInfo.td</code></pre>
+	<H3><a name="HEAD_dc1515f8" href="#TOC_HEAD_dc1515f8">2.5. MCTargetDesc</a></H3>
+<pre><code>commit: 6b2cca7f8f37f4929328d970582892354a893f5a
+title:  [RISCV] Add bare-bones RISC-V MCTargetDesc
+llvm/lib/Target/RISCV/CMakeLists.txt
+llvm/lib/Target/RISCV/LLVMBuild.txt
+llvm/lib/Target/RISCV/MCTargetDesc/CMakeLists.txt
+llvm/lib/Target/RISCV/MCTargetDesc/LLVMBuild.txt
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFObjectWriter.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCAsmInfo.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCAsmInfo.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCCodeEmitter.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCTargetDesc.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCTargetDesc.h
+llvm/lib/Target/RISCV/RISCVTargetMachine.h
+llvm/lib/Target/RISCV/TargetInfo/RISCVTargetInfo.cpp
+
+commit: d36e04cb6c2f308d6789f841a7155334aca7d688
+title:  [RISCV] Fix unused variable in RISCVMCTargetDesc. NFC
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCTargetDesc.cpp
+
+commit: 6be16fbfb8107dcc72e9fd2c15a6350013dfc162
+title:  [RISCV] Pseudo instructions are isCodeGenOnly, have blank asmstr
+llvm/lib/Target/RISCV/RISCVInstrFormats.td
+
+commit: e4f731b81308274ab2da8f0fed88420905760d42
+title:  [RISCV] Fix RV32 datalayout string and ensure initAsmInfo is called
+llvm/lib/Target/RISCV/RISCVTargetMachine.cpp</code></pre>
+	<H3><a name="HEAD_639eba5a" href="#TOC_HEAD_639eba5a">2.6. AsmParser</a></H3>
+<pre><code>commit: 1a4272914da23c2f39fcebcbe63998d1c0ff4330
+title:  [RISCV] Add basic RISCVAsmParser
+llvm/lib/Target/RISCV/CMakeLists.txt
+llvm/lib/Target/RISCV/LLVMBuild.txt
+llvm/lib/Target/RISCV/RISCV.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+
+commit: 04f06d922f9eb12a0db84b422d4b0494b206979c
+title:  [RISCV] Add basic RISCVAsmParser (missing files)
+llvm/lib/Target/RISCV/AsmParser/CMakeLists.txt
+llvm/lib/Target/RISCV/AsmParser/LLVMBuild.txt
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+
+commit: 6b34069ab702672c5317b2082fcdf67ed65871af
+title:  [RISCV] Fix warning about unused getSubtargetFeatureName()
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp</code></pre>
+	<H3><a name="HEAD_2fd5a708" href="#TOC_HEAD_2fd5a708">2.7. Relocation</a></H3>
+<pre><code>commit: 67820e015fc79aa115b594269de51d7a9d132682
+title:  [RISCV] Recognize new relocation types
+llvm/include/llvm/BinaryFormat/ELFRelocs/RISCV.def</code></pre>
+	<H3><a name="HEAD_6a0226d4" href="#TOC_HEAD_6a0226d4">2.8. InstPrinter</a></H3>
+<pre><code>commit: 2fee9ead7e51098fc8a6b401ce338c434c6c3506
+title:  [RISCV] Add RISCVInstPrinter and basic MC assembler tests
+llvm/lib/Target/RISCV/CMakeLists.txt
+llvm/lib/Target/RISCV/InstPrinter/CMakeLists.txt
+llvm/lib/Target/RISCV/InstPrinter/LLVMBuild.txt
+llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.cpp
+llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.h
+llvm/lib/Target/RISCV/LLVMBuild.txt
+llvm/lib/Target/RISCV/MCTargetDesc/LLVMBuild.txt
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCTargetDesc.cpp
+llvm/test/MC/RISCV/lit.local.cfg
+llvm/test/MC/RISCV/rv32i-invalid.s
+llvm/test/MC/RISCV/rv32i-valid.s
+
+commit: dd83484ab429ce78956c21af333d9a0f6f9ddc8c
+title:  [RISCV] Set HasRelocationAddend for RISCVELFObjectWriter
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFObjectWriter.cpp
+
+commit: e45186d43f39e1648e04a5ee09f6e76dcd2e6929
+title:  [RISCV] Fix two abuses of llvm_unreachable
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFObjectWriter.cpp
+
+commit: 21c8adf50b3a15af6a515763cc0c97f42d663a67
+title:  [RISCV] Trivial whitespace fix in RISCVInstPrinter
+llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.cpp
+
+commit: 4f7f0da57429675210c204baf2d8a41cade61d04
+title:  [RISCV][NFC] Fix sorting of includes in lib/Target/RISCV
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCTargetDesc.cpp</code></pre>
+	<H3><a name="HEAD_a7ec69c4" href="#TOC_HEAD_a7ec69c4">2.9. all instructions</a></H3>
+<pre><code>commit: 6758ecb98cf6a1e2d99f6a53cffe7d4848371cbc
+title:  [RISCV] Add support for all RV32I instructions
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.cpp
+llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVBaseInfo.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCCodeEmitter.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/rv32i-invalid.s
+llvm/test/MC/RISCV/rv32i-valid.s</code></pre>
+	<H3><a name="HEAD_dff15474" href="#TOC_HEAD_dff15474">2.10. disassembly</a></H3>
+<pre><code>commit: 8ab4a9696a7753c546caff4fd21826ea72370648
+title:  [RISCV] Add support for disassembly
+llvm/lib/Target/RISCV/CMakeLists.txt
+llvm/lib/Target/RISCV/Disassembler/CMakeLists.txt
+llvm/lib/Target/RISCV/Disassembler/LLVMBuild.txt
+llvm/lib/Target/RISCV/Disassembler/RISCVDisassembler.cpp
+llvm/lib/Target/RISCV/LLVMBuild.txt
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCCodeEmitter.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCTargetDesc.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCTargetDesc.h
+llvm/lib/Target/RISCV/RISCVInstrFormats.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/rv32i-valid.s
+
+commit: 52b68efdd481b71dc9c5aebf7f367b90ef590a9d
+title:  [RISCV] Define RISC-V specific e_flags
+llvm/include/llvm/BinaryFormat/ELF.h
+
+commit: 9d3f12501a4594421a8d07053dd9dbaa652c7418
+title:  [RISCV] Add common fixups and relocations
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/CMakeLists.txt
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVBaseInfo.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFObjectWriter.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVFixupKinds.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCCodeEmitter.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCExpr.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCExpr.h
+llvm/lib/Target/RISCV/RISCVInstrFormats.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/fixups-diagnostics.s
+llvm/test/MC/RISCV/fixups.s
+llvm/test/MC/RISCV/hilo-constaddr.s
+llvm/test/MC/RISCV/relocations.s
+llvm/test/MC/RISCV/rv32i-invalid.s
+llvm/test/MC/RISCV/rv32i-valid.s
+
+commit: 1fb1a480b586a8cbebd5eee7c3021e1d5e88c9eb
+title:  [RISCV] Parse RISC-V eflags in ObjectYAML
+llvm/lib/ObjectYAML/ELFYAML.cpp
+
+commit: 3ce3e6326c0094f4447d5e4cb7511c46483393f0
+title:  [RISCV] Add missed test case for r314770
+llvm/test/Object/RISCV/elf-flags.yaml
+llvm/test/Object/RISCV/lit.local.cfg
+
+commit: bb89b2b62860a53501d4d095fcbae558597f1253
+title:  [llvm-readobj][RISCV] Pretty-print RISCV e_flags
+llvm/test/Object/RISCV/elf-flags.yaml
+llvm/tools/llvm-readobj/ELFDumper.cpp
+
+commit: 8cc99f1887df7035e677940bba48063858360f2d
+title:  [RISCV] Fix build after r315254
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFObjectWriter.cpp
+
+commit: 5c1eef461856944ae776badc3c123e2bef2a0697
+title:  [RISCV] Fix build after r315327
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFObjectWriter.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCTargetDesc.h
+
+commit: 13ce95b77f54aa4a7ff01a46a5faaa85001755a6
+title:  [RISCV] Bugfix createRISCVELFObjectWriter
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFObjectWriter.cpp
+llvm/test/MC/RISCV/elf-header.s
+
+commit: ee7c7ecd0366214d6f7a6d38fb4d8c16d98cbb85
+title:  [RISCV] Prepare for the use of variable-sized register classes
+llvm/lib/Target/RISCV/Disassembler/RISCVDisassembler.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVBaseInfo.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCCodeEmitter.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCTargetDesc.cpp
+llvm/lib/Target/RISCV/RISCV.td
+llvm/lib/Target/RISCV/RISCVInstrFormats.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVRegisterInfo.td
+
+commit: baa54d4ac868a31ce5e33274dc80cf5106e7908e
+title:  [RISCV][NFC] Drop unused parameter from createImm helper in RISCVAsmParser
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+
+commit: 3c941e7ed92a5043d6e09b9885a0c66b52f7882e
+title:  [RISCV] RISCVAsmParser: early exit if RISCVOperand isn't immediate as expected
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/test/MC/RISCV/rv32i-invalid.s
+
+commit: 8971842f43b978e72aa40cf0a94c3d39c7a74c85
+title:  [RISCV] Initial codegen support for ALU operations
+llvm/lib/Target/RISCV/CMakeLists.txt
+llvm/lib/Target/RISCV/LLVMBuild.txt
+llvm/lib/Target/RISCV/RISCV.h
+llvm/lib/Target/RISCV/RISCV.td
+llvm/lib/Target/RISCV/RISCVAsmPrinter.cpp
+llvm/lib/Target/RISCV/RISCVCallingConv.td
+llvm/lib/Target/RISCV/RISCVFrameLowering.cpp
+llvm/lib/Target/RISCV/RISCVFrameLowering.h
+llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.h
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVMCInstLower.cpp
+llvm/lib/Target/RISCV/RISCVRegisterInfo.cpp
+llvm/lib/Target/RISCV/RISCVRegisterInfo.h
+llvm/lib/Target/RISCV/RISCVRegisterInfo.td
+llvm/lib/Target/RISCV/RISCVSubtarget.cpp
+llvm/lib/Target/RISCV/RISCVSubtarget.h
+llvm/lib/Target/RISCV/RISCVTargetMachine.cpp
+llvm/lib/Target/RISCV/RISCVTargetMachine.h
+llvm/test/CodeGen/RISCV/alu32.ll
+llvm/test/CodeGen/RISCV/lit.local.cfg
+
+commit: c6c4e8bd5aa536ee5513539a5d42e9743291f1dd
+title:  [RISCV] Add missing hunk from r316188
+llvm/lib/Target/RISCV/RISCV.td
+
+commit: 0f0e1b54f07bb63ca8da28399028e2d5387ce500
+title:  [RISCV] Codegen support for materializing constants
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/CodeGen/RISCV/alu32.ll
+llvm/test/CodeGen/RISCV/imm.ll
+
+commit: cfa6291bb1ae1d1d66467b662169af9453b7d846
+title:  [RISCV] Codegen support for memory operations
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.h
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/CodeGen/RISCV/mem.ll
+llvm/test/CodeGen/RISCV/wide-mem.ll
+
+commit: ec8aa913051a7edd895ad960bc0e12cd78ff0603
+title:  [RISCV] Codegen support for memory operations on global addresses
+llvm/lib/Target/RISCV/RISCV.h
+llvm/lib/Target/RISCV/RISCVAsmPrinter.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/lib/Target/RISCV/RISCVMCInstLower.cpp
+llvm/test/CodeGen/RISCV/mem.ll
+llvm/test/CodeGen/RISCV/wide-mem.ll
+
+commit: 74913e1c70097babd15de705b6c4bd3dbcfebfa6
+title:  [RISCV] Codegen for conditional branches
+llvm/lib/Target/RISCV/RISCVCallingConv.td
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.h
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVMCInstLower.cpp
+llvm/lib/Target/RISCV/RISCVRegisterInfo.cpp
+llvm/lib/Target/RISCV/RISCVRegisterInfo.h
+llvm/test/CodeGen/RISCV/branch.ll
+
+commit: a337675cdb05e4ff04c441517203ba73e2f9eee7
+title:  [RISCV] Initial support for function calls
+llvm/lib/Target/RISCV/RISCVFrameLowering.h
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVMCInstLower.cpp
+llvm/lib/Target/RISCV/RISCVRegisterInfo.cpp
+llvm/lib/Target/RISCV/RISCVRegisterInfo.h
+llvm/test/CodeGen/RISCV/calls.ll
+
+commit: a47514ce3faac5c682bf1edea37a3fcce59aa703
+title:  [RISCV] MC layer support for the standard RV32M instruction set extension
+llvm/lib/Target/RISCV/RISCV.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVInstrInfoM.td
+llvm/lib/Target/RISCV/RISCVSubtarget.h
+llvm/test/MC/RISCV/rv32i-invalid.s
+llvm/test/MC/RISCV/rv32m-valid.s
+
+commit: 8c345c5aa903b67bdf43394f05205a09c50f6dce
+title:  [RISCV] MC layer support for the standard RV32A instruction set extension
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/RISCV.td
+llvm/lib/Target/RISCV/RISCVInstrFormats.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVInstrInfoA.td
+llvm/lib/Target/RISCV/RISCVSubtarget.h
+llvm/test/MC/RISCV/rv32a-invalid.s
+llvm/test/MC/RISCV/rv32a-valid.s
+llvm/test/MC/RISCV/rv32i-invalid.s
+
+commit: 18ff303bed72782f05cfc9b87ed38d788edbdf07
+title:  [RISCV] Re-generate test/CodeGen/RISCV/alu32.ll using update_llc_test_checks.py
+llvm/test/CodeGen/RISCV/alu32.ll
+
+commit: 5f043ae2e16ba9ebe8d58aa7c225fed9bfaf7b90
+title:  [RISCV] Silence an unused variable warning in release builds [NFC]
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp
+llvm/lib/Target/RISCV/RISCVRegisterInfo.cpp
+
+commit: 47fbc5911dca29ca64eb8d3500d382dde7921975
+title:  [RISCV] Fix 64-bit data layout mismatch between backend and target description
+llvm/lib/Target/RISCV/RISCVTargetMachine.cpp
+
+commit: 65385167fbb4d30fcdddf54102b08fcb1b497fed
+title:  [RISCV] Implement lowering of ISD::SELECT
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/CodeGen/RISCV/bare-select.ll
+llvm/test/CodeGen/RISCV/select-cc.ll
+
+commit: ffc435e9c78e61f3ce7213840021300a06a984e7
+title:  [RISCV] Support and tests for a variety of additional LLVM IR constructs
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVMCInstLower.cpp
+llvm/test/CodeGen/RISCV/addc-adde-sube-subc.ll
+llvm/test/CodeGen/RISCV/alu32.ll
+llvm/test/CodeGen/RISCV/blockaddress.ll
+llvm/test/CodeGen/RISCV/bswap-ctlz-cttz-ctpop.ll
+llvm/test/CodeGen/RISCV/div.ll
+llvm/test/CodeGen/RISCV/i32-icmp.ll
+llvm/test/CodeGen/RISCV/indirectbr.ll
+llvm/test/CodeGen/RISCV/jumptable.ll
+llvm/test/CodeGen/RISCV/mul.ll
+llvm/test/CodeGen/RISCV/rem.ll
+llvm/test/CodeGen/RISCV/rotl-rotr.ll
+llvm/test/CodeGen/RISCV/sext-zext-trunc.ll
+llvm/test/CodeGen/RISCV/shifts.ll
+
+commit: 0c7b3643f715b1c2920331b43aca94997b58681d
+title:  [RISCV] Use register X0 (ZERO) for constant 0
+llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp
+llvm/test/CodeGen/RISCV/bare-select.ll
+llvm/test/CodeGen/RISCV/bswap-ctlz-cttz-ctpop.ll
+llvm/test/CodeGen/RISCV/sext-zext-trunc.ll
+
+commit: 9caefe364af0e60e31d30a0fd45ad1b5616283c0
+title:  [RISCV][NFC] Clean up RISCVDAGToDAGISel::Select
+llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp
+
+commit: e2f664e1c6151cf86554ef1d18bf4da0ab332583
+title:  [RISCV][NFC] Remove unnecessary {} around single statement if block
+llvm/lib/Target/RISCV/Disassembler/RISCVDisassembler.cpp
+
+commit: 0d6cf90663e6662e9b7b6045d56755679c1ffdc9
+title:  [RISCV] MC layer support for the standard RV32F instruction set extension
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/Disassembler/RISCVDisassembler.cpp
+llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.cpp
+llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVBaseInfo.h
+llvm/lib/Target/RISCV/RISCV.td
+llvm/lib/Target/RISCV/RISCVInstrFormats.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVInstrInfoF.td
+llvm/lib/Target/RISCV/RISCVRegisterInfo.td
+llvm/lib/Target/RISCV/RISCVSubtarget.h
+llvm/test/MC/RISCV/rv32f-invalid.s
+llvm/test/MC/RISCV/rv32f-valid.s
+llvm/test/MC/RISCV/rv32i-invalid.s
+
+commit: 7bc2a95bb98a5e589cf2a098f2b6c4eae3e4c072
+title:  [RISCV] MC layer support for the standard RV32D instruction set extension
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/Disassembler/RISCVDisassembler.cpp
+llvm/lib/Target/RISCV/RISCV.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVInstrInfoD.td
+llvm/lib/Target/RISCV/RISCVRegisterInfo.td
+llvm/lib/Target/RISCV/RISCVSubtarget.h
+llvm/test/MC/RISCV/rv32d-invalid.s
+llvm/test/MC/RISCV/rv32d-valid.s
+llvm/test/MC/RISCV/rv32f-invalid.s
+
+commit: a6e6248307f716acde5239ff81d7ac053024936f
+title:  [RISCV] MC layer support for the standard RV64I instructions
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/RISCV.td
+llvm/lib/Target/RISCV/RISCVInstrFormats.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/rv32i-invalid.s
+llvm/test/MC/RISCV/rv64i-invalid.s
+llvm/test/MC/RISCV/rv64i-valid.s
+
+commit: 81def7224ecca013eafc3c6402df18f6af791e41
+title:  [RISCV] MC layer support for the standard RV64M instruction set extension
+llvm/lib/Target/RISCV/RISCVInstrInfoM.td
+llvm/test/MC/RISCV/rv32m-invalid.s
+llvm/test/MC/RISCV/rv64m-valid.s
+
+commit: 48f95a655d61c4526f67b10f307a9ba2fe28352a
+title:  [RISCV] MC layer support for the standard RV64A instruction set extension
+llvm/lib/Target/RISCV/RISCVInstrInfoA.td
+llvm/test/MC/RISCV/rv32a-invalid.s
+llvm/test/MC/RISCV/rv64a-invalid.s
+llvm/test/MC/RISCV/rv64a-valid.s
+
+commit: 4dd94e0ccdfe1bd8d3fb768a441e9c52511261fd
+title:  [RISCV] MC layer support for the standard RV64F instruction set extension
+llvm/lib/Target/RISCV/RISCVInstrInfoF.td
+llvm/test/MC/RISCV/rv32f-invalid.s
+llvm/test/MC/RISCV/rv64f-invalid.s
+llvm/test/MC/RISCV/rv64f-valid.s
+
+commit: ee8950efd5d2b6f72c82d322a699f27c05b97bc3
+title:  [RISCV] MC layer support for the standard RV64D instruction set extension
+llvm/lib/Target/RISCV/RISCVInstrInfoD.td
+
+commit: 72281a228b77796a07f0314c4f0ce081119319f1
+title:  [RISCV] Add missed tests for RV64D MC layer support
+llvm/test/MC/RISCV/rv64d-invalid.s
+llvm/test/MC/RISCV/rv64d-valid.s
+
+commit: 87a54d611042449aff1c8f6ceee417af85dee193
+title:  [RISCV][NFC] Use TargetRegisterClass::hasSubClassEq in storeRegToStackSlot/loadReadFromStackSlot
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+
+commit: 9f6aec4b7aab9a0c0d33bff634af0e148ed580ef
+title:  [RISCV] MC layer support for load/store instructions of the C (compressed) extension
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/Disassembler/RISCVDisassembler.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVBaseInfo.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCCodeEmitter.cpp
+llvm/lib/Target/RISCV/RISCV.td
+llvm/lib/Target/RISCV/RISCVInstrFormats.td
+llvm/lib/Target/RISCV/RISCVInstrFormatsC.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+llvm/lib/Target/RISCV/RISCVRegisterInfo.td
+llvm/lib/Target/RISCV/RISCVSubtarget.h
+llvm/test/MC/RISCV/rv32c-invalid.s
+llvm/test/MC/RISCV/rv32c-valid.s
+llvm/test/MC/RISCV/rv64c-invalid.s
+llvm/test/MC/RISCV/rv64c-valid.s
+
+commit: f8f4b905448ae242ea08c84c0a36abc0431dc98b
+title:  [RISCV] MC layer support for the jump/branch instructions of the RVC extension
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFObjectWriter.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVFixupKinds.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCCodeEmitter.cpp
+llvm/lib/Target/RISCV/RISCVInstrFormatsC.td
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+llvm/test/MC/RISCV/fixups-compressed.s
+llvm/test/MC/RISCV/relocations.s
+llvm/test/MC/RISCV/rv32c-invalid.s
+llvm/test/MC/RISCV/rv32c-valid.s
+
+commit: 660bcceccf85bfc2bbac4f28b87e94c1f3e82184
+title:  [RISCV] Support lowering FrameIndex
+llvm/include/llvm/CodeGen/SelectionDAGISel.h
+llvm/lib/CodeGen/SelectionDAG/SelectionDAGISel.cpp
+llvm/lib/Target/Hexagon/HexagonISelDAGToDAG.cpp
+llvm/lib/Target/Hexagon/HexagonISelDAGToDAG.h
+llvm/lib/Target/RISCV/RISCVFrameLowering.cpp
+llvm/lib/Target/RISCV/RISCVFrameLowering.h
+llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVRegisterInfo.cpp
+llvm/test/CodeGen/RISCV/blockaddress.ll
+llvm/test/CodeGen/RISCV/bswap-ctlz-cttz-ctpop.ll
+llvm/test/CodeGen/RISCV/calls.ll
+llvm/test/CodeGen/RISCV/div.ll
+llvm/test/CodeGen/RISCV/frame.ll
+llvm/test/CodeGen/RISCV/indirectbr.ll
+llvm/test/CodeGen/RISCV/mul.ll
+llvm/test/CodeGen/RISCV/rem.ll
+llvm/test/CodeGen/RISCV/shifts.ll
+
+commit: b014e3de52fd50dc2c185f0c54a3f3783292ee78
+title:  [RISCV] Implement prolog and epilog insertion
+llvm/lib/Target/RISCV/RISCVFrameLowering.cpp
+llvm/lib/Target/RISCV/RISCVFrameLowering.h
+llvm/test/CodeGen/RISCV/addc-adde-sube-subc.ll
+llvm/test/CodeGen/RISCV/alu32.ll
+llvm/test/CodeGen/RISCV/bare-select.ll
+llvm/test/CodeGen/RISCV/blockaddress.ll
+llvm/test/CodeGen/RISCV/branch.ll
+llvm/test/CodeGen/RISCV/bswap-ctlz-cttz-ctpop.ll
+llvm/test/CodeGen/RISCV/calls.ll
+llvm/test/CodeGen/RISCV/div.ll
+llvm/test/CodeGen/RISCV/frame.ll
+llvm/test/CodeGen/RISCV/i32-icmp.ll
+llvm/test/CodeGen/RISCV/imm.ll
+llvm/test/CodeGen/RISCV/indirectbr.ll
+llvm/test/CodeGen/RISCV/jumptable.ll
+llvm/test/CodeGen/RISCV/mem.ll
+llvm/test/CodeGen/RISCV/mul.ll
+llvm/test/CodeGen/RISCV/rem.ll
+llvm/test/CodeGen/RISCV/rotl-rotr.ll
+llvm/test/CodeGen/RISCV/select-cc.ll
+llvm/test/CodeGen/RISCV/sext-zext-trunc.ll
+llvm/test/CodeGen/RISCV/shifts.ll
+llvm/test/CodeGen/RISCV/wide-mem.ll
+
+commit: bfb00d4c1c98c20a7daed6d6e680b47c33692c21
+title:  [RISCV] Allow lowering of dynamic_stackalloc, stacksave, stackrestore
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/test/CodeGen/RISCV/alloca.ll
+
+commit: dc31c61b18f01b21e18ccea4de0a010569e81887
+title:  [RISCV] Add custom CC_RISCV calling convention and improved call support
+llvm/include/llvm/CodeGen/CallingConvLower.h
+llvm/lib/Target/RISCV/CMakeLists.txt
+llvm/lib/Target/RISCV/RISCVCallingConv.td
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/test/CodeGen/RISCV/byval.ll
+llvm/test/CodeGen/RISCV/calling-conv-sext-zext.ll
+llvm/test/CodeGen/RISCV/calling-conv.ll
+llvm/test/CodeGen/RISCV/calls.ll
+llvm/test/CodeGen/RISCV/fp128.ll
+
+commit: 8bba6bfeef6853194f47f85c7391bc3b52e867f0
+title:  [RISCV] MC layer support for the instructions added in the privileged spec
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/priv-invalid.s
+llvm/test/MC/RISCV/priv-valid.s
+
+commit: 9ed84c8ae85a6274afc8c266dc662bd9e5a9fa21
+title:  [RISCV] Implement assembler pseudo instructions for RV32I and RV64I
+llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.cpp
+llvm/lib/Target/RISCV/RISCV.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/rv32i-aliases-invalid.s
+llvm/test/MC/RISCV/rv32i-aliases-valid.s
+llvm/test/MC/RISCV/rv64i-aliases-invalid.s
+llvm/test/MC/RISCV/rv64i-aliases-valid.s
+llvm/test/MC/RISCV/rvi-aliases-valid.s
+
+commit: c01db1ce8f7f8f5b3aebecfb6722c4b825e09910
+title:  [RISCV][NFC] Formatting fix in RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+
+commit: 60714f98baed163ef013512baa5ef368cdf04bbe
+title:  [RISCV] MC layer support for the remaining RVC instructions
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/Disassembler/RISCVDisassembler.cpp
+llvm/lib/Target/RISCV/RISCVInstrFormatsC.td
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+llvm/lib/Target/RISCV/RISCVRegisterInfo.td
+llvm/test/MC/RISCV/rv32c-invalid.s
+llvm/test/MC/RISCV/rv32c-only-valid.s
+llvm/test/MC/RISCV/rv32c-valid.s
+llvm/test/MC/RISCV/rv32dc-invalid.s
+llvm/test/MC/RISCV/rv32dc-valid.s
+llvm/test/MC/RISCV/rv32fc-invalid.s
+llvm/test/MC/RISCV/rv32fc-valid.s
+llvm/test/MC/RISCV/rv64c-invalid.s
+llvm/test/MC/RISCV/rv64c-valid.s
+
+commit: 581d6b081debcd8496de2c796d1e25014b9dc13a
+title:  [RISCV][NFC] Put isSImm6 and simm6 td definition in correct sorted position
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+
+commit: 19c9314aea1634800974de2199a1bdab0a63c7ea
+title:  [RISCV][NFC] Update RISCVInstrInfoC.td to match usual instruction naming convention
+llvm/lib/Target/RISCV/Disassembler/RISCVDisassembler.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+
+commit: fa7e4ec8373d031b85f9ae734ab01fb862b2d6ba
+title:  [RISCV] Implement floating point assembler pseudo instructions
+llvm/lib/Target/RISCV/RISCVInstrInfoD.td
+llvm/lib/Target/RISCV/RISCVInstrInfoF.td
+llvm/test/MC/RISCV/rvd-aliases-valid.s
+llvm/test/MC/RISCV/rvf-aliases-valid.s
+
+commit: 845e5dce835d24a30d876411fa3153115141ae89
+title:  [RISCV] Define sfence.vma InstAliases to match the GNU RISC-V tools
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/priv-invalid.s
+llvm/test/MC/RISCV/rvi-aliases-valid.s
+
+commit: 59136ffab1b0b051d2b56a90b8fb86d5721ed0b5
+title:  [RISCV] Enable emission of alias instructions by default
+llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.cpp
+llvm/test/CodeGen/RISCV/addc-adde-sube-subc.ll
+llvm/test/CodeGen/RISCV/alloca.ll
+llvm/test/CodeGen/RISCV/alu32.ll
+llvm/test/CodeGen/RISCV/bare-select.ll
+llvm/test/CodeGen/RISCV/blockaddress.ll
+llvm/test/CodeGen/RISCV/branch.ll
+llvm/test/CodeGen/RISCV/bswap-ctlz-cttz-ctpop.ll
+llvm/test/CodeGen/RISCV/byval.ll
+llvm/test/CodeGen/RISCV/calling-conv-sext-zext.ll
+llvm/test/CodeGen/RISCV/calling-conv.ll
+llvm/test/CodeGen/RISCV/calls.ll
+llvm/test/CodeGen/RISCV/div.ll
+llvm/test/CodeGen/RISCV/fp128.ll
+llvm/test/CodeGen/RISCV/frame.ll
+llvm/test/CodeGen/RISCV/i32-icmp.ll
+llvm/test/CodeGen/RISCV/imm.ll
+llvm/test/CodeGen/RISCV/indirectbr.ll
+llvm/test/CodeGen/RISCV/jumptable.ll
+llvm/test/CodeGen/RISCV/mem.ll
+llvm/test/CodeGen/RISCV/mul.ll
+llvm/test/CodeGen/RISCV/rem.ll
+llvm/test/CodeGen/RISCV/rotl-rotr.ll
+llvm/test/CodeGen/RISCV/select-cc.ll
+llvm/test/CodeGen/RISCV/sext-zext-trunc.ll
+llvm/test/CodeGen/RISCV/shifts.ll
+llvm/test/CodeGen/RISCV/wide-mem.ll
+llvm/test/MC/RISCV/fixups.s
+llvm/test/MC/RISCV/priv-valid.s
+llvm/test/MC/RISCV/relocations.s
+llvm/test/MC/RISCV/rv32a-valid.s
+llvm/test/MC/RISCV/rv32c-only-valid.s
+llvm/test/MC/RISCV/rv32c-valid.s
+llvm/test/MC/RISCV/rv32d-valid.s
+llvm/test/MC/RISCV/rv32dc-valid.s
+llvm/test/MC/RISCV/rv32f-valid.s
+llvm/test/MC/RISCV/rv32fc-valid.s
+llvm/test/MC/RISCV/rv32i-aliases-invalid.s
+llvm/test/MC/RISCV/rv32i-aliases-valid.s
+llvm/test/MC/RISCV/rv32i-valid.s
+llvm/test/MC/RISCV/rv32m-valid.s
+llvm/test/MC/RISCV/rv64a-valid.s
+llvm/test/MC/RISCV/rv64c-valid.s
+llvm/test/MC/RISCV/rv64d-aliases-valid.s
+llvm/test/MC/RISCV/rv64d-valid.s
+llvm/test/MC/RISCV/rv64f-aliases-valid.s
+llvm/test/MC/RISCV/rv64f-valid.s
+llvm/test/MC/RISCV/rv64i-aliases-invalid.s
+llvm/test/MC/RISCV/rv64i-aliases-valid.s
+llvm/test/MC/RISCV/rv64i-valid.s
+llvm/test/MC/RISCV/rv64m-valid.s
+llvm/test/MC/RISCV/rvd-aliases-valid.s
+llvm/test/MC/RISCV/rvf-aliases-valid.s
+llvm/test/MC/RISCV/rvi-aliases-valid.s
+
+commit: 0ad4c265d7202724a07c0473b5212d02b687c2d6
+title:  [RISCV] Change shift amount operand of RVC shift instructions to uimmlog2xlennonzero
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+llvm/test/MC/RISCV/rv32c-invalid.s
+llvm/test/MC/RISCV/rv64c-invalid.s
+llvm/test/MC/RISCV/rv64c-valid.s
+
+commit: 3633d1205f813c2111753b2ac303999d03da5df1
+title:  [RISCV][NFC] Resolve unused variable warning in RISCVISelLowering
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+
+commit: 8cb894b34b1aa5e4536e39b3fc44c6d7afd2311c
+title:  [RISCV] Add Defs Uses information for c.jal and c.addi4spn
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+
+commit: c85be0de56f8f1f15b6ed17f0b7ee88386cd791e
+title:  [RISCV] Support for varargs
+llvm/lib/Target/RISCV/RISCVFrameLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/lib/Target/RISCV/RISCVMachineFunctionInfo.h
+llvm/test/CodeGen/RISCV/vararg.ll
+
+commit: 9fea4881d01882e8ea921efa1ba1018d80ceca87
+title:  [RISCV] Support stack frames and offsets up to 32-bits
+llvm/lib/Target/RISCV/RISCVFrameLowering.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.h
+llvm/lib/Target/RISCV/RISCVRegisterInfo.cpp
+llvm/lib/Target/RISCV/RISCVRegisterInfo.h
+llvm/test/CodeGen/RISCV/large-stack.ll
+
+commit: 9330e64485aee847682704ddb62750d4b2badf22
+title:  [RISCV] Add basic support for inline asm constraints
+llvm/lib/Target/RISCV/RISCVAsmPrinter.cpp
+llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/test/CodeGen/RISCV/inline-asm.ll
+
+commit: 70f137b6bfe551f5ede1a27b985ba7906adac990
+title:  [RISCV] Add support for llvm.{frameaddress,returnaddress} intrinsics
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/test/CodeGen/RISCV/frameaddr-returnaddr.ll
+
+commit: e027c93ac2ff56f86a5313e0678849adc3fd9a53
+title:  [RISCV] Implement branch analysis
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.h
+llvm/test/CodeGen/RISCV/analyze-branch.ll
+llvm/test/CodeGen/RISCV/branch.ll
+llvm/test/CodeGen/RISCV/bswap-ctlz-cttz-ctpop.ll
+llvm/test/CodeGen/RISCV/jumptable.ll
+llvm/test/CodeGen/RISCV/select-cc.ll
+
+commit: 315cd3ace4e7c93e41525a7c4a81b6b07a193bb8
+title:  [RISCV] Implement support for the BranchRelaxation pass
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.h
+llvm/lib/Target/RISCV/RISCVMCInstLower.cpp
+llvm/lib/Target/RISCV/RISCVRegisterInfo.h
+llvm/lib/Target/RISCV/RISCVTargetMachine.cpp
+llvm/test/CodeGen/RISCV/analyze-branch.ll
+llvm/test/CodeGen/RISCV/branch-relaxation.ll
+llvm/test/CodeGen/RISCV/bswap-ctlz-cttz-ctpop.ll
+llvm/test/CodeGen/RISCV/jumptable.ll
+
+commit: 0715d35ed5ac2312951976bee2a0d2587f98f39f
+title:  [RISCV] Reserve an emergency spill slot for the register scavenger when necessary
+llvm/lib/Target/RISCV/RISCVFrameLowering.cpp
+llvm/lib/Target/RISCV/RISCVFrameLowering.h
+llvm/test/CodeGen/RISCV/large-stack.ll
+
+commit: 71f45455e1bab13226eddfae5ee93e82aaf4b975
+title:  [RISCV] Add the RISCV target and compiler driver
+clang/lib/Basic/CMakeLists.txt
+clang/lib/Basic/Targets.cpp
+clang/lib/Basic/Targets/RISCV.cpp
+clang/lib/Basic/Targets/RISCV.h
+clang/lib/Driver/CMakeLists.txt
+clang/lib/Driver/ToolChains/Arch/RISCV.cpp
+clang/lib/Driver/ToolChains/Arch/RISCV.h
+clang/lib/Driver/ToolChains/Clang.cpp
+clang/lib/Driver/ToolChains/Clang.h
+clang/lib/Driver/ToolChains/Gnu.cpp
+clang/lib/Driver/ToolChains/Linux.cpp
+clang/test/Driver/Inputs/multilib_riscv_linux_sdk/riscv64-unknown-linux-gnu/bin/ld
+clang/test/Driver/frame-pointer.c
+clang/test/Driver/riscv-abi.c
+clang/test/Driver/riscv-features.c
+clang/test/Driver/riscv32-toolchain.c
+clang/test/Driver/riscv64-toolchain.c
+clang/test/Preprocessor/init.c
+
+commit: d53ce4a8b5c5f21af334d5dca1461ae105598aa3
+title:  [Driver][RISCV] Fix r322276 by adding missing dummy crtbegin.o files to test input
+
+commit: 0acf13f6590ca80269958451e3aa10c05f1cd32d
+title:  [Driver][RISCV] Fix r322276 for Windows (path separator issue)
+clang/test/Driver/riscv32-toolchain.c
+
+commit: f067a2f769199d685d1571134627d31141fb8b33
+title:  [Driver][RISCV] Another Windows file separator fix for riscv32-toolchain.c test
+clang/test/Driver/riscv32-toolchain.c
+
+commit: e3d248361eecf4a6d8d394821a2407f292f9bf98
+title:  [RISCV] Pass MCSubtargetInfo to print methods.
+llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.cpp
+llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.h
+llvm/lib/Target/RISCV/RISCV.td
+llvm/test/MC/RISCV/csr-aliases.s
+
+commit: 8cbdd4892fcd030965bd10f36d3484cb82bee329
+title:  [RISCV] Implement RISCV ABI lowering
+clang/lib/CodeGen/TargetInfo.cpp
+clang/test/CodeGen/riscv32-abi.c
+clang/test/CodeGen/riscv64-abi.c
+clang/test/Driver/riscv32-toolchain.c
+clang/test/Driver/riscv64-toolchain.c
+
+commit: 78b2c686b866c2d7f6ba28c8e7441d6da650d272
+title:  [RISCV] Fix test failures on non-assert builds introduced in r322494
+clang/test/CodeGen/riscv32-abi.c
+clang/test/CodeGen/riscv64-abi.c
+
+commit: d93f889d8944fa0175f6f4b3eced2224086a7b00
+title:  [RISCV] Allow RISCVAsmBackend::writeNopData to generate c.nop when supported
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp
+llvm/test/MC/RISCV/cnop.s
+
+commit: f4b1c002d1ec3ed71ee63a3d505f83e1c3f8474a
+title:  [RISCV] Propagate -mabi and -march values to GNU assembler.
+clang/lib/Driver/ToolChains/Gnu.cpp
+clang/test/Driver/Inputs/multilib_riscv_linux_sdk/riscv64-unknown-linux-gnu/bin/as
+clang/test/Driver/riscv-gnutools.c
+
+commit: a646fed6ed263d26b9b9574968dd3b3cd311ed15
+title:  Revert rC322769: [RISCV] Propagate -mabi and -march values to GNU assembler.
+clang/lib/Driver/ToolChains/Gnu.cpp
+
+commit: d3263aa1dfbf6277b56df46ce8f8972ee11dbc4d
+title:  [RISCV][NFC] Add nounwind to functions in div.ll and mul.ll
+llvm/test/CodeGen/RISCV/div.ll
+llvm/test/CodeGen/RISCV/mul.ll
+
+commit: 7d6aa1f7ae73206460bc36c97d5b48bdbf7c2cd8
+title:  [RISCV] Implement frame pointer elimination
+llvm/lib/Target/RISCV/RISCVFrameLowering.cpp
+llvm/lib/Target/RISCV/RISCVRegisterInfo.cpp
+llvm/test/CodeGen/RISCV/addc-adde-sube-subc.ll
+llvm/test/CodeGen/RISCV/alu32.ll
+llvm/test/CodeGen/RISCV/analyze-branch.ll
+llvm/test/CodeGen/RISCV/bare-select.ll
+llvm/test/CodeGen/RISCV/blockaddress.ll
+llvm/test/CodeGen/RISCV/branch-relaxation.ll
+llvm/test/CodeGen/RISCV/branch.ll
+llvm/test/CodeGen/RISCV/bswap-ctlz-cttz-ctpop.ll
+llvm/test/CodeGen/RISCV/byval.ll
+llvm/test/CodeGen/RISCV/calling-conv-sext-zext.ll
+llvm/test/CodeGen/RISCV/calling-conv.ll
+llvm/test/CodeGen/RISCV/calls.ll
+llvm/test/CodeGen/RISCV/div.ll
+llvm/test/CodeGen/RISCV/fp128.ll
+llvm/test/CodeGen/RISCV/frame.ll
+llvm/test/CodeGen/RISCV/frameaddr-returnaddr.ll
+llvm/test/CodeGen/RISCV/i32-icmp.ll
+llvm/test/CodeGen/RISCV/imm.ll
+llvm/test/CodeGen/RISCV/indirectbr.ll
+llvm/test/CodeGen/RISCV/inline-asm.ll
+llvm/test/CodeGen/RISCV/jumptable.ll
+llvm/test/CodeGen/RISCV/large-stack.ll
+llvm/test/CodeGen/RISCV/mem.ll
+llvm/test/CodeGen/RISCV/mul.ll
+llvm/test/CodeGen/RISCV/rem.ll
+llvm/test/CodeGen/RISCV/rotl-rotr.ll
+llvm/test/CodeGen/RISCV/select-cc.ll
+llvm/test/CodeGen/RISCV/sext-zext-trunc.ll
+llvm/test/CodeGen/RISCV/shifts.ll
+llvm/test/CodeGen/RISCV/vararg.ll
+llvm/test/CodeGen/RISCV/wide-mem.ll
+
+commit: 921383828e0b5922965162d9c9470de1868d4a88
+title:  [RISCV] Codegen support for the standard RV32M instruction set extension
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfoM.td
+llvm/test/CodeGen/RISCV/div.ll
+llvm/test/CodeGen/RISCV/mul.ll
+llvm/test/CodeGen/RISCV/rem.ll
+
+commit: 1b57c7a0f44c0f76b398ffcef6a64bef7ec17d07
+title:  [RISCV] Fixed setting predicates for compressed instructions.
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+llvm/test/MC/RISCV/rv32c-only-valid.s
+llvm/test/MC/RISCV/rv32dc-valid.s
+llvm/test/MC/RISCV/rv32fc-valid.s
+llvm/test/MC/RISCV/rv64c-valid.s
+llvm/test/MC/RISCV/rv64dc-valid.s
+
+commit: 056d835fa4b6e9fba3e7c068ded83c3dce7975cb
+title:  [RISCV] Encode RISCV specific ELF e_flags to RISCV Binary by RISCVTargetStreamer
+llvm/lib/Target/RISCV/MCTargetDesc/CMakeLists.txt
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFStreamer.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFStreamer.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCTargetDesc.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVTargetStreamer.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVTargetStreamer.h
+llvm/test/MC/RISCV/elf-flags.s
+
+commit: 3625e0589cbc53c701de9eda33b1422f93784e6f
+title:  Revert "Revert rC322769: [RISCV] Propagate -mabi and -march values to GNU assembler."
+clang/lib/Driver/ToolChains/Gnu.cpp
+clang/test/Driver/riscv-gnutools.c
+
+commit: bbf4c5c25efafe9a52ea0ede070229e87034aae1
+title:  [RISCV] Define getSetCCResultType for setting vector setCC type
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/test/CodeGen/RISCV/get-setcc-result-type.ll
+
+commit: b22c1d29bc7fd6ac3f389ac313ef4b80e493d966
+title:  [RISCV] Fix c.addi and c.addi16sp immediate constraints which should be non-zero
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+llvm/test/MC/RISCV/rv32c-invalid.s
+
+commit: 53489ada12e9e27a4863ad96adf7a64edf16eef3
+title:  [RISCV] Add ELFObjectFileBase::getRISCVFeatures let llvm-objdump could get RISCV target feature
+llvm/include/llvm/Object/ELFObjectFile.h
+llvm/lib/Object/ELFObjectFile.cpp
+llvm/test/MC/RISCV/cnop.s
+llvm/test/MC/RISCV/fixups-compressed.s
+llvm/test/MC/RISCV/rv32c-only-valid.s
+llvm/test/MC/RISCV/rv32c-valid.s
+llvm/test/MC/RISCV/rv32dc-valid.s
+llvm/test/MC/RISCV/rv32fc-valid.s
+llvm/test/MC/RISCV/rv64c-valid.s
+llvm/test/MC/RISCV/rv64dc-valid.s
+
+commit: 3e1478f866e66d74e7314635aa49448e023b8d27
+title:  [RISCV] Create a LinuxTargetInfo when targeting Linux
+clang/lib/Basic/Targets.cpp
+clang/test/Preprocessor/init.c
+
+commit: 7c11527b0342803b6730ce6b2b66ba02fd182682
+title:  [RISCV] Update two RISCV codegen tests after rL323991
+llvm/test/CodeGen/RISCV/bswap-ctlz-cttz-ctpop.ll
+llvm/test/CodeGen/RISCV/calls.ll
+
+commit: 646ab87bb433d255d5a7a66d3f61c5213853857e
+title:  [RISCV] Add support for %pcrel_lo.
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFObjectWriter.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVFixupKinds.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCCodeEmitter.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCExpr.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCExpr.h
+llvm/test/MC/RISCV/relocations.s
+llvm/test/MC/RISCV/rv32i-invalid.s
+
+commit: 2cd14e16a6b199c8a10d536470bc61b723543160
+title:  [RISCV] Revert r324172 now r323991 was reverted
+llvm/test/CodeGen/RISCV/bswap-ctlz-cttz-ctpop.ll
+llvm/test/CodeGen/RISCV/calls.ll
+
+commit: 8d8d0a733f2c3a5405edc1dd56c79df6a72a9b45
+title:  [RISCV][NFC] Make logic in RISCVMCCodeEmitter::getImmOpValue more defensive
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCCodeEmitter.cpp
+
+commit: 7c17242b9215d6ac1eacf4a7ed397c672a2b07e9
+title:  [RISCV] Implement c.lui immediate operand constraint
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/Disassembler/RISCVDisassembler.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+llvm/test/MC/RISCV/rv32c-invalid.s
+llvm/test/MC/RISCV/rv32c-valid.s
+
+commit: ac24bb53bb5424b7bb4db4414f988a27182cd70c
+title:  [RISCV] Enable __int128_t and __uint128_t through clang flag
+clang/include/clang/Basic/TargetInfo.h
+clang/include/clang/Basic/TargetOptions.h
+clang/include/clang/Driver/Options.td
+clang/lib/Basic/Targets/Mips.h
+clang/lib/Driver/ToolChains/Clang.cpp
+clang/lib/Frontend/CompilerInvocation.cpp
+clang/test/CodeGen/riscv32-abi.c
+clang/test/Driver/types.c
+clang/test/Preprocessor/init.c
+
+commit: 1b2a0f431b2476a532847c71475a680e86c1cbc4
+title:  [RISCV] Update two tests after r326208
+llvm/test/CodeGen/RISCV/bswap-ctlz-cttz-ctpop.ll
+llvm/test/CodeGen/RISCV/calls.ll
+
+commit: d34e8761856d6b64e620efeb6963cef9902f6ea5
+title:  [RISCV] Force enable int128 for compiling long double routines
+compiler-rt/lib/builtins/CMakeLists.txt
+
+commit: 2646a41e54ba858fdcb0d52fb7286af5ecbc0d38
+title:  [RISCV] Implement MC relaxations for compressed instructions.
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp
+llvm/test/MC/RISCV/fixups-compressed.s
+llvm/test/MC/RISCV/relocations.s
+llvm/test/MC/RISCV/rv32-relaxation.s
+llvm/test/MC/RISCV/rv64-relaxation.s
+
+commit: 0171a9f4eca3fe562e94895e618b1312e2134fcf
+title:  [RISCV] Peephole optimisation for load/store of global values or constant addresses
+llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp
+llvm/test/CodeGen/RISCV/blockaddress.ll
+llvm/test/CodeGen/RISCV/byval.ll
+llvm/test/CodeGen/RISCV/fp128.ll
+llvm/test/CodeGen/RISCV/inline-asm.ll
+llvm/test/CodeGen/RISCV/mem.ll
+llvm/test/CodeGen/RISCV/wide-mem.ll
+
+commit: cbd498ac10427778a6133b9dc3a78c3a5e9ec6cd
+title:  [RISCV] Preserve stack space for outgoing arguments when the function contain variable size objects
+llvm/lib/Target/RISCV/RISCVFrameLowering.cpp
+llvm/lib/Target/RISCV/RISCVFrameLowering.h
+llvm/test/CodeGen/RISCV/alloca.ll
+llvm/test/CodeGen/RISCV/calling-conv.ll
+
+commit: 76c29ee8158142b9c97ad56f5da7f99970bbbd9f
+title:  [RISCV] Add codegen for RV32F arithmetic and conversion operations
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfoF.td
+llvm/test/CodeGen/RISCV/float-arith.ll
+llvm/test/CodeGen/RISCV/float-convert.ll
+
+commit: 80c8eb769649c6178ff561812d441640c4eaac95
+title:  [RISCV] Add codegen for RV32F floating point load/store
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVInstrInfoF.td
+llvm/lib/Target/RISCV/RISCVMCInstLower.cpp
+llvm/test/CodeGen/RISCV/float-imm.ll
+llvm/test/CodeGen/RISCV/float-mem.ll
+
+commit: 77d5927a1c07aec856f44ae47ebbec3e4b3ae8fd
+title:  [RISCV] Add tests missed from r327979
+llvm/test/CodeGen/RISCV/float-mem.ll
+
+commit: 65d6ea5e68dd5c44f39567f923820d2aef9d41b7
+title:  [RISCV] Codegen support for RV32F floating point comparison operations
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVInstrInfoF.td
+llvm/test/CodeGen/RISCV/bare-select.ll
+llvm/test/CodeGen/RISCV/float-br-fcmp.ll
+llvm/test/CodeGen/RISCV/float-fcmp.ll
+llvm/test/CodeGen/RISCV/float-select-fcmp.ll
+
+commit: 98bc25a0f2bf169ef13f4dfc8ad3cc863731a8e7
+title:  [RISCV] Use init_array instead of ctors for RISCV target, by default
+llvm/lib/Target/RISCV/CMakeLists.txt
+llvm/lib/Target/RISCV/RISCVTargetMachine.cpp
+llvm/lib/Target/RISCV/RISCVTargetObjectFile.cpp
+llvm/lib/Target/RISCV/RISCVTargetObjectFile.h
+llvm/test/CodeGen/RISCV/init-array.ll
+
+commit: 203917e26edb0110efdf044966bca905e54c9d77
+title:  [PATCH] [RISCV] Verify the input value of -march=
+clang/lib/Driver/ToolChains/Arch/RISCV.cpp
+clang/test/Driver/riscv-arch.c
+
+commit: 4891dbf55736355c1b807ae2ab132e4c146269eb
+title:  [PATCH] [RISCV] Extend getTargetDefines for RISCVTargetInfo
+clang/lib/Basic/Targets/RISCV.cpp
+clang/lib/Basic/Targets/RISCV.h
+clang/test/Modules/Inputs/module.map
+clang/test/Modules/target-features.m
+clang/test/Preprocessor/riscv-target-features.c
+
+commit: 181501a6b95116f87bb850dc410b855d7ebedc0b
+title:  [RISCV] Update MC compression tests
+llvm/test/MC/RISCV/cnop.s
+llvm/test/MC/RISCV/rv32c-only-valid.s
+
+commit: c1b0e66b586b6898ee73efe445fe6af4125bf998
+title:  [RISCV] Tablegen-driven Instruction Compression.
+llvm/include/llvm/MC/MCInst.h
+llvm/lib/MC/MCInst.cpp
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/CMakeLists.txt
+llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCExpr.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCExpr.h
+llvm/lib/Target/RISCV/RISCVAsmPrinter.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+llvm/test/CodeGen/RISCV/alu32.ll
+llvm/test/CodeGen/RISCV/branch.ll
+llvm/test/CodeGen/RISCV/compress-Pseudo.ll
+llvm/test/CodeGen/RISCV/compress-inline-asm.ll
+llvm/test/MC/RISCV/cnop.s
+llvm/test/MC/RISCV/compress-cjal.s
+llvm/test/MC/RISCV/compress-rv32d.s
+llvm/test/MC/RISCV/compress-rv32f.s
+llvm/test/MC/RISCV/compress-rv32i.s
+llvm/test/MC/RISCV/compress-rv64i.s
+llvm/test/MC/RISCV/compressed-relocations.s
+llvm/test/MC/RISCV/fixups-compressed.s
+llvm/test/MC/RISCV/relocations.s
+llvm/test/MC/RISCV/rv32-relaxation.s
+llvm/test/MC/RISCV/rv64-relaxation.s
+llvm/utils/TableGen/CMakeLists.txt
+llvm/utils/TableGen/RISCVCompressInstEmitter.cpp
+llvm/utils/TableGen/TableGen.cpp
+llvm/utils/TableGen/TableGenBackends.h
+
+commit: 0b4175f160a274d02fa556edcc1ccab02a2f01b6
+title:  [RISCV] Codegen support for RV32D floating point load/store, fadd.d, calling conv
+llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfoD.td
+llvm/lib/Target/RISCV/RISCVMachineFunctionInfo.h
+
+commit: 8f296478ebbc17daeff51f9d1b84880af5bb726f
+title:  [RISCV] Add tests missed in r329871
+llvm/test/CodeGen/RISCV/double-arith.ll
+llvm/test/CodeGen/RISCV/double-calling-conv.ll
+llvm/test/CodeGen/RISCV/double-imm.ll
+llvm/test/CodeGen/RISCV/double-intrinsics.ll
+llvm/test/CodeGen/RISCV/double-mem.ll
+llvm/test/CodeGen/RISCV/double-stack-spill-restore.ll
+
+commit: 5d0dfa5e0e758fb075b70c4686e46abf45f3c3ba
+title:  [RISCV] Add codegen support for RV32D floating point arithmetic operations
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfoD.td
+llvm/test/CodeGen/RISCV/double-arith.ll
+
+commit: 60baa2e015c4254e0fd1791cf2a53e6e4c709d78
+title:  [RISCV] Codegen support for RV32D floating point conversion operations
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfoD.td
+llvm/test/CodeGen/RISCV/double-convert.ll
+llvm/test/CodeGen/RISCV/double-mem.ll
+
+commit: 21d28fe8b8e4624ceb0b06213a8b07f005016951
+title:  [RISCV] Codegen support for RV32D floating point comparison operations
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfoD.td
+llvm/test/CodeGen/RISCV/double-br-fcmp.ll
+llvm/test/CodeGen/RISCV/double-fcmp.ll
+llvm/test/CodeGen/RISCV/double-previous-failure.ll
+llvm/test/CodeGen/RISCV/double-select-fcmp.ll
+
+commit: b48b027d05eb28a868ffda436c4409b6b606a0cc
+title:  [RISCV] Change function alignment to 4 bytes, and 2 bytes for RVC
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/test/CodeGen/RISCV/align.ll
+
+commit: e8b7ff30e21628de4614d99765147da6948addd6
+title:  [RISCV] Add c.mv rs1, rs2 pattern for addi rs1, rs2, 0
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+llvm/test/MC/RISCV/compress-rv32i.s
+
+commit: 0c5300a93f124d64c0bdbb1665386ad4579aeb5d
+title:  [RISCV] Fix logic to check if frame pointer should be used
+clang/lib/Driver/ToolChains/Clang.cpp
+clang/test/Driver/frame-pointer.c
+
+commit: 88a8b269b4f1bb1f2761bef4db028adc9bcaa5fe
+title:  [RISCV] Fix assert message operator
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+
+commit: 480b7bc906865fdde915844210ff1efbd88d3103
+title:  [RISCV] implement li pseudo instruction
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/CMakeLists.txt
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCPseudoExpansion.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCPseudoExpansion.h
+llvm/lib/Target/RISCV/RISCVAsmPrinter.cpp
+llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp
+llvm/lib/Target/RISCV/RISCVInstrFormats.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/CodeGen/RISCV/bswap-ctlz-cttz-ctpop.ll
+llvm/test/CodeGen/RISCV/calling-conv.ll
+llvm/test/CodeGen/RISCV/float-arith.ll
+llvm/test/CodeGen/RISCV/vararg.ll
+llvm/test/MC/RISCV/rv32i-aliases-invalid.s
+llvm/test/MC/RISCV/rv32i-aliases-valid.s
+llvm/test/MC/RISCV/rv64i-aliases-invalid.s
+llvm/test/MC/RISCV/rv64i-aliases-valid.s
+llvm/test/MC/RISCV/rvi-aliases-valid.s
+
+commit: 75a4e52580c047b8f5527f79a93cb3daea772968
+title:  [RISCV] Add specific tests for materialising imm32hi20 constants
+llvm/test/CodeGen/RISCV/imm.ll
+
+commit: 099c720426b2e54fc17c8fddc270ea9a8ca2e356
+title:  Revert "[RISCV] implement li pseudo instruction"
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/CMakeLists.txt
+llvm/lib/Target/RISCV/RISCVAsmPrinter.cpp
+llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp
+llvm/lib/Target/RISCV/RISCVInstrFormats.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/CodeGen/RISCV/bswap-ctlz-cttz-ctpop.ll
+llvm/test/CodeGen/RISCV/calling-conv.ll
+llvm/test/CodeGen/RISCV/float-arith.ll
+llvm/test/CodeGen/RISCV/imm.ll
+llvm/test/CodeGen/RISCV/vararg.ll
+llvm/test/MC/RISCV/rv32i-aliases-invalid.s
+llvm/test/MC/RISCV/rv32i-aliases-valid.s
+llvm/test/MC/RISCV/rv64i-aliases-invalid.s
+llvm/test/MC/RISCV/rv64i-aliases-valid.s
+llvm/test/MC/RISCV/rvi-aliases-valid.s
+
+commit: c0464d9271bedaddcca349c9a610b39d8505d2a6
+title:  [RISCV] Expand codegen -&gt; compression sanity checks and move to a single file
+llvm/test/CodeGen/RISCV/alu32.ll
+llvm/test/CodeGen/RISCV/branch.ll
+llvm/test/CodeGen/RISCV/compress.ll
+
+commit: 792547b348486deab172b0f95448add2dd5a933f
+title:  [RISCV] Add imm-cse.ll test case
+llvm/test/CodeGen/RISCV/imm-cse.ll
+
+commit: 3ff2022bb940237f10584d81da8d21bd62e76c7d
+title:  [RISCV] Introduce pattern for materialising immediates with 0 for lower 12 bits
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/CodeGen/RISCV/bswap-ctlz-cttz-ctpop.ll
+llvm/test/CodeGen/RISCV/calling-conv.ll
+llvm/test/CodeGen/RISCV/float-arith.ll
+llvm/test/CodeGen/RISCV/imm.ll
+llvm/test/CodeGen/RISCV/vararg.ll
+
+commit: 9891ba347671e6a1281d256f4f8d50c487cb9fe9
+title:  [RISCV] Add test changes missed from rL330293
+llvm/test/CodeGen/RISCV/compress.ll
+
+commit: 98f9389f65e630a7243f9c99717009107758d492
+title:  [RISCV] Support "call" pseudoinstruction in the MC layer
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFObjectWriter.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVFixupKinds.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCCodeEmitter.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCExpr.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCExpr.h
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/function-call-invalid.s
+llvm/test/MC/RISCV/function-call.s
+
+commit: d58bd8dc4a1934e87c568a2fa40503461b3c7690
+title:  [RISCV] Expand function call to "call" pseudoinstruction
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/CodeGen/RISCV/alloca.ll
+llvm/test/CodeGen/RISCV/analyze-branch.ll
+llvm/test/CodeGen/RISCV/bswap-ctlz-cttz-ctpop.ll
+llvm/test/CodeGen/RISCV/byval.ll
+llvm/test/CodeGen/RISCV/calling-conv-sext-zext.ll
+llvm/test/CodeGen/RISCV/calling-conv.ll
+llvm/test/CodeGen/RISCV/calls.ll
+llvm/test/CodeGen/RISCV/div.ll
+llvm/test/CodeGen/RISCV/double-br-fcmp.ll
+llvm/test/CodeGen/RISCV/double-calling-conv.ll
+llvm/test/CodeGen/RISCV/double-intrinsics.ll
+llvm/test/CodeGen/RISCV/double-mem.ll
+llvm/test/CodeGen/RISCV/double-previous-failure.ll
+llvm/test/CodeGen/RISCV/double-stack-spill-restore.ll
+llvm/test/CodeGen/RISCV/float-br-fcmp.ll
+llvm/test/CodeGen/RISCV/float-mem.ll
+llvm/test/CodeGen/RISCV/fp128.ll
+llvm/test/CodeGen/RISCV/frame.ll
+llvm/test/CodeGen/RISCV/frameaddr-returnaddr.ll
+llvm/test/CodeGen/RISCV/mul.ll
+llvm/test/CodeGen/RISCV/rem.ll
+llvm/test/CodeGen/RISCV/shifts.ll
+llvm/test/CodeGen/RISCV/vararg.ll
+
+commit: cd8688a4c26540c4d03e5f1ac6566e7cd29bddc5
+title:  [RISCV] Allow call pseudoinstruction to be used to call a function name that coincides with a register name
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/test/MC/RISCV/function-call.s
+
+commit: c85505450ab6ad33a133516291bc268c0f09b572
+title:  [RISCV] More validations on the input value of -march=
+clang/include/clang/Basic/DiagnosticDriverKinds.td
+clang/lib/Driver/ToolChains/Arch/RISCV.cpp
+clang/test/Driver/riscv-arch.c
+
+commit: 09926296df468143fd960d54ac376194b442547c
+title:  [RISCV] Implement isLegalAddressingMode for RISC-V
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+
+commit: c2f78f80dac8af43b7c96e31ae184bace299dd29
+title:  [RISCV] Add test/CodeGen/RISCV/lsr-legaladdimm.ll
+llvm/test/CodeGen/RISCV/lsr-legaladdimm.ll
+
+commit: 5c41ecedf8cc249f80c1550860bf5b561200c6aa
+title:  [RISCV] Implement isLegalAddImmediate
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/test/CodeGen/RISCV/lsr-legaladdimm.ll
+
+commit: dcbff63c24e6262244f1c8cbaa6a8ffae61ffd6d
+title:  [RISCV] Implement isLegalICmpImmediate
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+
+commit: 130b8b3f2b49a0c04f5acb8e56c0f75245e222e8
+title:  [RISCV] Implement isTruncateFree
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/test/Transforms/SimplifyCFG/RISCV/lit.local.cfg
+llvm/test/Transforms/SimplifyCFG/RISCV/select-trunc-i64.ll
+
+commit: e74f51924155bc6ee08ef527128dac9a645eccfd
+title:  [RISCV] Add test case showing suboptimal codegen when loading unsigned char/short
+llvm/test/CodeGen/RISCV/zext-with-load-is-free.ll
+
+commit: 15e894baeeb96612ae471fa83d1729a2d3388fc8
+title:  [RISCV] Implement isZextFree
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/test/CodeGen/RISCV/zext-with-load-is-free.ll
+
+commit: fda6037e98694b74488614a099b06abffa7f0766
+title:  [RISCV] Implement isLoadFromStackSlot and isStoreToStackSlot
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.h
+
+commit: f5800a2aa06fb51a99a873bf7c8d84952480f3ce
+title:  [RISCV] Add remat.ll test case
+llvm/test/CodeGen/RISCV/remat.ll
+
+commit: bca0c3cdb6d49822dbfbcac0bd2719e17e08f309
+title:  [RISCV] Support .option rvc and norvc assembler directives
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFStreamer.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFStreamer.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCTargetDesc.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVTargetStreamer.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVTargetStreamer.h
+llvm/test/CodeGen/RISCV/option-norvc.ll
+llvm/test/CodeGen/RISCV/option-rvc.ll
+llvm/test/MC/RISCV/option-invalid.s
+llvm/test/MC/RISCV/option-rvc.s
+
+commit: 9d777984cf7db4a9a325a417684f108371e5e52c
+title:  [RISCV][NFC] Use more appropriate label for CHECK lines
+clang/test/Driver/riscv32-toolchain.c
+
+commit: 3969425081dbeb37097fd869338c671e2b5c8f99
+title:  [RISCV] Define FeatureRelax and shouldForceRelocation for RISCV linker relaxation
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp
+llvm/lib/Target/RISCV/RISCV.td
+llvm/lib/Target/RISCV/RISCVSubtarget.h
+
+commit: cea6db0480b4d9675c81f52a6ea3643994f4865e
+title:  [RISCV] Add support for .half, .hword, .word, .dword directives
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCAsmInfo.cpp
+llvm/test/MC/RISCV/data-directives-invalid.s
+llvm/test/MC/RISCV/data-directives-valid.s
+
+commit: 6a53023b4e1230609691377c33263de6667522c8
+title:  [RISCV] Set isReMaterializable on ADDI and LUI instructions
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVRegisterInfo.cpp
+llvm/lib/Target/RISCV/RISCVRegisterInfo.h
+llvm/test/CodeGen/RISCV/remat.ll
+
+commit: ef0ebf2806b57e73bdd93f8ffffde164dda6e68c
+title:  [RISCV] Implement MC layer support for the tail pseudoinstruction
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCCodeEmitter.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/tail-call-invalid.s
+llvm/test/MC/RISCV/tail-call.s
+
+commit: 1dc0a8fb18289dae8536c39d579e7e0064290833
+title:  [RISCV] Separate base from offset in lowerGlobalAddress
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/test/CodeGen/RISCV/byval.ll
+llvm/test/CodeGen/RISCV/double-mem.ll
+llvm/test/CodeGen/RISCV/float-mem.ll
+llvm/test/CodeGen/RISCV/fp128.ll
+llvm/test/CodeGen/RISCV/hoist-global-addr-base.ll
+llvm/test/CodeGen/RISCV/mem.ll
+llvm/test/CodeGen/RISCV/wide-mem.ll
+llvm/test/CodeGen/RISCV/zext-with-load-is-free.ll
+
+commit: 6e07dfb148a6fd5ed3fb6097e884bd4ecebb9239
+title:  [RISCV] Add WasForced parameter to MCAsmBackend::fixupNeedsRelaxationAdvanced
+llvm/include/llvm/MC/MCAsmBackend.h
+llvm/include/llvm/MC/MCAssembler.h
+llvm/lib/MC/MCAsmBackend.cpp
+llvm/lib/MC/MCAssembler.cpp
+llvm/lib/Target/Hexagon/MCTargetDesc/HexagonAsmBackend.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp
+llvm/test/MC/RISCV/compressed-relocations.s
+llvm/test/MC/RISCV/rv32-relaxation.s
+llvm/test/MC/RISCV/rv64-relaxation.s
+
+commit: 1c010d0fa4be73441bfd0adc07243f76739b1323
+title:  [RISCV] Correctly report sizes for builtin fixups
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp
+
+commit: 257d5b56390d39e498561bd58999a00d92561f05
+title:  [RISCV] Add symbol diff relocation support for RISC-V
+llvm/include/llvm/MC/MCAsmBackend.h
+llvm/include/llvm/MC/MCFixup.h
+llvm/lib/MC/MCAsmBackend.cpp
+llvm/lib/MC/MCAssembler.cpp
+llvm/lib/MC/MCExpr.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFObjectWriter.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCExpr.cpp
+llvm/test/MC/RISCV/fixups-expr.s
+llvm/test/MC/RISCV/hilo-constaddr-expr.s
+llvm/test/MC/RISCV/hilo-constaddr.s
+
+commit: eadce02741ad5044c764bc22ed18d60892e4529d
+title:  [RISCV] Set CostPerUse for registers
+llvm/lib/Target/RISCV/RISCVRegisterInfo.td
+llvm/test/CodeGen/RISCV/bswap-ctlz-cttz-ctpop.ll
+llvm/test/CodeGen/RISCV/calling-conv.ll
+llvm/test/CodeGen/RISCV/double-mem.ll
+llvm/test/CodeGen/RISCV/remat.ll
+
+commit: ddcb95664e4d94ca9b236066e29d3d92650097aa
+title:  [RISCV] Lower the tail pseudoinstruction
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCCodeEmitter.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVRegisterInfo.td
+llvm/test/CodeGen/RISCV/disable-tail-calls.ll
+llvm/test/CodeGen/RISCV/musttail-call.ll
+llvm/test/CodeGen/RISCV/tail-calls.ll
+
+commit: 43bfe84451ea49981cb5fcf2d70c9711714dc87d
+title:  [RISCV] Support linker relax function call from auipc and jalr to jal
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFObjectWriter.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVFixupKinds.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCCodeEmitter.cpp
+llvm/test/MC/RISCV/linker-relaxation.s
+
+commit: f78fc3842fbcdf48a2bc64cf05fc30f84e0b56fe
+title:  [RISCV] Add -mrelax/-mno-relax flags to enable/disable RISCV linker relaxation
+clang/include/clang/Driver/Options.td
+clang/lib/Driver/ToolChains/Arch/RISCV.cpp
+clang/test/Driver/riscv-features.c
+
+commit: 97684419e8306e8a80b93cfb56af20e73d0898a3
+title:  [RISCV] Add peepholes for Global Address lowering patterns
+llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp
+llvm/test/CodeGen/RISCV/hoist-global-addr-base.ll
+
+commit: c3d0e892840fc3d0cde091fddbe238021210239a
+title:  [RISCV] Support resolving fixup_riscv_call and add to MCFixupKindInfo table
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp
+llvm/test/MC/RISCV/fixups.s
+llvm/test/MC/RISCV/function-call.s
+llvm/test/MC/RISCV/linker-relaxation.s
+
+commit: 6a4b5441e47fca784539758ee65522b45d7eb908
+title:  [RISCV] AsmParser support for the li pseudo instruction
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/RISCVInstrFormats.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/rv32c-aliases-valid.s
+llvm/test/MC/RISCV/rv32i-aliases-invalid.s
+llvm/test/MC/RISCV/rv32i-aliases-valid.s
+llvm/test/MC/RISCV/rv64c-aliases-valid.s
+llvm/test/MC/RISCV/rv64i-aliases-invalid.s
+llvm/test/MC/RISCV/rv64i-aliases-valid.s
+llvm/test/MC/RISCV/rvi-aliases-valid.s
+
+commit: ed53ca73eccf41b72b672d3829862ad5a8771ef5
+title:  [RISCV] Implement MC layer support for the fence.tso instruction
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/rv32i-invalid.s
+llvm/test/MC/RISCV/rv32i-valid.s
+
+commit: dc790dd5d0eda1a22388824bd518045bc57741c1
+title:  [RISCV] Codegen support for atomic operations on RV32I
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVTargetMachine.cpp
+llvm/test/CodeGen/RISCV/atomic-cmpxchg.ll
+llvm/test/CodeGen/RISCV/atomic-fence.ll
+llvm/test/CodeGen/RISCV/atomic-load-store.ll
+llvm/test/CodeGen/RISCV/atomic-rmw.ll
+
+commit: 96f492d7df9e2bc2f2d76afb4d26cd59574d969f
+title:  [RISCV] Add codegen support for atomic load/stores with RV32A
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVInstrInfoA.td
+llvm/test/CodeGen/RISCV/atomic-load-store.ll
+
+commit: ec03fbe8bbc4f00bd71d45cf617f9412ef984ada
+title:  [RISCV] Add tests for overflow intrinsics
+llvm/test/CodeGen/RISCV/arith-with-overflow.ll
+
+commit: 18b9bd7d6c84179f6f91104111c5b743e295499f
+title:  [RISCV] Add InstAlias definitions for sgt and sgtu
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/rvi-aliases-valid.s
+
+commit: 79d2b50ca81fae77362bcd423bcd795c8d0498d8
+title:  [RISCV] Add InstAlias definitions for fgt.{s|d}, fge.{s|d}
+llvm/lib/Target/RISCV/RISCVInstrInfoD.td
+llvm/lib/Target/RISCV/RISCVInstrInfoF.td
+llvm/test/MC/RISCV/rvd-aliases-valid.s
+llvm/test/MC/RISCV/rvf-aliases-valid.s
+
+commit: fafdebcfcb621e213edefadb84766e196b0c14b6
+title:  [RISCV] Accept fmv.s.x and fmv.x.s as mnemonic aliases for fmv.w.x and fmv.x.w
+llvm/lib/Target/RISCV/RISCVInstrInfoF.td
+llvm/test/MC/RISCV/rvf-aliases-valid.s
+
+commit: e01e711c64fb743a659552eff30252e822fe9eb8
+title:  [RISCV] Tail calls don't need to save return address
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCCodeEmitter.cpp
+llvm/test/MC/RISCV/tail-call.s
+
+commit: 9b65ffb0976c5b9590959a6439d338fc5ec0dceb
+title:  [RISCV] Add machine function pass to merge base + offset
+llvm/lib/Target/RISCV/CMakeLists.txt
+llvm/lib/Target/RISCV/RISCV.h
+llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp
+llvm/lib/Target/RISCV/RISCVMergeBaseOffset.cpp
+llvm/lib/Target/RISCV/RISCVTargetMachine.cpp
+llvm/test/CodeGen/RISCV/hoist-global-addr-base.ll
+
+commit: 1eee1b771f43761e39c1e3bc9e0c31b078290240
+title:  [RISCV] Add support for interrupt attribute
+clang/include/clang/Basic/Attr.td
+clang/include/clang/Basic/AttrDocs.td
+clang/include/clang/Basic/DiagnosticSemaKinds.td
+clang/lib/CodeGen/TargetInfo.cpp
+clang/lib/Sema/SemaDeclAttr.cpp
+clang/test/Sema/riscv-interrupt-attr.c
+clang/test/Sema/riscv-interrupt-attr.cpp
+
+commit: 2e4106b73da2bd2845f9676e79ea43d4d3540813
+title:  [RISCV] Add support for _interrupt attribute
+llvm/lib/Target/RISCV/RISCVCallingConv.td
+llvm/lib/Target/RISCV/RISCVFrameLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVRegisterInfo.cpp
+llvm/test/CodeGen/RISCV/interrupt-attr-args-error.ll
+llvm/test/CodeGen/RISCV/interrupt-attr-invalid.ll
+llvm/test/CodeGen/RISCV/interrupt-attr-nocall.ll
+llvm/test/CodeGen/RISCV/interrupt-attr-ret-error.ll
+llvm/test/CodeGen/RISCV/interrupt-attr.ll
+
+commit: 2baa767455af475b900960dcdb4b85f92ed57f24
+title:  [RISCV] Fixed test case failure due to r338047
+llvm/test/CodeGen/RISCV/tail-calls.ll
+
+commit: f4be25352a7d87756ba9012e4088461c2a420494
+title:  [RISCV] Add driver for riscv32-unknown-elf baremetal target
+clang/lib/Driver/CMakeLists.txt
+clang/lib/Driver/Driver.cpp
+clang/lib/Driver/ToolChains/Gnu.cpp
+clang/lib/Driver/ToolChains/RISCV.cpp
+clang/lib/Driver/ToolChains/RISCV.h
+clang/test/Driver/Inputs/basic_riscv32_tree/bin/riscv32-unknown-elf-ld
+clang/test/Driver/riscv32-toolchain.c
+
+commit: 7d8d87c143f8eb83888f7494dd2509bf62bffa7a
+title:  [RISCV] Add InstAlias definitions for add[w], and, xor, or, sll[w], srl[w], sra[w], slt and sltu with immediate
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/rv32i-aliases-invalid.s
+llvm/test/MC/RISCV/rv32i-invalid.s
+llvm/test/MC/RISCV/rv64i-aliases-invalid.s
+llvm/test/MC/RISCV/rv64i-aliases-valid.s
+llvm/test/MC/RISCV/rvi-aliases-valid.s
+
+commit: 07224dfb475a95c6e8dd1e931cf8a33213d79f34
+title:  [RISCV] Add mnemonic alias: move, sbreak and scall.
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/rvi-aliases-valid.s
+
+commit: 577a97e2b9177fb48a01bde79e2f9af260fa4653
+title:  [RISCV] Add "lla" pseudo-instruction to assembler
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/lla-invalid.s
+llvm/test/MC/RISCV/rvi-pseudos.s
+
+commit: c8f4dbbc63b682e1f88ae83755fc62e4d200b501
+title:  [RISCV] Fix incorrect use of MCInstBuilder
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+
+commit: fdc4647ca37c64ba60207b9ec3f412779aa894aa
+title:  [RISCV][MC] Don't fold symbol differences if requiresDiffExpressionRelocations is true
+llvm/include/llvm/MC/MCObjectStreamer.h
+llvm/lib/MC/MCObjectStreamer.cpp
+llvm/test/CodeGen/RISCV/fixups-diff.ll
+
+commit: 734a04ea33064c790123f36051bd7cb2671a0054
+title:  [RISCV] Remove unused function
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+
+commit: ed08d3739a005c6dac59537aa1446cb85b5c02a3
+title:  [RISCV] RISC-V using -fuse-init-array by default
+clang/lib/Driver/ToolChains/Gnu.cpp
+clang/test/Driver/riscv32-toolchain.c
+
+commit: 61b28ede75d9cbd2754a97364b7e99aa60e1b26c
+title:  [RISCV] Fix std::advance slowness
+llvm/lib/Target/RISCV/RISCVFrameLowering.cpp
+
+commit: ecc65eddec743b14ec129b0e76dc2184e418259e
+title:  [RISCV] Fixed Assertion`Kind == Immediate && "Invalid type access!"' failed.
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/test/MC/RISCV/rv32c-fuzzed-invalid.s
+
+commit: fe282170487a7f021aca0af774091fcdf9a9c41b
+title:  [RISCV] atomic_store_nn have a different layout to regular store
+llvm/lib/Target/RISCV/RISCVInstrInfoA.td
+llvm/test/CodeGen/RISCV/atomic-load-store.ll
+
+commit: f56837f70f333295b7ffcedd26aa9cf8e0381a27
+title:  [RISCV][NFC] Rework CHECK lines in rvi-aliases-valid.s
+llvm/test/MC/RISCV/rvi-aliases-valid.s
+
+commit: d4e2c785a59cc390f7a066f871d8da89e3f633ee
+title:  [RISCV] Fix r341050
+llvm/test/MC/RISCV/rvi-aliases-valid.s
+
+commit: 6b34051b3370b409e9081345b98005cb43b0a22e
+title:  [RISCV] Fixed SmallVector.h Assertion `idx &lt; size()'
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/test/MC/RISCV/rv32i-invalid.s
+
+commit: fea4ac01c5fc4b9626e3ba990839b2f4ba9d8575
+title:  [RISCV][NFC] Rework test/MC/RISCV/rv{32,64}* to allow testing of symbol operands
+llvm/test/MC/RISCV/rv32a-valid.s
+llvm/test/MC/RISCV/rv32c-only-valid.s
+llvm/test/MC/RISCV/rv32c-valid.s
+llvm/test/MC/RISCV/rv32d-valid.s
+llvm/test/MC/RISCV/rv32dc-valid.s
+llvm/test/MC/RISCV/rv32f-valid.s
+llvm/test/MC/RISCV/rv32fc-valid.s
+llvm/test/MC/RISCV/rv32i-valid.s
+llvm/test/MC/RISCV/rv32m-valid.s
+llvm/test/MC/RISCV/rv64a-valid.s
+llvm/test/MC/RISCV/rv64c-valid.s
+llvm/test/MC/RISCV/rv64d-valid.s
+llvm/test/MC/RISCV/rv64dc-valid.s
+llvm/test/MC/RISCV/rv64f-valid.s
+llvm/test/MC/RISCV/rv64i-valid.s
+llvm/test/MC/RISCV/rv64m-valid.s
+
+commit: 8f060aac2f4777c5af03ebbd5484160089e2f951
+title:  [RISCV] Add support for computing sysroot for riscv32-unknown-elf
+clang/lib/Driver/ToolChains/RISCV.cpp
+clang/lib/Driver/ToolChains/RISCV.h
+clang/test/Driver/riscv32-toolchain.c
+
+commit: b97d18945b821fe4f9b4c7059eb87e2a8734ab5d
+title:  [RISCV] Fix AddressSanitizer heap-buffer-overflow in disassembling
+llvm/lib/Target/RISCV/Disassembler/RISCVDisassembler.cpp
+llvm/test/MC/Disassembler/RISCV/fuzzer-invalid.txt
+llvm/test/MC/Disassembler/RISCV/lit.local.cfg
+
+commit: b2ed11a086e8203f862a71ac4afe484ad1528ad8
+title:  [RISCV] Fix crash in decoding instruction with unknown floating point rounding mode
+llvm/lib/Target/RISCV/Disassembler/RISCVDisassembler.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVBaseInfo.h
+llvm/lib/Target/RISCV/RISCVInstrInfoF.td
+llvm/test/MC/Disassembler/RISCV/invalid-fp-rounding-mode.txt
+
+commit: bef9929d51827dacf0b53750adcfc82cfda374d1
+title:  [RISCV] Explicitly set an empty --sysroot in the test
+clang/test/Driver/riscv32-toolchain.c
+
+commit: b0799dda77c6b75526e1415331e2a9656abd6f95
+title:  [RISCV] Fix decoding of invalid instruction with C extension enabled.
+llvm/lib/Target/RISCV/Disassembler/RISCVDisassembler.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+llvm/test/MC/Disassembler/RISCV/invalid-instruction.txt
+
+commit: 065b088759c2f3b1e92743008fd0a6eed3ff5290
+title:  [RISCV][MC] Reject bare symbols for the simm6 and simm6nonzero operand types
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/test/MC/RISCV/rv32c-invalid.s
+llvm/test/MC/RISCV/rv64c-invalid.s
+
+commit: 74340f1805443cdc356c8fd7c8e4a25eb396b2b4
+title:  [RISCV][MC] Tighten up checking of sybol operands to lui and auipc
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/rv32i-invalid.s
+llvm/test/MC/RISCV/rv32i-valid.s
+
+commit: 7d0e18d0dd287eefcd379c2f3693c373ae927071
+title:  [RISCV][MC] Reject bare symbols for the simm12 operand type
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/test/MC/RISCV/rv32d-invalid.s
+llvm/test/MC/RISCV/rv32f-invalid.s
+llvm/test/MC/RISCV/rv32i-invalid.s
+llvm/test/MC/RISCV/rv32i-valid.s
+llvm/test/MC/RISCV/rv64i-invalid.s
+
+commit: 68f73c12067573c01e6e1351d346776d0373570d
+title:  [RISCV][MC] Use a custom ParserMethod for the bare_symbol operand type
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+
+commit: 21aea51e71614b15545c69f84310b938520b069c
+title:  [RISCV] Codegen for i8, i16, and i32 atomicrmw with RV32A
+llvm/include/llvm/CodeGen/TargetLowering.h
+llvm/include/llvm/IR/Intrinsics.td
+llvm/include/llvm/IR/IntrinsicsRISCV.td
+llvm/lib/CodeGen/AtomicExpandPass.cpp
+llvm/lib/Target/RISCV/CMakeLists.txt
+llvm/lib/Target/RISCV/RISCV.h
+llvm/lib/Target/RISCV/RISCVExpandPseudoInsts.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVInstrInfoA.td
+llvm/lib/Target/RISCV/RISCVTargetMachine.cpp
+llvm/test/CodeGen/RISCV/atomic-rmw.ll
+
+commit: 226f3ef5a52db932e4acbcfdf9bb860a25ba6d59
+title:  [RISCV][MC] Improve parsing of jal/j operands
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/rv32i-invalid.s
+llvm/test/MC/RISCV/rv32i-valid.s
+llvm/test/MC/RISCV/rvi-aliases-valid.s
+
+commit: 96ed75d066bf1ff27816c4898effb3eb6786dddf
+title:  [RISCV][MC] Modify evaluateConstantImm interface to allow reuse from addExpr
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+
+commit: efceb598019166dd28fb489a4c9a3dd02a6d6fbb
+title:  [RISCV] Remove RV64 test lines from umulo-128-legalisation-lowering.ll
+llvm/test/CodeGen/RISCV/umulo-128-legalisation-lowering.ll
+
+commit: a9ac5994b1ec3b17639c755117c5c56fd40e3e8a
+title:  [RISCV] Gate simm32 materialisation pattern and SW pattern on IsRV32
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+
+commit: d464ed8c2e4071fc79f213038e570b6319110a7d
+title:  [RISCV] Remove XLenVT==i32 assumptions from RISCVInstrInfo td
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVInstrInfoA.td
+
+commit: d934032e48cad89d506880fce22e9df6cb66487a
+title:  [RISCV] Gate float&lt;-&gt;int and double&lt;-&gt;int conversion patterns on IsRV32
+llvm/lib/Target/RISCV/RISCVInstrInfoD.td
+llvm/lib/Target/RISCV/RISCVInstrInfoF.td
+
+commit: d33ffe9bb1c177095422168f3d58d8f62f1098a0
+title:  [RISCV][NFC] Refactor RISCVDAGToDAGISel::Select
+llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp
+
+commit: ce9049952fa253791397028e88f3bcad3a7b87e6
+title:  [RISCV][NFCI] Handle redundant splitf64+buildpairf64 pairs during instruction selection
+llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp
+
+commit: 1dbfdeb6e5b0538559aa706abe670a3ab295af43
+title:  [RISCV][NFC] Refactor LocVT&lt;-&gt;ValVT converstion in RISCVISelLowering
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+
+commit: 5ac0a2fc48bdfc1165ca66b157cc0c46ba04e6e2
+title:  [RISCV] Handle redundant SplitF64+BuildPairF64 pairs in a DAGCombine
+llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+
+commit: 0e16766b76550b2eb3416f386a62ab76450526c2
+title:  [RISCV][NFC] Fix naming of RISCVISelLowering::{LowerRETURNADDR,LowerFRAMEADDR}
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+
+commit: e96b7c88a3a908c21b925ef0f61ef93475b222ca
+title:  [RISCV] Bugfix for floats passed on the stack with the ILP32 ABI on RV32F
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/test/CodeGen/RISCV/calling-conv-rv32f-ilp32.ll
+
+commit: a4b7b6dabc16c91fb19fba78f1910ee8c88cd16d
+title:  [RISCV][NFC] Remove dead CHECK lines from vararg.ll test
+llvm/test/CodeGen/RISCV/vararg.ll
+
+commit: 5bf3b20e9958bb03c68e2a0a739f335ea0086c47
+title:  [RISCV] Remove overzealous is64Bit checks
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.cpp
+
+commit: 9d6c55323f1ce36c18f9b0f7042d44228c6edda0
+title:  [RISCV] Support named operands for CSR instructions.
+llvm/lib/Target/RISCV/AsmParser/LLVMBuild.txt
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/CMakeLists.txt
+llvm/lib/Target/RISCV/Disassembler/RISCVDisassembler.cpp
+llvm/lib/Target/RISCV/InstPrinter/LLVMBuild.txt
+llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.cpp
+llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.h
+llvm/lib/Target/RISCV/LLVMBuild.txt
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVMCCodeEmitter.cpp
+llvm/lib/Target/RISCV/RISCV.h
+llvm/lib/Target/RISCV/RISCV.td
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVSystemOperands.td
+llvm/lib/Target/RISCV/Utils/CMakeLists.txt
+llvm/lib/Target/RISCV/Utils/LLVMBuild.txt
+llvm/lib/Target/RISCV/Utils/RISCVBaseInfo.cpp
+llvm/lib/Target/RISCV/Utils/RISCVBaseInfo.h
+llvm/test/MC/RISCV/csr-aliases.s
+llvm/test/MC/RISCV/function-call.s
+llvm/test/MC/RISCV/machine-csr-names-invalid.s
+llvm/test/MC/RISCV/machine-csr-names.s
+llvm/test/MC/RISCV/rv32-machine-csr-names.s
+llvm/test/MC/RISCV/rv32-user-csr-names.s
+llvm/test/MC/RISCV/rv32i-aliases-valid.s
+llvm/test/MC/RISCV/rv32i-invalid.s
+llvm/test/MC/RISCV/rv32i-valid.s
+llvm/test/MC/RISCV/rv64-machine-csr-names.s
+llvm/test/MC/RISCV/rv64-user-csr-names.s
+llvm/test/MC/RISCV/rvf-aliases-valid.s
+llvm/test/MC/RISCV/rvf-user-csr-names.s
+llvm/test/MC/RISCV/rvi-aliases-valid.s
+llvm/test/MC/RISCV/supervisor-csr-names.s
+llvm/test/MC/RISCV/user-csr-names-invalid.s
+llvm/test/MC/RISCV/user-csr-names.s
+
+commit: 90fc1007425b3e0a46146eaba1afcde8f2787e5c
+title:  [RISCV] Regenerate several tests now enableMultipleCopyHints is enabled by default
+llvm/test/CodeGen/RISCV/atomic-cmpxchg.ll
+llvm/test/CodeGen/RISCV/double-select-fcmp.ll
+llvm/test/CodeGen/RISCV/vararg.ll
+
+commit: 639df9e4c0279d75ff39108a669ee99d60a05cca
+title:  [RISCV] Compress addiw rd, x0, simm6 to c.li rd, simm6
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+llvm/test/MC/RISCV/rv64c-aliases-valid.s
+
+commit: 47afe5e7c058d1f2900e7f1dee4bbe857ca6c249
+title:  [RISCV] Introduce alu8.ll and alu16.ll tests
+llvm/test/CodeGen/RISCV/alu16.ll
+llvm/test/CodeGen/RISCV/alu8.ll
+
+commit: 5af6c1496aaf95108af8a928156da503fccb10c9
+title:  [RISCV] Update alu8.ll and alu16.ll test cases
+llvm/test/CodeGen/RISCV/alu16.ll
+llvm/test/CodeGen/RISCV/alu8.ll
+
+commit: 686ef9214147c048514f579b128bdbd9bbb49504
+title:  [RISCV] Re-generate test/CodeGen/RISCV/vararg.ll after r344142
+llvm/test/CodeGen/RISCV/vararg.ll
+
+commit: 0a5fcefa31bad39e7473a034c5ec3b4ed0c7f439
+title:  [RISCV] Fix disassembling of fence instruction with invalid field
+llvm/lib/Target/RISCV/InstPrinter/RISCVInstPrinter.cpp
+llvm/test/MC/Disassembler/RISCV/unknown-fence-field.txt
+llvm/test/MC/RISCV/rv32i-invalid.s
+
+commit: 748d080e6288ec3b2edd1a1bfdcf21491e816fd3
+title:  [RISCV] Eliminate unnecessary masking of promoted shift amounts
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/CodeGen/RISCV/alu16.ll
+llvm/test/CodeGen/RISCV/alu8.ll
+llvm/test/CodeGen/RISCV/shift-masked-shamt.ll
+
+commit: 74d4931da2fc5446d37c0335ca4349d10dbc62c7
+title:  [RISCV] Use PatFrags for variable shift patterns
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+
+commit: 52c27785cedc66464d356a961bdc7e3671c5775f
+title:  [RISCV] Add some missing expansions for floating-point intrinsics
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/test/CodeGen/RISCV/double-intrinsics.ll
+llvm/test/CodeGen/RISCV/float-intrinsics.ll
+
+commit: a9da1de5f46691284d2bb7973e44c6b34b8c2bc5
+title:  [RISCV] Update test/CodeGen/RISCV/calling-conv.ll after rL346432
+llvm/test/CodeGen/RISCV/calling-conv.ll
+
+commit: 1cc2d0b9fb9fc966fab5fb0575479aa888b2ed57
+title:  [RISCV] Avoid unnecessary XOR for seteq/setne 0
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/CodeGen/RISCV/calling-conv.ll
+llvm/test/CodeGen/RISCV/fp128.ll
+llvm/test/CodeGen/RISCV/get-setcc-result-type.ll
+llvm/test/CodeGen/RISCV/i32-icmp.ll
+llvm/test/CodeGen/RISCV/umulo-128-legalisation-lowering.ll
+
+commit: 9c03e4cacdaa75d30b8868f3a94d997ee79bed96
+title:  [RISCV] Support .option relax and .option norelax
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVAsmBackend.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFStreamer.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFStreamer.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVTargetStreamer.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVTargetStreamer.h
+llvm/test/CodeGen/RISCV/fixups-relax-diff.ll
+llvm/test/CodeGen/RISCV/option-norelax.ll
+llvm/test/CodeGen/RISCV/option-relax.ll
+llvm/test/MC/RISCV/option-invalid.s
+llvm/test/MC/RISCV/option-relax.s
+
+commit: 22c091fc3cb19af03bc0c49805760556d11c10b3
+title:  [RISCV] Introduce the RISCVMatInt::generateInstSeq helper
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/Utils/CMakeLists.txt
+llvm/lib/Target/RISCV/Utils/RISCVMatInt.cpp
+llvm/lib/Target/RISCV/Utils/RISCVMatInt.h
+llvm/test/MC/RISCV/rv64c-aliases-valid.s
+llvm/test/MC/RISCV/rv64i-aliases-valid.s
+
+commit: 7727240438429813a1b61cd17370dbd9343f068d
+title:  [RISCV] Mark FREM as Expand
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/test/CodeGen/RISCV/double-frem.ll
+llvm/test/CodeGen/RISCV/float-frem.ll
+
+commit: f809d89980af560b39bd62aba6b39176c9171b8a
+title:  [RISCV] Mark C.EBREAK instruction as having side effects
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+
+commit: 2146e8fb1e5f700460acc66cdf37f6c6729ad5c5
+title:  [RISCV] Constant materialisation for RV64I
+llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp
+llvm/test/CodeGen/RISCV/imm.ll
+
+commit: b4a64cede820c2fd58884226388dfa8f77cccd0f
+title:  [RISCV][NFC] Define and use the new CA instruction format
+llvm/lib/Target/RISCV/RISCVInstrFormats.td
+llvm/lib/Target/RISCV/RISCVInstrFormatsC.td
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+llvm/lib/Target/RISCV/Utils/RISCVBaseInfo.h
+
+commit: bca7192462140d27f27b7f95b73f74f13f8d8182
+title:  [RISCV] Mark unit tests as "requires: riscv-registered-target"
+clang/Driver/riscv-abi.c
+clang/Driver/riscv-arch.c
+clang/Driver/riscv-features.c
+clang/Driver/riscv-gnutools.c
+clang/Driver/riscv32-toolchain.c
+clang/Driver/riscv64-toolchain.c
+
+commit: 02d3ca89bdf63e1e1414e7820faf000e4c0a003d
+title:  Revert "[RISCV] Mark unit tests as "requires: riscv-registered-target""
+clang/test/Driver/riscv-abi.c
+clang/test/Driver/riscv-arch.c
+clang/test/Driver/riscv-features.c
+clang/test/Driver/riscv-gnutools.c
+clang/test/Driver/riscv32-toolchain.c
+clang/test/Driver/riscv64-toolchain.c
+
+commit: c77dd514ade7ce1b09871cdacf8ac80313d9fdcb
+title:  [RISCV] Mark unit tests as "requires: riscv-registered-target"
+clang/test/Driver/riscv-abi.c
+clang/test/Driver/riscv-arch.c
+clang/test/Driver/riscv-features.c
+clang/test/Driver/riscv-gnutools.c
+clang/test/Driver/riscv32-toolchain.c
+clang/test/Driver/riscv64-toolchain.c
+
+commit: 893e5bc77484e93d7219eb5aef3534cbe6a14bb5
+title:  [RISCV] Support .option push and .option pop
+llvm/lib/Target/RISCV/AsmParser/RISCVAsmParser.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFStreamer.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVELFStreamer.h
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVTargetStreamer.cpp
+llvm/lib/Target/RISCV/MCTargetDesc/RISCVTargetStreamer.h
+llvm/test/MC/RISCV/option-invalid.s
+llvm/test/MC/RISCV/option-pushpop.s
+
+commit: 66d9a752b9c4c7de32f21f921d1678799a254259
+title:  [RISCV] Implement codegen for cmpxchg on RV32IA
+llvm/include/llvm/IR/IntrinsicsRISCV.td
+llvm/lib/CodeGen/AtomicExpandPass.cpp
+llvm/lib/Target/RISCV/RISCVExpandPseudoInsts.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/lib/Target/RISCV/RISCVInstrInfoA.td
+llvm/test/CodeGen/RISCV/atomic-cmpxchg.ll
+
+commit: bc96a98ed0a548992fa305e6e4a9f1496156466b
+title:  [RISCV] Introduce codegen patterns for instructions introduced in RV64I
+llvm/lib/Target/RISCV/RISCVISelDAGToDAG.cpp
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/CodeGen/RISCV/alu16.ll
+llvm/test/CodeGen/RISCV/alu32.ll
+llvm/test/CodeGen/RISCV/alu64.ll
+llvm/test/CodeGen/RISCV/alu8.ll
+llvm/test/CodeGen/RISCV/mem64.ll
+llvm/test/CodeGen/RISCV/rv64i-exhaustive-w-insts.ll
+llvm/test/CodeGen/RISCV/sext-zext-trunc.ll
+
+commit: e0e62e97dfddb01a6f2e32d2f951c317a7478f9a
+title:  [TargetLowering][RISCV] Introduce isSExtCheaperThanZExt hook and implement for RISC-V
+llvm/include/llvm/CodeGen/TargetLowering.h
+llvm/lib/CodeGen/SelectionDAG/LegalizeIntegerTypes.cpp
+llvm/lib/CodeGen/SelectionDAG/LegalizeTypes.h
+llvm/lib/Target/RISCV/RISCVISelLowering.cpp
+llvm/lib/Target/RISCV/RISCVISelLowering.h
+llvm/test/CodeGen/RISCV/alu32.ll
+
+commit: 26403def69f72c7938889c1902d62121095b93d7
+title:  [RISCV] Add UNIMP instruction (32- and 16-bit forms)
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/lib/Target/RISCV/RISCVInstrInfoC.td
+llvm/test/MC/RISCV/compress-rv32i.s
+llvm/test/MC/RISCV/rv32c-valid.s
+llvm/test/MC/RISCV/rv32i-valid.s
+
+commit: 4830fdd21afd9e4f15cd610422ccab760779ef98
+title:  [RISCV] Add additional CSR instruction aliases (imm. operands)
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/MC/RISCV/rvi-aliases-valid.s
+
+commit: 757d296222ae1fa1baa9ca4a0379fab6ace2a612
+title:  [RISCV] Remove RV64I SLLW/SRLW/SRAW patterns and add new test cases
+llvm/lib/Target/RISCV/RISCVInstrInfo.td
+llvm/test/CodeGen/RISCV/alu32.ll
+llvm/test/CodeGen/RISCV/alu64.ll
+llvm/test/CodeGen/RISCV/rv64i-exhaustive-w-insts.ll
+llvm/test/CodeGen/RISCV/rv64i-tricky-shifts.ll
+
+commit: 96f3e7f22121764f4cc5490448bec72471fe50b4
+title:  [RISCV] Fix test/MC/Disassembler/RISCV/invalid-instruction.txt after rL347988
+llvm/test/MC/Disassembler/RISCV/invalid-instruction.txt
+
+commit: b0895f04bcedad0e27de6fff9f61e05ed290c6cd
+title:  Revert "[RISCV] Mark unit tests as "requires: riscv-registered-target""
+clang/test/Driver/riscv-abi.c
+clang/test/Driver/riscv-arch.c
+clang/test/Driver/riscv-features.c
+clang/test/Driver/riscv-gnutools.c
+clang/test/Driver/riscv32-toolchain.c
+clang/test/Driver/riscv64-toolchain.c</code></pre>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    ﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_c0b68c76" href="#HEAD_c0b68c76">1. RISCV Backend 相关代码</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_f95a6f55" href="#HEAD_f95a6f55">1.1. Query (LLVM 17, before 2019)</a></li>
+		<li><a name="TOC_HEAD_d0479e" href="#HEAD_d0479e">1.2. result (249 commits, 445 sources)</a></li>
+		<li><a name="TOC_HEAD_f47f3f86" href="#HEAD_f47f3f86">1.3. Summary</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_f9d66c3f" href="#HEAD_f9d66c3f">2. Main steps to add RISCV backend</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_cc6a0c5e" href="#HEAD_cc6a0c5e">2.1. triple</a></li>
+		<li><a name="TOC_HEAD_10c7f" href="#HEAD_10c7f">2.2. ELF</a></li>
+		<li><a name="TOC_HEAD_3ba51d22" href="#HEAD_3ba51d22">2.3. stub backend</a></li>
+		<li><a name="TOC_HEAD_f86148c7" href="#HEAD_f86148c7">2.4. td files</a></li>
+		<li><a name="TOC_HEAD_dc1515f8" href="#HEAD_dc1515f8">2.5. MCTargetDesc</a></li>
+		<li><a name="TOC_HEAD_639eba5a" href="#HEAD_639eba5a">2.6. AsmParser</a></li>
+		<li><a name="TOC_HEAD_2fd5a708" href="#HEAD_2fd5a708">2.7. Relocation</a></li>
+		<li><a name="TOC_HEAD_6a0226d4" href="#HEAD_6a0226d4">2.8. InstPrinter</a></li>
+		<li><a name="TOC_HEAD_a7ec69c4" href="#HEAD_a7ec69c4">2.9. all instructions</a></li>
+		<li><a name="TOC_HEAD_dff15474" href="#HEAD_dff15474">2.10. disassembly</a></li>
+	</menu>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

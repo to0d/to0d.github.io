@@ -1,0 +1,100 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161212D.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161212D.cpp</h1>
+            <h3>Binary Insert Sort</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/BinaryInsertSort.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>BinaryInsertSort</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+static void swap(vector&lt;int&gt;& nums, int a, int b) {
+    int t   = nums[a];
+    nums[a] = nums[b];
+    nums[b] = t;
+}
+
+void p2InsertSort(vector&lt;int&gt;& nums) {
+    int size = nums.size(), high = 0;
+    vector&lt;int&gt; next(size, 0);
+    next[0] = -1;
+    for(int i = 1; i &lt; size; ++i)
+    {   int last, pos;
+        if( nums[i] &lt; nums[0])
+        {   last = 0;
+            pos = next[0];
+        }
+        else
+        {   last = -1;
+            pos = high;
+        }
+
+        while(pos &gt;= 0 && nums[i] &lt; nums[pos])
+        {   last = pos;
+            pos = next[pos];
+        }
+
+        if( last &lt; 0 )
+        {   next[i] = high;
+            high = i;
+        }
+        else
+        {   next[last] = i;
+            next[i] = pos;
+        }
+    }
+
+    //重排静态链表
+    int pos = high;
+    for(int i = size -1 ;i &gt;= 0; --i)
+    {   int next_pos = next[pos];
+        if( pos != i )
+        {   int pos2 = pos;
+            while( pos2 &gt;= 0 && next[pos2] != i)
+                pos2 = next[pos2];
+            swap(nums, pos, i);
+            next[pos] = next[i];
+
+            if( pos2 &gt;=0 )
+                next[pos2] = pos;
+        }
+        pos = next_pos;
+    }
+}
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    p2InsertSort(nums);
+    cout &lt;&lt; "; output: ";
+    outputVector(nums);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main( void )
+{
+    test({8,9,3,2,6,5,7,1,4});
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

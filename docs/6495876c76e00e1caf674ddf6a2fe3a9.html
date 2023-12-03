@@ -1,0 +1,90 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>dwarf2.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>dwarf2.c</h1>
+            <h3></h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/DWARF.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DWARF</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/DWARF-section.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DWARF-section</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<H3><a name="HEAD_33f26584" href="#TOC_HEAD_33f26584">DWARF section defination</a></H3><ul><a href="../tags/DWARF-section.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DWARF-section</a>&nbsp;</ul>
+<pre><code>const struct dwarf_debug_section dwarf_debug_sections[] =
+{
+{ ".debug_abbrev",            ".zdebug_abbrev" },
+{ ".debug_aranges",           ".zdebug_aranges" },
+{ ".debug_frame",             ".zdebug_frame" },
+{ ".debug_info",              ".zdebug_info" },
+{ ".debug_info",              ".zdebug_info" },
+{ ".debug_line",              ".zdebug_line" },
+{ ".debug_loc",               ".zdebug_loc" },
+{ ".debug_macinfo",           ".zdebug_macinfo" },
+{ ".debug_macro",             ".zdebug_macro" },
+{ ".debug_pubnames",          ".zdebug_pubnames" },
+{ ".debug_pubtypes",          ".zdebug_pubtypes" },
+{ ".debug_ranges",            ".zdebug_ranges" },
+{ ".debug_rnglists",          ".zdebug_rnglist" },
+{ ".debug_static_func",       ".zdebug_static_func" },
+{ ".debug_static_vars",       ".zdebug_static_vars" },
+{ ".debug_str",               ".zdebug_str", },
+{ ".debug_str",               ".zdebug_str", },
+{ ".debug_str_offsets",       ".zdebug_str_offsets", },
+{ ".debug_addr",              ".zdebug_addr", },
+{ ".debug_line_str",          ".zdebug_line_str", },
+{ ".debug_types",             ".zdebug_types" },
+{ ".debug_sfnames",           ".zdebug_sfnames" },
+{ ".debug_srcinfo",           ".zebug_srcinfo" },
+{ ".debug_funcnames",         ".zdebug_funcnames" },
+{ ".debug_typenames",         ".zdebug_typenames" },
+{ ".debug_varnames",          ".zdebug_varnames" },
+{ ".debug_weaknames",         ".zdebug_weaknames" },
+{ NULL,               NULL },
+};
+
+enum dwarf_debug_section_enum
+{
+debug_abbrev = 0,
+debug_aranges,
+debug_frame,
+debug_info,
+debug_info_alt,
+debug_line,
+debug_loc,
+debug_macinfo,
+debug_macro,
+debug_pubnames,
+debug_pubtypes,
+debug_ranges,
+debug_rnglists,
+debug_static_func,
+debug_static_vars,
+debug_str,
+debug_str_alt,
+debug_str_offsets,
+debug_addr,
+debug_line_str,
+debug_types,
+debug_sfnames,
+debug_srcinfo,
+debug_funcnames,
+debug_typenames,
+debug_varnames,
+debug_weaknames,
+debug_max
+};</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

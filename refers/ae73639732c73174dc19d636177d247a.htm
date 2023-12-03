@@ -1,0 +1,411 @@
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8"></meta>
+		<meta charset="utf-8"></meta>
+		<title>程序猿的福音&nbsp;&ndash;&nbsp;Apache&nbsp;Commons&nbsp;Net&nbsp;&ndash;&nbsp;简书</title>
+	</head>
+	<body class="" data-new-gr-c-s-check-loaded="8.906.0" data-gr-ext-installed="">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Fri Jul 28 11:43:09 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://www.jianshu.com/p/d05e9af9028e" target="_blank">
+				<font color="red" size="3">程序猿的福音&nbsp;&ndash;&nbsp;Apache&nbsp;Commons&nbsp;Net&nbsp;&ndash;&nbsp;简书</font>
+			</a>
+			<p></p>
+		</body>
+		<article class="_2rhmJa">
+			<p>此文是系列文章第八篇，前几篇请点击链接查看</p>
+			<p>
+				<a href="https://www.jianshu.com/p/5782223d76e1" target="_blank">程序猿的福音&nbsp;&ndash;&nbsp;Apache&nbsp;Commons简介</a>
+			</p>
+			<p>
+				<a href="https://www.jianshu.com/p/89287d907b68" target="_blank">程序员的福音&nbsp;&ndash;&nbsp;Apache&nbsp;Commons&nbsp;Lang</a>
+			</p>
+			<p>
+				<a href="https://www.jianshu.com/p/c48720170923" target="_blank">程序员的福音&nbsp;&ndash;&nbsp;Apache&nbsp;Commons&nbsp;IO</a>
+			</p>
+			<p>
+				<a href="https://www.jianshu.com/p/6a925c70eb72" target="_blank">程序员的福音&nbsp;&ndash;&nbsp;Apache&nbsp;Commons&nbsp;Codec</a>
+			</p>
+			<p>
+				<a href="https://www.jianshu.com/p/14af3aeb6db9" target="_blank">程序员的福音&nbsp;&ndash;&nbsp;Apache&nbsp;Commons&nbsp;Compress</a>
+			</p>
+			<p>
+				<a href="https://www.jianshu.com/p/29ed2ad3f849" target="_blank">程序员的福音&nbsp;&ndash;&nbsp;Apache&nbsp;Commons&nbsp;Exec</a>
+			</p>
+			<p>
+				<a href="https://www.jianshu.com/p/5c566cb191d3" target="_blank">程序员的福音&nbsp;&ndash;&nbsp;Apache&nbsp;Commons&nbsp;Email</a>
+			</p>
+			<p>
+				<strong>Apache&nbsp;Commons&nbsp;Net</strong>
+				库实现了许多基本Internet协议的客户端。库的目的是提供基本的协议访问，而不是更高级别的抽象。
+			</p>
+			<p>Commons&ndash;Net&nbsp;最初是一个名为&nbsp;NetComponents&nbsp;的商业&nbsp;Java&nbsp;库，最初由&nbsp;ORO，Inc.&nbsp;在&nbsp;Java&nbsp;
+早期开发的。在&nbsp;1998&nbsp;发布了&nbsp;1.3.8&nbsp;版本后，源代码被捐赠给&nbsp;Apache&nbsp;软件基金会，并在&nbsp;APACHE&nbsp;
+许可证下可用。从那时起，许多程序员为&nbsp;Commons&ndash;Net&nbsp;的持续发展做出了贡献。当前版本的编号方案与旧版本无关。也就是说，Commons&nbsp;
+net&nbsp;1.0&nbsp;成功地取代了&nbsp;NetComponents&nbsp;1.3.8。</p>
+			<p>Commons&ndash;Net&nbsp;目前最新版本是&nbsp;3.8.0，最低要求&nbsp;Java7&nbsp;以上。</p>
+			<p>maven坐标如下：</p>
+			<div class="_2Uzcx_">
+				<button class="VJbwyy" type="button" aria-label="复制代码">
+					<i aria-label="icon: copy" class="anticon anticon-copy">
+						<svg viewBox="64 64 896 896" focusable="false" class="" data-icon="copy" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+							<path d="M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z"></path>
+						</svg>
+					</i>
+				</button>
+				<pre class="line-numbers  language-xml">
+<code class="xml  language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>commons-net<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>commons-net<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>3.8.0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code>
+				</pre>
+			</div>
+			<p>包结构如下：</p>
+			<div class="_2Uzcx_">
+				<button class="VJbwyy" type="button" aria-label="复制代码">
+					<i aria-label="icon: copy" class="anticon anticon-copy">
+						<svg viewBox="64 64 896 896" focusable="false" class="" data-icon="copy" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+							<path d="M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z"></path>
+						</svg>
+					</i>
+				</button>
+				<pre class="line-numbers  language-java">
+<code class="java  language-java">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>bsd
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>chargen
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>daytime
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>discard
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>echo
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>finger
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>ftp
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>imap
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>io
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>nntp
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>ntp
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>pop3
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>smtp
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>telnet
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>tftp
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>time
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>util
+org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>net<span class="token punctuation">.</span>whois
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code>
+				</pre>
+			</div>
+			<p>下面简单介绍一下它的结构和用法。</p>
+			<h2>01.&nbsp;概览</h2>
+			<p>Commons&ndash;Net&nbsp;的核心是实现了各种网络协议的Client类，其中两个核心抽象类
+				<strong>SocketClient</strong>
+				和
+				<strong>DatagramSocketClient&nbsp;，SocketClient</strong>
+				是所有TCP实现的基类，
+				<strong>DatagramSocketClient</strong>
+				是所有UDP实现的基类。其中支持的协议如下（S结尾就是使用
+				<strong>SSL/TLS</strong>
+				做通信加密，类似&nbsp;http&nbsp;和&nbsp;https&nbsp;的关系）：
+			</p>
+			<p>
+				<strong>FTP/FTPS</strong>
+				：FTP（File&nbsp;Transfer&nbsp;Protocol，文件传输协议）是&nbsp;TCP/IP&nbsp;
+协议组中的协议之一。FTP协议包括两个组成部分，其一为FTP服务器，其二为FTP客户端。其中FTP服务器用来存储文件，用户可以使用FTP客户端通
+过FTP协议访问位于FTP服务器上的资源。在开发网站的时候，通常利用FTP协议把网页或程序传到Web服务器上。此外，由于FTP传输效率非常高，在
+网络上传输大的文件时，一般也采用该协议。实现该协议的类是
+				<strong>FTPClient/FTPSClient</strong>
+			</p>
+			<p>
+				<strong>FTP&nbsp;over&nbsp;HTTP</strong>
+				(experimental)：以http协议实现FTP的功能。由于FTP工作在被动模式时不仅需要将21作为FTP的控制（命令）端口，还要将20作
+为FTP的数据端口，因此在配置防火墙时比较麻烦，不如用http协议传输文件。因此可以利用原有的网站结合Alias的方法加目录访问控制来实现。实现
+该协议的类是
+				<strong>FTPHTTPClient</strong>
+			</p>
+			<p>
+				<strong>NNTP</strong>
+				：网络新闻组传输协议（Network&nbsp;News&nbsp;Transfer&nbsp;Protocol）是一个主要用于阅读和张贴新闻文章到Usenet上的Internet应用协议，也负责新闻在服务器间的传送。实现该协议的类是
+				<strong>NNTPClient</strong>
+			</p>
+			<p>
+				<strong>SMTP(S)</strong>
+				：SMTP（Simple&nbsp;Mail&nbsp;Transfer&nbsp;Protocol）是一种提供可靠且有效的电子邮件传输的协议。SMTP是建立在FTP文件传输服务上的一种邮件服务，主要用于系统之间的邮件信息传递，并提供有关来信的通知。实现该协议的类是
+				<strong>SMTPClient****/****SMTPSClient</strong>
+			</p>
+			<p>
+				<strong>POP3(S)</strong>
+				：POP3，全名为&ldquo;Post&nbsp;Office&nbsp;Protocol&nbsp;&ndash;&nbsp;Version&nbsp;3&rdquo;，即&ldquo;邮局协议版本3&rdquo;。POP3协议允许电子邮件客户端下载服务器上的邮件，但是在客户端的操作（如移动邮件、标记已读等），不会反馈到服务器上。实现该协议的类是
+				<strong>POP3Client/POP3SClient</strong>
+			</p>
+			<p>
+				<strong>IMAP(S)</strong>
+				：IMAP（Internet&nbsp;Message&nbsp;Access&nbsp;
+Protocol）以前称作交互邮件访问协议（Interactive&nbsp;Mail&nbsp;Access&nbsp;
+Protocol），是一个应用层协议。它的主要作用是邮件客户端可以通过这种协议从邮件服务器上获取邮件的信息，下载邮件等。IMAP提供
+webmail&nbsp;
+与电子邮件客户端之间的双向通信，客户端的操作都会反馈到服务器上，对邮件进行的操作，服务器上的邮件也会做相应的动作。实现该协议的类是
+				<strong>IMAPClient/IMAPSClient</strong>
+			</p>
+			<p>
+				<strong>Telnet</strong>
+				：Telnet协议是TCP/IP协议族中的一员，是Internet远程登录服务的标准协议和主
+要方式。它为用户提供了在本地计算机上完成远程主机工作的能力。在终端使用者的电脑上使用telnet程序，用它连接到服务器。终端使用者可以在
+telnet程序中输入命令，这些命令会在服务器上运行，就像直接在服务器的控制台上输入一样。Telnet是常用的远程控制Web服务器的方法。实现该
+协议的类是
+				<strong>TelnetClient</strong>
+			</p>
+			<p>
+				<strong>TFTP</strong>
+				：TFTP（Trivial&nbsp;File&nbsp;Transfer&nbsp;Protocol,简单文件传输协议）是TCP/IP协议族中的一个用来在客户机与服务器之间进行简单文件传输的协议，提供不复杂、开销不大的文件传输服务。端口号为69。实现该协议的类是
+				<strong>TFTPClient</strong>
+			</p>
+			<p>
+				<strong>Finger</strong>
+				：显示有关运行&nbsp;Finger&nbsp;服务或&nbsp;Daemon&nbsp;的指定远程计算机（通常是运行&nbsp;UNIX&nbsp;的计算机）上用户的信息。该远程计算机指定显示用户信息的格式和输出。实现该协议的类是
+				<strong>FingerClient</strong>
+			</p>
+			<p>
+				<strong>Whois</strong>
+				：whois&nbsp;
+是用来查询域名的IP以及所有者等信息的传输协议。简单说，whois就是一个用来查询域名是否已经被注册，以及注册域名的详细信息的数据库（如域名所有
+人、域名注册商）。早期的whois查询多以命令行接口存在，但是现在出现了一些网页的线上查询工具，其仍依赖whois协议。命令行工具仍然被系统管理
+员广泛使用。whois通常使用TCP协议43端口。每个域名/IP的whois信息由对应的管理机构保存。实现该协议的类是
+				<strong>WhoisClient</strong>
+			</p>
+			<p>
+				<strong>rexec/rcmd/rlogin</strong>
+				：是一组Unix命令，远程执行，远程登录，起源于BSD系统。实现该协议的类是
+				<strong>RExecClient/</strong>
+				RCommandClient
+				<strong>/</strong>
+				RLoginClient****
+			</p>
+			<p>
+				<strong>Time</strong>
+				(rdate)&nbsp;/
+				<strong>Daytime</strong>
+				：
+				<strong>DAYTIME</strong>
+				协议是基于TCP的应用，是一种有用的调试工具，它的作用是返回当前时间和日期，格式是字符串格式。
+				<strong>Time</strong>
+				时间协议（英语：TIME&nbsp;protocol）是一个在RFC&nbsp;868内定义的网络传输协议。它用作提供机器可读的日期时间信息。实现该协议的类是
+				<strong>TimeTCPClient/TimeUDPClient，DaytimeTCPClient/DaytimeUDPClient</strong>
+			</p>
+			<p>
+				<strong>Echo</strong>
+				：echo是一个计算机命令，它可以基于TCP协议，也可以基于UDP协议，服务器在端口7检测有无消息。是路由也是网络中最常用的数据包，可以通过发送echo包知道当前的连接节点有那些路径，并且通过往返时间能得出路径长度。实现该协议的类是
+				<strong>EchoTCPClient/EchoUDPClient</strong>
+			</p>
+			<p>
+				<strong>Discard</strong>
+				：抛弃协议，作用就是接收到什么抛弃什么，它对调试网络状态的一定的用处。实现该协议的类是****Discard
+				<strong>TCPClient/</strong>
+				Discard
+				<strong>UDPClient</strong>
+			</p>
+			<p>
+				<strong>NTP/SNTP</strong>
+				：NTP服务器【Network&nbsp;Time&nbsp;Protocol（NTP）】是用来使计算机时间同步化的一种协议，它可以使计算机对其服务器或时钟源（如石英钟，GPS等等）做同步化。实现该协议的类是****NTPUDP
+				<strong>Client</strong>
+			</p>
+			<p>客户端类图如下：</p>
+			<div class="image-package">
+				<div class="image-container" style="max-width: 700px; max-height: 260px; background-color: transparent;">
+					<div class="image-container-fill" style="padding-bottom: 24.07%;"></div>
+					<div class="image-view" data-width="1080" data-height="260">
+						<img data-original-src="//upload-images.jianshu.io/upload_images/26573181-d7bf0d0ba1c23c23.image" data-original-width="1080" data-original-height="260" data-original-format="image/png" data-original-filesize="54487" style="cursor: zoom-in;" data-image-index="0" class="" src="files/1d84f18379420a4c716ef3cd6b092910.webp"></img>
+					</div>
+				</div>
+				<div class="image-caption">图片</div>
+			</div>
+			<div class="image-package">
+				<div class="image-container" style="max-width: 700px; max-height: 271px; background-color: transparent;">
+					<div class="image-container-fill" style="padding-bottom: 25.09%;"></div>
+					<div class="image-view" data-width="1080" data-height="271">
+						<img data-original-src="//upload-images.jianshu.io/upload_images/26573181-ca944b0cb64923c5.image" data-original-width="1080" data-original-height="271" data-original-format="image/png" data-original-filesize="45544" style="cursor: zoom-in;" data-image-index="1" class="" src="files/9be8c5137c45bab5a60f03e968d48df4.webp"></img>
+					</div>
+				</div>
+				<div class="image-caption">图片</div>
+			</div>
+			<h2>02.&nbsp;工具方法</h2>
+			<p>Commons&ndash;Net&nbsp;还提供了一些网络相关的工具类，简化我们的一些网络处理，主要有以下几个</p>
+			<p>
+				<strong>SubnetUtils</strong>
+				：在给定网络地址和子网掩码的情况下执行一些子网计算
+			</p>
+			<p>
+				<strong>TrustManagerUtils</strong>
+				：TrustManager&nbsp;工具类
+			</p>
+			<p>
+				<strong>KeyManagerUtils</strong>
+				：KeyManager&nbsp;工具类
+			</p>
+			<p>
+				<strong>SSLContextUtils</strong>
+				：SSLContext&nbsp;工具类
+			</p>
+			<p>下面看看代码示例</p>
+			<p>
+				<strong>1.&nbsp;SSL相关</strong>
+			</p>
+			<p>Java&nbsp;API&nbsp;写法：</p>
+			<div class="_2Uzcx_">
+				<button class="VJbwyy" type="button" aria-label="复制代码">
+					<i aria-label="icon: copy" class="anticon anticon-copy">
+						<svg viewBox="64 64 896 896" focusable="false" class="" data-icon="copy" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+							<path d="M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z"></path>
+						</svg>
+					</i>
+				</button>
+				<pre class="line-numbers  language-java">
+<code class="java  language-java"><span class="token comment">// 使用jdk原生获取SSLContext</span>
+<span class="token class-name">String</span> key <span class="token operator">=</span> <span class="token string">"c:/client.jks"</span><span class="token punctuation">;</span>
+<span class="token class-name">String</span> password <span class="token operator">=</span> <span class="token string">"123456"</span><span class="token punctuation">;</span> <span class="token comment">// key密码</span>
+<span class="token class-name">KeyStore</span> keyStore <span class="token operator">=</span> <span class="token class-name">KeyStore</span><span class="token punctuation">.</span><span class="token function">getInstance</span><span class="token punctuation">(</span><span class="token string">"JKS"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//创建一个keystore来管理密钥库</span>
+keyStore<span class="token punctuation">.</span><span class="token function">load</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">FileInputStream</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">,</span> password<span class="token punctuation">.</span><span class="token function">toCharArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//创建jkd密钥访问库</span>
+<span class="token class-name">KeyManagerFactory</span> kmf <span class="token operator">=</span> <span class="token class-name">KeyManagerFactory</span><span class="token punctuation">.</span><span class="token function">getInstance</span><span class="token punctuation">(</span><span class="token string">"SunX509"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">TrustManagerFactory</span> tmf <span class="token operator">=</span> <span class="token class-name">TrustManagerFactory</span><span class="token punctuation">.</span><span class="token function">getInstance</span><span class="token punctuation">(</span><span class="token string">"SunX509"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tmf<span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span>keyStore<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">KeyManager</span><span class="token punctuation">[</span><span class="token punctuation">]</span> kms <span class="token operator">=</span> kmf<span class="token punctuation">.</span><span class="token function">getKeyManagers</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">TrustManager</span><span class="token punctuation">[</span><span class="token punctuation">]</span> tms <span class="token operator">=</span> tmf<span class="token punctuation">.</span><span class="token function">getTrustManagers</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">SSLContext</span> ctx <span class="token operator">=</span> <span class="token class-name">SSLContext</span><span class="token punctuation">.</span><span class="token function">getInstance</span><span class="token punctuation">(</span><span class="token string">"TLSv1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 支持SSLv2, SSLv3, TLSv1, TLSv1.1, SSLv2Hello</span>
+ctx<span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span>kms<span class="token punctuation">,</span> tms<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code>
+				</pre>
+			</div>
+			<p>Commons&nbsp;Net&nbsp;写法：</p>
+			<div class="_2Uzcx_">
+				<button class="VJbwyy" type="button" aria-label="复制代码">
+					<i aria-label="icon: copy" class="anticon anticon-copy">
+						<svg viewBox="64 64 896 896" focusable="false" class="" data-icon="copy" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+							<path d="M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z"></path>
+						</svg>
+					</i>
+				</button>
+				<pre class="line-numbers  language-java">
+<code class="java  language-java"><span class="token comment">// 使用commons-net相关工具类写法</span>
+<span class="token class-name">String</span> key <span class="token operator">=</span> <span class="token string">"c:/client.jks"</span><span class="token punctuation">;</span>
+<span class="token class-name">String</span> password <span class="token operator">=</span> <span class="token string">"123456"</span><span class="token punctuation">;</span> <span class="token comment">// key密码</span>
+<span class="token class-name">File</span> keyFile <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">File</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">KeyManager</span> km <span class="token operator">=</span> <span class="token class-name">KeyManagerUtils</span><span class="token punctuation">.</span><span class="token function">createClientKeyManager</span><span class="token punctuation">(</span>keyFile<span class="token punctuation">,</span> password<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">TrustManager</span> tm <span class="token operator">=</span> <span class="token class-name">TrustManagerUtils</span><span class="token punctuation">.</span><span class="token function">getDefaultTrustManager</span><span class="token punctuation">(</span>keyStore<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">SSLContext</span> ctx2 <span class="token operator">=</span> <span class="token class-name">SSLContextUtils</span><span class="token punctuation">.</span><span class="token function">createSSLContext</span><span class="token punctuation">(</span><span class="token string">"TLSv1"</span><span class="token punctuation">,</span> km<span class="token punctuation">,</span> tm<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code>
+				</pre>
+			</div>
+			<p>
+				<strong>2.&nbsp;子网工具类</strong>
+			</p>
+			<div class="_2Uzcx_">
+				<button class="VJbwyy" type="button" aria-label="复制代码">
+					<i aria-label="icon: copy" class="anticon anticon-copy">
+						<svg viewBox="64 64 896 896" focusable="false" class="" data-icon="copy" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+							<path d="M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z"></path>
+						</svg>
+					</i>
+				</button>
+				<pre class="line-numbers  language-java">
+<code class="java  language-java"><span class="token comment">// 以下为两种初始化subnet工具类的方式</span>
+<span class="token comment">// 1. 使用IP和子网掩码</span>
+<span class="token class-name">SubnetUtils</span> subnet <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SubnetUtils</span><span class="token punctuation">(</span><span class="token string">"192.168.1.113"</span><span class="token punctuation">,</span> <span class="token string">"255.255.255.0"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 2. 使用CIDR格式地址</span>
+<span class="token comment">// SubnetUtils subnet = new SubnetUtils("192.168.1.113/24");</span>
+
+<span class="token comment">// 获取网络各种参数</span>
+<span class="token class-name">SubnetUtils</span><span class="token punctuation">.</span><span class="token class-name">SubnetInfo</span> si <span class="token operator">=</span> subnet<span class="token punctuation">.</span><span class="token function">getInfo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 获取IP地址</span>
+si<span class="token punctuation">.</span><span class="token function">getAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 192.168.1.113</span>
+<span class="token comment">// 获取网络地址（IP地址和子网掩码进行与运算，结果是网络地址，即主机号全0是网络地址）</span>
+si<span class="token punctuation">.</span><span class="token function">getNetworkAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 192.168.1.0</span>
+<span class="token comment">// 获取广播地址（专门用于同时向网络中所有工作站进行发送的一个地址）</span>
+si<span class="token punctuation">.</span><span class="token function">getBroadcastAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 192.168.1.255</span>
+<span class="token comment">// 获取子网下的起始地址</span>
+si<span class="token punctuation">.</span><span class="token function">getLowAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 192.168.1.1</span>
+<span class="token comment">// 获取子网下的终止地址</span>
+si<span class="token punctuation">.</span><span class="token function">getHighAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 192.168.1.254</span>
+<span class="token comment">// 获取上一个地址</span>
+si<span class="token punctuation">.</span><span class="token function">getPreviousAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 192.168.1.112</span>
+<span class="token comment">// 获取下一个地址</span>
+si<span class="token punctuation">.</span><span class="token function">getNextAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 192.168.1.114</span>
+<span class="token comment">// 获取子网掩码</span>
+si<span class="token punctuation">.</span><span class="token function">getNetmask</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 255.255.255.0</span>
+<span class="token comment">// 获取CIDR格式的网络地址</span>
+si<span class="token punctuation">.</span><span class="token function">getCidrSignature</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 192.168.1.113/24</span>
+<span class="token comment">// 获取子网最大IP个数</span>
+si<span class="token punctuation">.</span><span class="token function">getAddressCountLong</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 254</span>
+<span class="token comment">// 获取所有IP地址数组</span>
+si<span class="token punctuation">.</span><span class="token function">getAllAddresses</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// [192.168.1.1, ..., 192.168.1.254]</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code>
+				</pre>
+			</div>
+			<h2>03.&nbsp;网络客户端</h2>
+			<p>Commons&ndash;Net&nbsp;提供的网络客户端非常多，此处只列举几个简单的做下示例：</p>
+			<p>
+				<strong>1.&nbsp;WhoisClient</strong>
+			</p>
+			<div class="_2Uzcx_">
+				<button class="VJbwyy" type="button" aria-label="复制代码">
+					<i aria-label="icon: copy" class="anticon anticon-copy">
+						<svg viewBox="64 64 896 896" focusable="false" class="" data-icon="copy" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+							<path d="M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z"></path>
+						</svg>
+					</i>
+				</button>
+				<pre class="line-numbers  language-java">
+<code class="java  language-java"><span class="token comment">// 基于TCP协议</span>
+<span class="token class-name">WhoisClient</span> whoisClient <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WhoisClient</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 基于TCP使用connect</span>
+    whoisClient<span class="token punctuation">.</span><span class="token function">connect</span><span class="token punctuation">(</span><span class="token class-name">WhoisClient</span><span class="token punctuation">.</span>DEFAULT_HOST<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> host <span class="token operator">=</span> whoisClient<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span><span class="token string">"baidu.com"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>host<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 基于TCP需要主动断开连接</span>
+    whoisClient<span class="token punctuation">.</span><span class="token function">disconnect</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code>
+				</pre>
+			</div>
+			<p>
+				<strong>2.&nbsp;TimeUDPClient</strong>
+			</p>
+			<div class="_2Uzcx_">
+				<button class="VJbwyy" type="button" aria-label="复制代码">
+					<i aria-label="icon: copy" class="anticon anticon-copy">
+						<svg viewBox="64 64 896 896" focusable="false" class="" data-icon="copy" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+							<path d="M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z"></path>
+						</svg>
+					</i>
+				</button>
+				<pre class="line-numbers  language-java">
+<code class="java  language-java"><span class="token comment">// 基于UDP协议</span>
+<span class="token class-name">TimeUDPClient</span> timeClient <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">TimeUDPClient</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+timeClient<span class="token punctuation">.</span><span class="token function">setDefaultTimeout</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">InetAddress</span> addr <span class="token operator">=</span> <span class="token class-name">InetAddress</span><span class="token punctuation">.</span><span class="token function">getByName</span><span class="token punctuation">(</span><span class="token string">"time.nist.gov"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// UDP使用open</span>
+timeClient<span class="token punctuation">.</span><span class="token keyword">open</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">Date</span> d <span class="token operator">=</span> timeClient<span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span>addr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">DateFormatUtils</span><span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span>d<span class="token punctuation">,</span> <span class="token string">"yyyy-MM-dd HH:mm:ss.SSS"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// UDP使用close关闭连接</span>
+timeClient<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code>
+				</pre>
+			</div>
+			<p>其他简单协议就不做示例了。复杂协议（如FTP）由于支持功能较多，篇幅原因也不做代码示例了，感兴趣的可以到
+				<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fmirrors.tuna.tsinghua.edu.cn%2Fapache%2F%2Fcommons%2Fnet%2Fsource%2Fcommons-net-3.8.0-src.zip" target="_blank">https://mirrors.tuna.tsinghua.edu.cn/apache//commons/net/source/commons&ndash;net&ndash;3.8.0&ndash;src.zip</a>
+				这里下载源码查看其中的Example。
+			</p>
+			<h2>04.&nbsp;总结</h2>
+			<p>
+				<strong>Commons&nbsp;Net</strong>
+				做为网络工具包，实现了很多网络协议的客户端，如果有相关需求可以考虑使用，也可以基于&nbsp;Net&nbsp;的基础自行扩展。
+			</p>
+			<p>后续章节我将继续给大家介绍&nbsp;commons&nbsp;中其他好用的工具类库，期待你的关注。</p>
+		</article>
+	</body>
+</html>

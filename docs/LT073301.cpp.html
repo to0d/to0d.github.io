@@ -1,0 +1,163 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT073301.cpp (Flood Fill)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT073301.cpp (Flood Fill)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-12-06</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0733.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0733</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_3dee055d" href="#TOC_HEAD_3dee055d">Problem 0733 <strong>Flood Fill</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/flood-fill/" target="_blank">https://leetcode.com/problems/flood&ndash;fill/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>74.57</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_50b96dd8" href="#TOC_HEAD_50b96dd8">LT073301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_83b4e835">LT0733 (name=Flood Fill, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0733.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0733</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_b039a50"><a href="https://leetcode.com/problems/flood-fill/" target="_blank">Flood Fill &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0733.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0733</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_5cac1525" href="#TOC_HEAD_5cac1525">LT073301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; floodFill(vector&lt;vector&lt;int&gt;&gt;& image, int sr, int sc, int color) {
+        int row = image.size();
+        int column = image[0].size();
+        int target = image[sr][sc];
+        if( target == color )
+            return image;
+
+        stack&lt;int&gt; rstack, cstack;
+        rstack.push(sr);
+        cstack.push(sc);
+        while(!rstack.empty())
+        {   int r = rstack.top();
+            int c = cstack.top();
+            rstack.pop();
+            cstack.pop();
+            if( image[r][c] != target )
+                continue;
+            image[r][c] = color;
+            if( r &gt; 0 )
+            {   rstack.push(r-1);
+                cstack.push(c);
+            }
+            if( (r+1) &lt; row )
+            {   rstack.push(r+1);
+                cstack.push(c);
+            }
+            if( c &gt; 0 )
+            {   rstack.push(r);
+                cstack.push(c-1);
+            }
+            if( (c+1) &lt; column )
+            {   rstack.push(r);
+                cstack.push(c+1);
+            }
+        }
+        return image;
+    }
+};
+
+
+void test(vector&lt;vector&lt;int&gt;&gt; image, int sr, int sc, int color)
+{
+    cout &lt;&lt; "input: sr=" &lt;&lt; sr &lt;&lt; ", sc=" &lt;&lt; sc &lt;&lt; ", color=" &lt;&lt; color &lt;&lt; ", image=";
+    outputVector(image);
+    vector&lt;vector&lt;int&gt;&gt; r = Solution().floodFill(image, sr, sc, color);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout  &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test({{1,1,1},{1,1,0},{1,0,1}},1,1,2);
+}
+
+
+// Result
+//
+// 2022-12-06: Runtime 8ms 74.57% Memory 14.4MB 17.41%, https://leetcode.com/problems/flood-fill/submissions/855581793/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: sr=1, sc=1, color=2, image=[[1,1,1],[1,1,0],[1,0,1]]; output: [[2,2,2],[2,2,0],[2,0,1]];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

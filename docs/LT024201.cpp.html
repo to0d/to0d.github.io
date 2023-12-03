@@ -1,0 +1,167 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT024201.cpp (Valid Anagram)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT024201.cpp (Valid Anagram)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-30</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0242.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0242</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_77ecfaa8" href="#TOC_HEAD_77ecfaa8">Problem 0242 <strong>Valid Anagram</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/valid-anagram/" target="_blank">https://leetcode.com/problems/valid&ndash;anagram/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>92.39</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_1af73ff1" href="#TOC_HEAD_1af73ff1">LT024201.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_4c0231da">LT0242 (name=Valid Anagram, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0242.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0242</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_240f4a08"><a href="https://leetcode.com/problems/valid-anagram/" target="_blank">Valid Anagram &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0242.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0242</a></li>
+		<br />
+	</ul>
+	<p>
+		Given two strings
+		<em>s</em> and
+		<em>t</em> , write a function to determine if
+		<em>t</em> is an anagram of
+		<em>s</em> .
+	</p>
+	<p>
+		For example,
+	</p>
+	<p>
+		<em>s</em> = &quot;anagram&quot;,
+		<em>t</em> = &quot;nagaram&quot;, return true.
+	</p>
+	<p>
+		<em>s</em> = &quot;rat&quot;,
+		<em>t</em> = &quot;car&quot;, return false.
+	</p>
+	<p>
+		<strong>Note:</strong>
+	</p>
+	<p>
+		You may assume the string contains only lowercase alphabets.
+	</p>
+	<p>
+		<strong>Follow up:</strong>
+	</p>
+	<p>
+		What if the inputs contain unicode characters? How would you adapt your solution to such case?
+	</p>
+</ul>
+	<H3><a name="HEAD_aa50dbbe" href="#TOC_HEAD_aa50dbbe">LT024201.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        if( s.length() != t.length() )
+            return false;
+        vector&lt;int&gt; cmap(26, 0);
+        for(char c : s )
+            cmap[c- 'a']++;
+        for(char c : t )
+            if( --cmap[c- 'a'] &lt; 0 )
+                return false;
+        return true;
+    }
+};
+
+
+
+void test(string s, string t)
+{
+    cout &lt;&lt; "input: s=" &lt;&lt; s &lt;&lt; ", t=" &lt;&lt; t &lt;&lt; "; output: ";
+    bool r = Solution().isAnagram(s, t);
+    cout &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("anagram", "nagaram");
+    test("rat", "car");
+}
+
+// Result
+//
+// 2022-11-19: Runtime 30ms 6.80% Memory 7.4MB 62.7%, https://leetcode.com/problems/valid-anagram/submissions/846317857/
+// 2023-02-22: Runtime 12ms 58.42% Memory 7.3MB 62.9%, https://leetcode.com/problems/valid-anagram/submissions/902727646/
+// 2023-07-30: Runtime 4ms 92.39% Memory 6.94MB 71.94%, https://leetcode.cn/problems/valid-anagram/submissions/451497299/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: s=anagram, t=nagaram; output: 1;
+input: s=rat, t=car; output: 0;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

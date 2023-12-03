@@ -1,0 +1,45 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC170310B.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC170310B.cpp</h1>
+            <h3>vector shrink to fit - vector<int> (v).swap(v)</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/std-vector.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-vector</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+int main()
+{
+    vector&lt;int&gt; v;
+    for(int i =0; i&lt; 100; i++)
+        v.push_back(i);
+
+    //3) erase one
+    v.pop_back();
+    v.reserve(1000000);
+
+    cout &lt;&lt; "output: before swap, size=" &lt;&lt; v.size() &lt;&lt; ", capacity=" &lt;&lt; v.capacity();
+
+    vector&lt;int&gt; (v).swap(v);  //4) use Shrink to fit method
+
+    cout &lt;&lt; "; after swap, size=" &lt;&lt; v.size() &lt;&lt; ", capacity=" &lt;&lt; v.capacity() &lt;&lt; endl;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

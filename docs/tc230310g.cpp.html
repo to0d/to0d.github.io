@@ -1,0 +1,47 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC230310G.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC230310G.cpp</h1>
+            <h3>C11 std::move</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/std-move.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-move</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/rvalue-reference.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>rvalue-reference</a>&nbsp;<a href="../tags/std-move.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-move</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    <ul>
+	<li><a name="HEAD_HIDDEN_d5f592b7">std&ndash;move (ptag=Cxx&ndash;Function) &nbsp;<a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/rvalue-reference.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>rvalue-reference</a>&nbsp;<a href="../tags/std-move.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-move</a>&nbsp;<a href="../tags/Cxx-Function.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Function</a></li>
+	<br />
+</ul>
+	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+int main(void)
+{
+    std::string str = "str";
+    std::vector&lt;std::string&gt; v;
+    cout&lt;&lt; "input: str=" &lt;&lt; str &lt;&lt; ", v=";
+    outputVector(v);
+
+    v.push_back(std::move(str));
+
+    cout&lt;&lt; "; output: str=" &lt;&lt; str &lt;&lt; ", v=";
+    outputVector(v);
+
+    cout &lt;&lt; endl;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

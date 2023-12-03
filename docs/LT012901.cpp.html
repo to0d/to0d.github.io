@@ -1,0 +1,169 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT012901.cpp (Sum Root to Leaf Numbers)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT012901.cpp (Sum Root to Leaf Numbers)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-22</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0129.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0129</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_6a5c7dfb" href="#TOC_HEAD_6a5c7dfb">Problem 0129 <strong>Sum Root to Leaf Numbers</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/sum-root-to-leaf-numbers/" target="_blank">https://leetcode.com/problems/sum&ndash;root&ndash;to&ndash;leaf&ndash;numbers/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>29.8</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_2f51d1f9" href="#TOC_HEAD_2f51d1f9">LT012901.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_95f8bb93">LT0129 (name=Sum Root to Leaf Numbers, ptag=Leetcode) &nbsp;<a href="../tags/LT0129.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0129</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_7babcedd"><a href="https://leetcode.com/problems/sum-root-to-leaf-numbers/" target="_blank">Sum Root to Leaf Numbers &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0129.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0129</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a binary tree containing digits from
+		<code>0&ndash;9</code> only, each root&ndash;to&ndash;leaf path could represent a number.
+	</p>
+	<p>
+		An example is the root&ndash;to&ndash;leaf path
+		<code>1&ndash;&gt;2&ndash;&gt;3</code> which represents the number
+		<code>123</code> .
+	</p>
+	<p>
+		Find the total sum of all root&ndash;to&ndash;leaf numbers.
+	</p>
+	<p>
+		For example,
+	</p>
+	<pre><code>1
+/ \
+2   3	</code></pre>
+	<p>
+		The root&ndash;to&ndash;leaf path
+		<code>1&ndash;&gt;2</code> represents the number
+		<code>12</code> .
+	</p>
+	<p>
+		The root&ndash;to&ndash;leaf path
+		<code>1&ndash;&gt;3</code> represents the number
+		<code>13</code> .
+	</p>
+	<p>
+		Return the sum = 12 + 13 =
+		<code>25</code> .
+	</p>
+</ul>
+	<H3><a name="HEAD_b895b1c6" href="#TOC_HEAD_b895b1c6">LT012901.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int sumNumbers(TreeNode* root) {
+        return root == NULL ? 0 : getSum(root, 0);
+    }
+
+    int getSum(TreeNode* node, int val){
+        val = val*10 + node-&gt;val;
+        if( node-&gt;left == NULL && node-&gt;right == NULL)
+            return val;
+
+        return (node-&gt;left != NULL ? getSum(node-&gt;left, val) : 0)
+            + (node-&gt;right != NULL ? getSum(node-&gt;right, val) : 0);
+    }
+};
+
+
+
+void test(TreeNode* root)
+{
+    cout &lt;&lt; "input: ";
+    outputTree(root);
+    int r = Solution().sumNumbers(root);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(makeTree("{1,2,3}"));
+}
+
+// Result
+//
+// 2022-11-23: Runtime 8ms 5.56% Memory 9.3MB 53.14%, https://leetcode.com/problems/sum-root-to-leaf-numbers/submissions/848487352/
+// 2023-02-22: Runtime 4ms 29.8% Memory 9.1MB 87.71%, https://leetcode.com/problems/sum-root-to-leaf-numbers/submissions/902640880/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [1,2,3]; output: 25;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

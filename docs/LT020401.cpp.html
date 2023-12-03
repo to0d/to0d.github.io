@@ -1,0 +1,157 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT020401.cpp (Count Primes)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT020401.cpp (Count Primes)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-30</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0204.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0204</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Prime.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Prime</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_39a6f1fe" href="#TOC_HEAD_39a6f1fe">Problem 0204 <strong>Count Primes</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/count-primes/" target="_blank">https://leetcode.com/problems/count&ndash;primes/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>68.70</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_25fa0ff7" href="#TOC_HEAD_25fa0ff7">LT020401.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_32889d6">LT0204 (name=Count Primes, ptag=Leetcode) &nbsp;<a href="../tags/LT0204.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0204</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Prime.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Prime</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_45bff050"><a href="https://leetcode.com/problems/count-primes/" target="_blank">Count Primes &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0204.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0204</a></li>
+		<br />
+	</ul>
+	<p>
+		Given an integer n, return the number of prime numbers that are strictly less than n.
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input: n = 10
+Output: 4
+Explanation: There are 4 prime numbers less than 10, they are 2, 3, 5, 7.	</code></pre>
+</ul>
+	<H3><a name="HEAD_74989ec4" href="#TOC_HEAD_74989ec4">LT020401.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int countPrimes(int n) {
+        if(n &lt;= 2 )
+            return 0;
+
+        vector&lt;bool&gt; isPrime(n, true);
+        isPrime[0] = false;
+        isPrime[1] = false;
+
+        for(int i = 2; i*i &lt; n ; ++i )
+            if( isPrime[i] )
+                for(int j = i*i; j &lt; n ; j += i)
+                    isPrime[j] = false;
+
+        int count = 0;
+        for( bool is : isPrime)
+            if( is )
+                ++count;
+
+        return count;
+    }
+};
+
+
+
+void test(int n)
+{
+    cout &lt;&lt; "input: " &lt;&lt; n;;
+    int r = Solution().countPrimes(n);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(0);
+    test(1);
+    test(10);
+}
+
+// Result
+//
+// 2022-11-21: Runtime 449ms 21.89% Memory 10.3MB 73.78%, https://leetcode.com/problems/count-primes/submissions/847510396/
+// 2023-02-22: Runtime 331ms 30.39% Memory 10.2MB 73.29%, https://leetcode.com/problems/count-primes/submissions/902629628/
+// 2023-07-30: Runtime 236ms 68.70% Memory 9.66MB 95.14%, https://leetcode.cn/problems/count-primes/submissions/451550042</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 0; output: 0;
+input: 1; output: 0;
+input: 10; output: 4;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

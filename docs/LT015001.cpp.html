@@ -1,0 +1,161 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT015001.cpp (Evaluate Reverse Polish Notation)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT015001.cpp (Evaluate Reverse Polish Notation)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-31</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0150.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0150</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_d32d70cf" href="#TOC_HEAD_d32d70cf">Problem 0150 <strong>Evaluate Reverse Polish Notation</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/evaluate-reverse-polish-notation/" target="_blank">https://leetcode.com/problems/evaluate&ndash;reverse&ndash;polish&ndash;notation/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>89.18</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_a5c794d" href="#TOC_HEAD_a5c794d">LT015001.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_ce764267">LT0150 (name=Evaluate Reverse Polish Notation, ptag=Leetcode) &nbsp;<a href="../tags/LT0150.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0150</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_550075ca"><a href="https://leetcode.com/problems/evaluate-reverse-polish-notation/" target="_blank">Evaluate Reverse Polish Notation &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0150.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0150</a></li>
+		<br />
+	</ul>
+	<p>
+		Evaluate the value of an arithmetic expression in
+		<a href="http://en.wikipedia.org/wiki/Reverse_Polish_notation" target="_blank">Reverse Polish Notation</a>
+		.
+	</p>
+	<p>
+		Valid operators are
+		<code>+</code> ,
+		<code>&ndash;</code> ,
+		<code>*</code> ,
+		<code>/</code> . Each operand may be an integer or another expression.
+	</p>
+	<p>
+		Some examples:
+	</p>
+	<pre><code>["2", "1", "+", "3", "*"] -&gt; ((2 + 1) * 3) -&gt; 9
+["4", "13", "5", "/", "+"] -&gt; (4 + (13 / 5)) -&gt; 6	</code></pre>
+</ul>
+	<H3><a name="HEAD_1421231a" href="#TOC_HEAD_1421231a">LT015001.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int evalRPN(vector&lt;string&gt;& tokens){
+        if( tokens.empty() )
+            return 0;
+        stack&lt;int&gt;  num_stack;
+        for(string& t : tokens)
+        {   int val = 0; char op;
+            if( t.size() == 1 && (t[0] == '+' || t[0] == '-' || t[0] == '*' || t[0] == '/'))
+            {   int a = num_stack.top(); num_stack.pop();
+                int b = num_stack.top(); num_stack.pop();
+                switch( t[0] )
+                {   case '+': val = b + a; break;
+                    case '-': val = b - a; break;
+                    case '*': val = b * a; break;
+                    case '/': val = b / a; break;
+                }
+            }
+            else
+                sscanf(t.c_str(), "%d", &val);
+            num_stack.push(val);
+        }
+        return num_stack.top();
+    }
+};
+
+
+void test(vector&lt;string&gt; tokens)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(tokens);
+    int r = Solution().evalRPN(tokens);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({"2","1","+","3","*"});
+}
+
+// Result
+//
+// 2023-07-31: Runtime 8ms 89.18% Memory 11.46MB 38.51%, https://leetcode.cn/problems/evaluate-reverse-polish-notation/submissions/451871280/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [2,1,+,3,*]; output: 9;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT020201.cpp (Happy Number)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT020201.cpp (Happy Number)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-30</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0202.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0202</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_ac96d744" href="#TOC_HEAD_ac96d744">Problem 0202 <strong>Happy Number</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/happy-number/" target="_blank">https://leetcode.com/problems/happy&ndash;number/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_fc30aa75" href="#TOC_HEAD_fc30aa75">LT020201.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_27c4cb9c">LT0202 (name=Happy Number, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0202.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0202</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_8d7ac4d0"><a href="https://leetcode.com/problems/happy-number/" target="_blank">Happy Number &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0202.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0202</a></li>
+		<br />
+	</ul>
+</ul>
+<p>
+	Write an algorithm to determine if a number is &quot;happy&quot;.
+</p>
+<p>
+	A happy number is a number defined by the following process:
+</p>
+<ul>
+	<li>Starting with any positive integer, replace the number by the sum of the squares of its digits</li>
+	<li>Repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1.</li>
+	<li>Those numbers for which this process ends in 1 are happy.</li>
+	<br />
+</ul>
+<p>
+	Return true if n is a happy number, and false if not.
+</p>
+<p>
+	<strong>Example 1:</strong>
+</p>
+<pre><code>Input: n = 19
+Output: true
+Explanation:
+
+1^2 + 9^2 = 82
+8^2 + 2^2 = 68
+6^2 + 8^2 = 100
+1^2 + 0^2 + 0^2 = 1</code></pre>
+<p>
+	<strong>Example 2:</strong>
+</p>
+<pre><code>Input: n = 2
+Output: false</code></pre>
+	<H3><a name="HEAD_acc2842" href="#TOC_HEAD_acc2842">LT020201.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool isHappy(int n) {
+        int d = n;
+        int HappyValue[1000] = {0};         // INT_MAX: 2147483647
+        while( d != 1 )                     //      max possible value 999999999
+        {   int sum = 0;                    //      9*9*9 &lt; 1000
+            for (; d &gt; 0; d /=10 )
+            {   int a = d%10;
+                sum += a*a;
+            }
+            if( HappyValue[sum]++ != 0 )
+                break;
+            d = sum;
+        }
+        return d == 1;
+    }
+};
+
+
+
+void test(long n)
+{
+    cout &lt;&lt; "input: " &lt;&lt; n &lt;&lt; "; output: ";
+    bool r = Solution().isHappy(n);
+    cout &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(19);
+    test(1999999999);
+}
+
+// Result
+//
+// 2022-11-21: Runtime 4ms 39.37% Memory 6.5MB 6.58%, https://leetcode.com/problems/happy-number/submissions/846973268/
+// 2023-02-22: Runtime 4ms 38.78% Memory 6.7MB 6.74%, https://leetcode.com/problems/happy-number/submissions/902628893/
+// 2023-07-30: Runtime 0ms 100% Memory 5.73MB 83.54%, https://leetcode.cn/problems/happy-number/submissions/451563367/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 19; output: 1;
+input: 1999999999; output: 0;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

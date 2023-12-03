@@ -1,0 +1,353 @@
+<html>
+	<head>
+		<meta charset="utf-8"></meta>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8"></meta>
+		<title>分析一个简单的汇编代码_rbp是什么寄存器&ndash;CSDN博客</title>
+	</head>
+	<body class="nodata is_black_skin " style="">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Fri Sep 29 12:28:44 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://blog.csdn.net/qq_20892953/article/details/122023099" target="_blank">
+				<font color="red" size="3">分析一个简单的汇编代码_rbp是什么寄存器&ndash;CSDN博客</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="blog-content-box">
+			<div class="article-header-box">
+				<div class="article-header">
+					<div class="article-title-box">
+						<h1 class="title-article" id="articleContentId">分析一个简单的汇编代码</h1>
+					</div>
+				</div>
+			</div>
+            <div id="content_views" class="markdown_views prism-tomorrow-night">
+                
+                <h2>
+                    <a id="_1"></a>
+                    分析一个简单的汇编代码
+                </h2>
+                <h3>
+                    <a id="_3"></a>
+                    部分常见的寄存器
+                </h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>寄存器</th>
+                            <th>16位</th>
+                            <th>32位</th>
+                            <th>64位</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>累加寄存器</td>
+                            <td>AX</td>
+                            <td>EAX</td>
+                            <td>RAX</td>
+                        </tr>
+                        <tr>
+                            <td>基址寄存器</td>
+                            <td>BX</td>
+                            <td>EBX</td>
+                            <td>RBX</td>
+                        </tr>
+                        <tr>
+                            <td>计数寄存器</td>
+                            <td>CX</td>
+                            <td>ECX</td>
+                            <td>RCX</td>
+                        </tr>
+                        <tr>
+                            <td>数据寄存器</td>
+                            <td>DX</td>
+                            <td>EDX</td>
+                            <td>RDX</td>
+                        </tr>
+                        <tr>
+                            <td>堆栈基指针</td>
+                            <td>BP</td>
+                            <td>EBP</td>
+                            <td>RBP</td>
+                        </tr>
+                        <tr>
+                            <td>变址寄存器</td>
+                            <td>SI</td>
+                            <td>ESI</td>
+                            <td>RSI</td>
+                        </tr>
+                        <tr>
+                            <td>堆栈顶指针</td>
+                            <td>SP</td>
+                            <td>ESP</td>
+                            <td>RSP</td>
+                        </tr>
+                        <tr>
+                            <td>指令寄存器</td>
+                            <td>IP</td>
+                            <td>EIP</td>
+                            <td>RIP</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>一个x86&ndash;64的CPU&amp;#xff0c;包含一组16个存储64位值的「通用目的寄存器」。
+                    <br>这些寄存器用来存储「整数数据」和「指针」。
+
+                </p>
+                <ul>
+                    <li>最初的8086中&amp;#xff0c;有8个16位寄存器&amp;#xff0c;即「ax」到「sp」。</li>
+                    <li>扩展到IA32架构时&amp;#xff0c;这些寄存器也扩展到32位&amp;#xff0c;也即「eax」到「esp」。</li>
+                    <li>扩展到x86&ndash;64位后&amp;#xff0c;原来的8个寄存器扩展成64位&amp;#xff0c;即「rax」到「rsp」&amp;#xff0c;然后新增了8个寄存器「r8」到「r15」。</li>
+                </ul>
+                <p>8086：第一代单芯片、16位微处理器之一。
+                    <br>IA32：Intel&nbsp;32位体系结构（Intel&nbsp;Architecture&nbsp;32&ndash;bit）
+
+                    <br>Intel64：IA32的64位扩展&amp;#xff0c;也称x86&ndash;64
+
+                </p>
+                <h3>
+                    <a id="_26"></a>
+                    环境信息
+                </h3>
+                <pre>
+<code class="prism language-c">gcc <span class="token operator">-</span>v
+使用内建 specs。
+COLLECT_GCC<span class="token operator">&#61;</span>gcc
+COLLECT_LTO_WRAPPER<span class="token operator">&#61;</span><span class="token operator">/</span>usr<span class="token operator">/</span>libexec<span class="token operator">/</span>gcc<span class="token operator">/</span>x86_64<span class="token operator">-</span>redhat<span class="token operator">-</span>linux<span class="token operator">/</span><span class="token number">4.8</span><span class="token number">.5</span><span class="token operator">/</span>lto<span class="token operator">-</span>wrapper
+目标&#xff1a;x86_64<span class="token operator">-</span>redhat<span class="token operator">-</span>linux
+配置为&#xff1a;<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token operator">/</span>configure <span class="token operator">--</span>prefix<span class="token operator">&#61;</span><span class="token operator">/</span>usr <span class="token operator">--</span>mandir<span class="token operator">&#61;</span><span class="token operator">/</span>usr<span class="token operator">/</span>share<span class="token operator">/</span>man <span class="token operator">--</span>infodir<span class="token operator">&#61;</span><span class="token operator">/</span>usr<span class="token operator">/</span>share<span class="token operator">/</span>info <span class="token operator">--</span>with<span class="token operator">-</span>bugurl<span class="token operator">&#61;</span>http<span class="token operator">:</span><span class="token comment">//bugzilla.redhat.com/bugzilla --enable-bootstrap --enable-shared --enable-threads&#61;posix --enable-checking&#61;release --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-gnu-unique-object --enable-linker-build-id --with-linker-hash-style&#61;gnu --enable-languages&#61;c,c&#43;&#43;,objc,obj-c&#43;&#43;,java,fortran,ada,go,lto --enable-plugin --enable-initfini-array --disable-libgcj --with-isl&#61;/builddir/build/BUILD/gcc-4.8.5-20150702/obj-x86_64-redhat-linux/isl-install --with-cloog&#61;/builddir/build/BUILD/gcc-4.8.5-20150702/obj-x86_64-redhat-linux/cloog-install --enable-gnu-indirect-function --with-tune&#61;generic --with-arch_32&#61;x86-64 --build&#61;x86_64-redhat-linux</span>
+线程模型&#xff1a;posix
+gcc 版本 <span class="token number">4.8</span><span class="token number">.5</span> <span class="token number">20150623</span> <span class="token punctuation">(</span>Red Hat <span class="token number">4.8</span><span class="token number">.5</span><span class="token operator">-</span><span class="token number">44</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>GCC<span class="token punctuation">)</span>
+</code>
+                </pre>
+                <h3>
+                    <a id="C_39"></a>
+                    C语言代码
+                </h3>
+                <pre>
+<code class="prism language-c"><span class="token keyword">int</span> <span class="token function">add_a_and_b</span><span class="token punctuation">(</span><span class="token keyword">int</span> a<span class="token punctuation">,</span> <span class="token keyword">int</span> b<span class="token punctuation">)</span> <span class="token punctuation">{        </span>
+<span class="token keyword">return</span> a <span class="token operator">&#43;</span> b<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{        </span>
+<span class="token keyword">return</span> <span class="token function">add_a_and_b</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code>
+                </pre>
+                <h3>
+                    <a id="_51"></a>
+                    汇编代码
+                </h3>
+                <p>执行
+                    <strong>gcc&nbsp;&ndash;S&nbsp;&ndash;fno&ndash;asynchronous&ndash;unwind&ndash;tables&nbsp;test_asm.c</strong>
+                    就可以得到汇编代码。
+                    <br>使用&ndash;fno&ndash;asynchronous&ndash;unwind&ndash;tables选项&amp;#xff0c;是为了禁用
+
+                    <a href="https://sourceware.org/binutils/docs/as/CFI-directives.html">cfi指令</a>
+                    。
+                </p>
+                <blockquote>
+                    <p>关于CFI指令的用处&amp;#xff0c;有一个解释：On&nbsp;some&nbsp;architectures,&nbsp;exception&nbsp;handling&nbsp;must&nbsp;be&nbsp;managed&nbsp;with&nbsp;Call&nbsp;Frame&nbsp;Information&nbsp;directives.&nbsp;These&nbsp;directives&nbsp;are&nbsp;used&nbsp;in&nbsp;the&nbsp;assembly&nbsp;to&nbsp;direct&nbsp;exception&nbsp;handling.&nbsp;These&nbsp;directives&nbsp;are&nbsp;available&nbsp;on&nbsp;Linux&nbsp;on&nbsp;POWER,&nbsp;if,&nbsp;for&nbsp;any&nbsp;reason&nbsp;(portability&nbsp;of&nbsp;the&nbsp;code&nbsp;base,&nbsp;for&nbsp;example),&nbsp;the&nbsp;GCC&nbsp;generated&nbsp;exception&nbsp;handling&nbsp;information&nbsp;is&nbsp;not&nbsp;sufficient.
+                        <br>下述是ATT格式的汇编代码。ATT格式也是GCC、OBJDUMP等工具的默认格式。Microsoft的工具和Intel的文档&amp;#xff0c;汇编代码都是Intel格式的。这两种格式不太相同&amp;#xff0c;比如：movq(ATT格式)、mov(Intel格式)。GCC也可以产生Intel格式的汇编代码&amp;#xff0c;只需要带上参数&ndash;masm&#61;intel。
+
+                    </p>
+                </blockquote>
+                <pre>
+<code class="prism language-asm">	.file	&#34;test_asm.c&#34;
+.text
+.globl	add_a_and_b
+.type	add_a_and_b, &#64;function
+add_a_and_b:
+pushq	%rbp			; (6)
+movq	%rsp, %rbp		; (7)
+movl	%edi, -4(%rbp)	; (8)
+movl	%esi, -8(%rbp)	; (9)
+movl	-8(%rbp), %eax	; (10)
+movl	-4(%rbp), %edx	; (11)
+addl	%edx, %eax		; (12)
+popq	%rbp			; (13)
+ret						; (14)
+.size	add_a_and_b, .-add_a_and_b
+.globl	main
+.type	main, &#64;function
+main:
+pushq	%rbp			; (1)
+movq	%rsp, %rbp		; (2)
+movl	$5, %esi		; (3)
+movl	$8, %edi		; (4)
+call	add_a_and_b		; (5)
+popq	%rbp			; (15)
+ret						; (16)
+.size	main, .-main
+.ident	&#34;GCC: (GNU) 4.8.5 20150623 (Red Hat 4.8.5-39)&#34;
+.section	.note.GNU-stack,&#34;&#34;,&#64;progbits
+</code>
+                </pre>
+                <h4>
+                    <a id="1_pushq_rbp_90"></a>
+                    (1)&nbsp;pushq&nbsp;%rbp
+                </h4>
+                <p>rbp寄存器，是ebp寄存器64位扩展。意思是扩展栈指针寄存器，存储栈中最高位数据的内存地址。
+                    <br>rbp寄存器的值，在(1)入栈，在(15)出栈。
+
+                </p>
+                <p>这主要是为了把函数中用到的rbp寄存器的内容，恢复到函数调用前的状态。
+                    <br>在进入函数之前，我们无法确定rbp寄存器的值是什么，但是由于函数内部也会使用rbp寄存器，所以就需要暂时把rbp寄存器的值先存到栈里面，函数处理完成之后，再从栈中将值恢复到rbp寄存器。
+
+                </p>
+                <p>在函数的入口处，将rbp的值入栈保存，在函数的出口处出栈，这是C语言编译器的规定。
+                    <br>这样做是为了确保函数在调用前后，rbp寄存器的值不会改变。
+
+                </p>
+                <p>push和pop指令只有一个操作数，我们不需要指定将值push到哪里，以及将哪里的值pop到寄存器。
+                    <br>是因为，对栈进行读写的内存地址，是由rsp栈指针寄存器管理的。
+
+                </p>
+                <p>push入栈和pop出栈指令执行之后，rsp寄存器存储的栈指针的值会自动更新。
+                    <br>因为栈是从高地址位向低地址位生长。
+
+                    <br>push指令是增加栈元素的操作，所以执行push后，rsp寄存器的值会&ndash;4（64位机器就是&ndash;8）。
+
+                    <br>pop指令是减少栈元素的操作，所以执行pop后，rsp寄存器的值会&#43;4（64位机器就是&#43;8）。
+
+                </p>
+                <p>我们可以认为，push和pop指令，就是用来在寄存器和栈（主存）之间进行操作的。
+                    <br>push指令就是将寄存器的值，保存到主存中。
+
+                    <br>pop指令就是将主存中保存的值恢复到寄存器里。
+
+                </p>
+                <h4>
+                    <a id="2_movq_rsp_rbp_113"></a>
+                    (2)&nbsp;movq&nbsp;%rsp,&nbsp;%rbp
+                </h4>
+                <p>mov指令有这几种：movb（8位）、movw（16位）、movl（32位）、movq（64位）
+                    <br>mov指令的基本格式是：movx&nbsp;source,&nbsp;destination
+
+                    <br>所以上面(2)的含义是，将rsp寄存器的值，传递到rbp中，这样就形成了main函数的栈帧。
+
+                </p>
+                <p>系统开始执行main函数时，会为它在内存里面建立一个帧（frame），所有main的内部变量（比如a和b）都保存在这个帧里面。
+                    <br>main函数执行结束后，该帧就会被回收，释放所有的内部变量，不再占用空间。
+
+                </p>
+                <img src="files/9a2278b363c4cc979567144982c9e1c5.png"></img>
+                <h4>
+                    <a id="3_movl_5_esi_124"></a>
+                    (3)&nbsp;movl&nbsp;$5,&nbsp;%esi
+                </h4>
+                <p>将数字5，传递到esi寄存器。</p>
+                <h4>
+                    <a id="4_movl_8_edi_128"></a>
+                    (4)&nbsp;movl&nbsp;$8,&nbsp;%edi
+                </h4>
+                <p>将数字8，传递到edi寄存器。</p>
+                <h4>
+                    <a id="5_call_add_a_and_b_132"></a>
+                    (5)&nbsp;call&nbsp;add_a_and_b
+                </h4>
+                <p>调用add_a_and_b函数。</p>
+                <p>在将函数的入口地址，设定到程序计数器之前，
+                    <br>call指令会把调用函数结束后，要执行的那一条指令的地址，存储在栈中（也就是主内存中）。
+
+                </p>
+                <p>函数执行完毕后，执行ret指令，就会把刚刚说的保存到栈中的地址，设定到程序计数器中。</p>
+                <p>程序计数器，就是用来存储了下一条指令所在内存的地址。
+                    <br>CPU的控制器，会参照程序计数器的数值，从内存中读取指令，并执行。
+
+                </p>
+                <h4>
+                    <a id="6_pushq_rbp_144"></a>
+                    (6)&nbsp;pushq&nbsp;%rbp
+                </h4>
+                <p>作用同(1)</p>
+                <h4>
+                    <a id="7_movq_rsp_rbp_148"></a>
+                    (7)&nbsp;movq&nbsp;%rsp,&nbsp;%rbp
+                </h4>
+                <p>作用同(2)，为了形成了add_a_and_b函数的栈帧</p>
+                <h4>
+                    <a id="8_movl_edi_4rbp_152"></a>
+                    (8)&nbsp;movl&nbsp;%edi,&nbsp;&ndash;4(%rbp)
+                </h4>
+                <p>rbp寄存器，在步骤(7)已经被更新为rsp寄存器的值了，也就是当前add_a_and_b函数的栈帧首地址。
+                    <br>将edi寄存器，此时保存的值是8，传送到rbp&ndash;4的位置，也就是第一个参数入栈了
+
+                </p>
+                <h4>
+                    <a id="9_movl_esi_8rbp_157"></a>
+                    (9)&nbsp;movl&nbsp;%esi,&nbsp;&ndash;8(%rbp)
+                </h4>
+                <p>将esi寄存器，此时保存的值是5，传送到rbp&ndash;8的位置，也就是第二个参数入栈了</p>
+                <h4>
+                    <a id="10_movl_8rbp_eax_161"></a>
+                    (10)&nbsp;movl&nbsp;&ndash;8(%rbp),&nbsp;%eax
+                </h4>
+                <p>将rbp&ndash;8地址的值，也就是5，传送到eax寄存器。
+                    <br>eax，累加寄存器，主要用来做加法运算。
+
+                </p>
+                <h4>
+                    <a id="11_movl_4rbp_edx_166"></a>
+                    (11)&nbsp;movl&nbsp;&ndash;4(%rbp),&nbsp;%edx
+                </h4>
+                <p>将rbp&ndash;4地址的值，也就是8，传送到edx寄存器。</p>
+                <h4>
+                    <a id="12_addl_edx_eax_170"></a>
+                    (12)&nbsp;addl&nbsp;%edx,&nbsp;%eax
+                </h4>
+                <p>加法指令格式：ADD&nbsp;A,B&nbsp;//A&#61;A&#43;B;
+                    <br>将edx与eax中的数值相加，结果存在edx中
+
+                </p>
+                <h4>
+                    <a id="13_popq_rbp_175"></a>
+                    (13)&nbsp;popq&nbsp;%rbp
+                </h4>
+                <p>取出栈中最近一次写入的值并写入到rbp寄存器，其实就是步骤(6)存入栈的值。
+                    <br>pop指令还会将esp寄存器的地址加4，回收栈帧。
+
+                    <br>64位寄存器就是将rsp寄存器的地址加8，回收栈帧。
+
+                </p>
+                <h4>
+                    <a id="14_ret_181"></a>
+                    (14)&nbsp;ret
+                </h4>
+                <p>ret指令的作用，在步骤(5)中已涉及</p>
+                <h4>
+                    <a id="15_popq_rbp_185"></a>
+                    (15)&nbsp;popq&nbsp;%rbp
+                </h4>
+                <p>上述已提到</p>
+                <h4>
+                    <a id="16_ret_189"></a>
+                    (16)&nbsp;ret
+                </h4>
+                <p>ret指令的作用，在步骤(5)中已涉及</p>
+                <h3>
+                    <a id="_193"></a>
+                    参考链接
+                </h3>
+                <ul>
+                    <li>《程序是怎样跑起来的》,&nbsp;by&nbsp;矢泽久雄</li>
+                    <li>
+                        <a href="http://www.ruanyifeng.com/blog/2018/01/assembly-language-primer.html">汇编语言入门教程</a>
+                        ,&nbsp;by&nbsp;阮一峰
+                    </li>
+                    <li>
+                        <a href="http://blog.luoyuanhang.com/2015/07/07/%E5%87%A0%E7%A7%8D%E5%9F%BA%E6%9C%AC%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E8%AF%A6%E8%A7%A3/">几种基本汇编指令详解</a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/xuanyuan/p/13850548.html">一口气看完45个寄存器，CPU核心技术大揭秘</a>
+                    </li>
+                </ul>
+            </div>
+             
+		</div>
+	</body>
+</html>

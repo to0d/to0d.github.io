@@ -1,0 +1,895 @@
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8"></meta>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge"></meta>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
+		<meta name="apple-mobile-web-app-status-bar-style" content="black"></meta>
+		<meta name="referrer" content="always"></meta>
+		<title >程序内存区域分配&nbsp;(五个段)&nbsp;终于搞明白了&nbsp;CSDN博客</title>
+	</head>
+	<body>
+		<body>Original&nbsp;Link:&nbsp;
+			<b >
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2016. All rights reserved - to0d@outlook.com, at Sun Mar 25 11:15:24 CST 2018</font>
+			</b>
+			<br>
+
+			<a href="https://blog.csdn.net/love_gaohz/article/details/41310597" target="_blank">
+				<font color="red" size="3">程序或&ndash;内存区域分配（五个段）&ndash;&ndash;终于搞明白了&nbsp;&ndash;&nbsp;CSDN博客</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="container clearfix">
+			<main>
+				<article>
+					<div id="article_content" class="article_content csdn-tracking-statistics tracking-click" data-mod="popu_519" data-dsm="post">
+						<div class="htmledit_views">
+							<p>
+								<span style="font-size:18px;">一.</span>
+							</p>
+							<p>
+								<span style="font-size:14px;">在学习之前我们先看看ELF文件。</span>
+							</p>
+							<p>
+								<img src="files/e72c38e3ff64844cfb3a566fdc276a5a.jpg" alt></img>
+								<br>
+
+							</p>
+							<p>
+								<span style="font-size:14px;">ELF分为三种类型：
+									<span style="color:#cc0000;">.o&nbsp;可重定位文件(relocalble&nbsp;file)，可执行文件以及共享库(shared&nbsp;library)，</span>
+									三种格式基本上从结构上是一样的，只是具体到每一个结构不同。下面我们就从整体上看看这3种格式从文件内容上存储的方式，spec上有张图是比较经典的：如上图：
+									<br> 其实从文件存储的格式来说，上面的两种view实际上是一样的，Segment实际上就是由section组成的，将相应的一些section映射到一起就叫segment了,就是说segment是由0个或多个section组成的，实际上本质都是section。在这里我们首先来仔细了解一下section和segment的概念：section就是相同或者相似信息的集合，比如我们比较熟悉的.text&nbsp;.data&nbsp; .bss&nbsp;section，.text是可执行指令的集合，.data是初始化后数据的集合，.bss是未初始化数据的集合。实际上我们也可以将一个程序的所有内容都放在一起，就像dos一样，但是将可执行程序分成多个section是很有好处的，比如说我们可以将.text
+&nbsp;section放在memory的只读空间内，将可变的.data&nbsp;section放在memory的可写空间内。
+
+								</span>
+							</p>
+							<p>
+								<span style="font-size:14px;">
+									<span style="color:#ff0000;">从可执行文件的角度来讲，如果一个数据未被初始化那就不需要为其分配空间，所以.data和.bss一个重要的区别就是.bss并不占用可执行文件的大小，它只是记载需要多少空间来存储这些未初始化数据，而不分配实际的空间。</span>
+								</span>
+								<br>
+
+							</p>
+							<p>
+								<span style="font-family:verdana, sans-serif;font-size:14px;line-height:21px;">
+									<span style="font-family:verdana, sans-serif;font-size:14px;line-height:21px;">
+										<span style="color:#ff0000;">
+											<strong>可以通过命令
+												<span style="color:rgb(68,68,68);font-family:verdana, sans-serif;font-size:14px;line-height:21px;"> $
+&nbsp;readelf&nbsp;&ndash;l&nbsp;a.out&nbsp;查看文件的格式和组成。</span>
+											</strong>
+										</span>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:verdana, sans-serif;line-height:21px;">
+									<span style="font-family:verdana, sans-serif;line-height:21px;">
+										<span style="color:rgb(255,0,0);">
+											<strong>
+												<span style="color:rgb(68,68,68);font-family:verdana, sans-serif;line-height:21px;">
+													<span style="font-size:18px;">二.</span>
+												</span>
+											</strong>
+										</span>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:verdana, sans-serif;line-height:21px;">
+									<span style="font-family:verdana, sans-serif;line-height:21px;">
+										<span style="font-family:verdana, sans-serif;line-height:21px;"></span>
+									</span>
+								</span>
+							</p>
+							<p style="font-size:13px;font-weight:bold;color:rgb(68,68,68);margin:10px auto;padding-top:0px;padding-bottom:0px;line-height:19px;font-family:Verdana, Arial, Helvetica, sans-serif;background-color:rgb(254,254,242);">
+								<span style="font-family:Verdana;margin:0px;padding:0px;">站在汇编语言的角度，一个程序分为：
+									<br style="margin:0px;padding:0px;">数据段&nbsp;&ndash;&ndash;&nbsp;DS
+
+									<br style="margin:0px;padding:0px;">堆栈段&nbsp;&ndash;&ndash;&nbsp;SS
+
+									<br style="margin:0px;padding:0px;">代码段&nbsp;&ndash;&ndash;&nbsp;CS
+
+									<br style="margin:0px;padding:0px;">扩展段&nbsp;&ndash;&ndash;&nbsp;ES
+
+								</span>
+							</p>
+							<p style="font-size:13px;font-weight:bold;margin:10px auto;padding-top:0px;padding-bottom:0px;line-height:19px;font-family:Verdana, Arial, Helvetica, sans-serif;background-color:rgb(254,254,242);">
+								<span style="font-family:Verdana;margin:0px;padding:0px;">
+									<span style="color:#444444;">站在高级语言的角度，根据</span>
+									<span style="color:#ff0000;">APUE</span>
+									<span style="color:#444444;">，一个程序分为如下段：</span>
+									<br style="margin:0px;padding:0px;">
+
+									<span style="color:#444444;">text</span>
+									<br style="margin:0px;padding:0px;">
+
+									<span style="color:#444444;">data&nbsp;(initialized)</span>
+									<br style="margin:0px;padding:0px;">
+
+									<span style="color:#444444;">bss</span>
+									<br style="margin:0px;padding:0px;">
+
+									<span style="color:#444444;">stack</span>
+									<br style="margin:0px;padding:0px;">
+
+									<span style="color:#444444;">heap</span>
+								</span>
+							</p>
+							<p style="font-size:13px;font-weight:bold;margin:10px auto;padding-top:0px;padding-bottom:0px;line-height:19px;font-family:Verdana, Arial, Helvetica, sans-serif;background-color:rgb(254,254,242);">
+								<span style="font-family:Verdana;margin:0px;padding:0px;">
+									<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+										<span style="color:#444444;"> &nbsp; &nbsp; &nbsp; &nbsp;1.一般情况下，一个</span>
+										<span style="color:#ff0000;">可执行二进制程序</span>
+										<span style="color:#444444;">(更确切的说，在Linux操作系统下为一个进程单元，在UC/OSII中被称为任务)在存储(没有调入到内存运行)时拥有3个部分，分别是代码段(text)、数据段(data)和BSS段。这3个部分一起组成了该</span>
+										<span style="color:#cc0000;">可执行程序的文件</span>
+										<span style="color:#444444;">。</span>
+									</span>
+									<br>
+
+								</span>
+							</p>
+							<p style="font-size:13px;font-weight:bold;margin:10px auto;padding-top:0px;padding-bottom:0px;line-height:19px;font-family:Verdana, Arial, Helvetica, sans-serif;background-color:rgb(254,254,242);">
+								<span style="font-family:Verdana;margin:0px;padding:0px;">
+									<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+										<span style="color:#444444;">
+											<span style="color:rgb(255,0,0);font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+												<strong>★
+													<span style="color:rgb(255,0,0);font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+														<strong>★</strong>
+													</span>
+													可执行二进制程序
+&nbsp;= 
+													<span style="color:rgb(68,68,68);font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+														<strong>代码段(text)＋数据段(data)+BSS段
+															<span style="color:rgb(255,0,0);font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+																<strong>★</strong>
+															</span>
+															<span style="color:rgb(255,0,0);font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+																<strong>★</strong>
+															</span>
+														</strong>
+													</span>
+												</strong>
+											</span>
+											<br>
+
+										</span>
+									</span>
+								</span>
+							</p>
+							<p style="font-size:13px;font-weight:bold;margin:10px auto;padding-top:0px;padding-bottom:0px;line-height:19px;font-family:Verdana, Arial, Helvetica, sans-serif;background-color:rgb(254,254,242);">
+								<span style="font-family:Verdana;margin:0px;padding:0px;">
+									<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+										<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+											<span style="color:#444444;"> 
+&nbsp; &nbsp; &nbsp; &nbsp;2.而当程序被加载到内存单元时，则需要另外两个域：堆域和栈域。图1&ndash;1所示为</span>
+											<span style="color:#ff0000;">可执行代码存储态</span>
+											<span style="color:#444444;">和</span>
+											<span style="color:#ff0000;">运行态</span>
+											<span style="color:#444444;">的结构对照图。一个正在运行的C程序占用的内存区域分为代码段、初始化数据段、未初始化数据段(BSS)、堆、栈5个部分。</span>
+										</span>
+										<br>
+
+									</span>
+								</span>
+							</p>
+							<p style="font-size:13px;font-weight:bold;margin:10px auto;padding-top:0px;padding-bottom:0px;line-height:19px;font-family:Verdana, Arial, Helvetica, sans-serif;background-color:rgb(254,254,242);">
+								<span style="font-family:Verdana;margin:0px;padding:0px;">
+									<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+										<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+											<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+												<span style="font-weight:bold;">
+													<span style="color:#ff0000;">
+														<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);color:rgb(255,0,0);">
+															<strong>★</strong>
+														</span>
+														<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);color:rgb(255,0,0);">
+															<strong>★</strong>
+														</span>
+														正在运行的C程序
+														<span style="color:rgb(255,0,0);font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+															<strong> = </strong>
+														</span>
+														<span style="color:rgb(68,68,68);font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+															<strong>代码段+初始化数据段
+																<span style="color:rgb(68,68,68);font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+																	<strong>(data)</strong>
+																</span>
+																+未初始化数据段(BSS)+堆+栈
+																<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);color:rgb(255,0,0);">
+																	<strong>★</strong>
+																</span>
+																<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);color:rgb(255,0,0);">
+																	<strong>★</strong>
+																</span>
+															</strong>
+														</span>
+													</span>
+												</span>
+											</span>
+											<br>
+
+										</span>
+									</span>
+								</span>
+							</p>
+							<p style="font-size:13px;font-weight:bold;margin:10px auto;padding-top:0px;padding-bottom:0px;line-height:19px;font-family:Verdana, Arial, Helvetica, sans-serif;background-color:rgb(254,254,242);">
+								<span style="font-family:Verdana;margin:0px;padding:0px;">
+									<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+										<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+											<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+												<span style="font-weight:bold;">
+													<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+														<span style="font-weight:bold;">
+															<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+																<strong>
+																	<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+																		<span style="color:#ff0000;"> 
+&nbsp; &nbsp; </span>
+																		<span style="color:#333333;"> 3.在将应用程序加载到内存空间执行时，操作系统负责代码段、数据段和BSS段的加载，并将在</span>
+																		<span style="color:#ff0000;">内存</span>
+																		<span style="color:#333333;">中为这些段分配空间。栈亦由操作系统分配和管理，而不需要程序员显示地管理；堆段由程序员自己管理，即显示地申请和释放空间。</span>
+																	</span>
+																	<br>
+
+																</strong>
+															</span>
+														</span>
+													</span>
+												</span>
+											</span>
+										</span>
+									</span>
+								</span>
+							</p>
+							<p style="margin:10px auto;padding-top:0px;padding-bottom:0px;">
+								<span style="margin:0px;padding:0px;">
+									<strong>
+										<span style="text-indent:30px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;4.
+											<span style="color:#ff0000;">动态分配与静态分配</span>
+											，二者最大的区别在于
+										</span>
+										<span style="text-indent:30px;">:1. </span>
+										<span style="text-indent:30px;">直到</span>
+										<span style="text-indent:30px;">Run&ndash;Time</span>
+										<span style="text-indent:30px;">的时候，执行动态分配，而在</span>
+										<span style="text-indent:30px;">compile&ndash;time</span>
+										<span style="text-indent:30px;">的时候，就已经决定好了分配多少</span>
+										<span style="text-indent:30px;">Text+Data+BSS+Stack</span>
+										<span style="text-indent:30px;">。</span>
+										<span style="text-indent:30px;">2.</span>
+										<span style="text-indent:30px;">通过</span>
+										<span style="text-indent:30px;">malloc()</span>
+										<span style="text-indent:30px;">动态分配的内存，需要程序员手工调用</span>
+										<span style="text-indent:30px;">free()</span>
+										<span style="text-indent:30px;">释放内存，否则容易导致内存泄露，而静态分配的内存则在进程执行结束后系统释放</span>
+										<span style="text-indent:30px;">(Text,
+&nbsp;Data), </span>
+										<span style="text-indent:30px;">但</span>
+										<span style="text-indent:30px;">Stack</span>
+										<span style="text-indent:30px;">段中的数据很短暂，函数退出立即被销毁。</span>
+									</strong>
+									<br>
+
+								</span>
+							</p>
+							<p style="font-size:13px;font-weight:bold;margin:10px auto;padding-top:0px;padding-bottom:0px;line-height:19px;font-family:Verdana, Arial, Helvetica, sans-serif;background-color:rgb(254,254,242);">
+								<span style="font-family:Verdana;margin:0px;padding:0px;">
+									<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+										<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+											<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+												<span style="font-weight:bold;">
+													<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+														<span style="font-weight:bold;">
+															<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+																<strong>
+																	<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+																		<span style="color:#333333;">
+																			<br>
+
+																		</span>
+																	</span>
+																</strong>
+															</span>
+														</span>
+													</span>
+												</span>
+											</span>
+										</span>
+									</span>
+								</span>
+							</p>
+							<p style="font-size:13px;font-weight:bold;margin:10px auto;padding-top:0px;padding-bottom:0px;line-height:19px;font-family:Verdana, Arial, Helvetica, sans-serif;background-color:rgb(254,254,242);">
+								<span style="font-family:Verdana;margin:0px;padding:0px;">
+									<span style="color:#444444;">
+										<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+											<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+												<img src="files/71e9d7e82391c56559dfee03962b0f43.jpg" alt></img>
+												<br>
+
+											</span>
+										</span>
+									</span>
+								</span>
+							</p>
+							<p style="font-size:13px;margin:10px auto;padding-top:0px;padding-bottom:0px;line-height:19px;font-family:Verdana, Arial, Helvetica, sans-serif;background-color:rgb(254,254,242);">
+								<span style="font-family:Verdana;margin:0px;padding:0px;">
+									<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+										<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+											<span style="color:rgb(68,68,68);"> </span>
+											<span style="color:rgb(68,68,68);font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+												<strong>图1&ndash;1</strong>
+											</span>
+											<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+												<span style="color:#009900;">（
+													<span style="font-family:verdana, sans-serif;font-size:14px;line-height:21px;">从可执行文件a.out的角度来讲，如果一个数据未被初始化那就不需要为其分配空间，所以.data和.bss一个重要的区别就是</span>
+													<span style="font-family:verdana, sans-serif;font-size:14px;line-height:21px;">.bss并不占用可执行文件的大小，它只是记载需要多少空间来存储这些未初始化数据，而不分配实际的空间</span>
+													）
+												</span>
+											</span>
+										</span>
+									</span>
+								</span>
+							</p>
+							<p style="margin:10px auto;padding-top:0px;padding-bottom:0px;line-height:19px;font-family:Verdana, Arial, Helvetica, sans-serif;background-color:rgb(254,254,242);">
+								<strong>
+									<span style="font-size:18px;">三.</span>
+								</strong>
+							</p>
+							<p style="font-size:13px;margin:10px auto;padding-top:0px;padding-bottom:0px;line-height:19px;font-family:Verdana, Arial, Helvetica, sans-serif;background-color:rgb(254,254,242);">
+								<span style="font-family:Verdana;margin:0px;padding:0px;">
+									<span style="color:#ff0000;">
+										<strong>代码段&nbsp;&ndash;&ndash;
+											<span style="font-family:Verdana;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+												<strong>text</strong>
+											</span>
+											（
+											<span style="font-family:Verdana, sans-serif, '宋体';font-size:13px;line-height:23px;">code
+&nbsp;segment/text&nbsp;segment）</span>
+										</strong>
+									</span>
+									<br style="margin:0px;padding:0px;">
+
+									<span style="color:#009900;">
+										<strong>text段在内存中被映射为只读，但.data和.bss是可写的。</strong>
+									</span>
+									<br style="margin:0px;padding:0px;">
+
+									<span style="color:#444444;">
+										<strong>text段是程序代码段，在AT91库中是表示程序段的大小，它是由编译器在编译连接时自动计算的，当你在链接定位文件中将该符号放置在代码段后，那么该符号表示的值就是代码段大小，编译连接时，该符号所代表的值会自动代入到源程序中。</strong>
+									</span>
+								</span>
+							</p>
+							<p style="font-size:13px;font-weight:bold;margin:10px auto;padding-top:0px;padding-bottom:0px;line-height:19px;font-family:Verdana, Arial, Helvetica, sans-serif;background-color:rgb(254,254,242);">
+								<span style="font-family:Verdana;margin:0px;padding:0px;">
+									<span style="color:#ff0000;">数据段&nbsp;&ndash;&ndash;&nbsp;data</span>
+									<br style="margin:0px;padding:0px;">
+
+									<span style="color:#444444;">data包含静态初始化的数据，所以有初值的全局变量和static变量在data区。段的起始位置也是由连接定位文件所确定，大小在编译连接时自动分配，它和你的程序大小没有关系，但和程序使用到的全局变量，常量数量相关。</span>
+									<span style="color:#ff0000;">
+										<span style="padding:0px;margin:0px;font-family:Verdana, sans-serif, '宋体';font-size:13px;line-height:23px;">数据段属于静态内存分配。</span>
+										<span style="font-family:Verdana, sans-serif, '宋体';font-size:13px;line-height:23px;"> </span>
+									</span>
+								</span>
+							</p>
+							<p style="font-size:13px;font-weight:bold;margin:10px auto;padding-top:0px;padding-bottom:0px;line-height:19px;font-family:Verdana, Arial, Helvetica, sans-serif;background-color:rgb(254,254,242);">
+								<span style="font-family:Verdana;margin:0px;padding:0px;">
+									<span style="color:#ff0000;">bss段&ndash;&ndash;bss</span>
+									<br style="margin:0px;padding:0px;">
+
+									<span style="color:#444444;">bss是英文Block&nbsp;Started&nbsp;by&nbsp;Symbol的简称，通常是指用来存放程序中未初始化的全局变量的一块内存区域，在程序载入时由内核清0。BSS段属于静态内存分配。它的初始值也是由用户自己定义的连接定位文件所确定，用户应该将它定义在可读写的RAM区内，源程序中使用malloc分配的内存就是这一块，它不是根据data大小确定，主要由程序中同时分配内存最大值所确定，不过如果超出了范围，也就是分配失败，可以等空间释放之后再分配。</span>
+									<span style="font-family:Verdana, sans-serif, '宋体';font-size:13px;letter-spacing:.5px;line-height:23px;">
+										<span style="color:#ff0000;">BSS段属于静态内存分配。</span>
+									</span>
+								</span>
+							</p>
+							<p style="font-size:13px;margin:10px auto;padding-top:0px;padding-bottom:0px;line-height:19px;font-family:Verdana, Arial, Helvetica, sans-serif;background-color:rgb(254,254,242);">
+								<span style="font-family:Verdana;margin:0px;padding:0px;">
+									<span style="color:#ff0000;">
+										<strong>stack：</strong>
+									</span>
+									<br style="margin:0px;padding:0px;">
+
+									<strong>
+										<span style="color:#444444;">栈(stack)保存函数的</span>
+										<span style="color:#ff0000;">局部变量</span>
+										<span style="color:#009900;">
+											<span style="padding:0px;margin:0px;font-family:Verdana, sans-serif, '宋体';font-size:13px;line-height:23px;">（但不包括static声明的变量，</span>
+											<span style="font-family:Verdana, sans-serif, '宋体';font-size:13px;line-height:23px;"> </span>
+											<span style="padding:0px;margin:0px;font-family:Verdana, sans-serif, '宋体';font-size:13px;line-height:23px;">static</span>
+											<span style="font-family:Verdana, sans-serif, '宋体';font-size:13px;line-height:23px;"> </span>
+											<span style="padding:0px;margin:0px;font-family:Verdana, sans-serif, '宋体';font-size:13px;line-height:23px;">意味着</span>
+											<span style="font-family:Verdana, sans-serif, '宋体';font-size:13px;line-height:23px;"> </span>
+											<span style="padding:0px;margin:0px;font-family:Verdana, sans-serif, '宋体';font-size:13px;line-height:23px;">在数据段中</span>
+											<span style="font-family:Verdana, sans-serif, '宋体';font-size:13px;line-height:23px;"> </span>
+											<span style="padding:0px;margin:0px;font-family:Verdana, sans-serif, '宋体';font-size:13px;line-height:23px;">存放变量），</span>
+										</span>
+										<span style="color:#ff0000;">参数</span>
+										<span style="color:#444444;">以及</span>
+										<span style="color:#ff0000;">返回值</span>
+										<span style="color:#444444;">。是一种&ldquo;后进先出&rdquo;（Last
+&nbsp;In&nbsp;First&nbsp;Out，LIFO）的数据结构，这意味着最后放到栈上的数据，将会是第一个从栈上移走的数据。对于哪些暂时存贮的信息，和不需要长时间保存的信息来说，LIFO这种数据结构非常理想。在调用函数或过程后，系统通常会清除栈上保存的局部变量、函数调用信息及其它的信息。栈另外一个重要的特征是，它的地址空间&ldquo;向下减少&rdquo;，即当栈上保存的数据越多，栈的地址就越低。栈（stack）的顶部在可读写的RAM区的最后。</span>
+									</strong>
+								</span>
+							</p>
+							<p style="font-size:13px;font-weight:bold;margin:10px auto;padding-top:0px;padding-bottom:0px;line-height:19px;font-family:Verdana, Arial, Helvetica, sans-serif;background-color:rgb(254,254,242);">
+								<span style="font-family:Verdana;margin:0px;padding:0px;">
+									<span style="font-family:Verdana;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+										<strong>
+											<span style="color:#ff0000;">heap:</span>
+										</strong>
+									</span>
+									<br style="margin:0px;padding:0px;">
+
+									<span style="color:#444444;">堆(heap)保存函数内部动态分配内存，是另外一种用来保存程序信息的数据结构，更准确的说是保存程序的动态变量。堆是&ldquo;先进先出&rdquo;（First&nbsp;In&nbsp;first&nbsp;Out，FIFO）数据结构。它只允许在堆的一端插入数据，在另一端移走数据。堆的地址空间&ldquo;向上增加&rdquo;，即当堆上保存的数据越多，堆的地址就越高。</span>
+								</span>
+							</p>
+							<span style="font-size:14px;">
+								<img src="files/4359a1cad115eed75f484c90c0c9101d.jpg" alt></img>
+							</span>
+							<p>
+								<span style="font-family:verdana, sans-serif;font-size:14px;line-height:21px;">
+									<span style="font-family:verdana, sans-serif;font-size:14px;line-height:21px;">
+										<span style="font-family:verdana, sans-serif;font-size:14px;line-height:21px;">
+											<strong>
+												<span style="color:rgb(240,0,0);font-family:Verdana, sans-serif, '宋体';font-size:13px;line-height:23px;">下图是APUE中的一个典型C内存空间分布图：</span>
+												<br>
+
+											</strong>
+										</span>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:verdana, sans-serif;font-size:14px;line-height:21px;">
+									<span style="font-family:verdana, sans-serif;font-size:14px;line-height:21px;">
+										<span style="font-family:verdana, sans-serif;font-size:14px;line-height:21px;">
+											<strong>
+												<span style="color:rgb(240,0,0);font-family:Verdana, sans-serif, '宋体';font-size:13px;line-height:23px;">
+													<img src="files/54297494e4fdcbda8fff6f8991cf51b3.jpg" alt></img>
+													<br>
+
+												</span>
+											</strong>
+										</span>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:Verdana, sans-serif, '宋体';font-size:12px;color:#f00000;">
+									<span style="line-height:23px;">
+										<strong>所以可以知道
+											<span style="color:rgb(51,51,51);font-family:Verdana, sans-serif, '宋体';font-size:13px;letter-spacing:.5px;line-height:23px;">传入的参数,局部变量,都是在栈顶分布,随着子函数的增多而向下增长.</span>
+											<br style="padding:0px;margin:0px;color:rgb(51,51,51);font-family:Verdana, sans-serif, '宋体';font-size:13px;letter-spacing:.5px;line-height:23px;">
+
+											<span style="color:rgb(51,51,51);font-family:Verdana, sans-serif, '宋体';font-size:13px;letter-spacing:.5px;line-height:23px;">函数的调用地址(函数运行代码),全局变量,静态变量都是在分配内存的低部存在,而malloc分配的堆则存在于这些内存之上,并向上生长.</span>
+										</strong>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:Verdana, sans-serif, '宋体';font-size:12px;color:#f00000;">
+									<span style="line-height:23px;">
+										<strong>
+											<span style="color:rgb(51,51,51);font-family:Verdana, sans-serif, '宋体';font-size:13px;letter-spacing:.5px;line-height:23px;">举例1:</span>
+										</strong>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:Verdana, sans-serif, '宋体';font-size:12px;color:#f00000;">
+									<span style="line-height:23px;">
+										<strong>
+											<span style="color:rgb(51,51,51);font-family:Verdana, sans-serif, '宋体';font-size:13px;letter-spacing:.5px;line-height:23px;">
+												<textarea readonly="readonly" name="code" class="c" cols="22" rows="3">#include&nbsp;&lt;stdio&nbsp;h=&quot;&quot;&gt;
+const&nbsp;int&nbsp;&nbsp;&nbsp;&nbsp;g_A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//代码段
+int&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;g_B&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;20;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//数据段
+static&nbsp;int&nbsp;&nbsp;&nbsp;g_C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;30;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//数据段
+static&nbsp;int&nbsp;&nbsp;&nbsp;g_D;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//BSS段
+int&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;g_E;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//BSS段
+char&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*p1;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//BSS段
+
+void&nbsp;main(&nbsp;)
+{
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;local_A;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//栈
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;local_B;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//栈
+&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;int&nbsp;&nbsp;&nbsp;&nbsp;local_C&nbsp;=&nbsp;0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//数据段
+&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;int&nbsp;&nbsp;&nbsp;&nbsp;local_D;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//数据段
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;char&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*p3&nbsp;=&nbsp;&quot;123456&quot;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//123456在代码段，p3在栈上
+
+&nbsp;&nbsp;&nbsp;&nbsp;p1&nbsp;=&nbsp;(char&nbsp;*)malloc(&nbsp;10&nbsp;);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//堆，分配得来得10字节的区域在堆区
+&nbsp;&nbsp;&nbsp;&nbsp;strcpy(&nbsp;p1,&nbsp;&quot;123456&quot;&nbsp;);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//123456{post.content}放在常量区，编译器可能会将它与p3所指向&nbsp;的&quot;123456&quot;优化成一块
+
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;hight&nbsp;address\n&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;栈&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;\n&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&nbsp;&quot;栈,&nbsp;&nbsp;&nbsp;&nbsp;局部变量,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;local_A,&nbsp;addr:0x%08x\n&quot;,&nbsp;&amp;local_A&nbsp;);
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&nbsp;&quot;栈,&nbsp;&nbsp;&nbsp;&nbsp;局部变量,(后进栈地址相对local_A低)&nbsp;&nbsp;local_B,&nbsp;addr:0x%08x\n&quot;,&nbsp;&amp;local_B&nbsp;);
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;堆&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;\n&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&nbsp;&quot;堆,&nbsp;&nbsp;&nbsp;&nbsp;malloc分配内存,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addr:0x%08x\n&quot;,&nbsp;p1&nbsp;);
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;BSS段&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;\n&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&nbsp;&quot;BSS段,&nbsp;全局变量,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;未初始化&nbsp;&nbsp;&nbsp;&nbsp;g_E,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addr:0x%08x\n&quot;,&nbsp;&amp;g_E,&nbsp;g_E&nbsp;);&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&nbsp;&quot;BSS段,&nbsp;静态全局变量,&nbsp;&nbsp;&nbsp;未初始化,&nbsp;&nbsp;&nbsp;g_D,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addr:0x%08x\n&quot;,&nbsp;&amp;g_D&nbsp;);
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&nbsp;&quot;BSS段,&nbsp;静态局部变量,&nbsp;&nbsp;&nbsp;初始化,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;local_C,&nbsp;addr:0x%08x\n&quot;,&nbsp;&amp;local_C);
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&nbsp;&quot;BSS段,&nbsp;静态局部变量,&nbsp;&nbsp;&nbsp;未初始化,&nbsp;&nbsp;&nbsp;local_D,&nbsp;addr:0x%08x\n&quot;,&nbsp;&amp;local_D);
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;数据段&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;\n&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&nbsp;&quot;数据段,全局变量,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;初始化&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;g_B,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addr:0x%08x\n&quot;,&nbsp;&amp;g_B);
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&nbsp;&quot;数据段,静态全局变量,&nbsp;&nbsp;&nbsp;初始化,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;g_C,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addr:0x%08x\n&quot;,&nbsp;&amp;g_C);
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;代码段&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;\n&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&nbsp;&quot;代码段,全局初始化变量,&nbsp;只读const,&nbsp;&nbsp;g_A,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addr:0x%08x\n\n&quot;,&nbsp;&amp;g_A);
+&nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;low&nbsp;address\n&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;return;
+}
+&lt;/stdio&gt;</textarea>
+												<br>
+
+											</span>
+										</strong>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:Verdana, sans-serif, '宋体';font-size:12px;color:#f00000;">
+									<span style="line-height:23px;">
+										<strong>
+											<span style="color:rgb(51,51,51);font-family:Verdana, sans-serif, '宋体';font-size:13px;letter-spacing:.5px;line-height:23px;">运行结果：</span>
+										</strong>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:Verdana, sans-serif, '宋体';font-size:12px;color:#f00000;">
+									<span style="line-height:23px;">
+										<strong>
+											<span style="color:rgb(51,51,51);font-family:Verdana, sans-serif, '宋体';font-size:13px;letter-spacing:.5px;line-height:23px;">
+												<textarea readonly="readonly" name="code" class="c" cols="22" rows="3">hight&nbsp;address
+&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;栈&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;
+栈,&nbsp;&nbsp;&nbsp;&nbsp;局部变量,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;local_A,&nbsp;addr:0xffa70c1c
+栈,&nbsp;&nbsp;&nbsp;&nbsp;局部变量,(后进栈地址相对local_A低)&nbsp;&nbsp;local_B,&nbsp;addr:0xffa70c18
+&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;堆&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;
+堆,&nbsp;&nbsp;&nbsp;&nbsp;malloc分配内存,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addr:0x087fe008
+&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;BSS段&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;
+BSS段,&nbsp;全局变量,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;未初始化&nbsp;&nbsp;&nbsp;&nbsp;g_E,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addr:0x08049a64
+BSS段,&nbsp;静态全局变量,&nbsp;&nbsp;&nbsp;未初始化,&nbsp;&nbsp;&nbsp;g_D,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addr:0x08049a5c
+BSS段,&nbsp;静态局部变量,&nbsp;&nbsp;&nbsp;初始化,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;local_C,&nbsp;addr:0x08049a58
+BSS段,&nbsp;静态局部变量,&nbsp;&nbsp;&nbsp;未初始化,&nbsp;&nbsp;&nbsp;local_D,&nbsp;addr:0x08049a54
+&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;数据段&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;
+数据段,全局变量,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;初始化&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;g_B,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addr:0x08049a44
+数据段,静态全局变量,&nbsp;&nbsp;&nbsp;初始化,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;g_C,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addr:0x08049a48
+&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;代码段&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;
+代码段,全局初始化变量,&nbsp;只读const,&nbsp;&nbsp;g_A,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addr:0x08048620
+
+low&nbsp;address</textarea>
+												<br>
+
+											</span>
+										</strong>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:Verdana, sans-serif, '宋体';font-size:12px;color:#f00000;">
+									<span style="line-height:23px;">
+										<strong>
+											<span style="color:rgb(51,51,51);font-family:Verdana, sans-serif, '宋体';font-size:13px;letter-spacing:.5px;line-height:23px;">
+												<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">注意：</span>
+												<br style="margin:0px;padding:0px;font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+
+												<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">编译时需要&ndash;g选项，这样才可以看elf信息；</span>
+												<br style="margin:0px;padding:0px;font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+
+												<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">readelf&nbsp;&ndash;a&nbsp;a.out </span>
+												<br>
+
+											</span>
+										</strong>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#333333;">
+									<span style="letter-spacing:.5px;line-height:19px;">
+										<strong>查看这个执行文件的elf信息，摘录部分如下：重点注意其中data段，text段还要有bss段的地址，然后比较这个地址和上面的运行结果，是否是在elf文件的各个段的地址之内。</strong>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#333333;">
+									<span style="letter-spacing:.5px;line-height:19px;">
+										<strong>
+											<textarea readonly="readonly" name="code" class="c" cols="22" rows="3">Section&nbsp;Headers:
+&nbsp;&nbsp;[Nr]&nbsp;Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Addr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Off&nbsp;&nbsp;&nbsp;&nbsp;Size&nbsp;&nbsp;&nbsp;ES&nbsp;Flg&nbsp;Lk&nbsp;Inf&nbsp;Al
+&nbsp;&nbsp;[&nbsp;0]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;00000000&nbsp;000000&nbsp;000000&nbsp;00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;0
+&nbsp;&nbsp;[&nbsp;1]&nbsp;.interp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08048114&nbsp;000114&nbsp;000013&nbsp;00&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;1
+&nbsp;&nbsp;[&nbsp;2]&nbsp;.note.ABI&ndash;tag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NOTE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08048128&nbsp;000128&nbsp;000020&nbsp;00&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[&nbsp;3]&nbsp;.gnu.hash&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GNU_HASH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08048148&nbsp;000148&nbsp;000020&nbsp;04&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[&nbsp;4]&nbsp;.dynsym&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DYNSYM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08048168&nbsp;000168&nbsp;000070&nbsp;10&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;4
+&nbsp;&nbsp;[&nbsp;5]&nbsp;.dynstr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;STRTAB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;080481d8&nbsp;0001d8&nbsp;000058&nbsp;00&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;1
+&nbsp;&nbsp;[&nbsp;6]&nbsp;.gnu.version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VERSYM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08048230&nbsp;000230&nbsp;00000e&nbsp;02&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;2
+&nbsp;&nbsp;[&nbsp;7]&nbsp;.gnu.version_r&nbsp;&nbsp;&nbsp;&nbsp;VERNEED&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08048240&nbsp;000240&nbsp;000020&nbsp;00&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;4
+&nbsp;&nbsp;[&nbsp;8]&nbsp;.rel.dyn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;REL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08048260&nbsp;000260&nbsp;000008&nbsp;08&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[&nbsp;9]&nbsp;.rel.plt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;REL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08048268&nbsp;000268&nbsp;000028&nbsp;08&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;4&nbsp;&nbsp;11&nbsp;&nbsp;4
+&nbsp;&nbsp;[10]&nbsp;.init&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08048290&nbsp;000290&nbsp;000017&nbsp;00&nbsp;&nbsp;AX&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[11]&nbsp;.plt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;080482a8&nbsp;0002a8&nbsp;000060&nbsp;04&nbsp;&nbsp;AX&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[12]&nbsp;.text&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08048310&nbsp;000310&nbsp;0002e8&nbsp;00&nbsp;&nbsp;AX&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;16
+&nbsp;&nbsp;[13]&nbsp;.fini&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;080485f8&nbsp;0005f8&nbsp;00001c&nbsp;00&nbsp;&nbsp;AX&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[14]&nbsp;.rodata&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08048614&nbsp;000614&nbsp;000326&nbsp;00&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[15]&nbsp;.eh_frame&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0804893c&nbsp;00093c&nbsp;000004&nbsp;00&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[16]&nbsp;.ctors&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08049940&nbsp;000940&nbsp;000008&nbsp;00&nbsp;&nbsp;WA&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[17]&nbsp;.dtors&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08049948&nbsp;000948&nbsp;000008&nbsp;00&nbsp;&nbsp;WA&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[18]&nbsp;.jcr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08049950&nbsp;000950&nbsp;000004&nbsp;00&nbsp;&nbsp;WA&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[19]&nbsp;.dynamic&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DYNAMIC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08049954&nbsp;000954&nbsp;0000c8&nbsp;08&nbsp;&nbsp;WA&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[20]&nbsp;.got&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08049a1c&nbsp;000a1c&nbsp;000004&nbsp;04&nbsp;&nbsp;WA&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[21]&nbsp;.got.plt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08049a20&nbsp;000a20&nbsp;000020&nbsp;04&nbsp;&nbsp;WA&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[22]&nbsp;.data&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08049a40&nbsp;000a40&nbsp;00000c&nbsp;00&nbsp;&nbsp;WA&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[23]&nbsp;.bss&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NOBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08049a4c&nbsp;000a4c&nbsp;00001c&nbsp;00&nbsp;&nbsp;WA&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[24]&nbsp;.comment&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;00000000&nbsp;000a4c&nbsp;000114&nbsp;00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;1
+&nbsp;&nbsp;[25]&nbsp;.debug_aranges&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;00000000&nbsp;000b60&nbsp;000020&nbsp;00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;1
+&nbsp;&nbsp;[26]&nbsp;.debug_pubnames&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;00000000&nbsp;000b80&nbsp;00003a&nbsp;00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;1
+&nbsp;&nbsp;[27]&nbsp;.debug_info&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;00000000&nbsp;000bba&nbsp;0001f4&nbsp;00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;1
+&nbsp;&nbsp;[28]&nbsp;.debug_abbrev&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;00000000&nbsp;000dae&nbsp;00006f&nbsp;00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;1
+&nbsp;&nbsp;[29]&nbsp;.debug_line&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;00000000&nbsp;000e1d&nbsp;000058&nbsp;00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;1
+&nbsp;&nbsp;[30]&nbsp;.debug_frame&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;00000000&nbsp;000e78&nbsp;00003c&nbsp;00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;4
+&nbsp;&nbsp;[31]&nbsp;.debug_str&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;00000000&nbsp;000eb4&nbsp;00000d&nbsp;00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;1
+&nbsp;&nbsp;[32]&nbsp;.debug_loc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PROGBITS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;00000000&nbsp;000ec1&nbsp;000043&nbsp;00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;1
+&nbsp;&nbsp;[33]&nbsp;.shstrtab&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;STRTAB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;00000000&nbsp;000f04&nbsp;000143&nbsp;00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;1
+&nbsp;&nbsp;[34]&nbsp;.symtab&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SYMTAB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;00000000&nbsp;0015e8&nbsp;000560&nbsp;10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;35&nbsp;&nbsp;60&nbsp;&nbsp;4
+&nbsp;&nbsp;[35]&nbsp;.strtab&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;STRTAB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;00000000&nbsp;001b48&nbsp;0002ad&nbsp;00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;1
+Key&nbsp;to&nbsp;Flags:
+&nbsp;&nbsp;W&nbsp;(write),&nbsp;A&nbsp;(alloc),&nbsp;X&nbsp;(execute),&nbsp;M&nbsp;(merge),&nbsp;S&nbsp;(strings)
+&nbsp;&nbsp;I&nbsp;(info),&nbsp;L&nbsp;(link&nbsp;order),&nbsp;G&nbsp;(group),&nbsp;x&nbsp;(unknown)
+&nbsp;&nbsp;O&nbsp;(extra&nbsp;OS&nbsp;processing&nbsp;required)&nbsp;o&nbsp;(OS&nbsp;specific),&nbsp;p&nbsp;(processor&nbsp;specific)</textarea>
+											<br>
+
+										</strong>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:Verdana, Arial, Helvetica, sans-serif;">
+									<span style="letter-spacing:.5px;line-height:19px;">
+										<span style="font-size:13px;color:rgb(255,0,0);font-family:Verdana, Arial, Helvetica, sans-serif;line-height:19px;background-color:rgb(254,254,242);">
+											<strong>★</strong>
+										</span>
+										<span style="font-size:13px;color:rgb(255,0,0);font-family:Verdana, Arial, Helvetica, sans-serif;line-height:19px;background-color:rgb(254,254,242);">
+											<strong>★
+												<span style="color:rgb(255,0,0);font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+													<strong>★</strong>
+												</span>
+												<span style="color:rgb(255,0,0);font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;background-color:rgb(254,254,242);">
+													<strong>★</strong>
+												</span>
+											</strong>
+										</span>
+										<strong>
+											<span style="color:#33cc00;">注意
+												<span style="font-size:14px;">静态变量初始化为零</span>
+												和
+												<span style="font-size:14px;">全局静态变量初始化为零</span>
+												的情况，都是存储在
+												<span style="font-size:14px;">bss段</span>
+												<span style="font-size:13px;font-family:Verdana, Arial, Helvetica, sans-serif;letter-spacing:.5px;line-height:19px;color:rgb(255,0,0);background-color:rgb(254,254,242);">
+													<strong>★</strong>
+												</span>
+												<span style="font-size:13px;font-family:Verdana, Arial, Helvetica, sans-serif;letter-spacing:.5px;line-height:19px;color:rgb(255,0,0);background-color:rgb(254,254,242);">
+													<strong>★★★</strong>
+												</span>
+											</span>
+										</strong>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#333333;">
+									<span style="letter-spacing:.5px;line-height:19px;">
+										<strong>从上面的elf文件可以看出，</strong>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:12px;color:#333333;">
+									<span style="letter-spacing:.5px;line-height:19px;">
+										<strong>
+											<span style="color:#333333;font-family:Verdana, Arial, Helvetica, sans-serif;letter-spacing:.5px;line-height:19px;">
+												<strong> 
+&nbsp;[23]&nbsp;.bss&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NOBITS&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </strong>
+											</span>
+											<span style="color:#ff0000;font-family:Verdana, Arial, Helvetica, sans-serif;letter-spacing:.5px;line-height:19px;">
+												<strong>08049a4c </strong>
+											</span>
+											<span style="color:#333333;font-family:Verdana, Arial, Helvetica, sans-serif;letter-spacing:.5px;line-height:19px;">
+												<strong>000a4c
+&nbsp;00001c&nbsp;00&nbsp; WA&nbsp; 0&nbsp; &nbsp;0&nbsp; 4</strong>
+											</span>
+											<br>
+
+										</strong>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:12px;">
+									<span style="letter-spacing:.5px;line-height:19px;">
+										<strong>
+											<span style="color:#333333;"> &nbsp;[22]&nbsp;.data&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;PROGBITS&nbsp; &nbsp; </span>
+											<span style="color:#ff0000;">08049a40</span>
+											<span style="color:#333333;">000a40
+&nbsp;00000c&nbsp;00&nbsp; WA&nbsp; 0&nbsp; &nbsp;0&nbsp; 4</span>
+										</strong>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:12px;">
+									<span style="letter-spacing:.5px;line-height:19px;">
+										<strong>
+											<span style="color:#333333;"> &nbsp;[12]&nbsp;.text&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;PROGBITS&nbsp; &nbsp; &nbsp; </span>
+											<span style="color:#ff0000;">08048310</span>
+											<span style="color:#333333;">000310
+&nbsp;0002e8&nbsp;00&nbsp; AX&nbsp; 0&nbsp; &nbsp;0&nbsp;16
+												<br>
+
+											</span>
+										</strong>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:12px;">
+									<span style="letter-spacing:.5px;line-height:19px;">
+										<strong>
+											<span style="color:#333333;">但是在结果中显示： </span>
+											<span style="color:#330000;">BSS段,&nbsp;静态局部变量,&nbsp; &nbsp;初始化,&nbsp; &nbsp; local_C,&nbsp;addr:</span>
+											<span style="color:#cc0000;">0x08049a58 </span>
+										</strong>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:12px;">
+									<span style="letter-spacing:.5px;line-height:19px;">
+										<span style="font-weight:bold;">
+											<span style="color:#cc0000;"> （
+												<span style="color:rgb(204,0,0);font-family:Verdana, Arial, Helvetica, sans-serif;letter-spacing:.5px;line-height:19px;">
+													<strong>0x08049a58
+&nbsp;大于
+														<span style="color:rgb(204,0,0);font-family:Verdana, Arial, Helvetica, sans-serif;letter-spacing:.5px;line-height:19px;">
+															<strong>0x</strong>
+														</span>
+														<span style="color:rgb(255,0,0);font-family:Verdana, Arial, Helvetica, sans-serif;letter-spacing:.5px;line-height:19px;">
+															<strong>08049a4c
+&nbsp;属于bss段</strong>
+														</span>
+													</strong>
+												</span>
+												）是初始化的静态局部变量但是却属于bss段，为什么？
+											</span>
+										</span>
+									</span>
+								</span>
+							</p>
+							<p>
+								<span style="font-family:Verdana, Arial, Helvetica, sans-serif;font-size:12px;">
+									<span style="letter-spacing:.5px;line-height:19px;">
+										<strong>
+											<span style="color:#cc0000;">
+												<span style="color:rgb(51,0,0);font-family:Verdana, Arial, Helvetica, sans-serif;letter-spacing:.5px;line-height:19px;">
+													<strong>原因是：local_C</strong>
+												</span>
+												是局部静态变量但是却初始化为零。这和没有初始化，默认是零的情况一样，都存储在bss段，如果初始化为其他的值，那么
+												<span style="color:rgb(51,0,0);font-family:Verdana, Arial, Helvetica, sans-serif;letter-spacing:.5px;line-height:19px;">
+													<strong>local_C这个变量就会存储在data段。</strong>
+												</span>
+											</span>
+										</strong>
+									</span>
+								</span>
+							</p>
+							<p></p>
+							<p style="margin:10px auto;padding-top:0px;padding-bottom:0px;font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+								<span style="margin:0px;padding:0px;font-size:18px;">
+									<span style="margin:0px;padding:0px;">四</span>
+								</span>
+							</p>
+							<p style="margin:10px auto;padding-top:0px;padding-bottom:0px;font-family:Verdana, Arial, Helvetica, sans-serif;line-height:19px;">
+								<span style="margin:0px;padding:0px;">
+									<span style="margin:0px;padding:0px;">
+										<span style="font-size:14px;color:#ff0000;">可执行文件大小由什么决定？</span>
+									</span>
+								</span>
+							</p>
+							<p style="margin:10px auto;padding-top:0px;padding-bottom:0px;font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+								<span style="color:#ff0000;">可执行文件在存储时分为代码段、数据段和BSS段三个部分。</span>
+							</p>
+							<p style="margin:10px auto;padding-top:0px;padding-bottom:0px;font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">【例一】
+								<br style="margin:0px;padding:0px;">程序1:
+
+								<br style="margin:0px;padding:0px;">int&nbsp;ar[30000];
+
+								<br style="margin:0px;padding:0px;">void&nbsp;main()
+
+								<br style="margin:0px;padding:0px;">{
+
+								<br style="margin:0px;padding:0px;"> &nbsp; &nbsp;......
+
+								<br style="margin:0px;padding:0px;">} 
+
+								<br style="margin:0px;padding:0px;">程序2:
+
+								<br style="margin:0px;padding:0px;">int&nbsp;ar[300000]&nbsp;=  {1,&nbsp;2,&nbsp;3,&nbsp;4,&nbsp;5,&nbsp;6&nbsp;};
+
+								<br style="margin:0px;padding:0px;">void&nbsp;main()
+
+								<br style="margin:0px;padding:0px;">{
+
+								<br style="margin:0px;padding:0px;"> &nbsp; &nbsp;......
+
+								<br style="margin:0px;padding:0px;">} 
+
+								<br style="margin:0px;padding:0px;">发现程序2编译之后所得的.exe文件比程序1的要大得多。当下甚为不解，于是手工编译了一下，并使用了/FAs编译选项来查看了一下其各自的.asm，发现在程序1.asm中ar的定义如下：
+
+								<br style="margin:0px;padding:0px;">_BSS&nbsp;SEGMENT
+
+								<br style="margin:0px;padding:0px;"> &nbsp;   ?ar@@3PAHA&nbsp;DD&nbsp;0493e0H&nbsp;DUP&nbsp;(?) &nbsp; &nbsp;;&nbsp;ar
+
+								<br style="margin:0px;padding:0px;">_BSS&nbsp;ENDS 
+
+								<br style="margin:0px;padding:0px;">而在程序2.asm中，ar被定义为：
+
+								<br style="margin:0px;padding:0px;">_DATA&nbsp;SEGMENT
+
+								<br style="margin:0px;padding:0px;"> &nbsp;   ?ar@@3PAHA&nbsp;DD&nbsp;01H &nbsp;   ;&nbsp;ar
+
+								<br style="margin:0px;padding:0px;"> &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; &nbsp;DD&nbsp;02H
+
+								<br style="margin:0px;padding:0px;"> &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; &nbsp;DD&nbsp;03H
+
+								<br style="margin:0px;padding:0px;"> &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; &nbsp;ORG&nbsp;$+1199988
+
+								<br style="margin:0px;padding:0px;">_DATA&nbsp;ENDS 
+
+								<br style="margin:0px;padding:0px;">区别很明显，一个位于.bss段，而另一个位于.data段，两者的区别在于：全局的未初始化变量存在于.bss段中，具体体现为一个占位符；全局的已初始化变量存于.data段中；而函数内的自动变量都在栈上分配空间。
+
+							</p>
+							<p style="margin:10px auto;padding-top:0px;padding-bottom:0px;font-family:Verdana, Arial, Helvetica, sans-serif;font-size:13px;line-height:19px;">
+								<span style="margin:0px;padding:0px;">
+									<span style="margin:0px;padding:0px;color:rgb(255,0,0);">.bss是不占用.exe文件空间的，其内容由操作系统初始化（清零）；而.data却需要占用，其内容由程序初始化</span>
+								</span>
+								，因此造成了上述情况。
+							</p>
+							<br>
+
+							<p>
+								<span style="font-size:18px;color:#3366ff;">以上仅仅做为学习只用！！</span>
+							</p>
+							<div>参考材料：</div>
+							<div>
+								<a id="cb_post_title_url" href="http://www.cnblogs.com/xmphoenix/archive/2011/10/23/2221879.html" style="color:#000080;text-decoration:none;font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;font-size:13px;font-weight:bold;">可执行文件（ELF）格式的理解</a>
+								<br>
+
+							</div>
+							<div>
+								<a href="http://www.cnblogs.com/xmphoenix/archive/2011/10/23/2221879.html">http://www.cnblogs.com/xmphoenix/archive/2011/10/23/2221879.html</a>
+							</div>
+							<div>C程序内存区域分配(5个段作用)
+								<br>
+
+							</div>
+							<div>
+								<a href="http://www.cnblogs.com/bigbigtree/archive/2012/11/23/2784137.html">http://www.cnblogs.com/bigbigtree/archive/2012/11/23/2784137.html</a>
+								<br>
+
+							</div>
+							<div>
+								<br>
+
+							</div>
+						</div>
+					</div>
+				</article>
+			</main>
+		</div>
+	</body>
+</html>

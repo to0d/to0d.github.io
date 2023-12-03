@@ -1,0 +1,122 @@
+<html>
+	<head>
+		<meta charset="utf-8"></meta>
+		<title>在git与tortoisegit中使用openSSH与PuTTY&nbsp;波多尔斯基&nbsp;博客园</title>
+	</head>
+	<body>
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2016. All rights reserved - to0d@outlook.com, at Sun Jan 12 20:50:57 CST 2020</font>
+			</b>
+			<br>
+
+			<a href="https://www.cnblogs.com/podolski/p/4543023.html" target="_blank">
+				<font color="red" size="3">在git与tortoisegit中使用openSSH与PuTTY&nbsp;&ndash;&nbsp;波多尔斯基&nbsp;&ndash;&nbsp;博客园</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="post">
+			<h1 class = "postTitle">
+				<a id="cb_post_title_url" href class="postTitle2">在git与tortoisegit中使用openSSH与PuTTY</a>
+			</h1>
+			<div class="clear"></div>
+			<div class="postBody">
+				<div id="cnblogs_post_body" class="blogpost-body ">
+					<h2>问题</h2>
+					<p>在使用Git与tortoisegit的时候，指定远程版本库的地址有2种方式：</p>
+					<ol>
+						<li>使用https方式的git地址非常直接（https://xxx.oschina.net/xxx.git），基本上什么都不需要配置，不管是git&nbsp;bash还是tortoisegit都能完美使用，但是每次需要连接远程服务器时，都要提示我输入用户名与密码，非常不爽；</li>
+						<li>使用ssh方式的git地址非常爽快（git@git.oschina.net:xxxx/xxx.git），不需要输入密码，但是需要配置。</li>
+					</ol>
+					<p>第一种方式没啥说的，第二种方式的应用，我配置的时候出现了一个问题：</p>
+					<p>配置了tortoisegit的putty后，直接用tortoisegit可以不输入密码直接完成操作；但是当我使用git&nbsp;bash的时候，使用git&nbsp;pull之类的命令还需要我输入密码...</p>
+					<p class="Third">P.S.&nbsp;别说我闲的，有tortoisegit为啥还用git&nbsp;bash。实际上，使用git&nbsp;bash在有的操作上还是挺方便的（比如删除分支&nbsp;git&nbsp;push&nbsp;origin&nbsp;:branchx）。</p>
+					<p>&nbsp;</p>
+					<p>那怎么弄才能让这2个小家伙都不输入密码呢？</p>
+					<p>这里又有两种办法...</p>
+					<ol>
+						<li>调整tortoisegit的settings中的network选项，将tortoisegitplink.exe改成git安装目录的下bin\ssh.exe。如果先前用ssh&ndash;keygen.exe配置好了git下的ssh话，改完就能直接用，没配置好的话...等下说。</li>
+						<li>默认安装tortoisegit，会使用PuTTY（plink）作为默认的ssh方式，声称对windows集成更好，如果不想改这种方式的话，就只能让git的ssh.exe使用PuTTY的密钥了，tortoisegit继续使用PuTTY。</li>
+					</ol>
+					<p class="note">
+						<span style="font-family: 'Microsoft YaHei';">注意：tortoisegit可以自动载入putty&nbsp;key，使用puttygen程序可以生成对应的公钥与私钥。</span>
+					</p>
+					<p>&nbsp;</p>
+					<h2>解决方法</h2>
+					<p>我先前已经配置好了PuTTY，只是bash中的openssh不能用，于是我采用第二种方式。公钥是相同的，需要转换一下私钥。</p>
+					<p>定位putty的ppk文件，用puttygen（在tortoisegit目录里面）打开（conversions&gt;import&nbsp;key）</p>
+					<p>
+						<img src="files/e4211af430861ce4b64adc5f9e5e4665.png"></img>
+					</p>
+					<p>然后点击conversions&gt;export&nbsp;openSSH&nbsp;key,保存文件为id_rsa文件，不要拓展名。</p>
+					<p>
+						<img src="files/89a9d4ca30c4685ccb50d1f63ecd5c80.png"></img>
+					</p>
+					<p>然后再点击下面的save&nbsp;public&nbsp;key按钮，保存为id_rsa.pub文件，效果如下：</p>
+					<p>
+						<img src="files/70a9ca7aa19088bd98509a07f95c2c04.png"></img>
+					</p>
+					<p>找到自己%home%下（&tilde;）的.ssh文件夹，一般windows&nbsp;7以后的在c:\用户\&ldquo;自己的用户名&rdquo;下面。没有的话，可以新建。</p>
+					<p>把刚才的两个文件扔进去。打开git&nbsp;bash，执行命令，如下图。</p>
+					<p>
+						<img src="files/4e2c90b333bc22145f3669e5accf3c79.png"></img>
+					</p>
+					<p>跳转到自己的版本路径，执行git&nbsp;pull，命令行再也不提示密码了...再试试tortoisegit，依然也不提示要密码。</p>
+					<p>这样实际相当于配置了一回git的ssh，让openSSH与putty使用相同的密钥，git&nbsp;bash使用openssh连接，而tortoisegit使用PuTTY连接，谁也不碍着谁。</p>
+					<p>&nbsp;</p>
+					<h2>实践指南</h2>
+					<p>依据自己的喜好，为了不重复输入用户名与密码，可以选择
+						<span style="line-height: 1.5;">兼用PuTTY与OpenSSH</span>
+						<span style="line-height: 1.5;">或者</span>
+						<span style="line-height: 1.5;">只用openSSH</span>
+					</p>
+					<h3>*兼用openSSH与PuTTY*</h3>
+					<p>1.配置tortoisegit的PuTTY：
+						<a href="http://my.oschina.net/longxuu/blog/141699" target="_blank">http://my.oschina.net/longxuu/blog/141699</a>
+					</p>
+					<p>2.确认tortoisegit可以正常使用PuTTY，可以按照上面解决方法的步骤配置openSSH以供git&nbsp;bash使用。</p>
+					<p>&nbsp;</p>
+					<h3>*只用openSSH*</h3>
+					<p>1.使用git&nbsp;bash，输入ssh&ndash;keygen.exe&nbsp;&ndash;t&nbsp;rsa&nbsp;&ndash;C&nbsp;&ldquo;自己的email&rdquo;</p>
+					<p>2.如果不想输密码的话，一路回车，程序会自动生成.ssh/下面的id_rsa和对应的pub文件</p>
+					<p>3.打开id_rsa.pub文件，将内容全部复制</p>
+					<p>4.在版本控制的网站（例如oschina），在个人资料里面，SSH公钥，新添一个公钥，将刚刚的东西贴进去。</p>
+					<p>5.可以参照
+						<a href="http://git.oschina.net/oschina/git-osc/wikis/%E5%B8%AE%E5%8A%A9#ssh-keys" target="_blank">http://git.oschina.net/oschina/git&ndash;osc/wikis/%E5%B8%AE%E5%8A%A9#ssh&ndash;keys</a>
+						进行验证
+					</p>
+					<p>6.调整tortoisegit的settings中的network选项，将tortoisegitplink.exe改成git安装目录的下bin\ssh.exe。</p>
+					<p>7.在对应项目的文件夹上右键，点击tortoisegit下的settings，定位到remote</p>
+					<p>8.修改对应的url为SSH地址，putty&nbsp;key定位到id_rsa文件，如下图</p>
+					<p>
+						<img src="files/d360ea7e719a1b9b4972cd1ff2667869.png"></img>
+					</p>
+					<p>9.测试tortoisegit，没有错误，则大功告成&tilde;</p>
+					<p>&nbsp;</p>
+				</div>
+				<div id="MySignature"></div>
+				<div class="clear"></div>
+				<div id="blog_post_info_block">
+					<div id="blog_post_info"></div>
+					<div class="clear"></div>
+					<div id="post_next_prev"></div>
+				</div>
+			</div>
+			<div class="postDesc">posted&nbsp;@
+				<span id="post-date">2015&ndash;05&ndash;31&nbsp;23:58</span>
+				&nbsp;
+				<a href="../">波多尔斯基</a>
+				&nbsp;
+阅读(
+				<span id="post_view_count">...</span>
+				)&nbsp;
+评论(
+				<span id="post_comment_count">...</span>
+				)&nbsp;
+				<a href="https://i.cnblogs.com/EditPosts.aspx?postid=4543023" rel="nofollow">编辑</a>
+				&nbsp;
+				<a href="javascript:void(0)" onclick="AddToWz(4543023);return false;">收藏</a>
+			</div>
+		</div>
+	</body>
+</html>

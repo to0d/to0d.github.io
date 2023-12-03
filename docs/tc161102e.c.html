@@ -1,0 +1,100 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161102E.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161102E.c</h1>
+            <h3>test IO - Read File list</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/IO.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>IO</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;dirent.h&gt;
+#include &lt;unistd.h&gt;
+
+int readFileList(char *basePath, int level);
+
+int main(void)
+{
+    char basePath[1000];
+
+    //get the current absoulte path
+    memset(basePath,'\0',sizeof(basePath));
+    getcwd(basePath, 999);
+
+    printf("The current dir is : %s\n",basePath);
+
+    // get the file list
+    //memset(basePath,'\0',sizeof(basePath));
+    //strcpy(basePath,"./XL");
+    readFileList(basePath, 1);
+
+    printf( "output: done.\n" );
+    return 0;
+}
+
+int readFileList(char *basePath, int level)
+{
+    DIR *dir;
+    struct dirent *ptr;
+    char base[1000];
+    int i = 0;
+
+    if ((dir=opendir(basePath)) == NULL)
+    {   perror("Open dir error...");
+        exit(1);
+    }
+
+    while ((ptr=readdir(dir)) != NULL)
+    {
+        //current dir OR parrent dir
+        if(strcmp(ptr-&gt;d_name,".")==0 || strcmp(ptr-&gt;d_name,"..") ==0 )
+        {   continue;
+        }
+
+        for(i = 0; i &lt; level; ++i )
+        {   printf("    ");
+        }
+
+        if(ptr-&gt;d_type == 8)    //file
+        {   printf("-&gt;File: %s/%s\n",basePath,ptr-&gt;d_name);
+            continue;
+        }
+
+        if(ptr-&gt;d_type == 10)    //link file
+        {   printf("-&gt;Link:%s/%s\n",basePath,ptr-&gt;d_name);
+            continue;
+        }
+
+        if(ptr-&gt;d_type == 4 )    //dir
+        {
+            memset(base,'\0',sizeof(base));
+            strcpy(base, basePath);
+            strcat(base,"/");
+            strcat(base,ptr-&gt;d_name);
+            readFileList(base, level+1);
+        }
+    }
+
+    closedir(dir);
+    return 1;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

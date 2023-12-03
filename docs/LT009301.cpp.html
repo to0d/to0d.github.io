@@ -1,0 +1,159 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT009301.cpp (Restore IP Addresses)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT009301.cpp (Restore IP Addresses)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-12-28</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0093.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0093</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_6f244e60" href="#TOC_HEAD_6f244e60">Problem 0093 <strong>Restore IP Addresses</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/restore-ip-addresses/" target="_blank">https://leetcode.com/problems/restore&ndash;ip&ndash;addresses/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>64.95</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_f94e208b" href="#TOC_HEAD_f94e208b">LT009301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_60d9c9b8">LT0093 (name=Restore IP Addresses, ptag=Leetcode) &nbsp;<a href="../tags/LT0093.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0093</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_7afc1d"><a href="https://leetcode.com/problems/restore-ip-addresses/" target="_blank">Restore IP Addresses &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0093.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0093</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_be141958" href="#TOC_HEAD_be141958">LT009301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+public:
+    vector&lt;string&gt; restoreIpAddresses(string s) {
+        vector&lt;string&gt; rst;
+        static char buf[24];
+        _restoreIpAddresses(buf, 0, s.c_str(), s.length(), 0, rst);
+        return rst;
+    }
+
+    void _restoreIpAddresses(char* buf, int buf_len, const char* str, int str_len, int deep, vector&lt;string&gt;& rst)
+    {   if( deep == 3 )
+        {   if(_isValidNum(str, str_len))
+            {   memcpy(buf+buf_len, str, str_len);
+                rst.push_back(string(buf, buf_len+str_len));
+            }
+            return;
+        }
+        for(int len=1; len &lt;= 3 && len &lt;= str_len; ++len)
+        {   if(!_isValidNum(str, len))
+                continue;
+            memcpy(buf+buf_len, str, len);
+            buf[buf_len+len] = '.';
+            _restoreIpAddresses(buf, buf_len+len+1, str+len, str_len-len, deep+1, rst);
+        }
+    }
+
+    bool _isValidNum(const char* p, int len)
+    {   if( len &lt;= 0 || len &gt; 3 )
+            return false;
+        if( p[0] == '0' && len &gt; 1 )
+            return false;
+        if( std::stoi(string(p, len)) &gt; 255 )
+            return false;
+        return true;
+    }
+};
+
+
+
+void test(string s)
+{
+    cout &lt;&lt; "input: " &lt;&lt; s;
+    vector&lt;string&gt; r = Solution().restoreIpAddresses(s);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test("25525511135");
+}
+
+
+// Result
+//
+// 2022-12-28: Runtime 2ms 64.95% Memory 6.5MB 85.83%, https://leetcode.com/problems/restore-ip-addresses/submissions/866994442/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 25525511135; output: [255.255.11.135,255.255.111.35];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>2015-10-20 Java中使用JSSE实现SSL_TLS安全协议_爵士陈的博客-CSDN博客_jsse.htm</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">2015-10-20 Java中使用JSSE实现SSL_TLS安全协议_爵士陈的博客-CSDN博客_jsse.htm</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-01-27</time>
+            <i><a href="../tags/JSSE.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>JSSE</a>&nbsp;<a href="../tags/Network-TLS.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Network-TLS</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H2><a name="HEAD_610b4dca" href="#TOC_HEAD_610b4dca">一、 简介</a></H2>
+<p>
+	<img src="../refers/files/fd31a93237dbfbb3a57a5cf84215d7f4.jpg" />
+</p>
+	<H3><a name="HEAD_7e03948a" href="#TOC_HEAD_7e03948a">JSSE接口的主要类</a></H3>
+<ol>
+	<li>通信核心类 &ndash; <a name="wd_ln_SSLSocket_0"><b>SSLSocket</b></a> 和 <a name="wd_ln_SSLServerSocket_0"><b>SSLServerSocket</b></a></li>
+	<br />
+	<li>客户端与服务器端Socket工厂 &ndash; <a name="wd_ln_SSLSocketFactory_0"><b>SSLSocketFactory</b></a> 和 <a name="wd_ln_SSLServerSocketFactory_0"><b>SSLServerSocketFactory</b></a></li>
+	<br />
+	<li>SSL会话 &ndash; <a name="wd_ln_SSLSession_0"><b>SSLSession</b></a></li>
+	<ul>
+		<li>安全通信握手过程需要一个会话，为了提高通信的效率，SSL协议允许多个SSLSocket共享同一个SSL会话， 在同一个会话中， <strong>只有第一个打开的SSLSocket需要进行SSL握手，负责生成密钥及交换密钥，其余SSLSocket都共享密钥信息</strong></li>
+		<br />
+	</ul>
+	<li>SSL上下文 &ndash; <a name="wd_ln_SSLContext_0"><b>SSLContext</b></a></li>
+	<br />
+	<li>SSL非阻塞引擎 &ndash; <a name="wd_ln_SSLEngine_0"><b>SSLEngine</b></a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_c44b8be2">假如你要进行NIO通信，那么将使用这个类，它让通过过程支持非阻塞的安全通信。 &nbsp;<a href="../tags/NIO.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>NIO</a></li>
+		<br />
+	</ul>
+	<li>密钥管理器 &ndash; <a name="wd_ln_KeyManager_0"><b>KeyManager</b></a></li>
+	<br />
+	<li>信任管理器 &ndash; <a name="wd_ln_TrustManager_0"><b>TrustManager</b></a></li>
+	<br />
+	<li>密钥证书存储设施 &ndash; <a name="wd_ln_KeyStore_0"><b>KeyStore</b></a></li>
+	<br />
+</ol>
+<blockquote>
+	<p>
+	客户端模式或服务器模式
+	</p>
+	<p>
+	</p>
+</blockquote>
+<ul>
+	<li>关于身份认证方面有个名词叫客户端模式，一般情况客户端要对服务器端的身份进行验证，但是无需向服务器证实自己的身份，这样不用向对方证实自己身份的通信端 我们就说它处于客户模式，否则成它处于服务器模式。SSLSocket的 <strong>setUseClientMode(Boolean mode)</strong> 方法可以设置客户端模式或服务器模式。</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_346a5da3" href="#TOC_HEAD_346a5da3">二 、 证书简介</a></H2><ul><a href="../tags/113ac5.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>证书</a>&nbsp;</ul>
+<ul>
+	<li>证书获取的途径</li>
+	<ul>
+		<li>从权威机构购买</li>
+		<li><a name="HEAD_HIDDEN_b7bbca03">用JDK提供的工具 keytool 创建一个自我签名的证书 &nbsp;<a href="../tags/keytool.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>keytool</a></li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_b9af78fd">keytool (ptag=Tool) &nbsp;<a href="../tags/JDK.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>JDK</a>&nbsp;<a href="../tags/keytool.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>keytool</a>&nbsp;<a href="../tags/f484f.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>签名</a>&nbsp;<a href="../tags/Tool.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tool</a></li>
+			<br />
+		</ul>
+	</ul>
+</ul>
+	<H2><a name="HEAD_24fa575e" href="#TOC_HEAD_24fa575e">三、 生成证书</a></H2>
+	<H2><a name="HEAD_58f718c0" href="#TOC_HEAD_58f718c0">四、 实现SSL</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_7572a339">see example <a href="test-jsse-example-1.html" target="_blank">Test_JSSE_Example1.java</a></li>
+</ul>
+	<hr/>
+	<H2><a name="HEAD_9fbf4370" href="#TOC_HEAD_9fbf4370">Index (10)</a></H2>
+	<H3><a name="wd_def_KeyManager" href="#TOC_wd_def_KeyManager">KeyManager (1)</a></H3>
+	<ul>
+		<li><a href="#wd_ln_KeyManager_0" >密钥管理器 &ndash; KeyManager</a>
+	</ul>
+	<H3><a name="wd_def_KeyStore" href="#TOC_wd_def_KeyStore">KeyStore (1)</a></H3>
+	<ul>
+		<li><a href="#wd_ln_KeyStore_0" >密钥证书存储设施 &ndash; KeyStore</a>
+	</ul>
+	<H3><a name="wd_def_SSLContext" href="#TOC_wd_def_SSLContext">SSLContext (1)</a></H3>
+	<ul>
+		<li><a href="#wd_ln_SSLContext_0" >SSL上下文 &ndash; SSLContext</a>
+	</ul>
+	<H3><a name="wd_def_SSLEngine" href="#TOC_wd_def_SSLEngine">SSLEngine (1)</a></H3>
+	<ul>
+		<li><a href="#wd_ln_SSLEngine_0" >SSL非阻塞引擎 &ndash; SSLEngine</a>
+	</ul>
+	<H3><a name="wd_def_SSLServerSocket" href="#TOC_wd_def_SSLServerSocket">SSLServerSocket (1)</a></H3>
+	<ul>
+		<li><a href="#wd_ln_SSLServerSocket_0" >通信核心类 &ndash; SSLSocket 和 SSLServerSocket</a>
+	</ul>
+	<H3><a name="wd_def_SSLServerSocketFactory" href="#TOC_wd_def_SSLServerSocketFactory">SSLServerSocketFactory (1)</a></H3>
+	<ul>
+		<li><a href="#wd_ln_SSLServerSocketFactory_0" >客户端与服务器端Socket工厂 &ndash; SSLSocketFactory 和 SSLServerSocketFactory</a>
+	</ul>
+	<H3><a name="wd_def_SSLSession" href="#TOC_wd_def_SSLSession">SSLSession (1)</a></H3>
+	<ul>
+		<li><a href="#wd_ln_SSLSession_0" >SSL会话 &ndash; SSLSession</a>
+	</ul>
+	<H3><a name="wd_def_SSLSocket" href="#TOC_wd_def_SSLSocket">SSLSocket (1)</a></H3>
+	<ul>
+		<li><a href="#wd_ln_SSLSocket_0" >通信核心类 &ndash; SSLSocket 和 SSLServerSocket</a>
+	</ul>
+	<H3><a name="wd_def_SSLSocketFactory" href="#TOC_wd_def_SSLSocketFactory">SSLSocketFactory (1)</a></H3>
+	<ul>
+		<li><a href="#wd_ln_SSLSocketFactory_0" >客户端与服务器端Socket工厂 &ndash; SSLSocketFactory 和 SSLServerSocketFactory</a>
+	</ul>
+	<H3><a name="wd_def_TrustManager" href="#TOC_wd_def_TrustManager">TrustManager (1)</a></H3>
+	<ul>
+		<li><a href="#wd_ln_TrustManager_0" >信任管理器 &ndash; TrustManager</a>
+	</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    ﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_610b4dca" href="#HEAD_610b4dca">一、 简介</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_7e03948a" href="#HEAD_7e03948a">JSSE接口的主要类</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_346a5da3" href="#HEAD_346a5da3">二 、 证书简介 </a></b><br>
+	<b><a name="TOC_HEAD_24fa575e" href="#HEAD_24fa575e">三、 生成证书</a></b><br>
+	<b><a name="TOC_HEAD_58f718c0" href="#HEAD_58f718c0">四、 实现SSL</a></b><br>
+	<b><a name="TOC_HEAD_9fbf4370" href="#HEAD_9fbf4370">Index (10)</a></b><br>
+	<menu>
+		<li><a name="TOC_wd_def_KeyManager" href="#wd_def_KeyManager">KeyManager (1) </a></li>
+		<li><a name="TOC_wd_def_KeyStore" href="#wd_def_KeyStore">KeyStore (1) </a></li>
+		<li><a name="TOC_wd_def_SSLContext" href="#wd_def_SSLContext">SSLContext (1) </a></li>
+		<li><a name="TOC_wd_def_SSLEngine" href="#wd_def_SSLEngine">SSLEngine (1) </a></li>
+		<li><a name="TOC_wd_def_SSLServerSocket" href="#wd_def_SSLServerSocket">SSLServerSocket (1) </a></li>
+		<li><a name="TOC_wd_def_SSLServerSocketFactory" href="#wd_def_SSLServerSocketFactory">SSLServerSocketFactory (1) </a></li>
+		<li><a name="TOC_wd_def_SSLSession" href="#wd_def_SSLSession">SSLSession (1) </a></li>
+		<li><a name="TOC_wd_def_SSLSocket" href="#wd_def_SSLSocket">SSLSocket (1) </a></li>
+		<li><a name="TOC_wd_def_SSLSocketFactory" href="#wd_def_SSLSocketFactory">SSLSocketFactory (1) </a></li>
+		<li><a name="TOC_wd_def_TrustManager" href="#wd_def_TrustManager">TrustManager (1) </a></li>
+	</menu>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

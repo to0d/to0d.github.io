@@ -1,0 +1,387 @@
+<html>
+	<head>
+		<meta charSet="utf-8"></meta>
+		<title data-rh="true">性能优化&nbsp;使用objdump分析core堆栈&nbsp;知乎</title>
+	</head>
+	<body class="WhiteBg-body PostIndex-body">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Thu May 18 09:46:59 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://zhuanlan.zhihu.com/p/416589231" target="_blank">
+				<font color="red" size="3">性能优化&ndash;使用objdump分析core堆栈&nbsp;&ndash;&nbsp;知乎</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="RichText ztext Post-RichText css-1g0fqss" options="[object Object]">
+			<h2 data-first-child id="h_416589231_0" data-into-catalog-status="">
+				<b>使用objdump分析core堆栈</b>
+			</h2>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<ul>
+				<li data-pid="moEhrIIo">
+					<a href="../write" class="internal">源代码</a>
+				</li>
+				<li data-pid="SWsWQRfu">
+					<a href="../write" class="internal">执行程序</a>
+				</li>
+				<li data-pid="bwLwN6RB">
+					<a href="../write" class="internal">使用objdump分析</a>
+				</li>
+				<li data-pid="lFMYgRbk">
+					<a href="../write" class="internal">源代码</a>
+				</li>
+				<li data-pid="bgjUhmeo">
+					<a href="../write" class="internal">运行程序</a>
+				</li>
+				<li data-pid="F-pQ3Efd">
+					<a href="../write" class="internal">objdump</a>
+				</li>
+			</ul>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<blockquote data-pid="OjAHXoOH">使用c++编程的同学，经常会遇到诸如内存越界、重复释放等内存问题，大家比较习惯的追查这类问题的方式是，打开core文件的limit，生成core文件，用gdb进行分析；&nbsp;但是，在实际的生产环境中。由于程序本省占用内存非常大，比如搜索的索引服务，进行core的dump不太现实，所以一般采用，在程序中捕获信号，之后打印进程的堆栈信息，再进行追查。&nbsp;下面本文，就按照这种方式进行追查，首先，分析没有so的程序如何使用objdump与汇编进行分析程序的问题所在；接着分析有so的程序，如何使用objdump进行分析，希望对大家能有所帮助。
+				<br>
+
+			</blockquote>
+			<h2 id="h_416589231_1" data-into-catalog-status="">
+				<b>普通程序的core分析</b>
+			</h2>
+			<h2 id="h_416589231_2" data-into-catalog-status="">
+				<b>源代码</b>
+			</h2>
+			<div class="highlight">
+				<pre>
+<code class="language-text">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;signal.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;execinfo.h&gt;
+
+static void print_stack_fs(int sig, FILE * output)
+{
+    fprintf(output, &#34;--------------------------------------\n&#34;);
+
+ char pTime[256];
+ //getSafeNow(pTime, 256);
+    fprintf(output, &#34;[%s] received signal=%d, thread_id=%ld\n&#34;,
+      &#34;now&#34;, sig, getpid());
+
+    void *array[128]; // 128 stacks at most
+    size_t size = backtrace(array, sizeof(array) / sizeof(array[0]));
+    if (size &gt; 0 &amp;&amp; size &lt; 128) {
+        char ** stackLog = backtrace_symbols(array, size);
+        if(stackLog) {
+            for (size_t i = 0; i &lt; size; i++) {
+                fprintf(output,&#34;%s\n&#34;, stackLog[i]);
+            }
+            fflush(output);
+            free(stackLog);
+        }
+    }
+}
+
+static void sig_handler(int signo)
+{
+ if (signo == SIGSEGV ||
+        signo == SIGBUS  ||
+        signo == SIGABRT ||
+        signo == SIGFPE) {
+
+        print_stack_fs(signo, stderr);
+
+  exit(-1);
+ }
+ else if (signo == SIGTERM || signo == SIGINT) {
+  exit(-1);
+    }
+}
+
+static void sig_register()
+{
+    struct sigaction sigac;
+    sigemptyset(&amp;sigac.sa_mask);
+    sigac.sa_handler = sig_handler;
+    sigac.sa_flags = 0;
+
+    sigaction(SIGTERM, &amp;sigac, 0);
+    sigaction(SIGINT , &amp;sigac, 0);
+    sigaction(SIGQUIT, &amp;sigac, 0);
+    sigaction(SIGPIPE, &amp;sigac, 0);
+    sigaction(SIGBUS , &amp;sigac, 0);
+    sigaction(SIGABRT, &amp;sigac, 0);
+    sigaction(SIGFPE , &amp;sigac, 0);
+    sigaction(SIGSEGV, &amp;sigac, 0);
+}
+
+
+
+int main(int argc, char *argv[])
+{
+sig_register();
+    int a = 10, b = -2, c = 100;
+    char * pstr = 0x00;
+    int d = 100;
+    *pstr = 0x00;
+    return 0;
+}
+</code>
+				</pre>
+			</div>
+			<h2 id="h_416589231_3" data-into-catalog-status="">
+				<b>执行程序</b>
+			</h2>
+			<p data-pid="rVh5u-em">关键地址：0x400add，指向出错的代码的具体的虚拟空间地址</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">[now] received signal=11, thread_id=1852
+./a.out() [0x4008ab]
+./a.out() [0x400985]
+/lib64/libc.so.6(+0x362f0) [0x7fbc41a3d2f0]
+./a.out() [0x400add]
+/lib64/libc.so.6(__libc_start_main+0xf5) [0x7fbc41a29445]
+./a.out() [0x400769]
+</code>
+				</pre>
+			</div>
+			<h2 id="h_416589231_4" data-into-catalog-status="">
+				<b>使用objdump分析</b>
+			</h2>
+			<p data-pid="lt2AE0Nd">objdump&nbsp;&ndash;d&nbsp;a.out&nbsp;，分析&ndash;0x18(%rbp)的地址是变量pstr的地址，之后将pstr的放置到寄存器rax赋值，之后没有申请内存的空指针进行赋值出core，具体请看下面的汇编代码</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">321 0000000000400aa1 &lt;main&gt;:
+322   400aa1:   55                      push   %rbp
+323   400aa2:   48 89 e5                mov    %rsp,%rbp
+324   400aa5:   48 83 ec 30             sub    $0x30,%rsp
+325   400aa9:   89 7d dc                mov    %edi,-0x24(%rbp)
+326   400aac:   48 89 75 d0             mov    %rsi,-0x30(%rbp)
+327   400ab0:   e8 f2 fe ff ff          callq  4009a7 &lt;_ZL12sig_registerv&gt;
+328   400ab5:   c7 45 fc 0a 00 00 00    movl   $0xa,-0x4(%rbp)     // 变量a
+329   400abc:   c7 45 f8 fe ff ff ff    movl   $0xfffffffe,-0x8(%rbp)     // 变量b
+330   400ac3:   c7 45 f4 64 00 00 00    movl   $0x64,-0xc(%rbp)    // 变量c
+331   400aca:   48 c7 45 e8 00 00 00    movq   $0x0,-0x18(%rbp)    // 变量 pstr
+332   400ad1:   00
+333   400ad2:   c7 45 e4 64 00 00 00    movl   $0x64,-0x1c(%rbp)   // 变量d
+334   400ad9:   48 8b 45 e8             mov    -0x18(%rbp),%rax     // 将变量pstr放到rax寄存器
+335   400add:   c6 00 00                movb   $0x0,(%rax)        // 对pstr赋值，也就是对空指针赋值，找到问题
+336   400ae0:   b8 00 00 00 00          mov    $0x0,%eax
+337   400ae5:   c9                      leaveq
+338   400ae6:   c3                      retq
+339   400ae7:   66 0f 1f 84 00 00 00    nopw   0x0(%rax,%rax,1)
+</code>
+				</pre>
+			</div>
+			<h2 id="h_416589231_5" data-into-catalog-status="">
+				<b>core在so里面的objdump分析</b>
+			</h2>
+			<h2 id="h_416589231_6" data-into-catalog-status="">
+				<b>源代码</b>
+			</h2>
+			<ol>
+				<li data-pid="rg_7qNZA">max.h</li>
+			</ol>
+			<div class="highlight">
+				<pre><code class="language-text">#ifndef __MAX_H__
+#define __MAX_H__
+
+int max(int n1, int n2, int n3);
+
+#endif
+
+</code></pre>
+			</div>
+			<ol>
+				<li data-pid="K3IRJQwx">max.cpp</li>
+			</ol>
+			<div class="highlight">
+				<pre>
+<code class="language-text">#include &#34;max.h&#34;
+
+int max(int n1, int n2, int n3)
+{
+    int max_num = n1;
+    max_num = max_num &lt; n2? n2: max_num;
+    max_num = max_num &lt; n3? n3: max_num;
+    char * pstr = 0x00;
+    *pstr = 0x00;
+    return max_num;
+}
+
+</code>
+				</pre>
+			</div>
+			<ol>
+				<li data-pid="W0vG0Hyc">test.cpp</li>
+			</ol>
+			<div class="highlight">
+				<pre>
+<code class="language-text">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;signal.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;execinfo.h&gt;
+#include &#34;max.h&#34;
+
+static void print_stack_fs(int sig, FILE * output)
+{
+    fprintf(output, &#34;--------------------------------------\n&#34;);
+
+ char pTime[256];
+ //getSafeNow(pTime, 256);
+    fprintf(output, &#34;[%s] received signal=%d, thread_id=%ld\n&#34;,
+      &#34;now&#34;, sig, getpid());
+
+    void *array[128]; // 128 stacks at most
+    size_t size = backtrace(array, sizeof(array) / sizeof(array[0]));
+    if (size &gt; 0 &amp;&amp; size &lt; 128) {
+        char ** stackLog = backtrace_symbols(array, size);
+        if(stackLog) {
+            for (size_t i = 0; i &lt; size; i++) {
+                fprintf(output,&#34;%s\n&#34;, stackLog[i]);
+            }
+            fflush(output);
+            free(stackLog);
+        }
+    }
+}
+
+static void sig_handler(int signo)
+{
+ if (signo == SIGSEGV ||
+        signo == SIGBUS  ||
+        signo == SIGABRT ||
+        signo == SIGFPE) {
+
+        print_stack_fs(signo, stderr);
+
+  exit(-1);
+ }
+ else if (signo == SIGTERM || signo == SIGINT) {
+  exit(-1);
+    }
+}
+
+static void sig_register()
+{
+    struct sigaction sigac;
+    sigemptyset(&amp;sigac.sa_mask);
+    sigac.sa_handler = sig_handler;
+    sigac.sa_flags = 0;
+
+    sigaction(SIGTERM, &amp;sigac, 0);
+    sigaction(SIGINT , &amp;sigac, 0);
+    sigaction(SIGQUIT, &amp;sigac, 0);
+    sigaction(SIGPIPE, &amp;sigac, 0);
+    sigaction(SIGBUS , &amp;sigac, 0);
+    sigaction(SIGABRT, &amp;sigac, 0);
+    sigaction(SIGFPE , &amp;sigac, 0);
+    sigaction(SIGSEGV, &amp;sigac, 0);
+}
+
+
+
+int main(int argc, char *argv[])
+{
+ sig_register();
+    int a = 10, b = -2, c = 100;
+    int d = 100;
+    printf(&#34;max among 10, -2 and 100 is %d.\n&#34;, max(a, b, c));
+    return 0;
+}
+
+</code>
+				</pre>
+			</div>
+			<h2 id="h_416589231_7" data-into-catalog-status="">
+				<b>运行程序</b>
+			</h2>
+			<p data-pid="I5rpxQPN">关键地址：./libmax.so(_Z3maxiii+0x45)&nbsp;[0x7fb914d6868a]</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">[now] received signal=11, thread_id=1893
+./a.out() [0x4009fb]
+./a.out() [0x400ad5]
+/lib64/libc.so.6(+0x362f0) [0x7fb9141b12f0]
+./libmax.so(_Z3maxiii+0x45) [0x7fb914d6868a]
+./a.out() [0x400c33]
+/lib64/libc.so.6(__libc_start_main+0xf5) [0x7fb91419d445]
+./a.out() [0x4008b9]
+</code>
+				</pre>
+			</div>
+			<h2 id="h_416589231_8" data-into-catalog-status="">
+				<b>objdump</b>
+			</h2>
+			<p data-pid="NTT4mngo">针对so进行反编译，运行&nbsp;objdump&nbsp;&ndash;d&nbsp;libmax.so，然后找搭配_Z3maxiii，地址是645，然后+上0x45，得到地址&nbsp;68A&nbsp;汇编代码：movq&nbsp;&nbsp;&nbsp;$0x0,&ndash;0x10(%rbp)&nbsp;&nbsp;&nbsp;&nbsp;定义pstr，68A的地址同样是对未申请内存的地址进行赋值出错。</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">106 0000000000000645 &lt;_Z3maxiii&gt;:
+107  645:   55                      push   %rbp
+108  646:   48 89 e5                mov    %rsp,%rbp
+109  649:   89 7d ec                mov    %edi,-0x14(%rbp)    // 参数1
+110  64c:   89 75 e8                mov    %esi,-0x18(%rbp)    // 参数2
+111  64f:   89 55 e4                mov    %edx,-0x1c(%rbp)    // 参数3
+112  652:   8b 45 ec                mov    -0x14(%rbp),%eax
+113  655:   89 45 fc                mov    %eax,-0x4(%rbp)
+114  658:   8b 45 fc                mov    -0x4(%rbp),%eax
+115  65b:   3b 45 e8                cmp    -0x18(%rbp),%eax
+116  65e:   7d 05                   jge    665 &lt;_Z3maxiii+0x20&gt;
+117  660:   8b 45 e8                mov    -0x18(%rbp),%eax
+118  663:   eb 03                   jmp    668 &lt;_Z3maxiii+0x23&gt;
+119  665:   8b 45 fc                mov    -0x4(%rbp),%eax
+120  668:   89 45 fc                mov    %eax,-0x4(%rbp)
+121  66b:   8b 45 fc                mov    -0x4(%rbp),%eax
+122  66e:   3b 45 e4                cmp    -0x1c(%rbp),%eax
+123  671:   7d 05                   jge    678 &lt;_Z3maxiii+0x33&gt;
+124  673:   8b 45 e4                mov    -0x1c(%rbp),%eax
+125  676:   eb 03                   jmp    67b &lt;_Z3maxiii+0x36&gt;
+126  678:   8b 45 fc                mov    -0x4(%rbp),%eax
+127  67b:   89 45 fc                mov    %eax,-0x4(%rbp)
+128  67e:   48 c7 45 f0 00 00 00    movq   $0x0,-0x10(%rbp)    // pstr
+129  685:   00
+130  686:   48 8b 45 f0             mov    -0x10(%rbp),%rax
+131  68a:   c6 00 00                movb   $0x0,(%rax)   // 对pstr赋值0，这个就是问题所在了
+132  68d:   8b 45 fc                mov    -0x4(%rbp),%eax
+133  690:   5d                      pop    %rbp
+</code>
+				</pre>
+			</div>
+			<h2 id="h_416589231_9" data-into-catalog-status="">
+				<b>使用addr2line定位问题的行数</b>
+			</h2>
+			<div class="highlight">
+				<pre>
+<code class="language-text">[dubaokun@localhost so]$ addr2line -e libmax.so -ifC 68a
+max(int, int, int)
+/home/dubaokun/github/code/engine_code/compile/objdump/so/max.cpp:9 (discriminator 3)
+</code>
+				</pre>
+			</div>
+			<h2 id="h_416589231_10" data-into-catalog-status="">
+				<b>总结</b>
+			</h2>
+			<p data-pid="SNSpXqiN">以上的程序较为简单，实际工作中的程序较为复杂，但是复杂都是由基础而来的，大家可以认真思考、仔细研究，对于汇编代码要有一定的理解。</p>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<p></p>
+		</div>
+	</body>
+</html>

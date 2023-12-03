@@ -1,0 +1,232 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT004301.cpp (Multiply Strings)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT004301.cpp (Multiply Strings)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-17</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0043.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0043</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/String-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>String-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_8a15426" href="#TOC_HEAD_8a15426">Problem 0043 <strong>Multiply Strings</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/multiply-strings/" target="_blank">https://leetcode.com/problems/multiply&ndash;strings/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>89.90</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_d2d5e5b0" href="#TOC_HEAD_d2d5e5b0">LT004301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_eaeb20fe">LT0043 (name=Multiply Strings, ptag=Leetcode) &nbsp;<a href="../tags/LT0043.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0043</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/String-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>String-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_49d2c4a8"><a href="https://leetcode.com/problems/multiply-strings/" target="_blank">Multiply Strings &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0043.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0043</a></li>
+		<br />
+	</ul>
+	<p>
+		Given two numbers represented as strings, return multiplication of the numbers as a string.
+	</p>
+	<p>
+		Note: The numbers can be arbitrarily large and are non&ndash;negative.
+	</p>
+</ul>
+	<H3><a name="HEAD_b6ae38fd" href="#TOC_HEAD_b6ae38fd">LT004301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+
+    //#define DBG
+    #define BINARY_CAP 10000
+    #define BINARY_LEN 4
+    #define BINARY_FMT "%04d"
+
+public:
+    string multiply(string num1, string num2){
+        if( num1.empty() || num1 == "0" || num2.empty() || num2 == "0" )
+            return "0";
+        if( num1.size() &gt; num2.size() )
+            return multiplyString(num2,num1);
+        else
+            return multiplyString(num1,num2);
+    }
+
+private:
+
+    string multiplyString(const string& num1, const string& num2){
+        arr1.clear();
+        arr2.clear();
+        res.clear();
+
+        bool positive1 = converFromString(num1, arr1), positive2 = converFromString(num2, arr2);
+
+        for( int i = 0; i &lt; (int)arr1.size(); ++i)
+        {
+            int v(0), j(0), k(i), a(arr1[i]);
+            arr3.clear();
+
+            // operator *
+            for(; v &gt; 0 || j &lt; (int)arr2.size(); ++j, v /= BINARY_CAP)
+            {   v += (j &lt; (int)arr2.size()) ? a * arr2[j] : 0 ;
+                arr3.push_back( v % BINARY_CAP);
+            }
+
+            // operator +
+            v = 0;
+            j = 0;
+            for(; v &gt; 0 || j &lt; (int)arr3.size(); ++j, ++k, v /= BINARY_CAP)
+            {
+                v += ( j &lt; (int)arr3.size()) ? arr3[j] : 0 ;
+
+                if( k &lt; (int)res.size() )
+                    v += res[k];
+                else
+                    res.push_back(0);
+
+                res[k] = v % BINARY_CAP;
+            }
+        }
+
+        return converToString(res, (positive1 == positive2));
+    }
+
+    string converToString(vector&lt;int&gt;& array, bool positive){
+        int len = array.size();
+        char* buf = new char[ len * BINARY_LEN +2 ];
+        char* pstr = buf;
+        if( !positive )
+            *pstr++ = '-';
+
+        pstr += sprintf( pstr, "%d", array[--len]);
+        for(; len &gt; 0; --len )
+            pstr += sprintf( pstr, BINARY_FMT, array[len-1]);
+
+        *pstr = '\0';
+
+        string r(buf);
+        delete [] buf;
+        return r;
+    }
+
+    bool converFromString(const string& num, vector&lt;int&gt;& array){
+        const char* pstart = num.c_str();
+        const char* pend = num.c_str() + num.size();
+        char buf[ BINARY_LEN+1 ] = {0};
+        int val;
+
+        bool positive = true;
+        if( *pstart == '-' )
+        {   positive = false;
+            ++pstart;
+        }
+
+        for( ; pstart &lt;  pend; pend -= BINARY_LEN)
+        {   if( pend &gt;= ( pstart + BINARY_LEN ) )
+                strncpy(buf, pend-BINARY_LEN, BINARY_LEN);
+            else
+            {   strncpy(buf, pstart, pend - pstart);
+                buf[pend - pstart] = '\0';
+            }
+
+            sscanf(buf,"%d",&val);
+            array.push_back(val);
+        }
+
+        return positive;
+    }
+
+    vector&lt;int&gt; arr1;
+    vector&lt;int&gt; arr2;
+    vector&lt;int&gt; arr3;
+    vector&lt;int&gt; res;
+};
+
+
+
+void test(string num1, string num2)
+{
+    cout &lt;&lt; "input: num1=" &lt;&lt; num1 &lt;&lt; ", num2=" &lt;&lt; num2;
+    string r = Solution().multiply(num1, num2);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("123", "456");
+}
+
+// Result
+//
+// 2022-11-16: Runtime 8ms 66.74% Memory 7MB 35.66%, https://leetcode.com/problems/multiply-strings/submissions/844574956/
+// 2023-02-17: Runtime 4ms 89.90% Memory 6.9MB 35.56%, https://leetcode.com/problems/multiply-strings/submissions/899804673/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: num1=123, num2=456; output: 56088;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

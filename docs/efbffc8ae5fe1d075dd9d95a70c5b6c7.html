@@ -1,0 +1,43 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>MachineFunction.h</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>MachineFunction.h</h1>
+            <h3></h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> </li><li><strong>BLOCK TAGS: </strong> <a href="../tags/LLVM-version.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-version</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<H3><a name="MF-GET-INFO-UPDATE-1" href="#TOC_MF-GET-INFO-UPDATE-1"><strong>getInfo</strong> changed in LLVM 17</a></H3><ul><a href="../tags/LLVM-version.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-version</a>&nbsp;</ul>
+<ul>
+	<li><strong>new code</strong> (LLVM 17)</li>
+	<br />
+	<pre><code>template&lt;typename Ty&gt;
+Ty *getInfo() {
+return static_cast&lt;Ty*&gt;(MFInfo);
+}	</code></pre>
+	<li><strong>old code</strong> (LLVM 14)</li>
+	<br />
+	<pre><code>template&lt;typename Ty&gt;
+Ty *getInfo() {
+if (!MFInfo)
+MFInfo = Ty::template create&lt;Ty&gt;(Allocator, *this);
+return static_cast&lt;Ty*&gt;(MFInfo);
+}	</code></pre>
+</ul>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

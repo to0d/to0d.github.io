@@ -1,0 +1,200 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT004901.cpp (Group Anagrams)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT004901.cpp (Group Anagrams)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-09-24</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0049.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0049</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_be2c4d83" href="#TOC_HEAD_be2c4d83">Problem 0049 <strong>Group Anagrams</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/group-anagrams/" target="_blank">https://leetcode.com/problems/group&ndash;anagrams/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>31.87</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_50321636" href="#TOC_HEAD_50321636">LT004901.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_fcce3b5b">LT0049 (name=Group Anagrams, ptag=Leetcode) &nbsp;<a href="../tags/LT0049.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0049</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_28519582"><a href="https://leetcode.com/problems/group-anagrams/" target="_blank">Group Anagrams &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0049.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0049</a></li>
+		<br />
+	</ul>
+	<p>
+		Given an array of strings, group anagrams together.
+	</p>
+	<p>
+		For example, given:
+		<code>[&quot;eat&quot;, &quot;tea&quot;, &quot;tan&quot;, &quot;ate&quot;, &quot;nat&quot;, &quot;bat&quot;]</code> ,
+	</p>
+	<p>
+		Return:
+	</p>
+	<pre><code>[
+["ate", "eat","tea"],
+["nat","tan"],
+["bat"]
+]	</code></pre>
+	<p>
+		<strong>Note:</strong>
+	</p>
+	<ol>
+		<li><p>
+		For the return value, each
+		<em>inner</em> list&#039;s elements must follow the lexicographic order.
+		<p></li>
+		<li>All inputs will be in lower&ndash;case.</li>
+		<br />
+	</ol>
+	<li><a name="HEAD_HIDDEN_6b7105e2">Better solution learn from other people &nbsp;<a href="../tags/LT0049.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0049</a></li>
+	<br />
+	<ul>
+		<li>std::sort(a,b)  ==&gt; 可以不加比较算子</li>
+		<li>unordered_map   ==&gt; 不用判断是否含有 pair, 直接 map[k].push_back(s)</li>
+		<br />
+	</ul>
+</ul>
+<p>
+	<strong>Main Code:</strong>
+</p>
+<pre><code>class Solution {
+public:
+vector&lt;vector&lt;string&gt;&gt; groupAnagrams(vector&lt;string&gt;& strs)
+{
+    unordered_map&lt;string, vector&lt;string&gt;&gt; groupMap;
+    for( auto s : strs)
+    {
+        string k = s;
+        std::sort(k.begin(), k.end());
+        groupMap[k].push_back(s);
+    }
+
+    vector&lt;vector&lt;string&gt;&gt; res;
+    for( auto pm : groupMap )
+    {
+        vector&lt;string&gt;& group = (pm).second;
+        std::sort( group.begin(), group.end());
+        res.push_back(group);
+    }
+    return res;
+}
+};</code></pre>
+	<H3><a name="HEAD_f4139c83" href="#TOC_HEAD_f4139c83">LT004901.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    vector&lt;vector&lt;string&gt;&gt; groupAnagrams(vector&lt;string&gt;& strs) {
+        map&lt;string, vector&lt;string&gt;&gt; gm;
+        char buf[10000];
+        for(auto str : strs) {
+            int len = str.length();
+            strncpy(buf, str.c_str(), len);
+            sort(buf, buf+len);
+            string key = string(buf, len);
+            gm[key].push_back(str);
+        }
+        vector&lt;vector&lt;string&gt;&gt; rst;
+        for( auto p : gm )
+            rst.push_back(p.second);
+        return rst;
+    }
+};
+
+
+void test(vector&lt;string&gt; strs)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(strs);
+    vector&lt;vector&lt;string&gt;&gt; r = Solution().groupAnagrams(strs);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({"eat","tea","tan","ate","nat","bat"});
+}
+
+// Result
+//
+// 2022-11-16: Runtime 105ms 15.88% Memory 20.8MB 46.99%, https://leetcode.com/problems/group-anagrams/submissions/844606184/
+// 2023-02-17: Runtime 51ms 37.14% Memory 20.8MB 35.19%, https://leetcode.com/problems/group-anagrams/submissions/899810760/
+// 2023-03-15: Runtime 39ms 64.38% Memory 20.8MB 47.40%, https://leetcode.com/problems/group-anagrams/submissions/915735096/
+// 2023-09-24: Runtime 40ms 31.87% Memory 20.47MB 16.29%, https://leetcode.cn/problems/group-anagrams/submissions/469190020/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [eat,tea,tan,ate,nat,bat]; output: [[bat],[eat,tea,ate],[tan,nat]];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

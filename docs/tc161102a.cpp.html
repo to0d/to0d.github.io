@@ -1,0 +1,126 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161102A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161102A.cpp</h1>
+            <h3>test c++ class: friend, const/static member</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Cxx-Class.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Class</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+class A
+{
+    friend class FriendOfA;
+    friend void print(A& a);
+
+    public:
+
+        A(int x);
+        A(const A& a);
+
+        ~A();
+
+    public:
+
+        A fun1(A a);
+        static void fun2(A& a);
+
+    private:
+        int mx;
+        static int ms;
+        const static int ms2;
+        const int   mc;
+        const int & mr;
+};
+
+int A::ms = 10;
+const int A::ms2 = 20;
+
+class FriendOfA
+{
+    public:
+
+        static void print(A& a)
+        {
+            std::cout &lt;&lt; "FriendOfA::print( ( A(" &lt;&lt;a.mx &lt;&lt; ") )" &lt;&lt; std::endl;
+        }
+};
+
+void A::fun2(A& a)
+{
+    std::cout &lt;&lt; "A::fun2( A(" &lt;&lt;a.mx &lt;&lt; ") )" &lt;&lt; std::endl;
+    std::cout &lt;&lt; "static A::ms("&lt;&lt;A::ms&lt;&lt;")" &lt;&lt; std::endl;
+    std::cout &lt;&lt; "const static A::ms2("&lt;&lt;A::ms2&lt;&lt;")" &lt;&lt; std::endl;
+    std::cout &lt;&lt; "const a.mc("&lt;&lt;a.mc&lt;&lt;")" &lt;&lt; std::endl;
+    std::cout &lt;&lt; "const ref a.mr("&lt;&lt;a.mr&lt;&lt;")" &lt;&lt; std::endl;
+}
+
+A A::fun1(A a)
+{
+    std::cout &lt;&lt; "A("&lt;&lt;mx&lt;&lt;").fun1( A(" &lt;&lt;a.mx &lt;&lt; ") )" &lt;&lt; std::endl;
+    return a;
+}
+
+A::A(int x): mx(x), mc(mx + 1), mr(mc)
+{
+    std::cout &lt;&lt; "A::A("&lt;&lt;mx&lt;&lt;")" &lt;&lt; std::endl;
+}
+
+A::A(const A& a):mx(a.mx), mc(mx + 1), mr(mc)
+{
+    std::cout &lt;&lt; "A::Copyof A("&lt;&lt;a.mx&lt;&lt;")" &lt;&lt; std::endl;
+}
+
+A::~A()
+{
+    std::cout &lt;&lt; "A::~A("&lt;&lt;mx&lt;&lt;")" &lt;&lt; std::endl;
+}
+
+void print(A& a)
+{
+std::cout &lt;&lt; "friend::print( ( A(" &lt;&lt;a.mx &lt;&lt; ") )" &lt;&lt; std::endl;
+}
+
+int main(void)
+{
+    A a(1);
+    A b(2);
+
+    A* pc = new A(a);
+
+    a.fun1(b);
+
+    delete pc;
+
+    std::cout &lt;&lt;"-----------static-----------------\n";
+    A::fun2(a);
+
+    std::cout &lt;&lt;"-----------friend-----------------\n";
+    print(a);
+    FriendOfA::print(a);
+
+    std::cout &lt;&lt; "output: done!" &lt;&lt; endl;
+
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

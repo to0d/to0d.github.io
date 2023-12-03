@@ -1,0 +1,86 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161102D.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161102D.cpp</h1>
+            <h3>test c++ Copy Constructer and Override Operator = 2</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Cxx-Operator.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Operator</a>&nbsp;<a href="../tags/override.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>override</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;stdio.h&gt;
+
+using namespace std;
+
+class A
+{
+    public:
+        A() {}
+        A(const A& a) { *this = a;  }
+
+        A& operator = ( const A& a );
+};
+
+
+A& A::operator =(const A&a)
+{
+    std::cout &lt;&lt; "Copy-";
+
+    if( this != &a)
+    {
+        std::cout &lt;&lt; "Yes";
+    }
+    else
+    {
+        std::cout &lt;&lt; "No";
+    }
+
+    return *this;
+}
+
+class B
+{
+    public:
+        B() {  std::cout &lt;&lt; "New-B;"; }
+
+};
+
+int main(void)
+{
+    {
+        std::cout &lt;&lt;"----------------------------------\n";
+
+        A a;
+        printf("%-20s:%-10s= ","a = a;","NO"); a = a; std::cout &lt;&lt;std::endl;
+        printf("%-20s:%-10s= ","A c(a);","Yes"); A c(a); std::cout &lt;&lt;std::endl;
+        printf("%-20s:%-10s= ","A b = a;","Yes"); A b = a; std::cout &lt;&lt;std::endl;
+    }
+
+    {
+        std::cout &lt;&lt;"----------------------------------\n";
+        printf("%-20s:%-10s= ","B b1[2]; ","Yes"); B b1[2]; std::cout &lt;&lt;std::endl;
+        printf("%-20s:%-10s= ","B b2[] = {B(),B()}; ","Yes"); B b2[] = {B(),B()}; std::cout &lt;&lt;std::endl;
+    }
+
+    std::cout &lt;&lt; "output: done!" &lt;&lt; endl;
+
+return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

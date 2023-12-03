@@ -1,0 +1,172 @@
+<html>
+	<head>
+		<meta charset="utf-8"></meta>
+		<title>java实现将汉字转为拼音&nbsp;itRed&nbsp;博客园</title>
+	</head>
+	<body>
+		<body>Original&nbsp;Link:&nbsp;
+			<b >
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017. All rights reserved - to0d@outlook.com, at Sat Jul 27 16:38:34 CST 2019</font>
+			</b>
+			<br>
+
+			<a href="https://www.cnblogs.com/itred/p/4060695.html" target="_blank">
+				<font color="red" size="3">java实现将汉字转为拼音&nbsp;&ndash;&nbsp;itRed&nbsp;&ndash;&nbsp;博客园</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="post">
+			<h2>
+				<a id="cb_post_title_url" href="https://www.cnblogs.com/itred/p/4060695.html">java实现将汉字转为拼音</a>
+			</h2>
+			<div id="cnblogs_post_body" class="blogpost-body">
+				<p>有时候为了方便操作程序的开发，需要将汉字转为拼音等操作。下面这个是自己结合网上的资料，加上自己在公司项目中的亲自实践。完整的实现了将汉字转为拼音的操作。这个Demo只是负责将其转换，在main方法中测试，在实际需要中，只需要调用这个类中的方法即可。本人也是在学习中总结，欢迎各位大神拍砖指教，本人邮箱：it_red@sina.com。转载本博客时请在文章明显位置标明文章出处（
+					<strong>
+						<a title="itRed的博客" href="http://www.cnblogs.com/itred" target="_blank">itRed的博客：http://www.cnblogs.com/itred</a>
+					</strong>
+					）。
+				</p>
+				<p>
+					<strong>首先贴出测试结果：</strong>
+				</p>
+				<p>
+					<img src="files/6d1620cf6fb557987482cf97b96cb64d.png"></img>
+				</p>
+				<p>
+					<strong>测试参数：</strong>
+				</p>
+				<p>
+					<span style="color: #00ff00;">汉字转换为拼音</span>
+				</p>
+				<p>
+					<span style="color: #00ff00;">汉字转换为拼音</span>
+				</p>
+				<p>&nbsp;&nbsp;
+					<strong>main测试方法的代码：</strong>
+				</p>
+				<div class="cnblogs_code">
+					<pre>
+<span style="color: #008080;">1</span> <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+</span><span style="color: #008080;">2</span>         System.out.println(ToFirstChar("汉字转换为拼音").toUpperCase()); <span style="color: #008000;">//</span><span style="color: #008000;">转为首字母大写</span>
+<span style="color: #008080;">3</span>         System.out.println(ToPinyin("汉字转换为拼音"<span style="color: #000000;">)); 
+</span><span style="color: #008080;">4</span>     }
+					</pre>
+				</div>
+				<p>&nbsp;</p>
+				<p>本功能的实现时利用java开源库，开发此程序需要一个jar包。本人用的是
+					<a title="pinyin4j.jar包下载" href="http://files.cnblogs.com/itred/%E6%8B%BC%E9%9F%B3%E5%8C%85.zip" target="_blank">pinyin4j&ndash;2.5.0.jar</a>
+					。网上可以直接下载，也可以在其官网进行下载。在此不祥述。如果实在不乐意，可以
+					<a title="pinyin4j.jar包下载" href="http://files.cnblogs.com/itred/%E6%8B%BC%E9%9F%B3%E5%8C%85.zip" target="_blank">点击下载</a>
+					将进行这个jar包的下载。
+				</p>
+				<p>
+					<strong>贴出实现该Demo的源码：</strong>
+				</p>
+				<div class="cnblogs_code">
+					<pre>
+<span style="color: #008080;"> 1</span> <span style="color: #0000ff;">package</span><span style="color: #000000;"> com.red.test;
+</span><span style="color: #008080;"> 2</span> 
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> net.sourceforge.pinyin4j.PinyinHelper;
+</span><span style="color: #008080;"> 4</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+</span><span style="color: #008080;"> 5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+</span><span style="color: #008080;"> 6</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+</span><span style="color: #008080;"> 7</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+</span><span style="color: #008080;"> 8</span> 
+<span style="color: #008080;"> 9</span> <span style="color: #008000;">/**</span>
+<span style="color: #008080;">10</span> <span style="color: #008000;"> * 汉字转换为拼音
+</span><span style="color: #008080;">11</span> <span style="color: #008000;"> * </span><span style="color: #808080;">@author</span><span style="color: #008000;"> Red
+</span><span style="color: #008080;">12</span>  <span style="color: #008000;">*/</span>
+<span style="color: #008080;">13</span> <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> PinyinDemo {
+</span><span style="color: #008080;">14</span>     <span style="color: #008000;">/**</span>
+<span style="color: #008080;">15</span> <span style="color: #008000;">     * 测试main方法
+</span><span style="color: #008080;">16</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> args
+</span><span style="color: #008080;">17</span>      <span style="color: #008000;">*/</span>
+<span style="color: #008080;">18</span>     <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+</span><span style="color: #008080;">19</span>         System.out.println(ToFirstChar("汉字转换为拼音").toUpperCase()); <span style="color: #008000;">//</span><span style="color: #008000;">转为首字母大写</span>
+<span style="color: #008080;">20</span>         System.out.println(ToPinyin("汉字转换为拼音"<span style="color: #000000;">)); 
+</span><span style="color: #008080;">21</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">22</span>     <span style="color: #008000;">/**</span>
+<span style="color: #008080;">23</span> <span style="color: #008000;">     * 获取字符串拼音的第一个字母
+</span><span style="color: #008080;">24</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> chinese
+</span><span style="color: #008080;">25</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@return</span>
+<span style="color: #008080;">26</span>      <span style="color: #008000;">*/</span>
+<span style="color: #008080;">27</span>     <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String ToFirstChar(String chinese){         
+</span><span style="color: #008080;">28</span>         String pinyinStr = ""<span style="color: #000000;">;  
+</span><span style="color: #008080;">29</span>         <span style="color: #0000ff;">char</span>[] newChar = chinese.toCharArray();  <span style="color: #008000;">//</span><span style="color: #008000;">转为单个字符</span>
+<span style="color: #008080;">30</span>         HanyuPinyinOutputFormat defaultFormat = <span style="color: #0000ff;">new</span><span style="color: #000000;"> HanyuPinyinOutputFormat(); 
+</span><span style="color: #008080;">31</span> <span style="color: #000000;">        defaultFormat.setCaseType(HanyuPinyinCaseType.LOWERCASE);  
+</span><span style="color: #008080;">32</span> <span style="color: #000000;">        defaultFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);  
+</span><span style="color: #008080;">33</span>         <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; newChar.length; i++<span style="color: #000000;">) {  
+</span><span style="color: #008080;">34</span>             <span style="color: #0000ff;">if</span> (newChar[i] &gt; 128<span style="color: #000000;">) {  
+</span><span style="color: #008080;">35</span>                 <span style="color: #0000ff;">try</span><span style="color: #000000;"> {  
+</span><span style="color: #008080;">36</span>                     pinyinStr += PinyinHelper.toHanyuPinyinStringArray(newChar[i], defaultFormat)[0].charAt(0<span style="color: #000000;">);  
+</span><span style="color: #008080;">37</span>                 } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (BadHanyuPinyinOutputFormatCombination e) {  
+</span><span style="color: #008080;">38</span> <span style="color: #000000;">                    e.printStackTrace();  
+</span><span style="color: #008080;">39</span> <span style="color: #000000;">                }  
+</span><span style="color: #008080;">40</span>             }<span style="color: #0000ff;">else</span><span style="color: #000000;">{  
+</span><span style="color: #008080;">41</span>                 pinyinStr +=<span style="color: #000000;"> newChar[i];  
+</span><span style="color: #008080;">42</span> <span style="color: #000000;">            }  
+</span><span style="color: #008080;">43</span> <span style="color: #000000;">        }  
+</span><span style="color: #008080;">44</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> pinyinStr;  
+</span><span style="color: #008080;">45</span> <span style="color: #000000;">    }  
+</span><span style="color: #008080;">46</span>    
+<span style="color: #008080;">47</span>     <span style="color: #008000;">/**</span>
+<span style="color: #008080;">48</span> <span style="color: #008000;">     * 汉字转为拼音
+</span><span style="color: #008080;">49</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> chinese
+</span><span style="color: #008080;">50</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@return</span>
+<span style="color: #008080;">51</span>      <span style="color: #008000;">*/</span>
+<span style="color: #008080;">52</span>     <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String ToPinyin(String chinese){          
+</span><span style="color: #008080;">53</span>         String pinyinStr = ""<span style="color: #000000;">;  
+</span><span style="color: #008080;">54</span>         <span style="color: #0000ff;">char</span>[] newChar =<span style="color: #000000;"> chinese.toCharArray();  
+</span><span style="color: #008080;">55</span>         HanyuPinyinOutputFormat defaultFormat = <span style="color: #0000ff;">new</span><span style="color: #000000;"> HanyuPinyinOutputFormat();  
+</span><span style="color: #008080;">56</span> <span style="color: #000000;">        defaultFormat.setCaseType(HanyuPinyinCaseType.LOWERCASE);  
+</span><span style="color: #008080;">57</span> <span style="color: #000000;">        defaultFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);  
+</span><span style="color: #008080;">58</span>         <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; newChar.length; i++<span style="color: #000000;">) {  
+</span><span style="color: #008080;">59</span>             <span style="color: #0000ff;">if</span> (newChar[i] &gt; 128<span style="color: #000000;">) {  
+</span><span style="color: #008080;">60</span>                 <span style="color: #0000ff;">try</span><span style="color: #000000;"> {  
+</span><span style="color: #008080;">61</span>                     pinyinStr += PinyinHelper.toHanyuPinyinStringArray(newChar[i], defaultFormat)[0<span style="color: #000000;">];  
+</span><span style="color: #008080;">62</span>                 } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (BadHanyuPinyinOutputFormatCombination e) {  
+</span><span style="color: #008080;">63</span> <span style="color: #000000;">                    e.printStackTrace();  
+</span><span style="color: #008080;">64</span> <span style="color: #000000;">                }  
+</span><span style="color: #008080;">65</span>             }<span style="color: #0000ff;">else</span><span style="color: #000000;">{  
+</span><span style="color: #008080;">66</span>                 pinyinStr +=<span style="color: #000000;"> newChar[i];  
+</span><span style="color: #008080;">67</span> <span style="color: #000000;">            }  
+</span><span style="color: #008080;">68</span> <span style="color: #000000;">        }  
+</span><span style="color: #008080;">69</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> pinyinStr;  
+</span><span style="color: #008080;">70</span> <span style="color: #000000;">    }  
+</span><span style="color: #008080;">71</span> }
+					</pre>
+				</div>
+				<p>&nbsp;</p>
+				<div class="cnblogs_code">
+					<pre>
+<span style="color: #000000;">   作者：<strong><span style="color: #0000ff;">itRed</span></strong>
+   出处：<a title="itRed的博客" href="http://www.cnblogs.com/itred" target="_blank"><strong><span style="color: #0000ff;">http://itred.cnblogs.com</span></strong></a>
+   版权声明：本文版权归作者和博客园共有，欢迎转载，但未经作者同意必须保留此段说明，且在文章明显位置给出原文链接，否则保留追究法律责任的权利。</span>
+					</pre>
+				</div>
+				<p>&nbsp;</p>
+			</div>
+			<div id="MySignature"></div>
+			<div class="clear"></div>
+			<div id="blog_post_info_block">
+				<div id="BlogPostCategory"></div>
+				<div id="EntryTag"></div>
+				<div id="blog_post_info"></div>
+				<div class="clear"></div>
+				<div id="post_next_prev"></div>
+			</div>
+			<p class="postfoot">posted&nbsp;on
+				<span id="post-date">2014&ndash;10&ndash;29&nbsp;22:01</span>
+				<a href='https://www.cnblogs.com/itred/'>itRed</a>
+				阅读(
+				<span id="post_view_count">...</span>
+				)&nbsp;评论(
+				<span id="post_comment_count">...</span>
+				)
+				<a href ="https://i.cnblogs.com/EditPosts.aspx?postid=4060695" rel="nofollow">编辑</a>
+				<a onclick="AddToWz(4060695);return false;" href="https://www.cnblogs.com/#">收藏</a>
+			</p>
+		</div>
+	</body>
+</html>

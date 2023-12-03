@@ -1,0 +1,253 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>ptrace.h</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>ptrace.h</h1>
+        <h3>ptrace usr include</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-06-04</time>
+            <i><a href="../tags/ptrace.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ptrace</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="PTRACE_REQUEST_1" href="#TOC_PTRACE_REQUEST_1">40 ptrace requests</a></H3><ul><a href="../tags/PTRACE_REQUEST.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PTRACE_REQUEST</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_f2fcee99">PTRACE_TRACEME (ptag=PTRACE_REQUEST, Indicate that the process making this request should be traced) &nbsp;<a href="../tags/PTRACE_TRACEME.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PTRACE_TRACEME</a>&nbsp;<a href="../tags/PTRACE_REQUEST.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PTRACE_REQUEST</a></li>
+	<br />
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l">Request</td>
+		<td id="mdt_td_l">Description</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="../tags/PTRACE_TRACEME.html" target="_blank"><i class="fa fa-tags fa-fw"></i>PTRACE_TRACEME</a></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_PEEKTEXT</td>
+		<td id="mdt_td_l">Return the word in the process&#039;s <strong>text space</strong> at address ADDR.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_PEEKDATA</td>
+		<td id="mdt_td_l">Return the word in the process&#039;s <strong>data space</strong> at address ADDR.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_PEEKUSER</td>
+		<td id="mdt_td_l">Return the word in the process&#039;s <strong>user area</strong> at offset ADDR.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_POKETEXT</td>
+		<td id="mdt_td_l"><font color="red">Write</font> the word DATA into the process&#039;s <strong>text space</strong> at address ADDR.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_POKEDATA</td>
+		<td id="mdt_td_l"><font color="red">Write</font> the word DATA into the process&#039;s <strong>data space</strong> at address ADDR.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_POKEUSER</td>
+		<td id="mdt_td_l"><font color="red">Write</font> the word DATA into the process&#039;s <strong>user area</strong> at offset ADDR.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_CONT</td>
+		<td id="mdt_td_l">Continue the process.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_KILL</td>
+		<td id="mdt_td_l">Kill the process.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_SINGLESTEP</td>
+		<td id="mdt_td_l">Single step the process.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_GETREGS</td>
+		<td id="mdt_td_l">Get all general purpose registers used by a processes.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_SETREGS</td>
+		<td id="mdt_td_l"><font color="red">Set</font> all <strong>general purpose registers</strong> used by a processes.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_GETFPREGS</td>
+		<td id="mdt_td_l">Get all floating point registers used by a processes.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_SETFPREGS</td>
+		<td id="mdt_td_l"><font color="red">Set</font> all <strong>floating point registers</strong> used by a processes.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_ATTACH</td>
+		<td id="mdt_td_l">Attach to a process that is already running.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_DETACH</td>
+		<td id="mdt_td_l">Detach from a process attached to with PTRACE_ATTACH.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_GETFPXREGS</td>
+		<td id="mdt_td_l">Get all <strong>extended floating point registers</strong> used by a processes.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_SETFPXREGS</td>
+		<td id="mdt_td_l"><font color="red">Set</font> all <strong>extended floating point registers</strong> used by a processes.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_SYSCALL</td>
+		<td id="mdt_td_l">Continue and stop at the next entry to or return from syscall.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_GET_THREAD_AREA</td>
+		<td id="mdt_td_l">Get a TLS entry in the GDT.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_SET_THREAD_AREA</td>
+		<td id="mdt_td_l">Change a TLS entry in the GDT.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_ARCH_PRCTL</td>
+		<td id="mdt_td_l">Access TLS data.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_SYSEMU</td>
+		<td id="mdt_td_l">Continue and stop at the next syscall, it will not be executed.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_SYSEMU_SINGLESTEP</td>
+		<td id="mdt_td_l">Single step the process, the next syscall will not be executed.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_SINGLEBLOCK</td>
+		<td id="mdt_td_l">Execute process until next taken branch.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_SETOPTIONS</td>
+		<td id="mdt_td_l">Set ptrace filter options.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_GETEVENTMSG</td>
+		<td id="mdt_td_l">Get last ptrace message.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_GETSIGINFO</td>
+		<td id="mdt_td_l">Get siginfo for process.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_SETSIGINFO</td>
+		<td id="mdt_td_l">Set new siginfo for process.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_GETREGSET</td>
+		<td id="mdt_td_l">Get register content.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_SETREGSET</td>
+		<td id="mdt_td_l">Set register content.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_SEIZE</td>
+		<td id="mdt_td_l">Like PTRACE_ATTACH, but do not force tracee to trap and do not affect</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_INTERRUPT</td>
+		<td id="mdt_td_l">Trap seized tracee.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_LISTEN</td>
+		<td id="mdt_td_l">Wait for next group event.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_PEEKSIGINFO</td>
+		<td id="mdt_td_l">Retrieve siginfo_t structures without removing signals from a queue.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_GETSIGMASK</td>
+		<td id="mdt_td_l">Get the mask of blocked signals.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_SETSIGMASK</td>
+		<td id="mdt_td_l">Change the mask of blocked signals.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_SECCOMP_GET_FILTER</td>
+		<td id="mdt_td_l">Get seccomp BPF filters.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">PTRACE_SECCOMP_GET_METADATA</td>
+		<td id="mdt_td_l">Get seccomp BPF filter metadata.</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">PTRACE_GET_SYSCALL_INFO</td>
+		<td id="mdt_td_l">Get information about system call.</td>
+	</tr>
+</table>
+<br>
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

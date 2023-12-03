@@ -1,0 +1,206 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT004401.cpp (Wildcard Matching)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT004401.cpp (Wildcard Matching)</h1>
+        <h3>Runtime Error</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2017-06-20</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0044.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0044</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/String-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>String-OJ</a>&nbsp;<a href="../tags/Wildcard.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Wildcard</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_7a383964" href="#TOC_HEAD_7a383964">Problem 0044 <strong>Wildcard Matching</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/wildcard-matching/" target="_blank">https://leetcode.com/problems/wildcard&ndash;matching/</a></li>
+	<li>Difficulty <strong>Hard</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_67ba9871" href="#TOC_HEAD_67ba9871">LT004401.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_c86116">LT0044 (name=Wildcard Matching, ptag=Leetcode) &nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0044.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0044</a>&nbsp;<a href="../tags/String-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>String-OJ</a>&nbsp;<a href="../tags/Wildcard.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Wildcard</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_2e16bd3c"><a href="https://leetcode.com/problems/wildcard-matching/" target="_blank">Wildcard Matching &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0044.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0044</a></li>
+		<br />
+	</ul>
+	<p>
+		Implement wildcard pattern matching with support for <code>&#039;?&#039;</code> and <code>&#039;*&#039;</code> .
+	</p>
+	<pre><code>'?' Matches any single character.
+'*' Matches any sequence of characters (including the empty sequence).
+
+The matching should cover the &lt;b&gt;entire&lt;/b&gt; input string (not partial).
+
+The function prototype should be:
+bool isMatch(const char *s, const char *p)
+
+Some examples:
+isMatch("aa","a") -&gt; false
+isMatch("aa","aa") -&gt; true
+isMatch("aaa","aa") -&gt; false
+isMatch("aa", "*") -&gt; true
+isMatch("aa", "a*") -&gt; true
+isMatch("ab", "?*") -&gt; true
+isMatch("aab", "c*a*b") -&gt; false	</code></pre>
+</ul>
+	<H3><a name="HEAD_eb94743e" href="#TOC_HEAD_eb94743e">LT004401.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+bool isMatch2(const char* s, const char* p, int i, int j, int* matched, int row) {
+
+    //printf("isMatch2: %s, %s\n", s+i, p+j);
+
+    if( matched[i*row+j] == 1)
+    {   return false;
+    }
+
+    matched[i*row+j] = 1;
+
+    char c = *(p+j);
+
+    if( c == '\0' )
+    {   return *(s+i) == '\0';
+    }
+
+MATCH: if( c == '*' )
+    {
+        char c2 = *(p+j+1);
+        //printf("c2: %c\n", c2);
+
+        if( c2 == '\0' )
+            return true;
+
+        if( c2 == '?' )
+        {
+            if( *(s+i) == '\0' )
+                return false;
+            else
+            {   i++;
+                j++;
+                goto MATCH;
+            }
+        }
+
+        if( c2 == '*' )
+        {   j++;
+            goto MATCH;
+        }
+
+        for( ; *(s+i) != '\0' ; ++i )
+        {   if( *(s+i) == c2 && isMatch2(s, p,i+1,j+2, matched, row))
+                return true;
+        }
+
+        return false;
+    }
+
+    if( *(s+i) == '\0' )
+        return false;
+
+    if( c == '?' )
+        return isMatch2(s, p,i+1,j+1, matched, row);
+
+    return c == *(s+i) && isMatch2(s,p,i+1,j+1, matched, row);
+}
+
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+    #define ROW   500
+    #define COL   500
+        static int matched[ROW*COL];
+        memset(matched, 0, sizeof(matched));
+        return isMatch2(s.c_str(), p.c_str(), 0, 0, matched, ROW);
+    }
+};
+
+
+void test(string s, string p)
+{
+    cout &lt;&lt; "input: s=" &lt;&lt; s &lt;&lt; ", p=" &lt;&lt; p;
+    bool r = Solution().isMatch(s, p);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test("aa", "a");
+}
+
+// Result
+//
+// 2022/11/16
+//    Runtime Error
+//</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: s=aa, p=a; output: 0;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

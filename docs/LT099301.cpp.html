@@ -1,0 +1,167 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT099301.cpp (Cousins in Binary Tree)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT099301.cpp (Cousins in Binary Tree)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-12-07</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0993.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0993</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_954fcaba" href="#TOC_HEAD_954fcaba">Problem 0993 <strong>Cousins in Binary Tree</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/cousins-in-binary-tree/" target="_blank">https://leetcode.com/problems/cousins&ndash;in&ndash;binary&ndash;tree/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_5be95b14" href="#TOC_HEAD_5be95b14">LT099301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_6fb99852">LT0993 (name=Cousins in Binary Tree, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0993.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0993</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_263a870"><a href="https://leetcode.com/problems/cousins-in-binary-tree/" target="_blank">Cousins in Binary Tree &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0993.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0993</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_f47c0061" href="#TOC_HEAD_f47c0061">LT099301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+public:
+    bool isCousins(TreeNode* root, int x, int y) {
+        m_x = x, m_y = y, m_deep_x = -1, m_deep_y = -1;
+        m_parent_x = NULL, m_parent_y = NULL;
+        _find(NULL, root, 0);
+        if( m_deep_x == -1 || m_deep_y == -1 )
+            return false;
+        //cout &lt;&lt; "xd="&lt;&lt; m_deep_x &lt;&lt; ", yd="&lt;&lt; m_deep_y
+        //     &lt;&lt; ", xp=" &lt;&lt; ((m_parent_x == NULL) ? -1 : m_parent_x-&gt;val)
+        //     &lt;&lt; ", yp=" &lt;&lt; ((m_parent_y == NULL) ? -1 : m_parent_y-&gt;val) &lt;&lt; endl;
+        return (m_deep_x == m_deep_y) && m_parent_x != m_parent_y;
+    }
+
+    void _find(TreeNode* parent, TreeNode* node, int deep)
+    {
+        if(node-&gt;val == m_x )
+        {   m_deep_x    = deep;
+            m_parent_x  = parent;
+        }
+        else if(node-&gt;val == m_y)
+        {   m_deep_y    = deep;
+            m_parent_y  = parent;
+        }
+
+        if( m_deep_x != -1 && m_deep_y != -1 )
+            return;
+
+        if(node-&gt;left != NULL)
+            _find(node, node-&gt;left, deep+1);
+
+        if( m_deep_x != -1 && m_deep_y != -1 )
+            return;
+
+        if(node-&gt;right != NULL)
+            _find(node, node-&gt;right, deep+1);
+    }
+
+    int m_x;
+    int m_y;
+    int m_deep_x;
+    int m_deep_y;
+    TreeNode* m_parent_x;
+    TreeNode* m_parent_y;
+};
+
+
+void test(TreeNode* root, int x, int y)
+{
+    cout &lt;&lt; "input: x=" &lt;&lt; x &lt;&lt; ", y=" &lt;&lt; y &lt;&lt; ", tree=";
+    outputTree(root);
+    bool r = Solution().isCousins(root, x, y);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(makeTree("{1,2,3,4}"), 4, 3);
+}
+
+
+// Result
+//
+// 2022-12-07: Runtime 0ms 100% Memory 10.9MB 78.10%, https://leetcode.com/problems/cousins-in-binary-tree/submissions/855887564/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: x=4, y=3, tree=[1,2,3,4]; output: 0;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT022701.cpp (Basic Calculator II)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT022701.cpp (Basic Calculator II)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-30</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0227.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0227</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_fcac7ff4" href="#TOC_HEAD_fcac7ff4">Problem 0227 <strong>Basic Calculator II</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/basic-calculator-ii/" target="_blank">https://leetcode.com/problems/basic&ndash;calculator&ndash;ii/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>74.27</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_f40b72f8" href="#TOC_HEAD_f40b72f8">LT022701.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_57621ce6">LT0227 (name=Basic Calculator II, ptag=Leetcode) &nbsp;<a href="../tags/LT0227.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0227</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_5fbec611"><a href="https://leetcode.com/problems/basic-calculator-ii/" target="_blank">Basic Calculator II &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0227.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0227</a></li>
+		<br />
+	</ul>
+	<p>
+		Implement a basic calculator to evaluate a simple expression string.
+	</p>
+	<p>
+		The expression string contains only <strong>non&ndash;negative</strong>
+		integers, <code>+</code> , <code>&ndash;</code> , <code>*</code> , <code>/</code> operators and empty spaces. The integer division should truncate toward zero.
+	</p>
+	<p>
+		You may assume that the given expression is always valid.
+	</p>
+	<p>
+		Some examples:
+	</p>
+	<pre><code>"3+2*2" = 7
+" 3/2 " = 1
+" 3+5 / 2 " = 5	</code></pre>
+	<p>
+		<strong>Note:</strong> <strong>Do not</strong> use the <code>eval</code> built&ndash;in library function.
+	</p>
+</ul>
+	<H3><a name="HEAD_e30daa45" href="#TOC_HEAD_e30daa45">LT022701.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+int op_level(char c){
+    switch(c)
+    {   case '+':
+        case '-': return 10;
+        case '*':
+        case '/': return 20;
+    }
+    return 0;
+}
+
+int cal(const char* s) {
+    static char op_stack[4];
+    static int  val_stack[4];
+    int op_size = 0, val_size = 0, val = 0, vn = 0;
+    char c;
+    while( ( c=*s ) != '\0' || vn &gt; 0 || op_size &gt; 0 )
+    {   if( c != '\0' )
+        {   s++;
+            if( c &lt;= '9' && c &gt;= '0' )
+            {   val *= 10;
+                val += c - '0';
+                vn ++;
+                continue;
+            }
+            if( c == ' ' )
+                continue;
+        }
+
+        if( vn &gt; 0 )
+        {   val_stack[val_size++] = val;    // push val
+            val = 0;
+            vn = 0;
+        }
+
+        int level = op_level(c);
+        while( op_size &gt; 0 && level &lt;= op_level(op_stack[op_size-1]) )
+        {   char op = op_stack[--op_size];
+            int b = val_stack[--val_size], a = val_stack[--val_size];   // pop val
+            switch(op)
+            {   case '+':  a += b; break;
+                case '-':  a -= b; break;
+                case '*':  a *= b; break;
+                case '/':  a /= b; break;
+            }
+            val_stack[val_size++] = a;      // push val
+        }
+
+        if( level &gt; 0 )
+            op_stack[op_size++] = c;        // push op
+    }
+
+    return val_size &gt; 0 ? val_stack[val_size-1] : 0; // Top val
+}
+
+class Solution {
+public:
+    int calculate(string s) {
+        return cal(s.c_str());
+    }
+};
+
+
+void test(string s)
+{
+    cout &lt;&lt; "input: " &lt;&lt; s;
+    int r = Solution().calculate(s);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("3+2*2");
+    test(" 3/2 ");
+    test(" 3+5 / 2 ");
+}
+
+// Result
+//
+// 2022-11-19: Runtime 32ms 41.15% Memory 8.4MB 100%, https://leetcode.com/problems/basic-calculator-ii/submissions/846323854/
+// 2023-02-20: Runtime 86ms 12.28% Memory 10.6MB 71.43%, https://leetcode.com/problems/basic-calculator-ii/submissions/901594075/
+// 2023-07-30: Runtime 16ms 74.27% Memory 8.95MB 99.85%, https://leetcode.cn/problems/basic-calculator-ii/submissions/451505063/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 3+2*2; output: 7;
+input:  3/2 ; output: 1;
+input:  3+5 / 2 ; output: 5;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

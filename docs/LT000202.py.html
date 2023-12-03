@@ -1,0 +1,142 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT000202.py (Add Two Numbers)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT000202.py (Add Two Numbers)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-06</time>
+            <i><a href="../tags/LT0002.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0002</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/List-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>List-OJ</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/PY-import.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PY-import</a>&nbsp;<a href="../tags/Python-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Python-Code</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_ffd4d6ba" href="#TOC_HEAD_ffd4d6ba">Problem 0002 <strong>Add Two Numbers</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/add-two-numbers/" target="_blank">https://leetcode.com/problems/add&ndash;two&ndash;numbers/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>41.9</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_e644b22b" href="#TOC_HEAD_e644b22b">LT000202.py</a></H3>
+<pre><code>#!/usr/bin/python
+#coding=UTF-8
+
+import sys
+sys.path.append('/mnt/c/data/project/ctl/include/lt_help/py')
+
+from list import *
+
+class Solution(object):
+    def addTwoNumbers(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        phead = None
+        pnode = None
+        val = 0
+
+        while (l1 != None) or (l2 != None ) or (val &gt; 0) :
+            if l1 != None :
+                val = val + l1.val
+                l1 = l1.next
+            if l2 != None :
+                val = val + l2.val
+                l2 = l2.next
+            if pnode == None :
+                pnode = ListNode(val % 10)
+                phead = pnode
+            else :
+                pnode.next = ListNode(val % 10)
+                pnode = pnode.next
+            val = val / 10
+
+        return phead
+
+
+l1 = makeList(2, 4, 3)
+l2 = makeList(5, 6, 4)
+r = Solution().addTwoNumbers(l1,l2)
+
+print "input: l1=",
+outputList(l1)
+print ", l2=",
+outputList(l2)
+print "; output: ",
+outputList(r)
+
+# Result
+#
+# 2023-02-06: Runtime 63 ms 41.9% Memory 13.5 49.75%, https://leetcode.com/problems/add-two-numbers/submissions/892674641/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: l1= [ 2 -&gt; 4 -&gt; 3 ] , l2= [ 5 -&gt; 6 -&gt; 4 ] ; output:  [ 7 -&gt; 0 -&gt; 8 ]</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

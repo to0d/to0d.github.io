@@ -1,0 +1,161 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT050401.cpp (Base 7)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT050401.cpp (Base 7)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-24</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0504.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0504</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_9b0ac95e" href="#TOC_HEAD_9b0ac95e">Problem 0504 <strong>Base 7</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/base-7/" target="_blank">https://leetcode.com/problems/base&ndash;7/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_f183237a" href="#TOC_HEAD_f183237a">LT050401.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_162790f6">LT0504 (name=Base 7, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0504.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0504</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_931cfb88"><a href="https://leetcode.com/problems/base-7/" target="_blank">Base 7 &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0504.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0504</a></li>
+		<br />
+	</ul>
+	<p>
+		Given an integer num, return a string of its base 7 representation.
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input: num = 100
+Output: "202"	</code></pre>
+	<p>
+		Example 2:
+	</p>
+	<pre><code>Input: num = -7
+Output: "-10"	</code></pre>
+	<p>
+		Constraints:
+	</p>
+	<pre><code>-107 &lt;= num &lt;= 107	</code></pre>
+</ul>
+	<H3><a name="HEAD_3165ebc7" href="#TOC_HEAD_3165ebc7">LT050401.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    string convertToBase7(int num) {
+        if( num == 0)
+            return "0";
+
+        static char buf[128];
+        int pos = sizeof(buf);
+        bool neg = false;
+        if( num &lt; 0 )
+        {   neg = true;
+            num = -num;
+        }
+
+        for(; num &gt; 0; num /= 7)
+            buf[--pos] = '0' + num%7;
+
+        if(neg)
+            buf[--pos] = '-';
+
+        return string(buf+pos, sizeof(buf) - pos);
+    }
+};
+
+
+
+void test(int num)
+{
+    cout &lt;&lt; "input: " &lt;&lt; num &lt;&lt; "; output: ";
+    string r = Solution().convertToBase7(num);
+    cout &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(0);
+    test(100);
+}
+
+// Result
+//
+// 2023-02-24: Runtime 0ms 100% Memory 6MB 13.86%, https://leetcode.com/problems/base-7/submissions/904148966/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 0; output: 0;
+input: 100; output: 202;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>2016-10-05 Pro Git book.html</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md2.css">
+        <link rel="stylesheet" href="css/inote_md_tb1.css">
+        
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div id="in-header">
+            <h1>2016-10-05 Pro Git book.html</h1>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Git.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/Git.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git</a>&nbsp;<a href="../tags/Git-Directory.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git-Directory</a>&nbsp;<a href="../tags/Git-FileMode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git-FileMode</a>&nbsp;<a href="../tags/Git-ObjectType.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git-ObjectType</a>&nbsp;<a href="../tags/Git-master.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git-master</a>&nbsp;<a href="../tags/Hash.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hash</a>&nbsp;<a href="../tags/SHA.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>SHA</a>&nbsp;<a href="../tags/SHA-1.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>SHA-1</a>&nbsp;<a href="../tags/git-cat-file.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>git-cat-file</a>&nbsp;<a href="../tags/git-hash-object.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>git-hash-object</a>&nbsp;<a href="../tags/git-update-index.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>git-update-index</a>&nbsp;<a href="../tags/git-write-tree.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>git-write-tree</a>&nbsp;<a href="../tags/plumbing.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>plumbing</a>&nbsp;<a href="../tags/porcelain.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>porcelain</a>&nbsp;<a href="../tags/setRelatedTags.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>setRelatedTags</a>&nbsp;</li></ul>
+            <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">Erro, 看前一段内容 </a></li>
+</ol>
+</div>
+            <hr/>
+        </div>
+        	<H2><a name="HEAD_2d96db1" href="#TOC_HEAD_2d96db1">1. 起步</a></H2>
+	<H3><a name="HEAD_342dfc5e" href="#TOC_HEAD_342dfc5e">1.3 Git 基础</a></H3>
+<ul>
+	<li>Git <strong>直接记录快照，而非差异比较</strong></li>
+	<li>Git 保证完整性</li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_607a4932">Git 使用 <strong>SHA&ndash;1</strong> 计算校验和  &nbsp;<a href="../tags/SHA-1.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>SHA-1</a></li>
+		<li><a name="HEAD_HIDDEN_848edb75"> <font color="red">@RULE{ (setRelatedTags &#039;(nt:SHA nt:Git)) }</font>&nbsp;<a href="../tags/Git.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git</a>&nbsp;<a href="../tags/SHA.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>SHA</a>&nbsp;<a href="../tags/setRelatedTags.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>setRelatedTags</a></li>
+	</ul>
+	<li>Git 一般只添加数据</li>
+	<br />
+	<li>Git 有三种状态</li>
+	<ul>
+		<li>committed (已提交)</li>
+		<li>modified (已修改)</li>
+		<li>staged (已暂存)</li>
+		<br />
+	</ul>
+</ul>
+	<H2><a name="HEAD_42724649" href="#TOC_HEAD_42724649">10. Git 内部原理</a></H2>
+<blockquote>
+	<p>
+	从根本上来讲 Git <em>是一个内容寻址 (content–addressable)</em> <strong>文件系统</strong> , 并在此之上提供了一个版本控制系统的用户界面。
+	</p>
+	<p>
+	</p>
+</blockquote>
+	<H3><a name="HEAD_6dca956b" href="#TOC_HEAD_6dca956b">10.1 底层命令和高层命令</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_d5d6aa39">plumbing (底层命令)  &nbsp;<a href="../tags/Git.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git</a>&nbsp;<a href="../tags/plumbing.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>plumbing</a></li>
+	<blockquote>
+		<p>
+		这些命令被设计成能以 <strong>UNIX 命令行的风格</strong> 连接在一起，抑或藉由脚本调用，来完成工作。
+		</p>
+		<p>
+		</p>
+	</blockquote>
+	<li><a name="HEAD_HIDDEN_e5e34fa1">porcelain (高层命令) &nbsp;<a href="../tags/Git.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git</a>&nbsp;<a href="../tags/porcelain.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>porcelain</a></li>
+	<br />
+	<li><a name="HEAD_HIDDEN_372d6ae3">.git 目录 &nbsp;<a href="../tags/Git-Directory.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git-Directory</a></li>
+	<br />
+	<pre><code>$ ls -F1
+HEAD                ===&gt; 目前被检出的分支
+config*                  ===&gt; 项目特有的配置选项
+description              ===&gt; 仅供 GitWeb 程序使用
+hooks/                   ===&gt; 包含客户端或服务端的钩子脚本
+info/                    ===&gt; 包含一个全局性排除 (global exclude) 文件   .gitignore
+objects/            ===&gt;  所有数据内容
+refs/               ===&gt;  指向数据(分支)的提交对象的指针
+index               ===&gt;  文件保存暂存区信息	</code></pre>
+</ul>
+	<H3><a name="HEAD_57ca2553" href="#TOC_HEAD_57ca2553">10.2 Git 对象</a></H3>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_8d86f733" href="#HEAD_8d86f733"><strong>git hash&ndash;object</strong> (将任意数据保存于 .git 目录) </a></li>
+	<li><a name="TOC_HEAD_57ab1b71" href="#HEAD_57ab1b71"><strong>git cat&ndash;file</strong> (从 Git 那里取回数据) </a></li>
+	<li><a name="TOC_HEAD_e949f939" href="#HEAD_e949f939">tree object (树对象) </a></li>
+	<li><a name="TOC_HEAD_b1c2aaba" href="#HEAD_b1c2aaba">创建树对象</a></li>
+</menu>
+
+</div>
+	<H4><a name="HEAD_8d86f733" href="#TOC_HEAD_8d86f733"><strong>git hash&ndash;object</strong> (将任意数据保存于 .git 目录)</a></H4><ul><a href="../tags/git-hash-object.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>git-hash-object</a>&nbsp;</ul>
+<pre><code>&gt; echo 'test content' | git hash-object -w --stdin
+                                        |     |
+                                        |     |
+                                        |     从标准输入读取内容,若不指定此选项，则须在命令尾部给出待存储文件的路径
+                                        |
+                                        命令存储数据对象
+                        ||
+                        || 命令输出一个
+                        || 长度为 40 个字符的校验和
+                        vv
+==&gt; d670460b4b4aece5915caf5c68d12f560a9fe3e4      ==&gt;  SHA–1 哈希值
+
+&gt; find .git/objects -type f
+==&gt; .git/objects/d6/70460b4b4aece5915caf5c68d12f560a9fe3e4</code></pre>
+<ul>
+	<li><a name="HEAD_HIDDEN_12672b4d">git&ndash;hash&ndash;object (ptag=plumbing) &nbsp;<a href="../tags/Hash.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hash</a>&nbsp;<a href="../tags/git-hash-object.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>git-hash-object</a>&nbsp;<a href="../tags/plumbing.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>plumbing</a></li>
+	<br />
+</ul>
+	<H4><a name="HEAD_57ab1b71" href="#TOC_HEAD_57ab1b71"><strong>git cat&ndash;file</strong> (从 Git 那里取回数据)</a></H4><ul><a href="../tags/git-cat-file.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>git-cat-file</a>&nbsp;</ul>
+<pre><code>&gt; git cat-file -p d670460b4b4aece5915caf5c68d12f560a9fe3e4
+==&gt; test content</code></pre>
+<ul>
+	<li><strong>–p</strong> : 选项可指示该命令自动判断内容的类型</li>
+	<li><strong>&ndash;t</strong> : 内部存储的任何对象类型</li>
+	<br />
+	<pre><code>&gt; git cat-file -t d670460b4b4aece5915caf5c68d12f560a9fe3e4
+==&gt; blob    ===&gt; 数据对象 (blob object)	</code></pre>
+	<li><a name="HEAD_HIDDEN_298bc279">blob object (数据对象) &nbsp;<a href="../tags/Git-ObjectType.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git-ObjectType</a></li>
+	<br />
+	<li><a name="HEAD_HIDDEN_629dca98">git&ndash;cat&ndash;file (ptag=plumbing) &nbsp;<a href="../tags/git-cat-file.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>git-cat-file</a>&nbsp;<a href="../tags/plumbing.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>plumbing</a></li>
+	<br />
+</ul>
+	<H4><a name="HEAD_e949f939" href="#TOC_HEAD_e949f939">tree object (树对象)</a></H4><ul><a href="../tags/Git-ObjectType.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git-ObjectType</a>&nbsp;</ul>
+<pre><code>Git ===&gt; 简化的UNIX 文件系统
+树对象 ===&gt; 目录
+数据对象 ===&gt; inodes 或文件内容</code></pre>
+<ul>
+	<li><a name="HEAD_HIDDEN_80150a1"><strong>git cat&ndash;file &ndash;p &quot;master&circ;{tree}&quot;</strong> (master 分支上最新的提交所指向的树对象)  &nbsp;<a href="../tags/Git-master.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git-master</a>&nbsp;<a href="../tags/git-cat-file.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>git-cat-file</a></li>
+	<br />
+	<pre><code>masterˆ{tree}   表示 master 分支上最新的提交所指向的树对象	</code></pre>
+</ul>
+	<H4><a name="HEAD_b1c2aaba" href="#TOC_HEAD_b1c2aaba">创建树对象</a></H4>
+<ul>
+	<li><a name="HEAD_HIDDEN_218e3f56">创建文件暂存区 &nbsp;<a href="../tags/git-update-index.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>git-update-index</a></li>
+	<br />
+	<pre><code>git update-index --add --cacheinfo 100644 83baae61804e65cc73a7201a7252750c76066a30 test.txt
+                    |       |         |                 |                            |
+                    |       |         v                 v                            v
+                    |       |    普通文件模式         SHA–1 指针                   文件名
+                    |       |
+                    |    添加的文件位于 Git 数据库中
+                    |    而不是位于当前目录
+                    |
+                此前该文件并不在暂存区	</code></pre>
+	<ul>
+		<li><a name="HEAD_HIDDEN_78f3534b">Git 文件模式 &nbsp;<a href="../tags/Git-FileMode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git-FileMode</a></li>
+		<ul>
+			<li>100644 普通文件</li>
+			<li>100755 可执行文件</li>
+			<li>120000 符号链接</li>
+			<br />
+		</ul>
+		<li><a name="HEAD_HIDDEN_2aa79cd3">git&ndash;update&ndash;index (ptag=plumbing) &nbsp;<a href="../tags/git-update-index.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>git-update-index</a>&nbsp;<a href="../tags/plumbing.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>plumbing</a></li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_96d530d1">将暂存区内容写入一个树对象 &nbsp;<a href="../tags/git-write-tree.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>git-write-tree</a></li>
+	<br />
+	<pre><code>git write-tree d8329fc1cc938780ffdd9f94e0d364e0ea74f579	</code></pre>
+	<ul>
+		<li><a name="HEAD_HIDDEN_bae3e729">Erro, 看前一段内容 &nbsp;<a href="../tags/git-write-tree.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>git-write-tree</a> <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></li>
+		<br />
+		<li><a name="HEAD_HIDDEN_19c58191">git&ndash;write&ndash;tree (ptag=plumbing) &nbsp;<a href="../tags/git-write-tree.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>git-write-tree</a>&nbsp;<a href="../tags/plumbing.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>plumbing</a></li>
+		<br />
+	</ul>
+</ul>
+    
+        <hr>
+        <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+        <font color="#000080" size="1">&copy; 2017-2023 Todd</font><br>
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    <b><a href="#HEAD_todo"><font color="red">TODO: 1</font></a></b><br>﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_2d96db1" href="#HEAD_2d96db1">1. 起步</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_342dfc5e" href="#HEAD_342dfc5e">1.3 Git 基础</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_42724649" href="#HEAD_42724649">10. Git 内部原理</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_6dca956b" href="#HEAD_6dca956b">10.1 底层命令和高层命令</a></li>
+		<li><a name="TOC_HEAD_57ca2553" href="#HEAD_57ca2553">10.2 Git 对象</a></li>
+	</menu>
+
+</div>
+
+    </font>
+    </div>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

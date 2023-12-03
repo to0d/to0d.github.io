@@ -1,0 +1,229 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT013401.cpp (Gas Station)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT013401.cpp (Gas Station)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-11-18</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0134.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0134</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/std-accumulate.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-accumulate</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_6d850670" href="#TOC_HEAD_6d850670">Problem 0134 <strong>Gas Station</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/gas-station/" target="_blank">https://leetcode.com/problems/gas&ndash;station/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>51.14</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_4e8bf993" href="#TOC_HEAD_4e8bf993">LT013401.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_a607c1e2">LT0134 (name=Gas Station, ptag=Leetcode) &nbsp;<a href="../tags/LT0134.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0134</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_4916e756"><a href="https://leetcode.com/problems/gas-station/" target="_blank">Gas Station &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0134.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0134</a></li>
+		<br />
+	</ul>
+	<p>
+		There are <em>N</em> gas stations along a circular route, where the amount of gas at station <em>i</em> is <code>gas[i]</code> .
+	</p>
+	<p>
+		You have a car with an unlimited gas tank and it costs <code>cost[i]</code> of gas to travel from station <em>i</em> to its next station (*i* +1). You begin the journey with an empty tank at one of the gas stations.
+	</p>
+	<p>
+		Return the starting gas station&#039;s index if you can travel around the circuit once, otherwise return &ndash;1.
+	</p>
+	<p>
+		<strong>Note:</strong>
+	</p>
+	<p>
+		The solution is guaranteed to be unique.
+	</p>
+</ul>
+	<H3><a name="HEAD_17f7b660" href="#TOC_HEAD_17f7b660">LT013401.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+
+    class GasPosition
+    {
+    public:
+        int gas;
+        int position;
+        GasPosition(int g, int p) : gas(g), position(p) {};
+    };
+
+public:
+
+    int canCompleteCircuit(vector&lt;int&gt;& gas, vector&lt;int&gt;& cost) {
+
+        int count = gas.size();
+        if( count == 0 || ( accumulate(gas.begin(),gas.end(),0) &lt; accumulate(cost.begin(),cost.end(),0)))
+            return -1;
+
+        vector&lt;GasPosition&gt; gs;
+        for(int i = 0 ; i &lt; count; ++i )
+        {   gs.push_back(GasPosition(gas[i], i));
+            gs.push_back(GasPosition(-cost[i], i));
+        }
+
+        while( gs.size() &gt; 1 )
+        {
+            GasPosition reverseGas(0, -1);
+            int ncout = gs.size() / 2;
+            int index = 0;
+
+            if( !canComplete(gs[0].gas + gs[1].gas) )
+            {
+                reverseGas.position = gs[0].position;
+                for( ;index &lt; ncout; ++index)
+                {
+                    int ncost = gs[2*index].gas + gs[2*index + 1].gas;
+                    if( !canComplete(ncost))
+                        reverseGas.gas += ncost;
+                    else
+                        break;
+                }
+            }
+
+            bool lastCanComplete = false;
+            int lastIndex = -1;
+
+            for( ;index &lt; ncout; ++index)
+            {
+                int ncost = gs[2*index].gas + gs[2*index + 1].gas;
+                if( lastCanComplete != canComplete(ncost) )
+                {
+                    ++lastIndex;
+                    gs[lastIndex].position = gs[2*index].position;
+                    gs[lastIndex].gas = ncost;
+                    lastCanComplete = !lastCanComplete;
+                }
+                else
+                    gs[lastIndex].gas += ncost;
+            }
+
+            if( (int)gs.size() &gt; (lastIndex+1) )
+                gs.erase( gs.begin() + lastIndex + 1, gs.end());
+
+            if( reverseGas.position &gt;= 0 )
+            {
+                if( lastIndex &lt; 0 || canComplete(gs[lastIndex].gas) )
+                {
+                    gs.push_back(reverseGas);
+                    ++lastIndex;
+                }
+                else
+                    gs[lastIndex].gas +=  reverseGas.gas;
+            }
+            else
+            {
+                if( lastIndex &gt; 0 && canComplete( gs[lastIndex].gas ) )
+                {
+                    gs[0].gas +=  gs[lastIndex].gas;
+                    gs[0].position +=  gs[lastIndex].position;
+                    gs.erase( gs.begin() + lastIndex, gs.end());
+                }
+            }
+        }
+
+        return gs[0].position;
+    }
+
+    bool canComplete(int gas) { return gas &gt;= 0; }
+};
+
+
+
+void test(vector&lt;int&gt; gas, vector&lt;int&gt; cost)
+{
+    cout &lt;&lt; "input: gas=";
+    outputVector(gas);
+    cout &lt;&lt; ", cost=";
+    outputVector(cost);
+    int r = Solution().canCompleteCircuit(gas, cost);
+    cout &lt;&lt; "; output: ";
+    cout &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({1,2,3,4,5}, {3,4,5,1,2});
+}
+
+// Result
+//
+// 2022-11-18: Runtime 91ms 51.14% Memory 78.5MB 8.84%, https://leetcode.com/problems/gas-station/submissions/845833435/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: gas=[1,2,3,4,5], cost=[3,4,5,1,2]; output: 3;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

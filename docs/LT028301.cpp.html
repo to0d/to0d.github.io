@@ -1,0 +1,162 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT028301.cpp (Move Zeroes)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT028301.cpp (Move Zeroes)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-12</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0283.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0283</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_14a060a3" href="#TOC_HEAD_14a060a3">Problem 0283 <strong>Move Zeroes</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/move-zeroes/" target="_blank">https://leetcode.com/problems/move&ndash;zeroes/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>92.3</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_cea2882e" href="#TOC_HEAD_cea2882e">LT028301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_2c1ec155">LT0283 (name=Move Zeroes, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0283.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0283</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_d84799d2"><a href="https://leetcode.com/problems/move-zeroes/" target="_blank">Move Zeroes &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0283.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0283</a></li>
+		<br />
+	</ul>
+	<p>
+		Given an array
+		<code>nums</code> , write a function to move all
+		<code>0</code> &#039;s to the end of it while maintaining the relative order of the non&ndash;zero elements.
+	</p>
+	<p>
+		For example, given
+		<code>nums  = [0, 1, 0, 3, 12]</code> , after calling your function,
+		<code>nums</code> should be
+		<code>[1, 3, 12, 0, 0]</code> .
+	</p>
+	<p>
+		<strong>Note</strong> :
+	</p>
+	<ol>
+		<li><p>
+		You must do this <strong>in&ndash;place</strong>
+		without making a copy of the array.
+		<p></li>
+		<li>Minimize the total number of operations.</li>
+		<br />
+	</ol>
+</ul>
+	<H3><a name="HEAD_7ebbca7b" href="#TOC_HEAD_7ebbca7b">LT028301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    void moveZeroes(vector&lt;int&gt;& nums) {
+        int size = nums.size(), pos = 0;
+        for(int i = 0; i &lt; size; ++i)
+        {   int num = nums[i];
+            if( num != 0 )
+            {   if( i != pos )
+                    nums[pos] = num;
+                ++pos;
+            }
+        }
+        for(; pos &lt; size; ++pos)
+            nums[pos] = 0;
+    }
+};
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout&lt;&lt; "input: ";
+    outputVector(nums);
+    Solution().moveZeroes(nums);
+    cout&lt;&lt; "; output: ";
+    outputVector(nums);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({0,1,0,3,12});
+}
+
+// Result
+//
+// 2022-11-19: Runtime 109ms 36.85% Memory 15MB 80.11%, https://leetcode.com/problems/move-zeroes/submissions/846315428/
+// 2023-02-22: Runtime 98ms 37.89% Memory 15.3MB 38.81%, https://leetcode.com/problems/move-zeroes/submissions/902732880/
+// 2023-02-27: Runtime 23ms 77.66% Memory 19.2MB 65.28%, https://leetcode.com/problems/move-zeroes/submissions/905737593/
+// 2023-03-12: Runtime 19ms 92.3% Memory 19.3MB 17.13%, https://leetcode.com/problems/move-zeroes/submissions/913663162/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [0,1,0,3,12]; output: [1,3,12,0,0];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

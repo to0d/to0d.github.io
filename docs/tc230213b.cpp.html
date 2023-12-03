@@ -1,0 +1,191 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC230213B.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC230213B.cpp</h1>
+            <h3>dynamic_cast</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/dynamic_cast.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>dynamic_cast</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+using namespace std;
+
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+using namespace std;
+
+class Parents
+{
+public:
+    Parents(string n="Parent"){ name = n;}
+    virtual ~Parents(){}
+
+    virtual void Speak()
+    {
+        cout &lt;&lt; "\tI am " &lt;&lt; name &lt;&lt; ", I love my children." &lt;&lt; endl;
+    }
+    void Work()
+    {
+        cout &lt;&lt; "\tI am " &lt;&lt; name &lt;&lt;", I need to work for my family." &lt;&lt; endl;;
+    }
+protected:
+    string name;
+};
+
+
+class Children : public Parents
+{
+public:
+    Children(string n="Child"):Parents(n){ }
+
+    virtual ~Children(){}
+
+    virtual void Speak()
+    {
+        cout &lt;&lt; "\tI am " &lt;&lt; name &lt;&lt; ", I love my parents." &lt;&lt; endl;
+    }
+    /*
+    **Children inherit Work() method from parents,
+    **it could be treated like part-time job.
+    */
+    void Study()
+    {
+        cout &lt;&lt; "\tI am " &lt;&lt; name &lt;&lt; ", I need to study for future." &lt;&lt; endl;;
+    }
+
+private:
+    //string name; //Inherit "name" member from Parents
+};
+
+class Stranger
+{
+public:
+    Stranger(string n="stranger"){name = n;}
+    virtual ~Stranger(){}
+
+    void Self_Introduce()
+    {
+        cout &lt;&lt; "\tI am a stranger" &lt;&lt; endl;
+    }
+    void Speak()
+    {
+        //cout &lt;&lt; "I am a stranger" &lt;&lt; endl;
+        cout &lt;&lt; "\tDo not talk to "&lt;&lt; name &lt;&lt; ", who is a stranger." &lt;&lt; endl;
+    }
+private:
+    string name;
+};
+
+int main(void)
+{
+    /******* cast from child class to base class *******/
+    cout &lt;&lt; "dynamic_cast from child class to base class:" &lt;&lt; endl;
+    Children * daughter_d = new Children("Daughter who pretend to be my mother");
+    Parents * mother_d = dynamic_cast&lt;Parents*&gt; (daughter_d); //right, cast with polymorphism
+    mother_d-&gt;Speak();
+    mother_d-&gt;Work();
+    //mother_d-&gt;Study(); //Error, no such method
+
+    cout &lt;&lt; "static_cast from child class to base class:" &lt;&lt; endl;
+    Children * son_s = new Children("Son who pretend to be my father");
+    Parents * father_s = static_cast&lt;Parents*&gt; (son_s); //right, cast with polymorphism
+    father_s-&gt;Speak();	
+    father_s-&gt;Work();
+    //father_s-&gt;Study(); //Error, no such method
+
+    cout &lt;&lt; endl;
+
+    /******* cast from base class to child class *******/	
+    cout &lt;&lt; "dynamic_cast from base class to child class:" &lt;&lt; endl;
+    Parents * father_d = new Parents("Father who pretend to be a my son");
+    Children * son_d = dynamic_cast&lt;Children*&gt; (father_d); //no error, but not safe
+    if (son_d)
+    {
+        son_d-&gt;Speak();
+        son_d-&gt;Study();
+    }
+    else cout &lt;&lt; "\t[null]" &lt;&lt; endl;
+
+    cout &lt;&lt; "static_cast from base class to child class:" &lt;&lt; endl;
+    Parents * mother_s = new Parents("Mother who pretend to be a my daugher");
+    Children * daughter_s = static_cast&lt;Children*&gt; (mother_s);  //no error, but not safe
+    if (daughter_s)
+    {
+        daughter_s-&gt;Speak();
+        daughter_s-&gt;Study();
+    }
+    else cout &lt;&lt; "\t[null]" &lt;&lt; endl;
+
+    cout &lt;&lt; endl;
+
+    /******* cast between non-related class *******/	
+    cout &lt;&lt; "dynamic_cast to non-related class:" &lt;&lt; endl;
+    Stranger* stranger_d = dynamic_cast&lt;Stranger*&gt; (daughter_d);
+    if (stranger_d)
+    {
+        stranger_d-&gt;Self_Introduce();
+        stranger_d-&gt;Speak();	
+    }
+    else cout &lt;&lt;"\t[null]"&lt;&lt;endl;
+
+    //Stranger* stranger_s = static_cast&lt;Stranger*&gt; (son_s);    //Error, invalid cast
+
+    cout &lt;&lt; "reinterpret_cast to non-related class:" &lt;&lt; endl;
+    Stranger* stranger_r = reinterpret_cast&lt;Stranger*&gt; (son_s);
+    if (stranger_r)
+    {
+        stranger_d-&gt;Self_Introduce();
+        //stranger_d-&gt;Speak();	//This line would cause program crush,
+        //as "name" could not be found corretly.
+    }
+    else cout &lt;&lt; "\t[null]" &lt;&lt; endl;
+
+    cout &lt;&lt; endl;
+
+    /******* cast back*******/
+    cout &lt;&lt; "use dynamic_cast to cast back from static_cast:" &lt;&lt; endl;
+    Children* child_s = dynamic_cast&lt;Children*&gt; (father_s);
+    if (child_s)
+    {
+        child_s-&gt;Speak();
+        child_s-&gt;Work();
+    }
+    else cout &lt;&lt; "\t[null]" &lt;&lt; endl;
+
+    //cout&lt;&lt;typeid(stranger_r).name()&lt;&lt;endl;
+
+    cout &lt;&lt; "use dynamic_cast to cast back from reinterpret_cast:" &lt;&lt; endl;
+    Children* child_r = dynamic_cast&lt;Children*&gt; (stranger_r);
+    if (child_r)
+    {
+        child_r-&gt;Speak();
+        child_r-&gt;Work();
+    }
+    else cout &lt;&lt; "\t[null]" &lt;&lt; endl;
+
+    delete daughter_d;
+    delete son_s;
+    delete father_d;
+    delete mother_s;
+
+    std::cout &lt;&lt; "output: done!" &lt;&lt; endl;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

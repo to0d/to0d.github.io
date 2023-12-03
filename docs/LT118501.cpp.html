@@ -1,0 +1,147 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT118501.cpp (Day of the Week)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT118501.cpp (Day of the Week)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-12-12</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1185.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1185</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/128684.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>闰年</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_bba964e6" href="#TOC_HEAD_bba964e6">Problem 1185 <strong>Day of the Week</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/day-of-the-week/" target="_blank">https://leetcode.com/problems/day&ndash;of&ndash;the&ndash;week/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ebc6b0ce" href="#TOC_HEAD_ebc6b0ce">LT118501.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_a0298dd8">LT1185 (name=Day of the Week, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1185.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1185</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_4974976c"><a href="https://leetcode.com/problems/day-of-the-week/" target="_blank">Day of the Week &ndash; Leetcode</a> &nbsp;<a href="../tags/LT1185.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1185</a></li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_917bed27"><a href="LT115401.cpp.html" target="_blank">LT115401.cpp</a> &nbsp;<a href="../tags/LT1185.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1185</a>&nbsp;<a href="../tags/Ref.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Ref</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_488d431b" href="#TOC_HEAD_488d431b">LT118501.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+public:
+    string dayOfTheWeek(int day, int month, int year) {
+        // 1971-01-01 Friday
+        int dth = 0;
+        for(int y = 1971; y &lt; year; ++y)
+            dth += isLeapYear(y)? 366:365;
+        int* days = isLeapYear(year) ? days2 : days1;
+        for(int i = 1;i &lt; month; ++i)
+            dth += *(days+i-1);
+        dth += day;
+        return weeks[(dth+4)%7];
+    }
+    static int isLeapYear(int year)
+    {   return year%100 != 0 ? year%4 == 0 : year%400 == 0;
+    }
+    static vector&lt;string&gt; weeks;
+    static int days1[12];
+    static int days2[12];
+};
+
+vector&lt;string&gt; Solution::weeks = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+int Solution::days1[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+int Solution::days2[12] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+
+
+void test(int day, int month, int year)
+{
+    cout &lt;&lt; "input: day=" &lt;&lt; day &lt;&lt; ", month=" &lt;&lt; month &lt;&lt; ", year=" &lt;&lt; year;
+    string r = Solution().dayOfTheWeek(day, month, year);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test(31, 8, 2019);
+}
+
+
+// Result
+//
+// 2022-12-12: Runtime 0ms 100% Memory 6MB 25%, https://leetcode.com/problems/day-of-the-week/submissions/858388279/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: day=31, month=8, year=2019; output: Saturday;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT013001.cpp (Surrounded Regions)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT013001.cpp (Surrounded Regions)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-22</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0130.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0130</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_cbbf98dd" href="#TOC_HEAD_cbbf98dd">Problem 0130 <strong>Surrounded Regions</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/surrounded-regions/" target="_blank">https://leetcode.com/problems/surrounded&ndash;regions/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>59.24</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_faf92e8f" href="#TOC_HEAD_faf92e8f">LT013001.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_d6d28c35">LT0130 (name=Surrounded Regions, ptag=Leetcode) &nbsp;<a href="../tags/LT0130.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0130</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_f295c1e8"><a href="https://leetcode.com/problems/surrounded-regions/" target="_blank">Surrounded Regions &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0130.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0130</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a 2D board containing <code>&#039;X&#039;</code> and <code>&#039;O&#039;</code> , capture all regions surrounded by <code>&#039;X&#039;</code> .
+	</p>
+	<p>
+		A region is captured by flipping all <code>&#039;O&#039;</code> s into <code>&#039;X&#039;</code> s in that surrounded region.
+	</p>
+	<p>
+		For example,
+	</p>
+	<pre><code>X X X X
+X O O X
+X X O X
+X O X X	</code></pre>
+	<p>
+		After running your function, the board should be:
+	</p>
+	<pre><code>X X X X
+X X X X
+X X X X
+X O X X	</code></pre>
+</ul>
+	<H3><a name="HEAD_445ec95c" href="#TOC_HEAD_445ec95c">LT013001.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    void solve(vector&lt;vector&lt;char&gt;&gt;& board) {
+        int row = board.size();
+        if( row == 0 )
+            return;
+        int colum = board[0].size();
+        if ( colum == 0 )
+            return;
+
+        vector&lt;int&gt; visited( row*colum, 0);
+        for( int r = 0; r &lt; row; ++r)
+        {   for( int c = 0; c &lt; colum; ++c )
+            {   if( board[r][c] == 'O' && visited[r*colum + c] == 0 )
+                {
+                    int touchSide = 0;
+                    stack&lt;pair&lt;int,int&gt;&gt; locStack;
+                    vector&lt;pair&lt;int,int&gt;&gt; visitedLoc;
+                    locStack.push(make_pair(r,c));
+                    visited[r*colum + c] = 1;
+
+                    while( !locStack.empty())
+                    {
+                        pair&lt;int,int&gt; loc = locStack.top();
+                        locStack.pop();
+                        visitedLoc.push_back(loc);
+
+                        int xr(loc.first), xc(loc.second);
+                        if( xr == 0 || xr == (row-1) || xc == 0 || xc == (colum-1))
+                            ++touchSide;
+
+                        for( int i = 0; i &lt; 4; ++i )
+                        {
+                            int xxr = xr + addR[i];
+                            int xxc = xc + addC[i];
+                            if( xxr &lt; row && xxr &gt;= 0
+                            && xxc &lt; colum && xxc &gt;= 0
+                            && board[xxr][xxc] == 'O'
+                            && visited[xxr*colum + xxc] == 0)
+                            {
+                                locStack.push(make_pair(xxr,xxc));
+                                visited[xxr*colum + xxc] = 1;
+                            }
+                        }
+                    }
+
+                    if( touchSide == 0 )
+                    {
+                        for( auto& p : visitedLoc)
+                            board[p.first][p.second] = 'X';
+                    }
+                }
+            }
+        }
+    }
+
+    static int addR[4];
+    static int addC[4];
+};
+
+int Solution::addR[4] = {1,0,-1,0};
+int Solution::addC[4] = {0,1,0,-1};
+
+
+
+void test(vector&lt;vector&lt;char&gt;&gt; board)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(board);
+    cout &lt;&lt; "; output: ";
+    Solution().solve(board);
+    outputVector(board);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({{'X','X','X','X'},{'X','O','O','X'},{'X','X','O','X'},{'X','O','X','X'}});
+}
+
+// Result
+//
+// 2022-11-18: Runtime 17ms 42.52% Memory 12.2MB 15.62%, https://leetcode.com/problems/surrounded-regions/submissions/845838382/
+// 2023-02-22: Runtime 15ms 59.24% Memory 12.2MB 13.57%, https://leetcode.com/problems/surrounded-regions/submissions/902641366/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [[X,X,X,X],[X,O,O,X],[X,X,O,X],[X,O,X,X]]; output: [[X,X,X,X],[X,X,X,X],[X,X,X,X],[X,O,X,X]];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

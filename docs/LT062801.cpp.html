@@ -1,0 +1,218 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT062801.cpp (Maximum Product of Three Numbers)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT062801.cpp (Maximum Product of Three Numbers)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-24</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0628.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0628</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_24eacf43" href="#TOC_HEAD_24eacf43">Problem 0628 <strong>Maximum Product of Three Numbers</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/maximum-product-of-three-numbers/" target="_blank">https://leetcode.com/problems/maximum&ndash;product&ndash;of&ndash;three&ndash;numbers/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>40.68</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_42fc3fbd" href="#TOC_HEAD_42fc3fbd">LT062801.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_29dcfddb">LT0628 (name=Maximum Product of Three Numbers, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0628.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0628</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_2f6da5d"><a href="https://leetcode.com/problems/maximum-product-of-three-numbers/" target="_blank">Maximum Product of Three Numbers &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0628.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0628</a></li>
+		<br />
+	</ul>
+	<p>
+		Given an integer array nums, find three numbers whose product is maximum and return the maximum product.
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input: nums = [1,2,3]
+Output: 6	</code></pre>
+	<p>
+		Example 2:
+	</p>
+	<pre><code>Input: nums = [1,2,3,4]
+Output: 24	</code></pre>
+	<p>
+		Example 3:
+	</p>
+	<pre><code>Input: nums = [-1,-2,-3]
+Output: -6	</code></pre>
+</ul>
+<p>
+	 
+</p>
+<pre><code>Constraints:
+
+    3 &lt;= nums.length &lt;= 104
+    -1000 &lt;= nums[i] &lt;= 1000</code></pre>
+	<H3><a name="HEAD_6905a18a" href="#TOC_HEAD_6905a18a">LT062801.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int maximumProduct(vector&lt;int&gt;& nums) {
+        //  negative ------- 0 --------- positive
+        //  x1 x2     n3 n2 n1            m1 m2 m3
+        //
+        // max product
+        // 1: positive_num&gt;= 3 or negative_num &gt;= 2
+        //      a) negative_num &lt; 2: m1*m2*m3  m1&gt;m2&gt;m3&gt;0, max 3 positive numbers
+        //      b) negative_num &gt;=2: m1*m2*m3 or x1*x2*m1
+        // 2: positive_num = 2: m1*m2*n1  m1&gt;m2&gt;0, 2 positive numbers; n1&lt;0, max negative number
+        // 3: positive_num = 1: m1*x1*x2  m1&gt;0, positive number; x1&lt;x2&lt;0, min negative 2 numbers
+        // 4: positive_num = 0: n1*n2*n3  n3&lt;n2&lt;n1&lt;0, min 3 negative numbers
+        vector&lt;int&gt; m(3, 0);
+        vector&lt;int&gt; n(5, 0);
+        int positive_num=0, negative_num=0;
+        for(int v : nums)
+        {   if( v &gt; 0 )
+            {   if( positive_num &lt; 3 )
+                    m[positive_num++] = v;
+                else if(v &gt; m[0] )
+                    m[0] = v;
+                if(positive_num == 3)
+                    std::sort(m.begin(), m.end());
+            }
+            else
+            {   if( negative_num &lt; 5 )
+                    n[negative_num++] = v;
+                else if(v &lt; n[1])
+                    n[1] = v;
+                else if(v &gt; n[2])
+                    n[2] = v;
+                if(negative_num == 5)
+                    std::sort(n.begin(), n.end());
+            }
+        }
+
+        if( positive_num &lt; 3 )
+            std::sort(m.begin(), m.begin()+positive_num);
+
+        if( negative_num &lt; 5 )
+            std::sort(n.begin(), n.begin()+negative_num);
+
+        if( (positive_num + negative_num) &lt; 3 ) // too many zero
+            return 0;
+
+        int a = -1, b = -1;
+
+        if( positive_num &gt;= 3 )
+            a = m[0]*m[1]*m[2];
+
+        if( positive_num &gt; 0 && negative_num &gt;= 2)
+            b = m[positive_num-1]*n[0]*n[1];
+
+        if( a &gt; 0 || b &gt; 0)
+            return std::max(a, b);
+
+        if( positive_num == 2)
+            return m[0]*m[1]*n[negative_num-1];
+
+        if( positive_num == 1)
+            return m[0]*n[0]*n[1];
+
+        if( positive_num == 0)
+            return n[negative_num-3]*n[negative_num-2]*n[negative_num-1];
+
+        return 0;
+    }
+};
+
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    int r = Solution().maximumProduct(nums);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({1,2,3,4});
+    test({1,2,3,-2,-5});
+}
+
+
+// Result
+//
+// 2022-11-30: Runtime 124ms 5.10% Memory 27.7MB 44.72%, https://leetcode.com/problems/maximum-product-of-three-numbers/submissions/851858785/
+// 2023-02-24: Runtime 57ms 40.68% Memory 27.7MB 86.55%, https://leetcode.com/problems/maximum-product-of-three-numbers/submissions/904181424/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [1,2,3,4]; output: 24;
+input: [1,2,3,-2,-5]; output: 30;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

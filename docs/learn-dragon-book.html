@@ -1,0 +1,140 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>2015-12-24 Learn Compilers Principles Techniques Tools 2nd Version (dragon book).pdf</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">2015-12-24 Learn Compilers Principles Techniques Tools 2nd Version (dragon book).pdf</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time></time>
+            <i><a href="../tags/Compiler.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Compiler</a>&nbsp;<a href="../tags/13a1ed.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>龙书</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+<ul>
+	<li>COMMENTS:</li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_f3c8bd7a">2015&ndash;12&ndash;24 &tilde;2.4.1 </li>
+		<br />
+	</ul>
+</ul>
+	<H2><a name="HEAD_716413c9" href="#TOC_HEAD_716413c9">1 Introduction</a></H2>
+	<H3><a name="HEAD_84424f7d" href="#TOC_HEAD_84424f7d">1.1 Language Processors</a></H3>
+<ul>
+	<li>Figure 1.5: A language&ndash;processing system p27</li>
+	<br />
+	<pre><code>            |-------------|    modified      |-------------|     target
+source  ==&gt; |Preprocessor | ==&gt; source   ==&gt; |  Compilier  | ==&gt; assembly
+program     |-------------|     program      |-------------|     program
+                                                                    ||
+                                                                    vv
+    library files     |---------------|                      |--------------|
+    relocatable   ==&gt; | Linker/Loader | &lt;== relocatable  &lt;== |  Assembler   |
+    obiect files      |---------------|     machine code     |--------------|
+                            ||
+                            vv
+                    target machine code	</code></pre>
+</ul>
+	<H3><a name="HEAD_a8c388c0" href="#TOC_HEAD_a8c388c0">1.2 The Structure of a Compiler</a></H3>
+<ul>
+	<li>Two parts to mapping: <strong>analysis</strong> (front end) and <strong>synthesis</strong> (back end)</li>
+	<br />
+	<li>Figure 1.6: Phases of a compiler</li>
+	<br />
+	<p>
+		<img src="files/b812a293839ce20c946203f84d50f552.jpg" />
+	</p>
+</ul>
+	<H1><a name="HEAD_b9cb84c7" href="#TOC_HEAD_b9cb84c7">2 A Simple Synt ax&ndash;Direct ed Translator</a></H1>
+	<H2><a name="learn-dragon-book-2-parsing" href="#TOC_learn-dragon-book-2-parsing">2.4 Parsing</a></H2><ul></ul>
+	<H1><a name="HEAD_cd7ce12b" href="#TOC_HEAD_cd7ce12b">Code Generation</a></H1>
+	<H2><a name="HEAD_9be1088e" href="#TOC_HEAD_9be1088e">8.7 Peephole Optimization</a></H2><ul><a href="../tags/Peephole-opt.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Peephole-opt</a>&nbsp;</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    ﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_716413c9" href="#HEAD_716413c9">1 Introduction</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_84424f7d" href="#HEAD_84424f7d">1.1 Language Processors</a></li>
+		<li><a name="TOC_HEAD_a8c388c0" href="#HEAD_a8c388c0">1.2 The Structure of a Compiler</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_b9cb84c7" href="#HEAD_b9cb84c7">2 A Simple Synt ax&ndash;Direct ed Translator</a></b><br>
+	<menu>
+		<li><a name="TOC_learn-dragon-book-2-parsing" href="#learn-dragon-book-2-parsing">2.4 Parsing </a></li>
+	</menu>
+	<b><a name="TOC_HEAD_cd7ce12b" href="#HEAD_cd7ce12b">Code Generation</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_9be1088e" href="#HEAD_9be1088e">8.7 Peephole Optimization </a></li>
+	</menu>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

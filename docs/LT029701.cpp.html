@@ -1,0 +1,212 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT029701.cpp (Serialize and Deserialize Binary Tree)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT029701.cpp (Serialize and Deserialize Binary Tree)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-20</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0297.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0297</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_4e5cebf4" href="#TOC_HEAD_4e5cebf4">Problem 0297 <strong>Serialize and Deserialize Binary Tree</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/serialize-and-deserialize-binary-tree/" target="_blank">https://leetcode.com/problems/serialize&ndash;and&ndash;deserialize&ndash;binary&ndash;tree/</a></li>
+	<li>Difficulty <strong>Hard</strong></li>
+	<li><strong>95.4</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_29e6f891" href="#TOC_HEAD_29e6f891">LT029701.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_4515726">LT0297 (name=Serialize and Deserialize Binary Tree, ptag=Leetcode) &nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0297.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0297</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_68e5309d"><a href="https://leetcode.com/problems/serialize-and-deserialize-binary-tree/" target="_blank">Serialize and Deserialize Binary Tree &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0297.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0297</a></li>
+		<br />
+	</ul>
+	<p>
+		Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.
+	</p>
+	<p>
+		Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.
+	</p>
+	<p>
+		For example, you may serialize the following tree
+	</p>
+	<pre><code>1
+/ \
+2   3
+/ \
+4   5	</code></pre>
+	<p>
+		as
+		<code>&quot;[1,2,3,null,null,4,5]&quot;</code> , just the same as
+		<a href="https://leetcode.com/faq/#binary-tree" target="_blank">how LeetCode OJ serializes a binary tree</a>
+		. You do not necessarily need to follow this format, so please be creative and come up with different approaches yourself.
+	</p>
+	<p>
+		<strong>Note:</strong>
+		Do not use class member/global/static variables to store states. Your serialize and deserialize algorithms should be stateless.
+	</p>
+</ul>
+	<H3><a name="HEAD_ba35e45e" href="#TOC_HEAD_ba35e45e">LT029701.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+// **Pos-Order expression**
+//                                              _1
+//   - Leaf node marked as #xx                 / \
+//   - NULL child marked nothing              4   5
+//                                           /
+//   &gt; For example: `#2,,4,#5,1,`           2
+//
+class Codec {
+public:
+    string serialize(TreeNode* root) {
+        string output;
+        if( root != NULL )
+            makeSerialize(root, output);
+        return output;
+    }
+
+    TreeNode* deserialize(string data) {
+        if(data.length() == 0)
+            return NULL;
+
+        stack&lt;TreeNode*&gt; s;
+        const char *begin = data.c_str(), *end = begin + data.length();
+        while (begin &lt; end)
+        {   if( *begin == '#' )
+                s.push(createNode(++begin,end));
+            else
+            {   TreeNode* pnode = createNode(begin,end);
+                if( pnode != NULL )
+                {   pnode-&gt;right = s.top(); s.pop();
+                    pnode-&gt;left = s.top();  s.pop();
+                }
+                s.push(pnode);
+            }
+        }
+        return s.top();
+    }
+
+    void makeSerialize(TreeNode* node, string& output){
+        if( node-&gt;left == NULL && node-&gt;right == NULL )
+            output += "#";
+        else
+        {   if( node-&gt;left != NULL )
+                makeSerialize(node-&gt;left, output);
+            else
+                output += ",";
+
+            if( node-&gt;right != NULL )
+                makeSerialize(node-&gt;right, output);
+            else
+                output += ",";
+        }
+        output += to_string(node-&gt;val);
+        output += ",";
+    }
+
+    TreeNode* createNode(const char* &begin, const char* end) {
+        const char* pos = begin;
+        while( *begin != ',' && begin &lt; end)
+            ++begin;
+        ++begin;
+        int val;
+        if( pos == begin || sscanf(pos,"%d",&val) != 1)
+            return NULL;
+        return new TreeNode(val);
+    }
+};
+
+
+
+void test(TreeNode* root)
+{
+    cout &lt;&lt; "input: ";
+    outputTree(root);
+    string r = Codec().serialize(root);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(makeTree("{1,2,3,null,null,4,5}"));
+}
+
+// Result
+//
+// 2022-11-23: Runtime 98ms 24.77% Memory 28.1MB 99.7%, https://leetcode.com/problems/serialize-and-deserialize-binary-tree/submissions/848459349/
+// 2023-02-20: Runtime 41ms 95.4% Memory 28.2MB 99.4%, https://leetcode.com/problems/serialize-and-deserialize-binary-tree/submissions/901585303/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [1,2,3,null,null,4,5]; output: #2,#4,#5,3,1,;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

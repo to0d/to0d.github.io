@@ -1,0 +1,50 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161030A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161030A.cpp</h1>
+            <h3>test std::copy</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/std-copy.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-copy</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+int main( void )
+{
+
+    /* *************************************************************** */
+    /*  01) copy to ostream_iterator                                   */
+    /* *************************************************************** */
+    {
+
+        // required header files:
+        // - ostream_iterator      #include &lt;iterator&gt;
+        // - copy                  #include &lt;algorithm&gt;
+
+        vector&lt;int&gt; numbers = {1, 2, 3};
+
+        std::cout &lt;&lt; "output: ";
+        std::copy( numbers.begin(), numbers.end(), ostream_iterator&lt;int&gt;(cout, ","));
+        cout &lt;&lt; endl;
+    }
+
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

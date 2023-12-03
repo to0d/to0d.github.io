@@ -1,0 +1,2212 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>How debuggers work - Eli Bendersky s website</title></head>
+<body style="word-wrap:break-word">
+    <div class="header"><h1>How debuggers work - Eli Bendersky s website</h1></div>
+    <div><ul>
+        <li><b><a name="TOC_HEAD_0" href="#HEAD_0">How debuggers work - Part 1 Basics</a></b><br>
+        <li><b><a name="TOC_HEAD_1" href="#HEAD_1">How debuggers work - Part 2 Breakpoints</a></b><br>
+        <li><b><a name="TOC_HEAD_2" href="#HEAD_2">How debuggers work - Part 3 Debugging information</a></b><br>
+    </ul></div>
+
+        <hr/>
+        <H2><a name="HEAD_0" href="#TOC_HEAD_0">How debuggers work - Part 1 Basics</a></H2>
+        <div>
+<!-- AutoExtract Begin-->
+        <body>Original&nbsp;Link:&nbsp;
+            <a href="http://eli.thegreenplace.net/2011/01/23/how-debuggers-work-part-1" target="_blank">
+                <font color="red" size="3">How&nbsp;debuggers&nbsp;work:&nbsp;Part&nbsp;1&nbsp;&ndash;&nbsp;Basics&nbsp;&ndash;&nbsp;Eli&nbsp;Bendersky&#039;s&nbsp;website</font>
+            </a>
+            <p></p>
+        </body>
+   
+        <div class="container">
+            <div class="row">
+                <section id="content">
+                    <article>
+                     
+                        <div class="entry-content">
+                        
+                            <p>This&nbsp;is&nbsp;the&nbsp;first&nbsp;part&nbsp;in&nbsp;a&nbsp;series&nbsp;of&nbsp;articles&nbsp;on&nbsp;how&nbsp;debuggers&nbsp;work.&nbsp;I&#039;m&nbsp;still&nbsp;not&nbsp;sure&nbsp;how&nbsp;many&nbsp;articles&nbsp;the&nbsp;series&nbsp;will&nbsp;contain&nbsp;and&nbsp;what&nbsp;topics&nbsp;it&nbsp;will&nbsp;cover,&nbsp;but&nbsp;I&#039;m&nbsp;going&nbsp;to&nbsp;start&nbsp;with&nbsp;the&nbsp;basics.</p>
+                            <div class="section" id="in-this-part">
+                                <h3>In&nbsp;this&nbsp;part</h3>
+                                <p>I&#039;m&nbsp;going&nbsp;to&nbsp;present&nbsp;the&nbsp;main&nbsp;building&nbsp;block&nbsp;of&nbsp;a&nbsp;debugger&#039;s&nbsp;implementation&nbsp;on&nbsp;Linux&nbsp;&ndash;&nbsp;the
+                                    <tt class="docutils literal">ptrace</tt>
+                                    system&nbsp;call.&nbsp;All&nbsp;the&nbsp;code&nbsp;in&nbsp;this&nbsp;article&nbsp;is&nbsp;developed&nbsp;on&nbsp;a&nbsp;32&ndash;bit&nbsp;Ubuntu&nbsp;machine.&nbsp;Note&nbsp;that&nbsp;the&nbsp;code&nbsp;is&nbsp;very&nbsp;much&nbsp;platform&nbsp;specific,&nbsp;although&nbsp;porting&nbsp;it&nbsp;to&nbsp;other&nbsp;platforms&nbsp;shouldn&#039;t&nbsp;be&nbsp;too&nbsp;difficult.
+                                </p>
+                            </div>
+                            <div class="section" id="motivation">
+                                <h3>Motivation</h3>
+                                <p>To&nbsp;understand&nbsp;where&nbsp;we&#039;re&nbsp;going,&nbsp;try&nbsp;to&nbsp;imagine&nbsp;what&nbsp;it&nbsp;takes&nbsp;for&nbsp;a&nbsp;debugger&nbsp;to&nbsp;do&nbsp;its&nbsp;work.&nbsp;A&nbsp;debugger&nbsp;can&nbsp;start&nbsp;some&nbsp;process&nbsp;and&nbsp;debug&nbsp;it,&nbsp;or&nbsp;attach&nbsp;itself&nbsp;to&nbsp;an&nbsp;existing&nbsp;process.&nbsp;It&nbsp;can&nbsp;single&ndash;step&nbsp;through&nbsp;the&nbsp;code,&nbsp;set&nbsp;breakpoints&nbsp;and&nbsp;run&nbsp;to&nbsp;them,&nbsp;examine&nbsp;variable&nbsp;values&nbsp;and&nbsp;stack&nbsp;traces.&nbsp;Many&nbsp;debuggers&nbsp;have&nbsp;advanced&nbsp;features&nbsp;such&nbsp;as&nbsp;executing&nbsp;expressions&nbsp;and&nbsp;calling&nbsp;functions&nbsp;in&nbsp;the&nbsp;debbugged&nbsp;process&#039;s&nbsp;address&nbsp;space,&nbsp;and&nbsp;even&nbsp;changing&nbsp;the&nbsp;process&#039;s&nbsp;code&nbsp;on&ndash;the&ndash;fly&nbsp;and&nbsp;watching&nbsp;the&nbsp;effects.</p>
+                                <p>Although&nbsp;modern&nbsp;debuggers&nbsp;are&nbsp;complex&nbsp;beasts
+                                    <a href="http://eli.thegreenplace.net/#id7" id="id1" class="footnote-reference">[1]</a>, &nbsp;it&#039;s&nbsp;surprising&nbsp;how&nbsp;simple&nbsp;is&nbsp;the&nbsp;foundation&nbsp;on&nbsp;which&nbsp;they&nbsp;are&nbsp;built.&nbsp;Debuggers&nbsp;start&nbsp;with&nbsp;only&nbsp;a&nbsp;few&nbsp;basic&nbsp;services&nbsp;provided&nbsp;by&nbsp;the&nbsp;operating&nbsp;system&nbsp;and&nbsp;the&nbsp;compiler/linker,&nbsp;all&nbsp;the&nbsp;rest&nbsp;is&nbsp;just
+                                    <a class="reference external" href="http://en.wikipedia.org/wiki/Small_matter_of_programming">a&nbsp;simple&nbsp;matter&nbsp;of&nbsp;programming</a>
+                                    .
+                                </p>
+                            </div>
+                            <div class="section" id="linux-debugging-ptrace">
+                                <h3>Linux&nbsp;debugging&nbsp;&ndash;
+                                    <tt class="docutils literal">ptrace</tt>
+                                </h3>
+                                <p>The&nbsp;Swiss&nbsp;army&nbsp;knife&nbsp;of&nbsp;Linux&nbsp;debuggers&nbsp;is&nbsp;the
+                                    <tt class="docutils literal">ptrace</tt>
+                                    system&nbsp;call
+                                    <a href="http://eli.thegreenplace.net/#id8" id="id2" class="footnote-reference">[2]</a>
+                                    .&nbsp;It&#039;s&nbsp;a&nbsp;versatile&nbsp;and&nbsp;rather&nbsp;complex&nbsp;tool&nbsp;that&nbsp;allows&nbsp;one&nbsp;process&nbsp;to&nbsp;control&nbsp;the&nbsp;execution&nbsp;of&nbsp;another&nbsp;and&nbsp;to&nbsp;peek&nbsp;and&nbsp;poke&nbsp;at&nbsp;its&nbsp;innards
+                                    <a href="http://eli.thegreenplace.net/#id9" id="id3" class="footnote-reference">[3]</a>
+                                    .
+                                    <tt class="docutils literal">ptrace</tt>
+                                    can&nbsp;take&nbsp;a&nbsp;mid&ndash;sized&nbsp;book&nbsp;to&nbsp;explain&nbsp;fully,&nbsp;which&nbsp;is&nbsp;why&nbsp;I&#039;m&nbsp;just&nbsp;going&nbsp;to&nbsp;focus&nbsp;on&nbsp;some&nbsp;of&nbsp;its&nbsp;practical&nbsp;uses&nbsp;in&nbsp;examples.
+                                </p>
+                                <p>Let&#039;s&nbsp;dive&nbsp;right&nbsp;in.</p>
+                            </div>
+                            <div class="section" id="stepping-through-the-code-of-a-process">
+                                <h3>Stepping&nbsp;through&nbsp;the&nbsp;code&nbsp;of&nbsp;a&nbsp;process</h3>
+                                <p>I&#039;m&nbsp;now&nbsp;going&nbsp;to&nbsp;develop&nbsp;an&nbsp;example&nbsp;of&nbsp;running&nbsp;a&nbsp;process&nbsp;in&nbsp;&quot;traced&quot;&nbsp;mode&nbsp;in&nbsp;which&nbsp;we&#039;re&nbsp;going&nbsp;to&nbsp;single&ndash;step&nbsp;through&nbsp;its&nbsp;code&nbsp;&ndash;&nbsp;the&nbsp;machine&nbsp;code&nbsp;(assembly&nbsp;instructions)&nbsp;that&#039;s&nbsp;executed&nbsp;by&nbsp;the&nbsp;CPU.&nbsp;I&#039;ll&nbsp;show&nbsp;the&nbsp;example&nbsp;code&nbsp;in&nbsp;parts,&nbsp;explaining&nbsp;each,&nbsp;and&nbsp;in&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;article&nbsp;you&nbsp;will&nbsp;find&nbsp;a&nbsp;link&nbsp;to&nbsp;download&nbsp;a&nbsp;complete&nbsp;C&nbsp;file&nbsp;that&nbsp;you&nbsp;can&nbsp;compile,&nbsp;execute&nbsp;and&nbsp;play&nbsp;with.</p>
+                                <p>The&nbsp;high&ndash;level&nbsp;plan&nbsp;is&nbsp;to&nbsp;write&nbsp;code&nbsp;that&nbsp;splits&nbsp;into&nbsp;a&nbsp;child&nbsp;process&nbsp;that&nbsp;will&nbsp;execute&nbsp;a&nbsp;user&ndash;supplied&nbsp;command,&nbsp;and&nbsp;a&nbsp;parent&nbsp;process&nbsp;that&nbsp;traces&nbsp;the&nbsp;child.&nbsp;First,&nbsp;the&nbsp;main&nbsp;function:</p>
+                                <div class="highlight" style="background: #ffffff">
+                                    <pre style="line-height: 125%">
+<span style="color: #00007f; font-weight: bold">int</span> <span style="color: #00007f">main</span>(<span style="color: #00007f; font-weight: bold">int</span> argc, <span style="color: #00007f; font-weight: bold">char</span>** argv)
+{
+    pid_t child_pid;
+
+    <span style="color: #00007f; font-weight: bold">if</span> (argc &lt; <span style="color: #007f7f">2</span>) {
+        fprintf(stderr, <span style="color: #7f007f">&quot;Expected a program name as argument\n&quot;</span>);
+        <span style="color: #00007f; font-weight: bold">return</span> -<span style="color: #007f7f">1</span>;
+    }
+
+    child_pid = fork();
+    <span style="color: #00007f; font-weight: bold">if</span> (child_pid == <span style="color: #007f7f">0</span>)
+        run_target(argv[<span style="color: #007f7f">1</span>]);
+    <span style="color: #00007f; font-weight: bold">else</span> <span style="color: #00007f; font-weight: bold">if</span> (child_pid &gt; <span style="color: #007f7f">0</span>)
+        run_debugger(child_pid);
+    <span style="color: #00007f; font-weight: bold">else</span> {
+        perror(<span style="color: #7f007f">&quot;fork&quot;</span>);
+        <span style="color: #00007f; font-weight: bold">return</span> -<span style="color: #007f7f">1</span>;
+    }
+
+    <span style="color: #00007f; font-weight: bold">return</span> <span style="color: #007f7f">0</span>;
+}
+                                    </pre>
+                                </div>
+                                <p>Pretty&nbsp;simple:&nbsp;we&nbsp;start&nbsp;a&nbsp;new&nbsp;child&nbsp;process&nbsp;with
+                                    <tt class="docutils literal">fork</tt>
+                                    <a href="http://eli.thegreenplace.net/#id10" id="id4" class="footnote-reference">[4]</a>
+                                    .&nbsp;The
+                                    <tt class="docutils literal">if</tt>
+                                    branch&nbsp;of&nbsp;the&nbsp;subsequent&nbsp;condition&nbsp;runs&nbsp;the&nbsp;child&nbsp;process&nbsp;(called&nbsp;&quot;target&quot;&nbsp;here),&nbsp;and&nbsp;the
+                                    <tt class="docutils literal">else&nbsp;if</tt>
+                                    branch&nbsp;runs&nbsp;the&nbsp;parent&nbsp;process&nbsp;(called&nbsp;&quot;debugger&quot;&nbsp;here).
+                                </p>
+                                <p>Here&#039;s&nbsp;the&nbsp;target&nbsp;process:</p>
+                                <div class="highlight" style="background: #ffffff">
+                                    <pre style="line-height: 125%">
+<span style="color: #00007f; font-weight: bold">void</span> <span style="color: #00007f">run_target</span>(<span style="color: #00007f; font-weight: bold">const</span> <span style="color: #00007f; font-weight: bold">char</span>* programname)
+{
+    procmsg(<span style="color: #7f007f">&quot;target started. will run &#39;%s&#39;\n&quot;</span>, programname);
+
+    <span style="color: #007f00">/* Allow tracing of this process */</span>
+    <span style="color: #00007f; font-weight: bold">if</span> (ptrace(PTRACE_TRACEME, <span style="color: #007f7f">0</span>, <span style="color: #007f7f">0</span>, <span style="color: #007f7f">0</span>) &lt; <span style="color: #007f7f">0</span>) {
+        perror(<span style="color: #7f007f">&quot;ptrace&quot;</span>);
+        <span style="color: #00007f; font-weight: bold">return</span>;
+    }
+
+    <span style="color: #007f00">/* Replace this process&#39;s image with the given program */</span>
+    execl(programname, programname, <span style="color: #007f7f">0</span>);
+}
+                                    </pre>
+                                </div>
+                                <p>The&nbsp;most&nbsp;interesting&nbsp;line&nbsp;here&nbsp;is&nbsp;the
+                                    <tt class="docutils literal">ptrace</tt>
+                                    call.
+                                    <tt class="docutils literal">ptrace</tt>
+                                    is&nbsp;declared&nbsp;thus&nbsp;(in
+                                    <tt class="docutils literal">sys/ptrace.h</tt>
+                                    ):
+                                </p>
+                                <div class="highlight" style="background: #ffffff">
+                                    <pre style="line-height: 125%">
+<span style="color: #00007f; font-weight: bold">long</span> ptrace(<span style="color: #00007f; font-weight: bold">enum</span> __ptrace_request request, pid_t pid,
+                 <span style="color: #00007f; font-weight: bold">void</span> *addr, <span style="color: #00007f; font-weight: bold">void</span> *data);
+                                    </pre>
+                                </div>
+                                <p>The&nbsp;first&nbsp;argument&nbsp;is&nbsp;a
+                                    <em>request</em>
+                                    ,&nbsp;which&nbsp;may&nbsp;be&nbsp;one&nbsp;of&nbsp;many&nbsp;predefined
+                                    <tt class="docutils literal">PTRACE_*</tt>
+                                    constants.&nbsp;The&nbsp;second&nbsp;argument&nbsp;specifies&nbsp;a&nbsp;process&nbsp;ID&nbsp;for&nbsp;some&nbsp;requests.&nbsp;The&nbsp;third&nbsp;and&nbsp;fourth&nbsp;arguments&nbsp;are&nbsp;address&nbsp;and&nbsp;data&nbsp;pointers,&nbsp;for&nbsp;memory&nbsp;manipulation.&nbsp;The
+                                    <tt class="docutils literal">ptrace</tt>
+                                    call&nbsp;in&nbsp;the&nbsp;code&nbsp;snippet&nbsp;above&nbsp;makes&nbsp;the
+                                    <tt class="docutils literal">PTRACE_TRACEME</tt>
+                                    request,&nbsp;which&nbsp;means&nbsp;that&nbsp;this&nbsp;child&nbsp;process&nbsp;asks&nbsp;the&nbsp;OS&nbsp;kernel&nbsp;to&nbsp;let&nbsp;its&nbsp;parent&nbsp;trace&nbsp;it.&nbsp;The&nbsp;request&nbsp;description&nbsp;from&nbsp;the&nbsp;man&ndash;page&nbsp;is&nbsp;quite&nbsp;clear:
+                                </p>
+                                <blockquote>Indicates&nbsp;that&nbsp;this&nbsp;process&nbsp;is&nbsp;to&nbsp;be&nbsp;traced&nbsp;by&nbsp;its&nbsp;parent.&nbsp;Any&nbsp;signal&nbsp;(except&nbsp;SIGKILL)&nbsp;delivered&nbsp;to&nbsp;this&nbsp;process&nbsp;will&nbsp;cause&nbsp;it&nbsp;to&nbsp;stop&nbsp;and&nbsp;its&nbsp;parent&nbsp;to&nbsp;be&nbsp;notified&nbsp;via&nbsp;wait().
+                                    <strong>Also,&nbsp;all&nbsp;subsequent&nbsp;calls&nbsp;to&nbsp;exec()&nbsp;by&nbsp;this&nbsp;process&nbsp;will&nbsp;cause&nbsp;a&nbsp;SIGTRAP&nbsp;to&nbsp;be&nbsp;sent&nbsp;to&nbsp;it,&nbsp;giving&nbsp;the&nbsp;parent&nbsp;a&nbsp;chance&nbsp;to&nbsp;gain&nbsp;control&nbsp;before&nbsp;the&nbsp;new&nbsp;program&nbsp;begins&nbsp;execution</strong>
+                                    .&nbsp;A&nbsp;process&nbsp;probably&nbsp;shouldn&#039;t&nbsp;make&nbsp;this&nbsp;request&nbsp;if&nbsp;its&nbsp;parent&nbsp;isn&#039;t&nbsp;expecting&nbsp;to&nbsp;trace&nbsp;it.&nbsp;(pid,&nbsp;addr,&nbsp;and&nbsp;data&nbsp;are&nbsp;ignored.)
+                                </blockquote>
+                                <p>I&#039;ve&nbsp;highlighted&nbsp;the&nbsp;part&nbsp;that&nbsp;interests&nbsp;us&nbsp;in&nbsp;this&nbsp;example.&nbsp;Note&nbsp;that&nbsp;the&nbsp;very&nbsp;next&nbsp;thing
+                                    <tt class="docutils literal">run_target</tt>
+                                    does&nbsp;after
+                                    <tt class="docutils literal">ptrace</tt>
+                                    is&nbsp;invoke&nbsp;the&nbsp;program&nbsp;given&nbsp;to&nbsp;it&nbsp;as&nbsp;an&nbsp;argument&nbsp;with
+                                    <tt class="docutils literal">execl</tt>
+                                    .&nbsp;This,&nbsp;as&nbsp;the&nbsp;highlighted&nbsp;part&nbsp;explains,&nbsp;causes&nbsp;the&nbsp;OS&nbsp;kernel&nbsp;to&nbsp;stop&nbsp;the&nbsp;process&nbsp;just&nbsp;before&nbsp;it&nbsp;begins&nbsp;executing&nbsp;the&nbsp;program&nbsp;in
+                                    <tt class="docutils literal">execl</tt>
+                                    and&nbsp;send&nbsp;a&nbsp;signal&nbsp;to&nbsp;the&nbsp;parent.
+                                </p>
+                                <p>Thus,&nbsp;time&nbsp;is&nbsp;ripe&nbsp;to&nbsp;see&nbsp;what&nbsp;the&nbsp;parent&nbsp;does:</p>
+                                <div class="highlight" style="background: #ffffff">
+                                    <pre style="line-height: 125%">
+<span style="color: #00007f; font-weight: bold">void</span> <span style="color: #00007f">run_debugger</span>(pid_t child_pid)
+{
+    <span style="color: #00007f; font-weight: bold">int</span> wait_status;
+    <span style="color: #00007f; font-weight: bold">unsigned</span> icounter = <span style="color: #007f7f">0</span>;
+    procmsg(<span style="color: #7f007f">&quot;debugger started\n&quot;</span>);
+
+    <span style="color: #007f00">/* Wait for child to stop on its first instruction */</span>
+    wait(&amp;wait_status);
+
+    <span style="color: #00007f; font-weight: bold">while</span> (WIFSTOPPED(wait_status)) {
+        icounter++;
+        <span style="color: #007f00">/* Make the child execute another instruction */</span>
+        <span style="color: #00007f; font-weight: bold">if</span> (ptrace(PTRACE_SINGLESTEP, child_pid, <span style="color: #007f7f">0</span>, <span style="color: #007f7f">0</span>) &lt; <span style="color: #007f7f">0</span>) {
+            perror(<span style="color: #7f007f">&quot;ptrace&quot;</span>);
+            <span style="color: #00007f; font-weight: bold">return</span>;
+        }
+
+        <span style="color: #007f00">/* Wait for child to stop on its next instruction */</span>
+        wait(&amp;wait_status);
+    }
+
+    procmsg(<span style="color: #7f007f">&quot;the child executed %u instructions\n&quot;</span>, icounter);
+}
+                                    </pre>
+                                </div>
+                                <p>Recall&nbsp;from&nbsp;above&nbsp;that&nbsp;once&nbsp;the&nbsp;child&nbsp;starts&nbsp;executing&nbsp;the
+                                    <tt class="docutils literal">exec</tt>
+                                    call,&nbsp;it&nbsp;will&nbsp;stop&nbsp;and&nbsp;be&nbsp;sent&nbsp;the
+                                    <tt class="docutils literal">SIGTRAP</tt>
+                                    signal.&nbsp;The&nbsp;parent&nbsp;here&nbsp;waits&nbsp;for&nbsp;this&nbsp;to&nbsp;happen&nbsp;with&nbsp;the&nbsp;first
+                                    <tt class="docutils literal">wait</tt>
+                                    call.
+                                    <tt class="docutils literal">wait</tt>
+                                    will&nbsp;return&nbsp;once&nbsp;something&nbsp;interesting&nbsp;happens,&nbsp;and&nbsp;the&nbsp;parent&nbsp;checks&nbsp;that&nbsp;it&nbsp;was&nbsp;because&nbsp;the&nbsp;child&nbsp;was&nbsp;stopped&nbsp;(
+                                    <tt class="docutils literal">WIFSTOPPED</tt>
+                                    returns&nbsp;true&nbsp;if&nbsp;the&nbsp;child&nbsp;process&nbsp;was&nbsp;stopped&nbsp;by&nbsp;delivery&nbsp;of&nbsp;a&nbsp;signal).
+                                </p>
+                                <p>What&nbsp;the&nbsp;parent&nbsp;does&nbsp;next&nbsp;is&nbsp;the&nbsp;most&nbsp;interesting&nbsp;part&nbsp;of&nbsp;this&nbsp;article.&nbsp;It&nbsp;invokes
+                                    <tt class="docutils literal">ptrace</tt>
+                                    with&nbsp;the
+                                    <tt class="docutils literal">PTRACE_SINGLESTEP</tt>
+                                    request&nbsp;giving&nbsp;it&nbsp;the&nbsp;child&nbsp;process&nbsp;ID.&nbsp;What&nbsp;this&nbsp;does&nbsp;is&nbsp;tell&nbsp;the&nbsp;OS&nbsp;&ndash;
+                                    <em>please&nbsp;restart&nbsp;the&nbsp;child&nbsp;process,&nbsp;but&nbsp;stop&nbsp;it&nbsp;after&nbsp;it&nbsp;executes&nbsp;the&nbsp;next&nbsp;instruction</em>
+                                    .&nbsp;Again,&nbsp;the&nbsp;parent&nbsp;waits&nbsp;for&nbsp;the&nbsp;child&nbsp;to&nbsp;stop&nbsp;and&nbsp;the&nbsp;loop&nbsp;continues.&nbsp;The&nbsp;loop&nbsp;will&nbsp;terminate&nbsp;when&nbsp;the&nbsp;signal&nbsp;that&nbsp;came&nbsp;out&nbsp;of&nbsp;the
+                                    <tt class="docutils literal">wait</tt>
+                                    call&nbsp;wasn&#039;t&nbsp;about&nbsp;the&nbsp;child&nbsp;stopping.&nbsp;During&nbsp;a&nbsp;normal&nbsp;run&nbsp;of&nbsp;the&nbsp;tracer,&nbsp;this&nbsp;will&nbsp;be&nbsp;the&nbsp;signal&nbsp;that&nbsp;tells&nbsp;the&nbsp;parent&nbsp;that&nbsp;the&nbsp;child&nbsp;process&nbsp;exited&nbsp;(
+                                    <tt class="docutils literal">WIFEXITED</tt>
+                                    would&nbsp;return&nbsp;true&nbsp;on&nbsp;it).
+                                </p>
+                                <p>Note&nbsp;that
+                                    <tt class="docutils literal">icounter</tt>
+                                    counts&nbsp;the&nbsp;amount&nbsp;of&nbsp;instructions&nbsp;executed&nbsp;by&nbsp;the&nbsp;child&nbsp;process.&nbsp;So&nbsp;our&nbsp;simple&nbsp;example&nbsp;actually&nbsp;does&nbsp;something&nbsp;useful&nbsp;&ndash;&nbsp;given&nbsp;a&nbsp;program&nbsp;name&nbsp;on&nbsp;the&nbsp;command&nbsp;line,&nbsp;it&nbsp;executes&nbsp;the&nbsp;program&nbsp;and&nbsp;reports&nbsp;the&nbsp;amount&nbsp;of&nbsp;CPU&nbsp;instructions&nbsp;it&nbsp;took&nbsp;to&nbsp;run&nbsp;from&nbsp;start&nbsp;to&nbsp;finish.&nbsp;Let&#039;s&nbsp;see&nbsp;it&nbsp;in&nbsp;action.
+                                </p>
+                            </div>
+                            <div class="section" id="a-test-run">
+                                <h3>A&nbsp;test&nbsp;run</h3>
+                                <p>I&nbsp;compiled&nbsp;the&nbsp;following&nbsp;simple&nbsp;program&nbsp;and&nbsp;ran&nbsp;it&nbsp;under&nbsp;the&nbsp;tracer:</p>
+                                <div class="highlight" style="background: #ffffff">
+                                    <pre style="line-height: 125%">
+<span style="color: #007f00">#include &lt;stdio.h&gt;</span>
+
+
+<span style="color: #00007f; font-weight: bold">int</span> <span style="color: #00007f">main</span>()
+{
+    printf(<span style="color: #7f007f">&quot;Hello, world!\n&quot;</span>);
+    <span style="color: #00007f; font-weight: bold">return</span> <span style="color: #007f7f">0</span>;
+}
+                                    </pre>
+                                </div>
+                                <p>To&nbsp;my&nbsp;surprise,&nbsp;the&nbsp;tracer&nbsp;took&nbsp;quite&nbsp;long&nbsp;to&nbsp;run&nbsp;and&nbsp;reported&nbsp;that&nbsp;there&nbsp;were&nbsp;more&nbsp;than&nbsp;100,000&nbsp;instructions&nbsp;executed.&nbsp;For&nbsp;a&nbsp;simple
+                                    <tt class="docutils literal">printf</tt>
+                                    call?&nbsp;What&nbsp;gives?&nbsp;The&nbsp;answer&nbsp;is&nbsp;very&nbsp;interesting
+                                    <a href="http://eli.thegreenplace.net/#id11" id="id5" class="footnote-reference">[5]</a>
+                                    .&nbsp;By&nbsp;default,
+                                    <tt class="docutils literal">gcc</tt>
+                                    on&nbsp;Linux&nbsp;links&nbsp;programs&nbsp;to&nbsp;the&nbsp;C&nbsp;runtime&nbsp;libraries&nbsp;dynamically.&nbsp;What&nbsp;this&nbsp;means&nbsp;is&nbsp;&nbsp;that&nbsp;one&nbsp;of&nbsp;the&nbsp;first&nbsp;things&nbsp;that&nbsp;runs&nbsp;when&nbsp;any&nbsp;program&nbsp;is&nbsp;executed&nbsp;is&nbsp;the&nbsp;dynamic&nbsp;library&nbsp;loader&nbsp;that&nbsp;looks&nbsp;for&nbsp;the&nbsp;required&nbsp;shared&nbsp;libraries.&nbsp;This&nbsp;is&nbsp;quite&nbsp;a&nbsp;lot&nbsp;of&nbsp;code&nbsp;&ndash;&nbsp;and&nbsp;remember&nbsp;that&nbsp;our&nbsp;basic&nbsp;tracer&nbsp;here&nbsp;looks&nbsp;at&nbsp;each&nbsp;and&nbsp;every&nbsp;instruction,&nbsp;not&nbsp;of&nbsp;just&nbsp;the
+                                    <tt class="docutils literal">main</tt>
+                                    function,&nbsp;but
+                                    <em>of&nbsp;the&nbsp;whole&nbsp;process</em>
+                                    .
+                                </p>
+                                <p>So,&nbsp;when&nbsp;I&nbsp;linked&nbsp;the&nbsp;test&nbsp;program&nbsp;with&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">&ndash;static</span>
+                                    </tt>
+                                    flag&nbsp;(and&nbsp;verified&nbsp;that&nbsp;the&nbsp;executable&nbsp;gained&nbsp;some&nbsp;500KB&nbsp;in&nbsp;weight,&nbsp;as&nbsp;is&nbsp;logical&nbsp;for&nbsp;a&nbsp;static&nbsp;link&nbsp;of&nbsp;the&nbsp;C&nbsp;runtime),&nbsp;the&nbsp;tracing&nbsp;reported&nbsp;only&nbsp;7,000&nbsp;instructions&nbsp;or&nbsp;so.&nbsp;This&nbsp;is&nbsp;still&nbsp;a&nbsp;lot,&nbsp;but&nbsp;makes&nbsp;perfect&nbsp;sense&nbsp;if&nbsp;you&nbsp;recall&nbsp;that
+                                    <tt class="docutils literal">libc</tt>
+                                    initialization&nbsp;still&nbsp;has&nbsp;to&nbsp;run&nbsp;before
+                                    <tt class="docutils literal">main</tt>
+                                    ,&nbsp;and&nbsp;cleanup&nbsp;has&nbsp;to&nbsp;run&nbsp;after
+                                    <tt class="docutils literal">main</tt>
+                                    .&nbsp;Besides,
+                                    <tt class="docutils literal">printf</tt>
+                                    is&nbsp;a&nbsp;complex&nbsp;function.
+                                </p>
+                                <p>Still&nbsp;not&nbsp;satisfied,&nbsp;I&nbsp;wanted&nbsp;to&nbsp;see&nbsp;something
+                                    <em>testable</em>
+                                    &ndash;&nbsp;i.e.&nbsp;a&nbsp;whole&nbsp;run&nbsp;in&nbsp;which&nbsp;I&nbsp;could&nbsp;account&nbsp;for&nbsp;every&nbsp;instruction&nbsp;executed.&nbsp;This,&nbsp;of&nbsp;course,&nbsp;can&nbsp;be&nbsp;done&nbsp;with&nbsp;assembly&nbsp;code.&nbsp;So&nbsp;I&nbsp;took&nbsp;this&nbsp;version&nbsp;of&nbsp;&quot;Hello,&nbsp;world!&quot;&nbsp;and&nbsp;assembled&nbsp;it:
+                                </p>
+                                <div class="highlight" style="background: #ffffff">
+                                    <pre style="line-height: 125%">
+section    .text
+    ; The _start symbol must be declared for the linker (ld)
+    global _start
+
+_start:
+
+    ; Prepare arguments for the sys_write system call:
+    ;   - eax: system call number (sys_write)
+    ;   - ebx: file descriptor (stdout)
+    ;   - ecx: pointer to string
+    ;   - edx: string length
+    mov    edx, len
+    mov    ecx, msg
+    mov    ebx, 1
+    mov    eax, 4
+
+    ; Execute the sys_write system call
+    int    0x80
+
+    ; Execute sys_exit
+    mov    eax, 1
+    int    0x80
+
+section   .data
+msg db    &#39;Hello, world!&#39;, 0xa
+len equ    $ - msg
+                                    </pre>
+                                </div>
+                                <p>Sure&nbsp;enough.&nbsp;Now&nbsp;the&nbsp;tracer&nbsp;reported&nbsp;that&nbsp;7&nbsp;instructions&nbsp;were&nbsp;executed,&nbsp;which&nbsp;is&nbsp;something&nbsp;I&nbsp;can&nbsp;easily&nbsp;verify.</p>
+                            </div>
+                            <div class="section" id="deep-into-the-instruction-stream">
+                                <h3>Deep&nbsp;into&nbsp;the&nbsp;instruction&nbsp;stream</h3>
+                                <p>The&nbsp;assembly&ndash;written&nbsp;program&nbsp;allows&nbsp;me&nbsp;to&nbsp;introduce&nbsp;you&nbsp;to&nbsp;another&nbsp;powerful&nbsp;use&nbsp;of
+                                    <tt class="docutils literal">ptrace</tt>
+                                    &ndash;&nbsp;closely&nbsp;examining&nbsp;the&nbsp;state&nbsp;of&nbsp;the&nbsp;traced&nbsp;process.&nbsp;Here&#039;s&nbsp;another&nbsp;version&nbsp;of&nbsp;the
+                                    <tt class="docutils literal">run_debugger</tt>
+                                    function:
+                                </p>
+                                <div class="highlight" style="background: #ffffff">
+                                    <pre style="line-height: 125%">
+<span style="color: #00007f; font-weight: bold">void</span> <span style="color: #00007f">run_debugger</span>(pid_t child_pid)
+{
+    <span style="color: #00007f; font-weight: bold">int</span> wait_status;
+    <span style="color: #00007f; font-weight: bold">unsigned</span> icounter = <span style="color: #007f7f">0</span>;
+    procmsg(<span style="color: #7f007f">&quot;debugger started\n&quot;</span>);
+
+    <span style="color: #007f00">/* Wait for child to stop on its first instruction */</span>
+    wait(&amp;wait_status);
+
+    <span style="color: #00007f; font-weight: bold">while</span> (WIFSTOPPED(wait_status)) {
+        icounter++;
+        <span style="color: #00007f; font-weight: bold">struct</span> user_regs_struct regs;
+        ptrace(PTRACE_GETREGS, child_pid, <span style="color: #007f7f">0</span>, &amp;regs);
+        <span style="color: #00007f; font-weight: bold">unsigned</span> instr = ptrace(PTRACE_PEEKTEXT, child_pid, regs.eip, <span style="color: #007f7f">0</span>);
+
+        procmsg(<span style="color: #7f007f">&quot;icounter = %u.  EIP = 0x%08x.  instr = 0x%08x\n&quot;</span>,
+                    icounter, regs.eip, instr);
+
+        <span style="color: #007f00">/* Make the child execute another instruction */</span>
+        <span style="color: #00007f; font-weight: bold">if</span> (ptrace(PTRACE_SINGLESTEP, child_pid, <span style="color: #007f7f">0</span>, <span style="color: #007f7f">0</span>) &lt; <span style="color: #007f7f">0</span>) {
+            perror(<span style="color: #7f007f">&quot;ptrace&quot;</span>);
+            <span style="color: #00007f; font-weight: bold">return</span>;
+        }
+
+        <span style="color: #007f00">/* Wait for child to stop on its next instruction */</span>
+        wait(&amp;wait_status);
+    }
+
+    procmsg(<span style="color: #7f007f">&quot;the child executed %u instructions\n&quot;</span>, icounter);
+}
+                                    </pre>
+                                </div>
+                                <p>The&nbsp;only&nbsp;difference&nbsp;is&nbsp;in&nbsp;the&nbsp;first&nbsp;few&nbsp;lines&nbsp;of&nbsp;the
+                                    <tt class="docutils literal">while</tt>
+                                    loop.&nbsp;There&nbsp;are&nbsp;two&nbsp;new
+                                    <tt class="docutils literal">ptrace</tt>
+                                    calls.&nbsp;The&nbsp;first&nbsp;one&nbsp;reads&nbsp;the&nbsp;value&nbsp;of&nbsp;the&nbsp;process&#039;s&nbsp;registers&nbsp;into&nbsp;a&nbsp;structure.
+                                    <tt class="docutils literal">user_regs_struct</tt>
+                                    is&nbsp;defined&nbsp;in
+                                    <tt class="docutils literal">sys/user.h</tt>
+                                    .&nbsp;Now&nbsp;here&#039;s&nbsp;the&nbsp;fun&nbsp;part&nbsp;&ndash;&nbsp;if&nbsp;you&nbsp;look&nbsp;at&nbsp;this&nbsp;header&nbsp;file,&nbsp;a&nbsp;comment&nbsp;close&nbsp;to&nbsp;the&nbsp;top&nbsp;says:
+                                </p>
+                                <div class="highlight" style="background: #ffffff">
+                                    <pre style="line-height: 125%">
+<span style="color: #007f00">/* The whole purpose of this file is for GDB and GDB only.</span>
+<span style="color: #007f00">   Don&#39;t read too much into it. Don&#39;t use it for</span>
+<span style="color: #007f00">   anything other than GDB unless know what you are</span>
+<span style="color: #007f00">   doing.  */</span>
+                                    </pre>
+                                </div>
+                                <p>Now,&nbsp;I&nbsp;don&#039;t&nbsp;know&nbsp;about&nbsp;you,&nbsp;but&nbsp;it&nbsp;makes
+                                    <em>me</em>
+                                    feel&nbsp;we&#039;re&nbsp;on&nbsp;the&nbsp;right&nbsp;track&nbsp;:&ndash;)&nbsp;Anyway,&nbsp;back&nbsp;to&nbsp;the&nbsp;example.&nbsp;Once&nbsp;we&nbsp;have&nbsp;all&nbsp;the&nbsp;registers&nbsp;in
+                                    <tt class="docutils literal">regs</tt>
+                                    ,&nbsp;we&nbsp;can&nbsp;peek&nbsp;at&nbsp;the&nbsp;current&nbsp;instruction&nbsp;of&nbsp;the&nbsp;process&nbsp;by&nbsp;calling
+                                    <tt class="docutils literal">ptrace</tt>
+                                    with
+                                    <tt class="docutils literal">PTRACE_PEEKTEXT</tt>
+                                    ,&nbsp;passing&nbsp;it
+                                    <tt class="docutils literal">regs.eip</tt>
+                                    (the&nbsp;extended&nbsp;instruction&nbsp;pointer&nbsp;on&nbsp;x86)&nbsp;as&nbsp;the&nbsp;address.&nbsp;What&nbsp;we&nbsp;get&nbsp;back&nbsp;is&nbsp;the&nbsp;instruction
+                                    <a href="http://eli.thegreenplace.net/#id12" id="id6" class="footnote-reference">[6]</a>
+                                    .&nbsp;Let&#039;s&nbsp;see&nbsp;this&nbsp;new&nbsp;tracer&nbsp;run&nbsp;on&nbsp;our&nbsp;assembly&ndash;coded&nbsp;snippet:
+                                </p>
+                                <div class="highlight" style="background: #ffffff">
+                                    <pre style="line-height: 125%">
+$ simple_tracer traced_helloworld
+[5700] debugger started
+[5701] target started. will run &#39;traced_helloworld&#39;
+[5700] icounter = 1.  EIP = 0x08048080.  instr = 0x00000eba
+[5700] icounter = 2.  EIP = 0x08048085.  instr = 0x0490a0b9
+[5700] icounter = 3.  EIP = 0x0804808a.  instr = 0x000001bb
+[5700] icounter = 4.  EIP = 0x0804808f.  instr = 0x000004b8
+[5700] icounter = 5.  EIP = 0x08048094.  instr = 0x01b880cd
+Hello, world!
+[5700] icounter = 6.  EIP = 0x08048096.  instr = 0x000001b8
+[5700] icounter = 7.  EIP = 0x0804809b.  instr = 0x000080cd
+[5700] the child executed 7 instructions
+                                    </pre>
+                                </div>
+                                <p>OK,&nbsp;so&nbsp;now&nbsp;in&nbsp;addition&nbsp;to
+                                    <tt class="docutils literal">icounter</tt>
+                                    we&nbsp;also&nbsp;see&nbsp;the&nbsp;instruction&nbsp;pointer&nbsp;and&nbsp;the&nbsp;instruction&nbsp;it&nbsp;points&nbsp;to&nbsp;at&nbsp;each&nbsp;step.&nbsp;How&nbsp;to&nbsp;verify&nbsp;this&nbsp;is&nbsp;correct?&nbsp;By&nbsp;using
+                                    <tt class="docutils literal">objdump
+                                        <span class="pre">&ndash;d</span>
+                                    </tt>
+                                    on&nbsp;the&nbsp;executable:
+                                </p>
+                                <div class="highlight" style="background: #ffffff">
+                                    <pre style="line-height: 125%">
+$ objdump -d traced_helloworld
+
+traced_helloworld:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+08048080 &lt;.text&gt;:
+ 8048080:     ba 0e 00 00 00          mov    $0xe,%edx
+ 8048085:     b9 a0 90 04 08          mov    $0x80490a0,%ecx
+ 804808a:     bb 01 00 00 00          mov    $0x1,%ebx
+ 804808f:     b8 04 00 00 00          mov    $0x4,%eax
+ 8048094:     cd 80                   int    $0x80
+ 8048096:     b8 01 00 00 00          mov    $0x1,%eax
+ 804809b:     cd 80                   int    $0x80
+                                    </pre>
+                                </div>
+                                <p>The&nbsp;correspondence&nbsp;between&nbsp;this&nbsp;and&nbsp;our&nbsp;tracing&nbsp;output&nbsp;is&nbsp;easily&nbsp;observed.</p>
+                            </div>
+                            <div class="section" id="attaching-to-a-running-process">
+                                <h3>Attaching&nbsp;to&nbsp;a&nbsp;running&nbsp;process</h3>
+                                <p>As&nbsp;you&nbsp;know,&nbsp;debuggers&nbsp;can&nbsp;also&nbsp;attach&nbsp;to&nbsp;an&nbsp;already&ndash;running&nbsp;process.&nbsp;By&nbsp;now&nbsp;you&nbsp;won&#039;t&nbsp;be&nbsp;surprised&nbsp;to&nbsp;find&nbsp;out&nbsp;that&nbsp;this&nbsp;is&nbsp;also&nbsp;done&nbsp;with
+                                    <tt class="docutils literal">ptrace</tt>
+                                    ,&nbsp;which&nbsp;can&nbsp;get&nbsp;the
+                                    <tt class="docutils literal">PTRACE_ATTACH</tt>
+                                    request.&nbsp;I&nbsp;won&#039;t&nbsp;show&nbsp;a&nbsp;code&nbsp;sample&nbsp;here&nbsp;since&nbsp;it&nbsp;should&nbsp;be&nbsp;very&nbsp;easy&nbsp;to&nbsp;implement&nbsp;given&nbsp;the&nbsp;code&nbsp;we&#039;ve&nbsp;already&nbsp;gone&nbsp;through.&nbsp;For&nbsp;educational&nbsp;purposes,&nbsp;the&nbsp;approach&nbsp;taken&nbsp;here&nbsp;is&nbsp;more&nbsp;convenient&nbsp;(since&nbsp;we&nbsp;can&nbsp;stop&nbsp;the&nbsp;child&nbsp;process&nbsp;right&nbsp;at&nbsp;its&nbsp;start).
+                                </p>
+                            </div>
+                            <div class="section" id="the-code">
+                                <h3>The&nbsp;code</h3>
+                                <p>The&nbsp;complete&nbsp;C&nbsp;source&ndash;code&nbsp;of&nbsp;the&nbsp;simple&nbsp;tracer&nbsp;presented&nbsp;in&nbsp;this&nbsp;article&nbsp;(the&nbsp;more&nbsp;advanced,&nbsp;instruction&ndash;printing&nbsp;version)&nbsp;is&nbsp;available
+                                    <a class="reference external" href="https://github.com/eliben/code-for-blog/blob/master/2011/simple_tracer.c">here</a>
+                                    .&nbsp;It&nbsp;compiles&nbsp;cleanly&nbsp;with
+                                    <tt class="docutils literal">
+                                        <span class="pre">&ndash;Wall</span>
+                                        <span class="pre">&ndash;pedantic</span>
+                                        <span class="pre">&ndash;&ndash;std=c99</span>
+                                    </tt>
+                                    on&nbsp;version&nbsp;4.4&nbsp;of
+                                    <tt class="docutils literal">gcc</tt>
+                                    .
+                                </p>
+                            </div>
+                            <div class="section" id="conclusion-and-next-steps">
+                                <h3>Conclusion&nbsp;and&nbsp;next&nbsp;steps</h3>
+                                <p>Admittedly,&nbsp;this&nbsp;part&nbsp;didn&#039;t&nbsp;cover&nbsp;much&nbsp;&ndash;&nbsp;we&#039;re&nbsp;still&nbsp;far&nbsp;from&nbsp;having&nbsp;a&nbsp;real&nbsp;debugger&nbsp;in&nbsp;our&nbsp;hands.&nbsp;However,&nbsp;I&nbsp;hope&nbsp;it&nbsp;has&nbsp;already&nbsp;made&nbsp;the&nbsp;process&nbsp;of&nbsp;debugging&nbsp;at&nbsp;least&nbsp;a&nbsp;little&nbsp;less&nbsp;mysterious.
+                                    <tt class="docutils literal">ptrace</tt>
+                                    is&nbsp;truly&nbsp;a&nbsp;versatile&nbsp;system&nbsp;call&nbsp;with&nbsp;many&nbsp;abilities,&nbsp;of&nbsp;which&nbsp;we&#039;ve&nbsp;sampled&nbsp;only&nbsp;a&nbsp;few&nbsp;so&nbsp;far.
+                                </p>
+                                <p>Single&ndash;stepping&nbsp;through&nbsp;the&nbsp;code&nbsp;is&nbsp;useful,&nbsp;but&nbsp;only&nbsp;to&nbsp;a&nbsp;certain&nbsp;degree.&nbsp;Take&nbsp;the&nbsp;C&nbsp;&quot;Hello,&nbsp;world!&quot;&nbsp;sample&nbsp;I&nbsp;demonstrated&nbsp;above.&nbsp;To&nbsp;get&nbsp;to
+                                    <tt class="docutils literal">main</tt>
+                                    it&nbsp;would&nbsp;probably&nbsp;take&nbsp;a&nbsp;couple&nbsp;of&nbsp;thousands&nbsp;of&nbsp;instructions&nbsp;of&nbsp;C&nbsp;runtime&nbsp;initialization&nbsp;code&nbsp;to&nbsp;step&nbsp;through.&nbsp;This&nbsp;isn&#039;t&nbsp;very&nbsp;convenient.&nbsp;What&nbsp;we&#039;d&nbsp;ideally&nbsp;want&nbsp;to&nbsp;have&nbsp;is&nbsp;the&nbsp;ability&nbsp;to&nbsp;place&nbsp;a&nbsp;breakpoint&nbsp;at&nbsp;the&nbsp;entry&nbsp;to
+                                    <tt class="docutils literal">main</tt>
+                                    and&nbsp;step&nbsp;from&nbsp;there.&nbsp;Fair&nbsp;enough,&nbsp;and&nbsp;in&nbsp;the&nbsp;next&nbsp;part&nbsp;of&nbsp;the&nbsp;series&nbsp;I&nbsp;intend&nbsp;to&nbsp;show&nbsp;how&nbsp;breakpoints&nbsp;are&nbsp;implemented.
+                                </p>
+                            </div>
+                            <div class="section" id="references">
+                                <h3>References</h3>
+                                <p>I&#039;ve&nbsp;found&nbsp;the&nbsp;following&nbsp;resources&nbsp;and&nbsp;articles&nbsp;useful&nbsp;in&nbsp;the&nbsp;preparation&nbsp;of&nbsp;this&nbsp;article:</p>
+                                <ul class="simple">
+                                    <li>
+                                        <a class="reference external" href="http://www.linuxjournal.com/article/6100?page=0,1">Playing&nbsp;with&nbsp;ptrace,&nbsp;Part&nbsp;I</a>
+                                    </li>
+                                    <li>
+                                        <a class="reference external" href="http://www.alexonlinux.com/how-debugger-works">How&nbsp;debugger&nbsp;works</a>
+                                    </li>
+                                </ul>
+                                <img src="How debuggers work Part 1 Basics Eli Bendersky s website_files/hline.jpg" style="width: 320px; height: 5px;" class="align-center"></img>
+                                <table class="docutils footnote" frame="void" id="id7" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id1" class="fn-backref">[1]</a>
+                                            </td>
+                                            <td>I&nbsp;didn&#039;t&nbsp;check&nbsp;but&nbsp;I&#039;m&nbsp;sure&nbsp;the&nbsp;LOC&nbsp;count&nbsp;of
+                                                <tt class="docutils literal">gdb</tt>
+                                                is&nbsp;at&nbsp;least&nbsp;in&nbsp;the&nbsp;six&ndash;figures&nbsp;range.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="docutils footnote" frame="void" id="id8" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id2" class="fn-backref">[2]</a>
+                                            </td>
+                                            <td>Run
+                                                <tt class="docutils literal">man&nbsp;2&nbsp;ptrace</tt>
+                                                for&nbsp;complete&nbsp;enlightment.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="docutils footnote" frame="void" id="id9" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id3" class="fn-backref">[3]</a>
+                                            </td>
+                                            <td>
+                                                <em>Peek</em>
+                                                and
+                                                <em>poke</em>
+                                                are&nbsp;well&ndash;known&nbsp;system&nbsp;programming
+                                                <a class="reference external" href="http://www.jargon.net/jargonfile/p/peek.html">jargon</a>
+                                                for&nbsp;directly&nbsp;reading&nbsp;and&nbsp;writing&nbsp;memory&nbsp;contents.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="docutils footnote" frame="void" id="id10" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id4" class="fn-backref">[4]</a>
+                                            </td>
+                                            <td>This&nbsp;article&nbsp;assumes&nbsp;some&nbsp;basic&nbsp;level&nbsp;of&nbsp;Unix/Linux&nbsp;programming&nbsp;experience.&nbsp;I&nbsp;assume&nbsp;you&nbsp;know&nbsp;(at&nbsp;least&nbsp;conceptually)&nbsp;about
+                                                <tt class="docutils literal">fork</tt>
+                                                ,&nbsp;the
+                                                <tt class="docutils literal">exec</tt>
+                                                family&nbsp;of&nbsp;functions&nbsp;and&nbsp;Unix&nbsp;signals.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="docutils footnote" frame="void" id="id11" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id5" class="fn-backref">[5]</a>
+                                            </td>
+                                            <td>At&nbsp;least&nbsp;if&nbsp;you&#039;re&nbsp;as&nbsp;obsessed&nbsp;with&nbsp;low&ndash;level&nbsp;details&nbsp;as&nbsp;I&nbsp;am&nbsp;:&ndash;)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="docutils footnote" frame="void" id="id12" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id6" class="fn-backref">[6]</a>
+                                            </td>
+                                            <td>A&nbsp;word&nbsp;of&nbsp;warning&nbsp;here:&nbsp;as&nbsp;I&nbsp;noted&nbsp;above,&nbsp;a&nbsp;lot&nbsp;of&nbsp;this&nbsp;is&nbsp;highly&nbsp;platform&nbsp;specific.&nbsp;I&#039;m&nbsp;making&nbsp;some&nbsp;simplifying&nbsp;assumptions&nbsp;&ndash;&nbsp;for&nbsp;example,&nbsp;x86&nbsp;instructions&nbsp;don&#039;t&nbsp;have&nbsp;to&nbsp;fit&nbsp;into&nbsp;4&nbsp;bytes&nbsp;(the&nbsp;size&nbsp;of
+                                                <tt class="docutils literal">unsigned</tt>
+                                                on&nbsp;my&nbsp;32&ndash;bit&nbsp;Ubuntu&nbsp;machine).&nbsp;In&nbsp;fact,&nbsp;many&nbsp;won&#039;t.&nbsp;Peeking&nbsp;at&nbsp;instructions&nbsp;meaningfully&nbsp;requires&nbsp;us&nbsp;to&nbsp;have&nbsp;a&nbsp;complete&nbsp;disassembler&nbsp;at&nbsp;hand.&nbsp;We&nbsp;don&#039;t&nbsp;have&nbsp;one&nbsp;here,&nbsp;but&nbsp;real&nbsp;debuggers&nbsp;do.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                
+                    </article>
+                </section>
+            </div>
+        </div>
+ 
+        </div>
+        <br><br><br>
+        <hr/>
+        <H2><a name="HEAD_1" href="#TOC_HEAD_1">How debuggers work Part 2 Breakpoints Eli Bendersky s website</a></H2>
+        <div>
+   
+        <div class="container">
+            <div class="row">
+                <section id="content">
+                    <article>
+                       
+                        <div class="entry-content">
+                          
+                            <p>This&nbsp;is&nbsp;the&nbsp;second&nbsp;part&nbsp;in&nbsp;a&nbsp;series&nbsp;of&nbsp;articles&nbsp;on&nbsp;how&nbsp;debuggers&nbsp;work.&nbsp;Make&nbsp;sure&nbsp;you&nbsp;read
+                                <a class="reference external" href="http://eli.thegreenplace.net/2011/01/23/how-debuggers-work-part-1/">the&nbsp;first&nbsp;part</a>
+                                before&nbsp;this&nbsp;one.
+                            </p>
+                            <div class="section" id="in-this-part">
+                                <h3>In&nbsp;this&nbsp;part</h3>
+                                <p>I&#039;m&nbsp;going&nbsp;to&nbsp;demonstrate&nbsp;how&nbsp;breakpoints&nbsp;are&nbsp;implemented&nbsp;in&nbsp;a&nbsp;debugger.&nbsp;Breakpoints&nbsp;are&nbsp;one&nbsp;of&nbsp;the&nbsp;two&nbsp;main&nbsp;pillars&nbsp;of&nbsp;debugging&nbsp;&ndash;&nbsp;the&nbsp;other&nbsp;being&nbsp;able&nbsp;to&nbsp;inspect&nbsp;values&nbsp;in&nbsp;the&nbsp;debugged&nbsp;process&#039;s&nbsp;memory.&nbsp;We&#039;ve&nbsp;already&nbsp;seen&nbsp;a&nbsp;preview&nbsp;of&nbsp;the&nbsp;other&nbsp;pillar&nbsp;in&nbsp;part&nbsp;1&nbsp;of&nbsp;the&nbsp;series,&nbsp;but&nbsp;breakpoints&nbsp;still&nbsp;remain&nbsp;mysterious.&nbsp;By&nbsp;the&nbsp;end&nbsp;of&nbsp;this&nbsp;article,&nbsp;they&nbsp;won&#039;t&nbsp;be.</p>
+                            </div>
+                            <div class="section" id="software-interrupts">
+                                <h3>Software&nbsp;interrupts</h3>
+                                <p>To&nbsp;implement&nbsp;breakpoints&nbsp;on&nbsp;the&nbsp;x86&nbsp;architecture,&nbsp;software&nbsp;interrupts&nbsp;(also&nbsp;known&nbsp;as&nbsp;&quot;traps&quot;)&nbsp;are&nbsp;used.&nbsp;Before&nbsp;we&nbsp;get&nbsp;deep&nbsp;into&nbsp;the&nbsp;details,&nbsp;I&nbsp;want&nbsp;to&nbsp;explain&nbsp;the&nbsp;concept&nbsp;of&nbsp;interrupts&nbsp;and&nbsp;traps&nbsp;in&nbsp;general.</p>
+                                <p>A&nbsp;CPU&nbsp;has&nbsp;a&nbsp;single&nbsp;stream&nbsp;of&nbsp;execution,&nbsp;working&nbsp;through&nbsp;instructions&nbsp;one&nbsp;by&nbsp;one
+                                    <a href="http://eli.thegreenplace.net/#id7" id="id1" class="footnote-reference">[1]</a>
+                                    .&nbsp;To&nbsp;handle&nbsp;asynchronous&nbsp;events&nbsp;like&nbsp;IO&nbsp;and&nbsp;hardware&nbsp;timers,&nbsp;CPUs&nbsp;use&nbsp;interrupts.&nbsp;A&nbsp;hardware&nbsp;interrupt&nbsp;is&nbsp;usually&nbsp;a&nbsp;dedicated&nbsp;electrical&nbsp;signal&nbsp;to&nbsp;which&nbsp;a&nbsp;special&nbsp;&quot;response&nbsp;circuitry&quot;&nbsp;is&nbsp;attached.&nbsp;This&nbsp;circuitry&nbsp;notices&nbsp;an&nbsp;activation&nbsp;of&nbsp;the&nbsp;interrupt&nbsp;and&nbsp;makes&nbsp;the&nbsp;CPU&nbsp;stop&nbsp;its&nbsp;current&nbsp;execution,&nbsp;save&nbsp;its&nbsp;state,&nbsp;and&nbsp;jump&nbsp;to&nbsp;a&nbsp;predefined&nbsp;&nbsp;address&nbsp;where&nbsp;a&nbsp;handler&nbsp;routine&nbsp;for&nbsp;the&nbsp;interrupt&nbsp;is&nbsp;located.&nbsp;When&nbsp;the&nbsp;handler&nbsp;finishes&nbsp;its&nbsp;work,&nbsp;the&nbsp;CPU&nbsp;resumes&nbsp;execution&nbsp;from&nbsp;where&nbsp;it&nbsp;stopped.
+                                </p>
+                                <p>Software&nbsp;interrupts&nbsp;are&nbsp;similar&nbsp;in&nbsp;principle&nbsp;but&nbsp;a&nbsp;bit&nbsp;different&nbsp;in&nbsp;practice.&nbsp;CPUs&nbsp;support&nbsp;special&nbsp;instructions&nbsp;that&nbsp;allow&nbsp;the&nbsp;software&nbsp;to&nbsp;simulate&nbsp;an&nbsp;interrupt.&nbsp;When&nbsp;such&nbsp;an&nbsp;instruction&nbsp;is&nbsp;executed,&nbsp;the&nbsp;CPU&nbsp;treats&nbsp;it&nbsp;like&nbsp;an&nbsp;interrupt&nbsp;&ndash;&nbsp;stops&nbsp;its&nbsp;normal&nbsp;flow&nbsp;of&nbsp;execution,&nbsp;saves&nbsp;its&nbsp;state&nbsp;and&nbsp;jumps&nbsp;to&nbsp;a&nbsp;handler&nbsp;routine.&nbsp;Such&nbsp;&quot;traps&quot;&nbsp;allow&nbsp;many&nbsp;of&nbsp;the&nbsp;wonders&nbsp;of&nbsp;modern&nbsp;OSes&nbsp;(task&nbsp;scheduling,&nbsp;virtual&nbsp;memory,&nbsp;memory&nbsp;protection,&nbsp;debugging)&nbsp;to&nbsp;be&nbsp;implemented&nbsp;efficiently.</p>
+                                <p>Some&nbsp;programming&nbsp;errors&nbsp;(such&nbsp;as&nbsp;division&nbsp;by&nbsp;0)&nbsp;are&nbsp;also&nbsp;treated&nbsp;by&nbsp;the&nbsp;CPU&nbsp;as&nbsp;traps,&nbsp;and&nbsp;are&nbsp;frequently&nbsp;referred&nbsp;to&nbsp;as&nbsp;&quot;exceptions&quot;.&nbsp;Here&nbsp;the&nbsp;line&nbsp;between&nbsp;hardware&nbsp;and&nbsp;software&nbsp;blurs,&nbsp;since&nbsp;it&#039;s&nbsp;hard&nbsp;to&nbsp;say&nbsp;whether&nbsp;such&nbsp;exceptions&nbsp;are&nbsp;really&nbsp;hardware&nbsp;interrupts&nbsp;or&nbsp;software&nbsp;interrupts.&nbsp;But&nbsp;I&#039;ve&nbsp;digressed&nbsp;too&nbsp;far&nbsp;away&nbsp;from&nbsp;the&nbsp;main&nbsp;topic,&nbsp;so&nbsp;it&#039;s&nbsp;time&nbsp;to&nbsp;get&nbsp;back&nbsp;to&nbsp;breakpoints.</p>
+                            </div>
+                            <div class="section" id="int-3-in-theory">
+                                <h3>int&nbsp;3&nbsp;in&nbsp;theory</h3>
+                                <p>Having&nbsp;written&nbsp;the&nbsp;previous&nbsp;section,&nbsp;I&nbsp;can&nbsp;now&nbsp;simply&nbsp;say&nbsp;that&nbsp;breakpoints&nbsp;are&nbsp;implemented&nbsp;on&nbsp;the&nbsp;CPU&nbsp;by&nbsp;a&nbsp;special&nbsp;trap&nbsp;called
+                                    <tt class="docutils literal">
+                                        <span class="pre">int</span>
+                                        <span class="pre">3</span>
+                                    </tt>
+                                    .
+                                    <tt class="docutils literal">
+                                        <span class="pre">int</span>
+                                    </tt>
+                                    is&nbsp;x86&nbsp;jargon&nbsp;for&nbsp;&quot;trap&nbsp;instruction&quot;&nbsp;&ndash;&nbsp;a&nbsp;call&nbsp;to&nbsp;a&nbsp;predefined&nbsp;interrupt&nbsp;handler.&nbsp;x86&nbsp;supports&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">int</span>
+                                    </tt>
+                                    instruction&nbsp;with&nbsp;a&nbsp;8&ndash;bit&nbsp;operand&nbsp;specifying&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;interrupt&nbsp;that&nbsp;occurred,&nbsp;so&nbsp;in&nbsp;theory&nbsp;256&nbsp;traps&nbsp;are&nbsp;supported.&nbsp;The&nbsp;first&nbsp;32&nbsp;are&nbsp;reserved&nbsp;by&nbsp;the&nbsp;CPU&nbsp;for&nbsp;itself,&nbsp;and&nbsp;number&nbsp;3&nbsp;is&nbsp;the&nbsp;one&nbsp;we&#039;re&nbsp;interested&nbsp;in&nbsp;here&nbsp;&ndash;&nbsp;it&#039;s&nbsp;called&nbsp;&quot;trap&nbsp;to&nbsp;debugger&quot;.
+                                </p>
+                                <p>Without&nbsp;further&nbsp;ado,&nbsp;I&#039;ll&nbsp;quote&nbsp;from&nbsp;the&nbsp;bible&nbsp;itself
+                                    <a href="http://eli.thegreenplace.net/#id8" id="id2" class="footnote-reference">[2]</a>
+                                    :
+                                </p>
+                                <blockquote>The&nbsp;INT&nbsp;3&nbsp;instruction&nbsp;generates&nbsp;a&nbsp;special&nbsp;one&nbsp;byte&nbsp;opcode&nbsp;(CC)&nbsp;that&nbsp;is&nbsp;intended&nbsp;for&nbsp;calling&nbsp;the&nbsp;debug&nbsp;exception&nbsp;handler.&nbsp;(This&nbsp;one&nbsp;byte&nbsp;form&nbsp;is&nbsp;valuable&nbsp;because&nbsp;it&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;replace&nbsp;the&nbsp;first&nbsp;byte&nbsp;of&nbsp;any&nbsp;instruction&nbsp;with&nbsp;a&nbsp;breakpoint,&nbsp;including&nbsp;other&nbsp;one&nbsp;byte&nbsp;instructions,&nbsp;without&nbsp;over&ndash;writing&nbsp;other&nbsp;code).</blockquote>
+                                <p>The&nbsp;part&nbsp;in&nbsp;parens&nbsp;is&nbsp;important,&nbsp;but&nbsp;it&#039;s&nbsp;still&nbsp;too&nbsp;early&nbsp;to&nbsp;explain&nbsp;it.&nbsp;We&#039;ll&nbsp;come&nbsp;back&nbsp;to&nbsp;it&nbsp;later&nbsp;in&nbsp;this&nbsp;article.</p>
+                            </div>
+                            <div class="section" id="int-3-in-practice">
+                                <h3>int&nbsp;3&nbsp;in&nbsp;practice</h3>
+                                <p>Yes,&nbsp;knowing&nbsp;the&nbsp;theory&nbsp;behind&nbsp;things&nbsp;is&nbsp;great,&nbsp;OK,&nbsp;but&nbsp;what&nbsp;does&nbsp;this&nbsp;really&nbsp;mean?&nbsp;How&nbsp;do&nbsp;we&nbsp;use
+                                    <tt class="docutils literal">
+                                        <span class="pre">int</span>
+                                        <span class="pre">3</span>
+                                    </tt>
+                                    to&nbsp;implement&nbsp;breakpoints?&nbsp;Or&nbsp;to&nbsp;paraphrase&nbsp;common&nbsp;programming&nbsp;Q&amp;A&nbsp;jargon&nbsp;&ndash;
+                                    <em>Plz&nbsp;show&nbsp;me&nbsp;the&nbsp;codes!</em>
+                                </p>
+                                <p>In&nbsp;practice,&nbsp;this&nbsp;is&nbsp;really&nbsp;very&nbsp;simple.&nbsp;Once&nbsp;your&nbsp;process&nbsp;executes&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">int</span>
+                                        <span class="pre">3</span>
+                                    </tt>
+                                    instruction,&nbsp;the&nbsp;OS&nbsp;stops&nbsp;it
+                                    <a href="http://eli.thegreenplace.net/#id9" id="id3" class="footnote-reference">[3]</a>
+                                    .&nbsp;On&nbsp;Linux&nbsp;(which&nbsp;is&nbsp;what&nbsp;we&#039;re&nbsp;concerned&nbsp;with&nbsp;in&nbsp;this&nbsp;article)&nbsp;it&nbsp;then&nbsp;sends&nbsp;the&nbsp;process&nbsp;a&nbsp;signal&nbsp;&ndash;
+                                    <tt class="docutils literal">
+                                        <span class="pre">SIGTRAP</span>
+                                    </tt>
+                                    .
+                                </p>
+                                <p>That&#039;s&nbsp;all&nbsp;there&nbsp;is&nbsp;to&nbsp;it&nbsp;&ndash;&nbsp;honest!&nbsp;Now&nbsp;recall&nbsp;from&nbsp;the&nbsp;first&nbsp;part&nbsp;of&nbsp;the&nbsp;series&nbsp;that&nbsp;a&nbsp;tracing&nbsp;(debugger)&nbsp;process&nbsp;gets&nbsp;notified&nbsp;of&nbsp;all&nbsp;the&nbsp;signals&nbsp;its&nbsp;child&nbsp;(or&nbsp;the&nbsp;process&nbsp;it&nbsp;attaches&nbsp;to&nbsp;for&nbsp;debugging)&nbsp;gets,&nbsp;and&nbsp;you&nbsp;can&nbsp;start&nbsp;getting&nbsp;a&nbsp;feel&nbsp;of&nbsp;where&nbsp;we&#039;re&nbsp;going.</p>
+                                <p>That&#039;s&nbsp;it,&nbsp;no&nbsp;more&nbsp;computer&nbsp;architecture&nbsp;101&nbsp;jabber.&nbsp;It&#039;s&nbsp;time&nbsp;for&nbsp;examples&nbsp;and&nbsp;code.</p>
+                            </div>
+                            <div class="section" id="setting-breakpoints-manually">
+                                <h3>Setting&nbsp;breakpoints&nbsp;manually</h3>
+                                <p>I&#039;m&nbsp;now&nbsp;going&nbsp;to&nbsp;show&nbsp;code&nbsp;that&nbsp;sets&nbsp;a&nbsp;breakpoint&nbsp;in&nbsp;a&nbsp;program.&nbsp;The&nbsp;target&nbsp;program&nbsp;I&#039;m&nbsp;going&nbsp;to&nbsp;use&nbsp;for&nbsp;this&nbsp;demonstration&nbsp;is&nbsp;the&nbsp;following:</p>
+                                <div class="highlight">
+                                    <pre>
+section    .text
+    ; The _start symbol must be declared for the linker (ld)
+    global _start
+
+_start:
+
+    ; Prepare arguments for the sys_write system call:
+    ;   - eax: system call number (sys_write)
+    ;   - ebx: file descriptor (stdout)
+    ;   - ecx: pointer to string
+    ;   - edx: string length
+    mov     edx, len1
+    mov     ecx, msg1
+    mov     ebx, 1
+    mov     eax, 4
+
+    ; Execute the sys_write system call
+    int     0x80
+
+    ; Now print the other message
+    mov     edx, len2
+    mov     ecx, msg2
+    mov     ebx, 1
+    mov     eax, 4
+    int     0x80
+
+    ; Execute sys_exit
+    mov     eax, 1
+    int     0x80
+
+section    .data
+
+msg1    db      &#39;Hello,&#39;, 0xa
+len1    equ     $ - msg1
+msg2    db      &#39;world!&#39;, 0xa
+len2    equ     $ - msg2
+                                    </pre>
+                                </div>
+                                <p>I&#039;m&nbsp;using&nbsp;assembly&nbsp;language&nbsp;for&nbsp;now,&nbsp;in&nbsp;order&nbsp;to&nbsp;keep&nbsp;us&nbsp;clear&nbsp;of&nbsp;compilation&nbsp;issues&nbsp;and&nbsp;symbols&nbsp;that&nbsp;come&nbsp;up&nbsp;when&nbsp;we&nbsp;get&nbsp;into&nbsp;C&nbsp;code.&nbsp;What&nbsp;the&nbsp;program&nbsp;listed&nbsp;above&nbsp;does&nbsp;is&nbsp;simply&nbsp;print&nbsp;&quot;Hello,&quot;&nbsp;on&nbsp;one&nbsp;line&nbsp;and&nbsp;then&nbsp;&quot;world!&quot;&nbsp;on&nbsp;the&nbsp;next&nbsp;line.&nbsp;It&#039;s&nbsp;very&nbsp;similar&nbsp;to&nbsp;the&nbsp;program&nbsp;demonstrated&nbsp;in&nbsp;the&nbsp;previous&nbsp;article.</p>
+                                <p>I&nbsp;want&nbsp;to&nbsp;set&nbsp;a&nbsp;breakpoint&nbsp;after&nbsp;the&nbsp;first&nbsp;printout,&nbsp;but&nbsp;before&nbsp;the&nbsp;second&nbsp;one.&nbsp;Let&#039;s&nbsp;say&nbsp;right&nbsp;after&nbsp;the&nbsp;first
+                                    <tt class="docutils literal">
+                                        <span class="pre">int</span>
+                                        <span class="pre">0x80</span>
+                                    </tt>
+                                    <a href="http://eli.thegreenplace.net/#id10" id="id4" class="footnote-reference">[4]</a>
+                                    ,&nbsp;on&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">mov</span>
+                                        <span class="pre">edx,</span>
+                                        <span class="pre">len2</span>
+                                    </tt>
+                                    instruction.&nbsp;First,&nbsp;we&nbsp;need&nbsp;to&nbsp;know&nbsp;what&nbsp;address&nbsp;this&nbsp;instruction&nbsp;maps&nbsp;to.&nbsp;Running
+                                    <tt class="docutils literal">
+                                        <span class="pre">objdump</span>
+                                        <span class="pre">&ndash;d</span>
+                                    </tt>
+                                    :
+                                </p>
+                                <div class="highlight">
+                                    <pre>
+traced_printer2:     file format elf32-i386
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000033  08048080  08048080  00000080  2**4
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         0000000e  080490b4  080490b4  000000b4  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+
+Disassembly of section .text:
+
+08048080 &lt;.text&gt;:
+ 8048080:     ba 07 00 00 00          mov    $0x7,%edx
+ 8048085:     b9 b4 90 04 08          mov    $0x80490b4,%ecx
+ 804808a:     bb 01 00 00 00          mov    $0x1,%ebx
+ 804808f:     b8 04 00 00 00          mov    $0x4,%eax
+ 8048094:     cd 80                   int    $0x80
+ 8048096:     ba 07 00 00 00          mov    $0x7,%edx
+ 804809b:     b9 bb 90 04 08          mov    $0x80490bb,%ecx
+ 80480a0:     bb 01 00 00 00          mov    $0x1,%ebx
+ 80480a5:     b8 04 00 00 00          mov    $0x4,%eax
+ 80480aa:     cd 80                   int    $0x80
+ 80480ac:     b8 01 00 00 00          mov    $0x1,%eax
+ 80480b1:     cd 80                   int    $0x80
+                                    </pre>
+                                </div>
+                                <p>So,&nbsp;the&nbsp;address&nbsp;we&#039;re&nbsp;going&nbsp;to&nbsp;set&nbsp;the&nbsp;breakpoint&nbsp;on&nbsp;is&nbsp;0x8048096.&nbsp;Wait,&nbsp;this&nbsp;is&nbsp;not&nbsp;how&nbsp;real&nbsp;debuggers&nbsp;work,&nbsp;right?&nbsp;Real&nbsp;debuggers&nbsp;set&nbsp;breakpoints&nbsp;on&nbsp;lines&nbsp;of&nbsp;code&nbsp;and&nbsp;on&nbsp;functions,&nbsp;not&nbsp;on&nbsp;some&nbsp;bare&nbsp;memory&nbsp;addresses?&nbsp;Exactly&nbsp;right.&nbsp;But&nbsp;we&#039;re&nbsp;still&nbsp;far&nbsp;from&nbsp;there&nbsp;&ndash;&nbsp;to&nbsp;set&nbsp;breakpoints&nbsp;like
+                                    <em>real</em>
+                                    debuggers&nbsp;we&nbsp;still&nbsp;have&nbsp;to&nbsp;cover&nbsp;symbols&nbsp;and&nbsp;debugging&nbsp;information&nbsp;first,&nbsp;and&nbsp;it&nbsp;will&nbsp;take&nbsp;another&nbsp;part&nbsp;or&nbsp;two&nbsp;in&nbsp;the&nbsp;series&nbsp;to&nbsp;reach&nbsp;these&nbsp;topics.&nbsp;For&nbsp;now,&nbsp;we&#039;ll&nbsp;have&nbsp;to&nbsp;do&nbsp;with&nbsp;bare&nbsp;memory&nbsp;addresses.
+                                </p>
+                                <p>At&nbsp;this&nbsp;point&nbsp;I&nbsp;really&nbsp;want&nbsp;to&nbsp;digress&nbsp;again,&nbsp;so&nbsp;you&nbsp;have&nbsp;two&nbsp;choices.&nbsp;If&nbsp;it&#039;s&nbsp;really&nbsp;interesting&nbsp;for&nbsp;you&nbsp;to&nbsp;know
+                                    <em>why</em>
+                                    the&nbsp;address&nbsp;is&nbsp;0x8048096&nbsp;and&nbsp;what&nbsp;does&nbsp;it&nbsp;mean,&nbsp;read&nbsp;the&nbsp;next&nbsp;section.&nbsp;If&nbsp;not,&nbsp;and&nbsp;you&nbsp;just&nbsp;want&nbsp;to&nbsp;get&nbsp;on&nbsp;with&nbsp;the&nbsp;breakpoints,&nbsp;you&nbsp;can&nbsp;safely&nbsp;skip&nbsp;it.
+                                </p>
+                            </div>
+                            <div class="section" id="digression-process-addresses-and-entry-point">
+                                <h3>Digression&nbsp;&ndash;&nbsp;process&nbsp;addresses&nbsp;and&nbsp;entry&nbsp;point</h3>
+                                <p>Frankly,&nbsp;0x8048096&nbsp;itself&nbsp;doesn&#039;t&nbsp;mean&nbsp;much,&nbsp;it&#039;s&nbsp;just&nbsp;a&nbsp;few&nbsp;bytes&nbsp;away&nbsp;from&nbsp;the&nbsp;beginning&nbsp;of&nbsp;the&nbsp;text&nbsp;section&nbsp;of&nbsp;the&nbsp;executable.&nbsp;If&nbsp;you&nbsp;look&nbsp;carefully&nbsp;at&nbsp;the&nbsp;dump&nbsp;listing&nbsp;above,&nbsp;you&#039;ll&nbsp;see&nbsp;that&nbsp;the&nbsp;text&nbsp;section&nbsp;starts&nbsp;at&nbsp;0x08048080.&nbsp;This&nbsp;tells&nbsp;the&nbsp;OS&nbsp;to&nbsp;map&nbsp;the&nbsp;text&nbsp;section&nbsp;starting&nbsp;at&nbsp;this&nbsp;address&nbsp;in&nbsp;the&nbsp;virtual&nbsp;address&nbsp;space&nbsp;given&nbsp;to&nbsp;the&nbsp;process.&nbsp;On&nbsp;Linux&nbsp;these&nbsp;addresses&nbsp;can&nbsp;be&nbsp;absolute&nbsp;(i.e.&nbsp;the&nbsp;executable&nbsp;isn&#039;t&nbsp;being&nbsp;relocated&nbsp;when&nbsp;it&#039;s&nbsp;loaded&nbsp;into&nbsp;memory),&nbsp;because&nbsp;with&nbsp;the&nbsp;virtual&nbsp;memory&nbsp;system&nbsp;each&nbsp;process&nbsp;gets&nbsp;its&nbsp;own&nbsp;chunk&nbsp;of&nbsp;memory&nbsp;and&nbsp;sees&nbsp;the&nbsp;whole&nbsp;32&ndash;bit&nbsp;address&nbsp;space&nbsp;as&nbsp;its&nbsp;own&nbsp;(called&nbsp;&quot;linear&quot;&nbsp;address).</p>
+                                <p>If&nbsp;we&nbsp;examine&nbsp;the&nbsp;ELF
+                                    <a href="http://eli.thegreenplace.net/#id11" id="id5" class="footnote-reference">[5]</a>
+                                    header&nbsp;with
+                                    <tt class="docutils literal">
+                                        <span class="pre">readelf</span>
+                                    </tt>
+                                    ,&nbsp;we&nbsp;get:
+                                </p>
+                                <div class="highlight">
+                                    <pre>
+$ readelf -h traced_printer2
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00
+  Class:                             ELF32
+  Data:                              2&#39;s complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              EXEC (Executable file)
+  Machine:                           Intel 80386
+  Version:                           0x1
+  Entry point address:               0x8048080
+  Start of program headers:          52 (bytes into file)
+  Start of section headers:          220 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               52 (bytes)
+  Size of program headers:           32 (bytes)
+  Number of program headers:         2
+  Size of section headers:           40 (bytes)
+  Number of section headers:         4
+  Section header string table index: 3
+                                    </pre>
+                                </div>
+                                <p>Note&nbsp;the&nbsp;&quot;entry&nbsp;point&nbsp;address&quot;&nbsp;section&nbsp;of&nbsp;the&nbsp;header,&nbsp;which&nbsp;also&nbsp;points&nbsp;to&nbsp;0x8048080.&nbsp;So&nbsp;if&nbsp;we&nbsp;interpret&nbsp;the&nbsp;directions&nbsp;encoded&nbsp;in&nbsp;the&nbsp;ELF&nbsp;file&nbsp;for&nbsp;the&nbsp;OS,&nbsp;it&nbsp;says:</p>
+                                <ol class="arabic simple">
+                                    <li>Map&nbsp;the&nbsp;text&nbsp;section&nbsp;(with&nbsp;given&nbsp;contents)&nbsp;to&nbsp;address&nbsp;0x8048080</li>
+                                    <li>Start&nbsp;executing&nbsp;at&nbsp;the&nbsp;entry&nbsp;point&nbsp;&ndash;&nbsp;address&nbsp;0x8048080</li>
+                                </ol>
+                                <p>But&nbsp;still,&nbsp;why&nbsp;0x8048080?&nbsp;For&nbsp;historic&nbsp;reasons,&nbsp;it&nbsp;turns&nbsp;out.&nbsp;Some&nbsp;googling&nbsp;led&nbsp;me&nbsp;to&nbsp;a&nbsp;few&nbsp;sources&nbsp;that&nbsp;claim&nbsp;that&nbsp;the&nbsp;first&nbsp;128MB&nbsp;of&nbsp;each&nbsp;process&#039;s&nbsp;address&nbsp;space&nbsp;were&nbsp;reserved&nbsp;for&nbsp;the&nbsp;stack.&nbsp;128MB&nbsp;happens&nbsp;to&nbsp;be&nbsp;0x8000000,&nbsp;which&nbsp;is&nbsp;where&nbsp;other&nbsp;sections&nbsp;of&nbsp;the&nbsp;executable&nbsp;may&nbsp;start.&nbsp;0x8048080,&nbsp;in&nbsp;particular,&nbsp;is&nbsp;the&nbsp;default&nbsp;entry&nbsp;point&nbsp;used&nbsp;by&nbsp;the&nbsp;Linux
+                                    <tt class="docutils literal">
+                                        <span class="pre">ld</span>
+                                    </tt>
+                                    linker.&nbsp;This&nbsp;entry&nbsp;point&nbsp;can&nbsp;be&nbsp;modified&nbsp;by&nbsp;passing&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">&ndash;Ttext</span>
+                                    </tt>
+                                    argument&nbsp;to
+                                    <tt class="docutils literal">
+                                        <span class="pre">ld</span>
+                                    </tt>
+                                    .
+                                </p>
+                                <p>To&nbsp;conclude,&nbsp;there&#039;s&nbsp;nothing&nbsp;really&nbsp;special&nbsp;in&nbsp;this&nbsp;address&nbsp;and&nbsp;we&nbsp;can&nbsp;freely&nbsp;change&nbsp;it.&nbsp;As&nbsp;long&nbsp;as&nbsp;the&nbsp;ELF&nbsp;executable&nbsp;is&nbsp;properly&nbsp;structured&nbsp;and&nbsp;the&nbsp;entry&nbsp;point&nbsp;address&nbsp;in&nbsp;the&nbsp;header&nbsp;matches&nbsp;the&nbsp;real&nbsp;beginning&nbsp;of&nbsp;the&nbsp;program&#039;s&nbsp;code&nbsp;(text&nbsp;section),&nbsp;we&#039;re&nbsp;OK.</p>
+                            </div>
+                            <div class="section" id="setting-breakpoints-in-the-debugger-with-int-3">
+                                <h3>Setting&nbsp;breakpoints&nbsp;in&nbsp;the&nbsp;debugger&nbsp;with&nbsp;int&nbsp;3</h3>
+                                <p>To&nbsp;set&nbsp;a&nbsp;breakpoint&nbsp;at&nbsp;some&nbsp;target&nbsp;address&nbsp;in&nbsp;the&nbsp;traced&nbsp;process,&nbsp;the&nbsp;debugger&nbsp;does&nbsp;the&nbsp;following:</p>
+                                <ol class="arabic simple">
+                                    <li>Remember&nbsp;the&nbsp;data&nbsp;stored&nbsp;at&nbsp;the&nbsp;target&nbsp;address</li>
+                                    <li>Replace&nbsp;the&nbsp;first&nbsp;byte&nbsp;at&nbsp;the&nbsp;target&nbsp;address&nbsp;with&nbsp;the&nbsp;int&nbsp;3&nbsp;instruction</li>
+                                </ol>
+                                <p>Then,&nbsp;when&nbsp;the&nbsp;debugger&nbsp;asks&nbsp;the&nbsp;OS&nbsp;to&nbsp;run&nbsp;the&nbsp;process&nbsp;(with
+                                    <tt class="docutils literal">
+                                        <span class="pre">PTRACE_CONT</span>
+                                    </tt>
+                                    as&nbsp;we&nbsp;saw&nbsp;in&nbsp;the&nbsp;previous&nbsp;article),&nbsp;the&nbsp;process&nbsp;will&nbsp;run&nbsp;and&nbsp;eventually&nbsp;hit&nbsp;upon&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">int</span>
+                                        <span class="pre">3</span>
+                                    </tt>
+                                    ,&nbsp;where&nbsp;it&nbsp;will&nbsp;stop&nbsp;and&nbsp;the&nbsp;OS&nbsp;will&nbsp;send&nbsp;it&nbsp;a&nbsp;signal.&nbsp;This&nbsp;is&nbsp;where&nbsp;the&nbsp;debugger&nbsp;comes&nbsp;in&nbsp;again,&nbsp;receiving&nbsp;a&nbsp;signal&nbsp;that&nbsp;its&nbsp;child&nbsp;(or&nbsp;traced&nbsp;process)&nbsp;was&nbsp;stopped.&nbsp;It&nbsp;can&nbsp;then:
+                                </p>
+                                <ol class="arabic simple">
+                                    <li>Replace&nbsp;the&nbsp;int&nbsp;3&nbsp;instruction&nbsp;at&nbsp;the&nbsp;target&nbsp;address&nbsp;with&nbsp;the&nbsp;original&nbsp;instruction</li>
+                                    <li>Roll&nbsp;the&nbsp;instruction&nbsp;pointer&nbsp;of&nbsp;the&nbsp;traced&nbsp;process&nbsp;back&nbsp;by&nbsp;one.&nbsp;This&nbsp;is&nbsp;needed&nbsp;because&nbsp;the&nbsp;instruction&nbsp;pointer&nbsp;now&nbsp;points
+                                        <em>after</em>
+                                        the
+                                        <tt class="docutils literal">
+                                            <span class="pre">int</span>
+                                            <span class="pre">3</span>
+                                        </tt>
+                                        ,&nbsp;having&nbsp;already&nbsp;executed&nbsp;it.
+                                    </li>
+                                    <li>Allow&nbsp;the&nbsp;user&nbsp;to&nbsp;interact&nbsp;with&nbsp;the&nbsp;process&nbsp;in&nbsp;some&nbsp;way,&nbsp;since&nbsp;the&nbsp;process&nbsp;is&nbsp;still&nbsp;halted&nbsp;at&nbsp;the&nbsp;desired&nbsp;target&nbsp;address.&nbsp;This&nbsp;is&nbsp;the&nbsp;part&nbsp;where&nbsp;your&nbsp;debugger&nbsp;lets&nbsp;you&nbsp;peek&nbsp;at&nbsp;variable&nbsp;values,&nbsp;the&nbsp;call&nbsp;stack&nbsp;and&nbsp;so&nbsp;on.</li>
+                                    <li>When&nbsp;the&nbsp;user&nbsp;wants&nbsp;to&nbsp;keep&nbsp;running,&nbsp;the&nbsp;debugger&nbsp;will&nbsp;take&nbsp;care&nbsp;of&nbsp;placing&nbsp;the&nbsp;breakpoint&nbsp;back&nbsp;(since&nbsp;it&nbsp;was&nbsp;removed&nbsp;in&nbsp;step&nbsp;1)&nbsp;at&nbsp;the&nbsp;target&nbsp;address,&nbsp;unless&nbsp;the&nbsp;user&nbsp;asked&nbsp;to&nbsp;cancel&nbsp;the&nbsp;breakpoint.</li>
+                                </ol>
+                                <p>Let&#039;s&nbsp;see&nbsp;how&nbsp;some&nbsp;of&nbsp;these&nbsp;steps&nbsp;are&nbsp;translated&nbsp;into&nbsp;real&nbsp;code.&nbsp;We&#039;ll&nbsp;use&nbsp;the&nbsp;debugger&nbsp;&quot;template&quot;&nbsp;presented&nbsp;in&nbsp;part&nbsp;1&nbsp;(forking&nbsp;a&nbsp;child&nbsp;process&nbsp;and&nbsp;tracing&nbsp;it).&nbsp;In&nbsp;any&nbsp;case,&nbsp;there&#039;s&nbsp;a&nbsp;link&nbsp;to&nbsp;&nbsp;the&nbsp;full&nbsp;source&nbsp;code&nbsp;of&nbsp;this&nbsp;example&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;article.</p>
+                                <div class="highlight">
+                                    <pre>
+<span style="color: #007f00">/* Obtain and show child&#39;s instruction pointer */</span>
+ptrace(PTRACE_GETREGS, child_pid, <span style="color: #007f7f">0</span>, &amp;regs);
+procmsg(<span style="color: #7f007f">&quot;Child started. EIP = 0x%08x\n&quot;</span>, regs.eip);
+
+<span style="color: #007f00">/* Look at the word at the address we&#39;re interested in */</span>
+<span style="color: #00007f; font-weight: bold">unsigned</span> addr = <span style="color: #007f7f">0x8048096</span>;
+<span style="color: #00007f; font-weight: bold">unsigned</span> data = ptrace(PTRACE_PEEKTEXT, child_pid, (<span style="color: #00007f; font-weight: bold">void</span>*)addr, <span style="color: #007f7f">0</span>);
+procmsg(<span style="color: #7f007f">&quot;Original data at 0x%08x: 0x%08x\n&quot;</span>, addr, data);
+                                    </pre>
+                                </div>
+                                <p>Here&nbsp;the&nbsp;debugger&nbsp;fetches&nbsp;the&nbsp;instruction&nbsp;pointer&nbsp;from&nbsp;the&nbsp;traced&nbsp;process,&nbsp;as&nbsp;well&nbsp;as&nbsp;examines&nbsp;the&nbsp;word&nbsp;currently&nbsp;present&nbsp;at&nbsp;0x8048096.&nbsp;When&nbsp;run&nbsp;tracing&nbsp;&nbsp;the&nbsp;assembly&nbsp;program&nbsp;listed&nbsp;in&nbsp;the&nbsp;beginning&nbsp;of&nbsp;the&nbsp;article,&nbsp;this&nbsp;prints:</p>
+                                <div class="highlight">
+                                    <pre>[13028] Child started. EIP = 0x08048080
+[13028] Original data at 0x08048096: 0x000007ba</pre>
+                                </div>
+                                <p>So&nbsp;far,&nbsp;so&nbsp;good.&nbsp;Next:</p>
+                                <div class="highlight">
+                                    <pre>
+<span style="color: #007f00">/* Write the trap instruction &#39;int 3&#39; into the address */</span>
+<span style="color: #00007f; font-weight: bold">unsigned</span> data_with_trap = (data &amp; <span style="color: #007f7f">0xFFFFFF00</span>) | <span style="color: #007f7f">0xCC</span>;
+ptrace(PTRACE_POKETEXT, child_pid, (<span style="color: #00007f; font-weight: bold">void</span>*)addr, (<span style="color: #00007f; font-weight: bold">void</span>*)data_with_trap);
+
+<span style="color: #007f00">/* See what&#39;s there again... */</span>
+<span style="color: #00007f; font-weight: bold">unsigned</span> readback_data = ptrace(PTRACE_PEEKTEXT, child_pid, (<span style="color: #00007f; font-weight: bold">void</span>*)addr, <span style="color: #007f7f">0</span>);
+procmsg(<span style="color: #7f007f">&quot;After trap, data at 0x%08x: 0x%08x\n&quot;</span>, addr, readback_data);
+                                    </pre>
+                                </div>
+                                <p>Note&nbsp;how
+                                    <tt class="docutils literal">
+                                        <span class="pre">int</span>
+                                        <span class="pre">3</span>
+                                    </tt>
+                                    is&nbsp;inserted&nbsp;at&nbsp;the&nbsp;target&nbsp;address.&nbsp;This&nbsp;prints:
+                                </p>
+                                <div class="highlight">
+                                    <pre>[13028] After trap, data at 0x08048096: 0x000007cc</pre>
+                                </div>
+                                <p>Again,&nbsp;as&nbsp;expected&nbsp;&ndash;
+                                    <tt class="docutils literal">
+                                        <span class="pre">0xba</span>
+                                    </tt>
+                                    was&nbsp;replaced&nbsp;with
+                                    <tt class="docutils literal">
+                                        <span class="pre">0xcc</span>
+                                    </tt>
+                                    .&nbsp;The&nbsp;debugger&nbsp;now&nbsp;runs&nbsp;the&nbsp;child&nbsp;and&nbsp;waits&nbsp;for&nbsp;it&nbsp;to&nbsp;halt&nbsp;on&nbsp;the&nbsp;breakpoint:
+                                </p>
+                                <div class="highlight">
+                                    <pre>
+<span style="color: #007f00">/* Let the child run to the breakpoint and wait for it to</span>
+<span style="color: #007f00">** reach it</span>
+<span style="color: #007f00">*/</span>
+ptrace(PTRACE_CONT, child_pid, <span style="color: #007f7f">0</span>, <span style="color: #007f7f">0</span>);
+
+wait(&amp;wait_status);
+<span style="color: #00007f; font-weight: bold">if</span> (WIFSTOPPED(wait_status)) {
+    procmsg(<span style="color: #7f007f">&quot;Child got a signal: %s\n&quot;</span>, strsignal(WSTOPSIG(wait_status)));
+}
+<span style="color: #00007f; font-weight: bold">else</span> {
+    perror(<span style="color: #7f007f">&quot;wait&quot;</span>);
+    <span style="color: #00007f; font-weight: bold">return</span>;
+}
+
+<span style="color: #007f00">/* See where the child is now */</span>
+ptrace(PTRACE_GETREGS, child_pid, <span style="color: #007f7f">0</span>, &amp;regs);
+procmsg(<span style="color: #7f007f">&quot;Child stopped at EIP = 0x%08x\n&quot;</span>, regs.eip);
+                                    </pre>
+                                </div>
+                                <p>This&nbsp;prints:</p>
+                                <div class="highlight">
+                                    <pre>Hello,
+[13028] Child got a signal: Trace/breakpoint trap
+[13028] Child stopped at EIP = 0x08048097</pre>
+                                </div>
+                                <p>Note&nbsp;the&nbsp;&quot;Hello,&quot;&nbsp;that&nbsp;was&nbsp;printed&nbsp;before&nbsp;the&nbsp;breakpoint&nbsp;&ndash;&nbsp;exactly&nbsp;as&nbsp;we&nbsp;planned.&nbsp;Also&nbsp;note&nbsp;where&nbsp;the&nbsp;child&nbsp;stopped&nbsp;&ndash;&nbsp;just&nbsp;after&nbsp;the&nbsp;single&ndash;byte&nbsp;trap&nbsp;instruction.</p>
+                                <p>Finally,&nbsp;as&nbsp;was&nbsp;explained&nbsp;earlier,&nbsp;to&nbsp;keep&nbsp;the&nbsp;child&nbsp;running&nbsp;we&nbsp;must&nbsp;do&nbsp;some&nbsp;work.&nbsp;We&nbsp;replace&nbsp;the&nbsp;trap&nbsp;with&nbsp;the&nbsp;original&nbsp;instruction&nbsp;and&nbsp;let&nbsp;the&nbsp;process&nbsp;continue&nbsp;running&nbsp;from&nbsp;it.</p>
+                                <div class="highlight">
+                                    <pre>
+<span style="color: #007f00">/* Remove the breakpoint by restoring the previous data</span>
+<span style="color: #007f00">** at the target address, and unwind the EIP back by 1 to</span>
+<span style="color: #007f00">** let the CPU execute the original instruction that was</span>
+<span style="color: #007f00">** there.</span>
+<span style="color: #007f00">*/</span>
+ptrace(PTRACE_POKETEXT, child_pid, (<span style="color: #00007f; font-weight: bold">void</span>*)addr, (<span style="color: #00007f; font-weight: bold">void</span>*)data);
+regs.eip -= <span style="color: #007f7f">1</span>;
+ptrace(PTRACE_SETREGS, child_pid, <span style="color: #007f7f">0</span>, &amp;regs);
+
+<span style="color: #007f00">/* The child can continue running now */</span>
+ptrace(PTRACE_CONT, child_pid, <span style="color: #007f7f">0</span>, <span style="color: #007f7f">0</span>);
+                                    </pre>
+                                </div>
+                                <p>This&nbsp;makes&nbsp;the&nbsp;child&nbsp;print&nbsp;&quot;world!&quot;&nbsp;and&nbsp;exit,&nbsp;just&nbsp;as&nbsp;planned.</p>
+                                <p>Note&nbsp;that&nbsp;we&nbsp;don&#039;t&nbsp;restore&nbsp;the&nbsp;breakpoint&nbsp;here.&nbsp;That&nbsp;can&nbsp;be&nbsp;done&nbsp;by&nbsp;executing&nbsp;the&nbsp;original&nbsp;instruction&nbsp;in&nbsp;single&ndash;step&nbsp;mode,&nbsp;then&nbsp;placing&nbsp;the&nbsp;trap&nbsp;back&nbsp;and&nbsp;only&nbsp;then&nbsp;do
+                                    <tt class="docutils literal">
+                                        <span class="pre">PTRACE_CONT</span>
+                                    </tt>
+                                    .&nbsp;The&nbsp;debug&nbsp;library&nbsp;demonstrated&nbsp;later&nbsp;in&nbsp;the&nbsp;article&nbsp;implements&nbsp;this.
+                                </p>
+                            </div>
+                            <div class="section" id="more-on-int-3">
+                                <h3>More&nbsp;on&nbsp;int&nbsp;3</h3>
+                                <p>Now&nbsp;is&nbsp;a&nbsp;good&nbsp;time&nbsp;to&nbsp;come&nbsp;back&nbsp;and&nbsp;examine
+                                    <tt class="docutils literal">
+                                        <span class="pre">int</span>
+                                        <span class="pre">3</span>
+                                    </tt>
+                                    and&nbsp;that&nbsp;curious&nbsp;note&nbsp;from&nbsp;Intel&#039;s&nbsp;manual.&nbsp;Here&nbsp;it&nbsp;is&nbsp;again:
+                                </p>
+                                <blockquote>This&nbsp;one&nbsp;byte&nbsp;form&nbsp;is&nbsp;valuable&nbsp;because&nbsp;it&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;replace&nbsp;the&nbsp;first&nbsp;byte&nbsp;of&nbsp;any&nbsp;instruction&nbsp;with&nbsp;a&nbsp;breakpoint,&nbsp;including&nbsp;other&nbsp;one&nbsp;byte&nbsp;instructions,&nbsp;without&nbsp;over&ndash;writing&nbsp;other&nbsp;code</blockquote>
+                                <p>
+                                    <tt class="docutils literal">
+                                        <span class="pre">int</span>
+                                    </tt>
+                                    instructions&nbsp;on&nbsp;x86&nbsp;occupy&nbsp;two&nbsp;bytes&nbsp;&ndash;
+                                    <tt class="docutils literal">
+                                        <span class="pre">0xcd</span>
+                                    </tt>
+                                    followed&nbsp;by&nbsp;the&nbsp;interrupt&nbsp;number
+                                    <a href="http://eli.thegreenplace.net/#id12" id="id6" class="footnote-reference">[6]</a>
+                                    .
+                                    <tt class="docutils literal">
+                                        <span class="pre">int</span>
+                                        <span class="pre">3</span>
+                                    </tt>
+                                    could&#039;ve&nbsp;been&nbsp;encoded&nbsp;as
+                                    <tt class="docutils literal">
+                                        <span class="pre">cd</span>
+                                        <span class="pre">03</span>
+                                    </tt>
+                                    ,&nbsp;but&nbsp;there&#039;s&nbsp;a&nbsp;special&nbsp;single&ndash;byte&nbsp;instruction&nbsp;reserved&nbsp;for&nbsp;it&nbsp;&ndash;&nbsp;0xcc.
+                                </p>
+                                <p>Why&nbsp;so?&nbsp;Because&nbsp;this&nbsp;allows&nbsp;us&nbsp;to&nbsp;insert&nbsp;a&nbsp;breakpoint&nbsp;without&nbsp;ever&nbsp;overwriting&nbsp;more&nbsp;than&nbsp;one&nbsp;instruction.&nbsp;And&nbsp;this&nbsp;is&nbsp;important.&nbsp;Consider&nbsp;this&nbsp;sample&nbsp;code:</p>
+                                <div class="highlight">
+                                    <pre>.. some code ..
+    jz    foo
+    dec   eax
+foo:
+    call  bar
+    .. some code ..</pre>
+                                </div>
+                                <p>Suppose&nbsp;we&nbsp;want&nbsp;to&nbsp;place&nbsp;a&nbsp;breakpoint&nbsp;on
+                                    <tt class="docutils literal">
+                                        <span class="pre">dec</span>
+                                        <span class="pre">eax</span>
+                                    </tt>
+                                    .&nbsp;This&nbsp;happens&nbsp;to&nbsp;be&nbsp;a&nbsp;single&ndash;byte&nbsp;instruction&nbsp;(with&nbsp;the&nbsp;opcode
+                                    <tt class="docutils literal">
+                                        <span class="pre">0x48</span>
+                                    </tt>
+                                    ).&nbsp;Had&nbsp;the&nbsp;replacement&nbsp;breakpoint&nbsp;instruction&nbsp;been&nbsp;longer&nbsp;than&nbsp;1&nbsp;byte,&nbsp;we&#039;d&nbsp;be&nbsp;forced&nbsp;to&nbsp;overwrite&nbsp;part&nbsp;of&nbsp;the&nbsp;next&nbsp;instruction&nbsp;(
+                                    <tt class="docutils literal">
+                                        <span class="pre">call</span>
+                                    </tt>
+                                    ),&nbsp;which&nbsp;would&nbsp;garble&nbsp;it&nbsp;and&nbsp;probably&nbsp;produce&nbsp;something&nbsp;completely&nbsp;invalid.&nbsp;But&nbsp;what&nbsp;is&nbsp;the&nbsp;branch
+                                    <tt class="docutils literal">
+                                        <span class="pre">jz</span>
+                                        <span class="pre">foo</span>
+                                    </tt>
+                                    was&nbsp;taken?&nbsp;Then,&nbsp;without&nbsp;stopping&nbsp;on
+                                    <tt class="docutils literal">
+                                        <span class="pre">dec</span>
+                                        <span class="pre">eax</span>
+                                    </tt>
+                                    ,&nbsp;the&nbsp;CPU&nbsp;would&nbsp;go&nbsp;straight&nbsp;to&nbsp;execute&nbsp;the&nbsp;invalid&nbsp;instruction&nbsp;after&nbsp;it.
+                                </p>
+                                <p>Having&nbsp;a&nbsp;special&nbsp;1&ndash;byte&nbsp;encoding&nbsp;for
+                                    <tt class="docutils literal">
+                                        <span class="pre">int</span>
+                                        <span class="pre">3</span>
+                                    </tt>
+                                    solves&nbsp;this&nbsp;problem.&nbsp;Since&nbsp;1&nbsp;byte&nbsp;is&nbsp;the&nbsp;shortest&nbsp;an&nbsp;instruction&nbsp;can&nbsp;get&nbsp;on&nbsp;x86,&nbsp;we&nbsp;guarantee&nbsp;than&nbsp;only&nbsp;the&nbsp;instruction&nbsp;we&nbsp;want&nbsp;to&nbsp;break&nbsp;on&nbsp;gets&nbsp;changed.
+                                </p>
+                            </div>
+                            <div class="section" id="encapsulating-some-gory-details">
+                                <h3>Encapsulating&nbsp;some&nbsp;gory&nbsp;details</h3>
+                                <p>Many&nbsp;of&nbsp;the&nbsp;low&ndash;level&nbsp;details&nbsp;shown&nbsp;in&nbsp;code&nbsp;samples&nbsp;of&nbsp;the&nbsp;previous&nbsp;section&nbsp;can&nbsp;be&nbsp;easily&nbsp;encapsulated&nbsp;behind&nbsp;a&nbsp;convenient&nbsp;API.&nbsp;I&#039;ve&nbsp;done&nbsp;some&nbsp;encapsulation&nbsp;into&nbsp;a&nbsp;small&nbsp;utility&nbsp;library&nbsp;called
+                                    <tt class="docutils literal">
+                                        <span class="pre">debuglib</span>
+                                    </tt>
+                                    &ndash;&nbsp;its&nbsp;code&nbsp;is&nbsp;available&nbsp;for&nbsp;download&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;article.&nbsp;Here&nbsp;I&nbsp;just&nbsp;want&nbsp;to&nbsp;demonstrate&nbsp;an&nbsp;example&nbsp;of&nbsp;its&nbsp;usage,&nbsp;but&nbsp;with&nbsp;a&nbsp;twist.&nbsp;We&#039;re&nbsp;going&nbsp;to&nbsp;trace&nbsp;a&nbsp;program&nbsp;written&nbsp;in&nbsp;C.
+                                </p>
+                            </div>
+                            <div class="section" id="tracing-a-c-program">
+                                <h3>Tracing&nbsp;a&nbsp;C&nbsp;program</h3>
+                                <p>So&nbsp;far,&nbsp;for&nbsp;the&nbsp;sake&nbsp;of&nbsp;simplicity,&nbsp;I&nbsp;focused&nbsp;on&nbsp;assembly&nbsp;language&nbsp;targets.&nbsp;It&#039;s&nbsp;time&nbsp;to&nbsp;go&nbsp;one&nbsp;level&nbsp;up&nbsp;and&nbsp;see&nbsp;how&nbsp;we&nbsp;can&nbsp;trace&nbsp;a&nbsp;program&nbsp;written&nbsp;in&nbsp;C.</p>
+                                <p>It&nbsp;turns&nbsp;out&nbsp;things&nbsp;aren&#039;t&nbsp;very&nbsp;different&nbsp;&ndash;&nbsp;it&#039;s&nbsp;just&nbsp;a&nbsp;bit&nbsp;harder&nbsp;to&nbsp;find&nbsp;where&nbsp;to&nbsp;place&nbsp;the&nbsp;breakpoints.&nbsp;Consider&nbsp;this&nbsp;simple&nbsp;program:</p>
+                                <div class="highlight">
+                                    <pre>
+<span style="color: #007f00">#include &lt;stdio.h&gt;</span>
+
+
+<span style="color: #00007f; font-weight: bold">void</span> <span style="color: #00007f">do_stuff</span>()
+{
+    printf(<span style="color: #7f007f">&quot;Hello, &quot;</span>);
+}
+
+
+<span style="color: #00007f; font-weight: bold">int</span> <span style="color: #00007f">main</span>()
+{
+    <span style="color: #00007f; font-weight: bold">for</span> (<span style="color: #00007f; font-weight: bold">int</span> i = <span style="color: #007f7f">0</span>; i &lt; <span style="color: #007f7f">4</span>; ++i)
+        do_stuff();
+    printf(<span style="color: #7f007f">&quot;world!\n&quot;</span>);
+    <span style="color: #00007f; font-weight: bold">return</span> <span style="color: #007f7f">0</span>;
+}
+                                    </pre>
+                                </div>
+                                <p>Suppose&nbsp;I&nbsp;want&nbsp;to&nbsp;place&nbsp;a&nbsp;breakpoint&nbsp;at&nbsp;the&nbsp;entrance&nbsp;to
+                                    <tt class="docutils literal">
+                                        <span class="pre">do_stuff</span>
+                                    </tt>
+                                    .&nbsp;I&#039;ll&nbsp;use&nbsp;the&nbsp;old&nbsp;friend
+                                    <tt class="docutils literal">
+                                        <span class="pre">objdump</span>
+                                    </tt>
+                                    to&nbsp;disassemble&nbsp;the&nbsp;executable,&nbsp;but&nbsp;there&#039;s&nbsp;a&nbsp;lot&nbsp;in&nbsp;it.&nbsp;In&nbsp;particular,&nbsp;looking&nbsp;at&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">text</span>
+                                    </tt>
+                                    section&nbsp;is&nbsp;a&nbsp;bit&nbsp;useless&nbsp;since&nbsp;it&nbsp;contains&nbsp;a&nbsp;lot&nbsp;of&nbsp;C&nbsp;runtime&nbsp;initialization&nbsp;code&nbsp;I&#039;m&nbsp;currently&nbsp;not&nbsp;interested&nbsp;in.&nbsp;So&nbsp;let&#039;s&nbsp;just&nbsp;look&nbsp;for
+                                    <tt class="docutils literal">
+                                        <span class="pre">do_stuff</span>
+                                    </tt>
+                                    in&nbsp;the&nbsp;dump:
+                                </p>
+                                <div class="highlight">
+                                    <pre>
+080483e4 &lt;do_stuff&gt;:
+ 80483e4:     55                      push   %ebp
+ 80483e5:     89 e5                   mov    %esp,%ebp
+ 80483e7:     83 ec 18                sub    $0x18,%esp
+ 80483ea:     c7 04 24 f0 84 04 08    movl   $0x80484f0,(%esp)
+ 80483f1:     e8 22 ff ff ff          call   8048318 &lt;puts@plt&gt;
+ 80483f6:     c9                      leave
+ 80483f7:     c3                      ret
+                                    </pre>
+                                </div>
+                                <p>Alright,&nbsp;so&nbsp;we&#039;ll&nbsp;place&nbsp;the&nbsp;breakpoint&nbsp;at&nbsp;0x080483e4,&nbsp;which&nbsp;is&nbsp;the&nbsp;first&nbsp;instruction&nbsp;of
+                                    <tt class="docutils literal">
+                                        <span class="pre">do_stuff</span>
+                                    </tt>
+                                    .&nbsp;Moreover,&nbsp;since&nbsp;this&nbsp;function&nbsp;is&nbsp;called&nbsp;in&nbsp;a&nbsp;loop,&nbsp;we&nbsp;want&nbsp;to&nbsp;keep&nbsp;stopping&nbsp;at&nbsp;the&nbsp;breakpoint&nbsp;until&nbsp;the&nbsp;loop&nbsp;ends.&nbsp;We&#039;re&nbsp;going&nbsp;to&nbsp;use&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">debuglib</span>
+                                    </tt>
+                                    library&nbsp;to&nbsp;make&nbsp;this&nbsp;simple.&nbsp;Here&#039;s&nbsp;the&nbsp;complete&nbsp;debugger&nbsp;function:
+                                </p>
+                                <div class="highlight">
+                                    <pre>
+<span style="color: #00007f; font-weight: bold">void</span> <span style="color: #00007f">run_debugger</span>(pid_t child_pid)
+{
+    procmsg(<span style="color: #7f007f">&quot;debugger started\n&quot;</span>);
+
+    <span style="color: #007f00">/* Wait for child to stop on its first instruction */</span>
+    wait(<span style="color: #007f7f">0</span>);
+    procmsg(<span style="color: #7f007f">&quot;child now at EIP = 0x%08x\n&quot;</span>, get_child_eip(child_pid));
+
+    <span style="color: #007f00">/* Create breakpoint and run to it*/</span>
+    debug_breakpoint* bp = create_breakpoint(child_pid, (<span style="color: #00007f; font-weight: bold">void</span>*)<span style="color: #007f7f">0x080483e4</span>);
+    procmsg(<span style="color: #7f007f">&quot;breakpoint created\n&quot;</span>);
+    ptrace(PTRACE_CONT, child_pid, <span style="color: #007f7f">0</span>, <span style="color: #007f7f">0</span>);
+    wait(<span style="color: #007f7f">0</span>);
+
+    <span style="color: #007f00">/* Loop as long as the child didn&#39;t exit */</span>
+    <span style="color: #00007f; font-weight: bold">while</span> (<span style="color: #007f7f">1</span>) {
+        <span style="color: #007f00">/* The child is stopped at a breakpoint here. Resume its</span>
+<span style="color: #007f00">        ** execution until it either exits or hits the</span>
+<span style="color: #007f00">        ** breakpoint again.</span>
+<span style="color: #007f00">        */</span>
+        procmsg(<span style="color: #7f007f">&quot;child stopped at breakpoint. EIP = 0x%08X\n&quot;</span>, get_child_eip(child_pid));
+        procmsg(<span style="color: #7f007f">&quot;resuming\n&quot;</span>);
+        <span style="color: #00007f; font-weight: bold">int</span> rc = resume_from_breakpoint(child_pid, bp);
+
+        <span style="color: #00007f; font-weight: bold">if</span> (rc == <span style="color: #007f7f">0</span>) {
+            procmsg(<span style="color: #7f007f">&quot;child exited\n&quot;</span>);
+            <span style="color: #00007f; font-weight: bold">break</span>;
+        }
+        <span style="color: #00007f; font-weight: bold">else</span> <span style="color: #00007f; font-weight: bold">if</span> (rc == <span style="color: #007f7f">1</span>) {
+            <span style="color: #00007f; font-weight: bold">continue</span>;
+        }
+        <span style="color: #00007f; font-weight: bold">else</span> {
+            procmsg(<span style="color: #7f007f">&quot;unexpected: %d\n&quot;</span>, rc);
+            <span style="color: #00007f; font-weight: bold">break</span>;
+        }
+    }
+
+
+    cleanup_breakpoint(bp);
+}
+                                    </pre>
+                                </div>
+                                <p>Instead&nbsp;of&nbsp;getting&nbsp;our&nbsp;hands&nbsp;dirty&nbsp;modifying&nbsp;EIP&nbsp;and&nbsp;the&nbsp;target&nbsp;process&#039;s&nbsp;memory&nbsp;space,&nbsp;we&nbsp;just&nbsp;use
+                                    <tt class="docutils literal">
+                                        <span class="pre">create_breakpoint</span>
+                                    </tt>
+                                    ,
+                                    <tt class="docutils literal">
+                                        <span class="pre">resume_from_breakpoint</span>
+                                    </tt>
+                                    and
+                                    <tt class="docutils literal">
+                                        <span class="pre">cleanup_breakpoint</span>
+                                    </tt>
+                                    .&nbsp;Let&#039;s&nbsp;see&nbsp;what&nbsp;this&nbsp;prints&nbsp;when&nbsp;tracing&nbsp;the&nbsp;simple&nbsp;C&nbsp;code&nbsp;displayed&nbsp;above:
+                                </p>
+                                <div class="highlight">
+                                    <pre>
+$ bp_use_lib traced_c_loop
+[13363] debugger started
+[13364] target started. will run &#39;traced_c_loop&#39;
+[13363] child now at EIP = 0x00a37850
+[13363] breakpoint created
+[13363] child stopped at breakpoint. EIP = 0x080483E5
+[13363] resuming
+Hello,
+[13363] child stopped at breakpoint. EIP = 0x080483E5
+[13363] resuming
+Hello,
+[13363] child stopped at breakpoint. EIP = 0x080483E5
+[13363] resuming
+Hello,
+[13363] child stopped at breakpoint. EIP = 0x080483E5
+[13363] resuming
+Hello,
+world!
+[13363] child exited
+                                    </pre>
+                                </div>
+                                <p>Just&nbsp;as&nbsp;expected!</p>
+                            </div>
+                            <div class="section" id="the-code">
+                                <h3>The&nbsp;code</h3>
+                                <p>
+                                    <a class="reference external" href="https://github.com/eliben/code-for-blog/tree/master/2011/debuggers_part2_code">Here&nbsp;are</a>
+                                    the&nbsp;complete&nbsp;source&nbsp;code&nbsp;files&nbsp;for&nbsp;this&nbsp;part.&nbsp;In&nbsp;the&nbsp;archive&nbsp;you&#039;ll&nbsp;find:
+                                </p>
+                                <ul class="simple">
+                                    <li>debuglib.h&nbsp;and&nbsp;debuglib.c&nbsp;&ndash;&nbsp;the&nbsp;simple&nbsp;library&nbsp;for&nbsp;encapsulating&nbsp;some&nbsp;of&nbsp;the&nbsp;inner&nbsp;workings&nbsp;of&nbsp;a&nbsp;debugger</li>
+                                    <li>bp_manual.c&nbsp;&ndash;&nbsp;the&nbsp;&quot;manual&quot;&nbsp;way&nbsp;of&nbsp;setting&nbsp;breakpoints&nbsp;presented&nbsp;first&nbsp;in&nbsp;this&nbsp;article.&nbsp;Uses&nbsp;the
+                                        <tt class="docutils literal">
+                                            <span class="pre">debuglib</span>
+                                        </tt>
+                                        library&nbsp;for&nbsp;some&nbsp;boilerplate&nbsp;code.
+                                    </li>
+                                    <li>bp_use_lib.c&nbsp;&ndash;&nbsp;uses
+                                        <tt class="docutils literal">
+                                            <span class="pre">debuglib</span>
+                                        </tt>
+                                        for&nbsp;most&nbsp;of&nbsp;its&nbsp;code,&nbsp;as&nbsp;demonstrated&nbsp;in&nbsp;the&nbsp;second&nbsp;code&nbsp;sample&nbsp;for&nbsp;tracing&nbsp;the&nbsp;loop&nbsp;in&nbsp;a&nbsp;C&nbsp;program.
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="section" id="conclusion-and-next-steps">
+                                <h3>Conclusion&nbsp;and&nbsp;next&nbsp;steps</h3>
+                                <p>We&#039;ve&nbsp;covered&nbsp;how&nbsp;breakpoints&nbsp;are&nbsp;implemented&nbsp;in&nbsp;debuggers.&nbsp;While&nbsp;implementation&nbsp;details&nbsp;vary&nbsp;between&nbsp;OSes,&nbsp;when&nbsp;you&#039;re&nbsp;on&nbsp;x86&nbsp;it&#039;s&nbsp;all&nbsp;basically&nbsp;variations&nbsp;on&nbsp;the&nbsp;same&nbsp;theme&nbsp;&ndash;&nbsp;substituting
+                                    <tt class="docutils literal">
+                                        <span class="pre">int</span>
+                                        <span class="pre">3</span>
+                                    </tt>
+                                    for&nbsp;the&nbsp;instruction&nbsp;where&nbsp;we&nbsp;want&nbsp;the&nbsp;process&nbsp;to&nbsp;stop.
+                                </p>
+                                <p>That&nbsp;said,&nbsp;I&#039;m&nbsp;sure&nbsp;some&nbsp;readers,&nbsp;just&nbsp;like&nbsp;me,&nbsp;will&nbsp;be&nbsp;less&nbsp;than&nbsp;excited&nbsp;about&nbsp;specifying&nbsp;raw&nbsp;memory&nbsp;addresses&nbsp;to&nbsp;break&nbsp;on.&nbsp;We&#039;d&nbsp;like&nbsp;to&nbsp;say&nbsp;&quot;break&nbsp;on
+                                    <tt class="docutils literal">
+                                        <span class="pre">do_stuff</span>
+                                    </tt>
+                                    &quot;,&nbsp;or&nbsp;even&nbsp;&quot;break&nbsp;on
+                                    <em>this</em>
+                                    line&nbsp;in
+                                    <tt class="docutils literal">
+                                        <span class="pre">do_stuff</span>
+                                    </tt>
+                                    &quot;&nbsp;and&nbsp;have&nbsp;the&nbsp;debugger&nbsp;do&nbsp;it.&nbsp;In&nbsp;the&nbsp;next&nbsp;article&nbsp;I&#039;m&nbsp;going&nbsp;to&nbsp;show&nbsp;how&nbsp;it&#039;s&nbsp;done.
+                                </p>
+                            </div>
+                            <div class="section" id="references">
+                                <h3>References</h3>
+                                <p>I&#039;ve&nbsp;found&nbsp;the&nbsp;following&nbsp;resources&nbsp;and&nbsp;articles&nbsp;useful&nbsp;in&nbsp;the&nbsp;preparation&nbsp;of&nbsp;this&nbsp;article:</p>
+                                <ul class="simple">
+                                    <li>
+                                        <a class="reference external" href="http://www.alexonlinux.com/how-debugger-works">How&nbsp;debugger&nbsp;works</a>
+                                    </li>
+                                    <li>
+                                        <a class="reference external" href="http://www.linuxforums.org/articles/understanding-elf-using-readelf-and-objdump_125.html">Understanding&nbsp;ELF&nbsp;using&nbsp;readelf&nbsp;and&nbsp;objdump</a>
+                                    </li>
+                                    <li>
+                                        <a class="reference external" href="http://mainisusuallyafunction.blogspot.com/2011/01/implementing-breakpoints-on-x86-linux.html">Implementing&nbsp;breakpoints&nbsp;on&nbsp;x86&nbsp;Linux</a>
+                                    </li>
+                                    <li>
+                                        <a class="reference external" href="http://www.nasm.us/xdoc/2.09.04/html/nasmdoc0.html">NASM&nbsp;manual</a>
+                                    </li>
+                                    <li>
+                                        <a class="reference external" href="http://stackoverflow.com/questions/2187484/elf-binary-entry-point">SO&nbsp;discussion&nbsp;of&nbsp;the&nbsp;ELF&nbsp;entry&nbsp;point</a>
+                                    </li>
+                                    <li>
+                                        <a class="reference external" href="http://news.ycombinator.net/item?id=2131894">This&nbsp;Hacker&nbsp;News&nbsp;discussion</a>
+                                        of&nbsp;the&nbsp;first&nbsp;part&nbsp;of&nbsp;the&nbsp;series
+                                    </li>
+                                    <li>
+                                        <a class="reference external" href="http://www.deansys.com/doc/gdbInternals/gdbint_toc.html">GDB&nbsp;Internals</a>
+                                    </li>
+                                </ul>
+                                <div align="center" class="align-center">
+                                    <img src="How debuggers work Part 2 Breakpoints Eli Bendersky s website_files/hline.jpg" style="width: 320px; height: 5px;" class="align-center"></img>
+                                </div>
+                                <table class="docutils footnote" frame="void" id="id7" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id1" class="fn-backref">[1]</a>
+                                            </td>
+                                            <td>On&nbsp;a&nbsp;high&ndash;level&nbsp;view&nbsp;this&nbsp;is&nbsp;true.&nbsp;Down&nbsp;in&nbsp;the&nbsp;gory&nbsp;details,&nbsp;many&nbsp;CPUs&nbsp;today&nbsp;execute&nbsp;multiple&nbsp;instructions&nbsp;in&nbsp;parallel,&nbsp;some&nbsp;of&nbsp;them
+                                                <a class="reference external" href="http://en.wikipedia.org/wiki/Out-of-order_execution">not&nbsp;in&nbsp;their&nbsp;original&nbsp;order</a>
+                                                .
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="docutils footnote" frame="void" id="id8" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id2" class="fn-backref">[2]</a>
+                                            </td>
+                                            <td>The&nbsp;bible&nbsp;in&nbsp;this&nbsp;case&nbsp;being,&nbsp;of&nbsp;course,&nbsp;Intel&#039;s&nbsp;Architecture&nbsp;software&nbsp;developer&#039;s&nbsp;manual,&nbsp;volume&nbsp;2A.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="docutils footnote" frame="void" id="id9" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id3" class="fn-backref">[3]</a>
+                                            </td>
+                                            <td>How&nbsp;can&nbsp;the&nbsp;OS&nbsp;stop&nbsp;a&nbsp;process&nbsp;just&nbsp;like&nbsp;that?&nbsp;The&nbsp;OS&nbsp;registered&nbsp;its&nbsp;own&nbsp;handler&nbsp;for
+                                                <tt class="docutils literal">
+                                                    <span class="pre">int</span>
+                                                    <span class="pre">3</span>
+                                                </tt>
+                                                with&nbsp;the&nbsp;CPU,&nbsp;that&#039;s&nbsp;how!
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="docutils footnote" frame="void" id="id10" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id4" class="fn-backref">[4]</a>
+                                            </td>
+                                            <td>Wait,
+                                                <tt class="docutils literal">
+                                                    <span class="pre">int</span>
+                                                </tt>
+                                                again?&nbsp;Yes!&nbsp;Linux&nbsp;uses
+                                                <tt class="docutils literal">
+                                                    <span class="pre">int</span>
+                                                    <span class="pre">0x80</span>
+                                                </tt>
+                                                to&nbsp;implement&nbsp;system&nbsp;calls&nbsp;from&nbsp;user&nbsp;processes&nbsp;into&nbsp;the&nbsp;OS&nbsp;kernel.&nbsp;The&nbsp;user&nbsp;places&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;system&nbsp;call&nbsp;and&nbsp;its&nbsp;arguments&nbsp;into&nbsp;registers&nbsp;and&nbsp;executes
+                                                <tt class="docutils literal">
+                                                    <span class="pre">int</span>
+                                                    <span class="pre">0x80</span>
+                                                </tt>
+                                                .&nbsp;The&nbsp;CPU&nbsp;then&nbsp;jumps&nbsp;to&nbsp;the&nbsp;appropriate&nbsp;interrupt&nbsp;handler,&nbsp;where&nbsp;the&nbsp;OS&nbsp;registered&nbsp;a&nbsp;procedure&nbsp;that&nbsp;looks&nbsp;at&nbsp;the&nbsp;registers&nbsp;and&nbsp;decides&nbsp;which&nbsp;system&nbsp;call&nbsp;to&nbsp;execute.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="docutils footnote" frame="void" id="id11" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id5" class="fn-backref">[5]</a>
+                                            </td>
+                                            <td>
+                                                <a class="reference external" href="http://en.wikipedia.org/wiki/Executable_and_Linkable_Format">ELF</a>
+                                                (Executable&nbsp;and&nbsp;Linkable&nbsp;Format)&nbsp;is&nbsp;the&nbsp;file&nbsp;format&nbsp;used&nbsp;by&nbsp;Linux&nbsp;for&nbsp;object&nbsp;files,&nbsp;shared&nbsp;libraries&nbsp;and&nbsp;executables.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="docutils footnote" frame="void" id="id12" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id6" class="fn-backref">[6]</a>
+                                            </td>
+                                            <td>An&nbsp;observant&nbsp;reader&nbsp;can&nbsp;spot&nbsp;the&nbsp;translation&nbsp;of
+                                                <tt class="docutils literal">
+                                                    <span class="pre">int</span>
+                                                    <span class="pre">0x80</span>
+                                                </tt>
+                                                into
+                                                <tt class="docutils literal">
+                                                    <span class="pre">cd</span>
+                                                    <span class="pre">80</span>
+                                                </tt>
+                                                in&nbsp;the&nbsp;dumps&nbsp;listed&nbsp;above.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    
+                   
+                    </article>
+                </section>
+            </div>
+        </div>
+ 
+        </div>
+
+        <br><br><br>
+        <hr/>
+        <H2><a name="HEAD_2" href="#TOC_HEAD_2">How debuggers work Part 3 Debugging information Eli Bendersky s website</a></H2>
+        <div>
+ 
+ 
+        <div class="container">
+            <div class="row">
+                <section id="content">
+                    <article>
+                     
+                        <div class="entry-content">
+                            
+                            <p>This&nbsp;is&nbsp;the&nbsp;third&nbsp;part&nbsp;in&nbsp;a&nbsp;series&nbsp;of&nbsp;articles&nbsp;on&nbsp;how&nbsp;debuggers&nbsp;work.&nbsp;Make&nbsp;sure&nbsp;you&nbsp;read
+                                <a class="reference external" href="http://eli.thegreenplace.net/2011/01/23/how-debuggers-work-part-1/">the&nbsp;first</a>
+                                and
+                                <a class="reference external" href="http://eli.thegreenplace.net/2011/01/27/how-debuggers-work-part-2-breakpoints/">the&nbsp;second</a>
+                                parts&nbsp;before&nbsp;this&nbsp;one.
+                            </p>
+                            <div class="section" id="in-this-part">
+                                <h3>In&nbsp;this&nbsp;part</h3>
+                                <p>I&#039;m&nbsp;going&nbsp;to&nbsp;explain&nbsp;how&nbsp;the&nbsp;debugger&nbsp;figures&nbsp;out&nbsp;where&nbsp;to&nbsp;find&nbsp;the&nbsp;C&nbsp;functions&nbsp;and&nbsp;variables&nbsp;in&nbsp;the&nbsp;machine&nbsp;code&nbsp;it&nbsp;wades&nbsp;through,&nbsp;and&nbsp;the&nbsp;data&nbsp;it&nbsp;uses&nbsp;to&nbsp;map&nbsp;between&nbsp;C&nbsp;source&nbsp;code&nbsp;lines&nbsp;and&nbsp;machine&nbsp;language&nbsp;words.</p>
+                            </div>
+                            <div class="section" id="debugging-information">
+                                <h3>Debugging&nbsp;information</h3>
+                                <p>Modern&nbsp;compilers&nbsp;do&nbsp;a&nbsp;pretty&nbsp;good&nbsp;job&nbsp;converting&nbsp;your&nbsp;high&ndash;level&nbsp;code,&nbsp;with&nbsp;its&nbsp;nicely&nbsp;indented&nbsp;and&nbsp;nested&nbsp;control&nbsp;structures&nbsp;and&nbsp;arbitrarily&nbsp;typed&nbsp;variables&nbsp;into&nbsp;a&nbsp;big&nbsp;pile&nbsp;of&nbsp;bits&nbsp;called&nbsp;machine&nbsp;code,&nbsp;the&nbsp;sole&nbsp;purpose&nbsp;of&nbsp;which&nbsp;is&nbsp;to&nbsp;run&nbsp;as&nbsp;fast&nbsp;as&nbsp;possible&nbsp;on&nbsp;the&nbsp;target&nbsp;CPU.&nbsp;Most&nbsp;&nbsp;lines&nbsp;of&nbsp;C&nbsp;get&nbsp;converted&nbsp;into&nbsp;several&nbsp;machine&nbsp;code&nbsp;instructions.&nbsp;Variables&nbsp;are&nbsp;shoved&nbsp;all&nbsp;over&nbsp;the&nbsp;place&nbsp;&ndash;&nbsp;into&nbsp;the&nbsp;stack,&nbsp;into&nbsp;registers,&nbsp;or&nbsp;completely&nbsp;optimized&nbsp;away.&nbsp;Structures&nbsp;and&nbsp;objects&nbsp;don&#039;t&nbsp;even
+                                    <em>exist</em>
+                                    in&nbsp;the&nbsp;resulting&nbsp;code&nbsp;&ndash;&nbsp;they&#039;re&nbsp;merely&nbsp;an&nbsp;abstraction&nbsp;that&nbsp;gets&nbsp;translated&nbsp;to&nbsp;hard&ndash;coded&nbsp;offsets&nbsp;into&nbsp;memory&nbsp;buffers.
+                                </p>
+                                <p>So&nbsp;how&nbsp;does&nbsp;a&nbsp;debugger&nbsp;know&nbsp;where&nbsp;to&nbsp;stop&nbsp;when&nbsp;you&nbsp;ask&nbsp;it&nbsp;to&nbsp;break&nbsp;at&nbsp;the&nbsp;entry&nbsp;to&nbsp;some&nbsp;function?&nbsp;How&nbsp;does&nbsp;it&nbsp;manage&nbsp;to&nbsp;find&nbsp;what&nbsp;to&nbsp;show&nbsp;you&nbsp;when&nbsp;you&nbsp;ask&nbsp;it&nbsp;for&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;variable?&nbsp;The&nbsp;answer&nbsp;is&nbsp;&ndash;&nbsp;debugging&nbsp;information.</p>
+                                <p>Debugging&nbsp;information&nbsp;is&nbsp;generated&nbsp;by&nbsp;the&nbsp;compiler&nbsp;together&nbsp;with&nbsp;the&nbsp;machine&nbsp;code.&nbsp;It&nbsp;is&nbsp;a&nbsp;representation&nbsp;of&nbsp;the&nbsp;relationship&nbsp;between&nbsp;the&nbsp;executable&nbsp;program&nbsp;and&nbsp;the&nbsp;original&nbsp;source&nbsp;code.&nbsp;This&nbsp;information&nbsp;is&nbsp;encoded&nbsp;into&nbsp;a&nbsp;pre&ndash;defined&nbsp;format&nbsp;and&nbsp;stored&nbsp;alongside&nbsp;the&nbsp;machine&nbsp;code.&nbsp;Many&nbsp;such&nbsp;formats&nbsp;were&nbsp;invented&nbsp;over&nbsp;the&nbsp;years&nbsp;for&nbsp;different&nbsp;platforms&nbsp;and&nbsp;executable&nbsp;files.&nbsp;Since&nbsp;the&nbsp;aim&nbsp;of&nbsp;this&nbsp;article&nbsp;isn&#039;t&nbsp;to&nbsp;survey&nbsp;the&nbsp;history&nbsp;of&nbsp;these&nbsp;formats,&nbsp;but&nbsp;rather&nbsp;to&nbsp;show&nbsp;how&nbsp;they&nbsp;work,&nbsp;we&#039;ll&nbsp;have&nbsp;to&nbsp;settle&nbsp;on&nbsp;something.&nbsp;This&nbsp;something&nbsp;is&nbsp;going&nbsp;to&nbsp;be&nbsp;DWARF,&nbsp;which&nbsp;is&nbsp;almost&nbsp;ubiquitously&nbsp;used&nbsp;today&nbsp;as&nbsp;the&nbsp;debugging&nbsp;information&nbsp;format&nbsp;for&nbsp;ELF&nbsp;executables&nbsp;on&nbsp;Linux&nbsp;and&nbsp;other&nbsp;Unix&ndash;y&nbsp;platforms.</p>
+                            </div>
+                            <div class="section" id="the-dwarf-in-the-elf">
+                                <h3>The&nbsp;DWARF&nbsp;in&nbsp;the&nbsp;ELF</h3>
+                                <div align="center" class="align-center">
+                                    <img src="How debuggers work Part 3 Debugging information Eli Bendersky s website_files/dwarf_logo.gif" class="align-center"></img>
+                                </div>
+                                <p>According&nbsp;to
+                                    <a class="reference external" href="http://en.wikipedia.org/wiki/DWARF">its&nbsp;Wikipedia&nbsp;page</a>
+                                    ,&nbsp;DWARF&nbsp;was&nbsp;designed&nbsp;alongside&nbsp;ELF,&nbsp;although&nbsp;it&nbsp;can&nbsp;in&nbsp;theory&nbsp;be&nbsp;embedded&nbsp;in&nbsp;other&nbsp;object&nbsp;file&nbsp;formats&nbsp;as&nbsp;well
+                                    <a href="http://eli.thegreenplace.net/#id7" id="id1" class="footnote-reference">[1]</a>
+                                    .
+                                </p>
+                                <p>DWARF&nbsp;is&nbsp;a&nbsp;complex&nbsp;format,&nbsp;building&nbsp;on&nbsp;many&nbsp;years&nbsp;of&nbsp;experience&nbsp;with&nbsp;previous&nbsp;formats&nbsp;for&nbsp;various&nbsp;architectures&nbsp;and&nbsp;operating&nbsp;systems.&nbsp;It&nbsp;has&nbsp;to&nbsp;be&nbsp;complex,&nbsp;since&nbsp;it&nbsp;solves&nbsp;a&nbsp;very&nbsp;tricky&nbsp;problem&nbsp;&ndash;&nbsp;presenting&nbsp;debugging&nbsp;information&nbsp;from&nbsp;any&nbsp;high&ndash;level&nbsp;language&nbsp;to&nbsp;debuggers,&nbsp;providing&nbsp;support&nbsp;for&nbsp;arbitrary&nbsp;platforms&nbsp;and&nbsp;ABIs.&nbsp;It&nbsp;would&nbsp;take&nbsp;much&nbsp;more&nbsp;than&nbsp;this&nbsp;humble&nbsp;article&nbsp;to&nbsp;explain&nbsp;it&nbsp;fully,&nbsp;and&nbsp;to&nbsp;be&nbsp;honest&nbsp;I&nbsp;don&#039;t&nbsp;understand&nbsp;all&nbsp;its&nbsp;dark&nbsp;corners&nbsp;well&nbsp;enough&nbsp;to&nbsp;engage&nbsp;in&nbsp;such&nbsp;an&nbsp;endeavor&nbsp;anyway
+                                    <a href="http://eli.thegreenplace.net/#id8" id="id2" class="footnote-reference">[2]</a>
+                                    .&nbsp;In&nbsp;this&nbsp;article&nbsp;I&nbsp;will&nbsp;take&nbsp;a&nbsp;more&nbsp;hands&ndash;on&nbsp;approach,&nbsp;showing&nbsp;just&nbsp;enough&nbsp;of&nbsp;DWARF&nbsp;to&nbsp;explain&nbsp;how&nbsp;debugging&nbsp;information&nbsp;works&nbsp;in&nbsp;practical&nbsp;terms.
+                                </p>
+                            </div>
+                            <div class="section" id="debug-sections-in-elf-files">
+                                <h3>Debug&nbsp;sections&nbsp;in&nbsp;ELF&nbsp;files</h3>
+                                <p>First&nbsp;let&#039;s&nbsp;take&nbsp;a&nbsp;glimpse&nbsp;of&nbsp;where&nbsp;the&nbsp;DWARF&nbsp;info&nbsp;is&nbsp;placed&nbsp;inside&nbsp;ELF&nbsp;files.&nbsp;ELF&nbsp;defines&nbsp;arbitrary&nbsp;sections&nbsp;that&nbsp;may&nbsp;exist&nbsp;in&nbsp;each&nbsp;object&nbsp;file.&nbsp;A
+                                    <em>section&nbsp;header&nbsp;table</em>
+                                    defines&nbsp;which&nbsp;sections&nbsp;exist&nbsp;and&nbsp;their&nbsp;names.&nbsp;Different&nbsp;tools&nbsp;treat&nbsp;various&nbsp;sections&nbsp;in&nbsp;special&nbsp;ways&nbsp;&ndash;&nbsp;for&nbsp;example&nbsp;the&nbsp;linker&nbsp;is&nbsp;looking&nbsp;for&nbsp;some&nbsp;sections,&nbsp;the&nbsp;debugger&nbsp;for&nbsp;others.
+                                </p>
+                                <p>We&#039;ll&nbsp;be&nbsp;using&nbsp;an&nbsp;executable&nbsp;built&nbsp;from&nbsp;this&nbsp;C&nbsp;source&nbsp;for&nbsp;our&nbsp;experiments&nbsp;in&nbsp;this&nbsp;article,&nbsp;compiled&nbsp;into
+                                    <tt class="docutils literal">
+                                        <span class="pre">tracedprog2</span>
+                                    </tt>
+                                    :
+                                </p>
+                                <div class="highlight">
+                                    <pre>
+<span style="color: #007f00">#include &lt;stdio.h&gt;</span>
+
+
+<span style="color: #00007f; font-weight: bold">void</span> <span style="color: #00007f">do_stuff</span>(<span style="color: #00007f; font-weight: bold">int</span> my_arg)
+{
+    <span style="color: #00007f; font-weight: bold">int</span> my_local = my_arg + <span style="color: #007f7f">2</span>;
+    <span style="color: #00007f; font-weight: bold">int</span> i;
+
+    <span style="color: #00007f; font-weight: bold">for</span> (i = <span style="color: #007f7f">0</span>; i &lt; my_local; ++i)
+        printf(<span style="color: #7f007f">&quot;i = %d\n&quot;</span>, i);
+}
+
+
+<span style="color: #00007f; font-weight: bold">int</span> <span style="color: #00007f">main</span>()
+{
+    do_stuff(<span style="color: #007f7f">2</span>);
+    <span style="color: #00007f; font-weight: bold">return</span> <span style="color: #007f7f">0</span>;
+}
+                                    </pre>
+                                </div>
+                                <p>Dumping&nbsp;the&nbsp;section&nbsp;headers&nbsp;from&nbsp;the&nbsp;ELF&nbsp;executable&nbsp;using
+                                    <tt class="docutils literal">
+                                        <span class="pre">objdump</span>
+                                        <span class="pre">&ndash;h</span>
+                                    </tt>
+                                    we&#039;ll&nbsp;notice&nbsp;several&nbsp;sections&nbsp;with&nbsp;names&nbsp;beginning&nbsp;with
+                                    <tt class="docutils literal">
+                                        <span class="pre">.debug_</span>
+                                    </tt>
+                                    &ndash;&nbsp;these&nbsp;are&nbsp;the&nbsp;DWARF&nbsp;debugging&nbsp;sections:
+                                </p>
+                                <div class="highlight">
+                                    <pre>
+26 .debug_aranges 00000020  00000000  00000000  00001037
+                 CONTENTS, READONLY, DEBUGGING
+27 .debug_pubnames 00000028  00000000  00000000  00001057
+                 CONTENTS, READONLY, DEBUGGING
+28 .debug_info   000000cc  00000000  00000000  0000107f
+                 CONTENTS, READONLY, DEBUGGING
+29 .debug_abbrev 0000008a  00000000  00000000  0000114b
+                 CONTENTS, READONLY, DEBUGGING
+30 .debug_line   0000006b  00000000  00000000  000011d5
+                 CONTENTS, READONLY, DEBUGGING
+31 .debug_frame  00000044  00000000  00000000  00001240
+                 CONTENTS, READONLY, DEBUGGING
+32 .debug_str    000000ae  00000000  00000000  00001284
+                 CONTENTS, READONLY, DEBUGGING
+33 .debug_loc    00000058  00000000  00000000  00001332
+                 CONTENTS, READONLY, DEBUGGING
+                                    </pre>
+                                </div>
+                                <p>The&nbsp;first&nbsp;number&nbsp;seen&nbsp;for&nbsp;each&nbsp;section&nbsp;here&nbsp;is&nbsp;its&nbsp;size,&nbsp;and&nbsp;the&nbsp;last&nbsp;is&nbsp;the&nbsp;offset&nbsp;where&nbsp;it&nbsp;begins&nbsp;in&nbsp;the&nbsp;ELF&nbsp;file.&nbsp;The&nbsp;debugger&nbsp;uses&nbsp;this&nbsp;information&nbsp;to&nbsp;read&nbsp;the&nbsp;section&nbsp;from&nbsp;the&nbsp;executable.</p>
+                                <p>Now&nbsp;let&#039;s&nbsp;see&nbsp;a&nbsp;few&nbsp;practical&nbsp;examples&nbsp;of&nbsp;finding&nbsp;useful&nbsp;debug&nbsp;information&nbsp;in&nbsp;DWARF.</p>
+                            </div>
+                            <div class="section" id="finding-functions">
+                                <h3>Finding&nbsp;functions</h3>
+                                <p>One&nbsp;of&nbsp;the&nbsp;most&nbsp;basic&nbsp;things&nbsp;we&nbsp;want&nbsp;to&nbsp;do&nbsp;when&nbsp;debugging&nbsp;is&nbsp;placing&nbsp;breakpoints&nbsp;at&nbsp;some&nbsp;function,&nbsp;expecting&nbsp;the&nbsp;debugger&nbsp;to&nbsp;break&nbsp;right&nbsp;at&nbsp;its&nbsp;entrance.&nbsp;To&nbsp;be&nbsp;able&nbsp;to&nbsp;perform&nbsp;this&nbsp;feat,&nbsp;the&nbsp;debugger&nbsp;must&nbsp;have&nbsp;some&nbsp;mapping&nbsp;between&nbsp;a&nbsp;function&nbsp;name&nbsp;in&nbsp;the&nbsp;high&ndash;level&nbsp;code&nbsp;and&nbsp;the&nbsp;address&nbsp;in&nbsp;the&nbsp;machine&nbsp;code&nbsp;where&nbsp;the&nbsp;instructions&nbsp;for&nbsp;this&nbsp;function&nbsp;begin.</p>
+                                <p>This&nbsp;information&nbsp;can&nbsp;be&nbsp;obtained&nbsp;from&nbsp;DWARF&nbsp;by&nbsp;looking&nbsp;at&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">.debug_info</span>
+                                    </tt>
+                                    section.&nbsp;Before&nbsp;we&nbsp;go&nbsp;further,&nbsp;a&nbsp;bit&nbsp;of&nbsp;background.&nbsp;The&nbsp;basic&nbsp;descriptive&nbsp;entity&nbsp;in&nbsp;DWARF&nbsp;is&nbsp;called&nbsp;the&nbsp;Debugging&nbsp;Information&nbsp;Entry&nbsp;(DIE).&nbsp;Each&nbsp;DIE&nbsp;has&nbsp;a&nbsp;tag&nbsp;&ndash;&nbsp;its&nbsp;type,&nbsp;and&nbsp;a&nbsp;set&nbsp;of&nbsp;attributes.&nbsp;DIEs&nbsp;are&nbsp;interlinked&nbsp;via&nbsp;sibling&nbsp;and&nbsp;child&nbsp;links,&nbsp;and&nbsp;values&nbsp;of&nbsp;attributes&nbsp;can&nbsp;point&nbsp;at&nbsp;other&nbsp;DIEs.
+                                </p>
+                                <p>Let&#039;s&nbsp;run:</p>
+                                <div class="highlight">
+                                    <pre>objdump --dwarf=info tracedprog2</pre>
+                                </div>
+                                <p>The&nbsp;output&nbsp;is&nbsp;quite&nbsp;long,&nbsp;and&nbsp;for&nbsp;this&nbsp;example&nbsp;we&#039;ll&nbsp;just&nbsp;focus&nbsp;on&nbsp;these&nbsp;lines
+                                    <a href="http://eli.thegreenplace.net/#id9" id="id3" class="footnote-reference">[3]</a>
+                                    :
+                                </p>
+                                <div class="highlight">
+                                    <pre>
+&lt;1&gt;&lt;71&gt;: Abbrev Number: 5 (DW_TAG_subprogram)
+    &lt;72&gt;   DW_AT_external    : 1
+    &lt;73&gt;   DW_AT_name        : (...): do_stuff
+    &lt;77&gt;   DW_AT_decl_file   : 1
+    &lt;78&gt;   DW_AT_decl_line   : 4
+    &lt;79&gt;   DW_AT_prototyped  : 1
+    &lt;7a&gt;   DW_AT_low_pc      : 0x8048604
+    &lt;7e&gt;   DW_AT_high_pc     : 0x804863e
+    &lt;82&gt;   DW_AT_frame_base  : 0x0      (location list)
+    &lt;86&gt;   DW_AT_sibling     : &lt;0xb3&gt;
+
+&lt;1&gt;&lt;b3&gt;: Abbrev Number: 9 (DW_TAG_subprogram)
+    &lt;b4&gt;   DW_AT_external    : 1
+    &lt;b5&gt;   DW_AT_name        : (...): main
+    &lt;b9&gt;   DW_AT_decl_file   : 1
+    &lt;ba&gt;   DW_AT_decl_line   : 14
+    &lt;bb&gt;   DW_AT_type        : &lt;0x4b&gt;
+    &lt;bf&gt;   DW_AT_low_pc      : 0x804863e
+    &lt;c3&gt;   DW_AT_high_pc     : 0x804865a
+    &lt;c7&gt;   DW_AT_frame_base  : 0x2c     (location list)
+                                    </pre>
+                                </div>
+                                <p>There&nbsp;are&nbsp;two&nbsp;entries&nbsp;(DIEs)&nbsp;tagged
+                                    <tt class="docutils literal">
+                                        <span class="pre">DW_TAG_subprogram</span>
+                                    </tt>
+                                    ,&nbsp;which&nbsp;is&nbsp;a&nbsp;function&nbsp;in&nbsp;DWARF&#039;s&nbsp;jargon.&nbsp;Note&nbsp;that&nbsp;there&#039;s&nbsp;an&nbsp;entry&nbsp;for
+                                    <tt class="docutils literal">
+                                        <span class="pre">do_stuff</span>
+                                    </tt>
+                                    and&nbsp;an&nbsp;entry&nbsp;for
+                                    <tt class="docutils literal">
+                                        <span class="pre">main</span>
+                                    </tt>
+                                    .&nbsp;There&nbsp;are&nbsp;several&nbsp;interesting&nbsp;attributes,&nbsp;but&nbsp;the&nbsp;one&nbsp;that&nbsp;interests&nbsp;us&nbsp;here&nbsp;is
+                                    <tt class="docutils literal">
+                                        <span class="pre">DW_AT_low_pc</span>
+                                    </tt>
+                                    .&nbsp;This&nbsp;is&nbsp;the&nbsp;program&ndash;counter&nbsp;(
+                                    <tt class="docutils literal">
+                                        <span class="pre">EIP</span>
+                                    </tt>
+                                    in&nbsp;x86)&nbsp;value&nbsp;for&nbsp;the&nbsp;beginning&nbsp;of&nbsp;the&nbsp;function.&nbsp;Note&nbsp;that&nbsp;it&#039;s
+                                    <tt class="docutils literal">
+                                        <span class="pre">0x8048604</span>
+                                    </tt>
+                                    for
+                                    <tt class="docutils literal">
+                                        <span class="pre">do_stuff</span>
+                                    </tt>
+                                    .&nbsp;Now&nbsp;let&#039;s&nbsp;see&nbsp;what&nbsp;this&nbsp;address&nbsp;is&nbsp;in&nbsp;the&nbsp;disassembly&nbsp;of&nbsp;the&nbsp;executable&nbsp;by&nbsp;running
+                                    <tt class="docutils literal">
+                                        <span class="pre">objdump</span>
+                                        <span class="pre">&ndash;d</span>
+                                    </tt>
+                                    :
+                                </p>
+                                <div class="highlight">
+                                    <pre>
+08048604 &lt;do_stuff&gt;:
+ 8048604:       55           push   ebp
+ 8048605:       89 e5        mov    ebp,esp
+ 8048607:       83 ec 28     sub    esp,0x28
+ 804860a:       8b 45 08     mov    eax,DWORD PTR [ebp+0x8]
+ 804860d:       83 c0 02     add    eax,0x2
+ 8048610:       89 45 f4     mov    DWORD PTR [ebp-0xc],eax
+ 8048613:       c7 45 (...)  mov    DWORD PTR [ebp-0x10],0x0
+ 804861a:       eb 18        jmp    8048634 &lt;do_stuff+0x30&gt;
+ 804861c:       b8 20 (...)  mov    eax,0x8048720
+ 8048621:       8b 55 f0     mov    edx,DWORD PTR [ebp-0x10]
+ 8048624:       89 54 24 04  mov    DWORD PTR [esp+0x4],edx
+ 8048628:       89 04 24     mov    DWORD PTR [esp],eax
+ 804862b:       e8 04 (...)  call   8048534 &lt;printf@plt&gt;
+ 8048630:       83 45 f0 01  add    DWORD PTR [ebp-0x10],0x1
+ 8048634:       8b 45 f0     mov    eax,DWORD PTR [ebp-0x10]
+ 8048637:       3b 45 f4     cmp    eax,DWORD PTR [ebp-0xc]
+ 804863a:       7c e0        jl     804861c &lt;do_stuff+0x18&gt;
+ 804863c:       c9           leave
+ 804863d:       c3           ret
+                                    </pre>
+                                </div>
+                                <p>Indeed,
+                                    <tt class="docutils literal">
+                                        <span class="pre">0x8048604</span>
+                                    </tt>
+                                    is&nbsp;the&nbsp;beginning&nbsp;of
+                                    <tt class="docutils literal">
+                                        <span class="pre">do_stuff</span>
+                                    </tt>
+                                    ,&nbsp;so&nbsp;the&nbsp;debugger&nbsp;can&nbsp;have&nbsp;a&nbsp;mapping&nbsp;between&nbsp;functions&nbsp;and&nbsp;their&nbsp;locations&nbsp;in&nbsp;the&nbsp;executable.
+                                </p>
+                            </div>
+                            <div class="section" id="finding-variables">
+                                <h3>Finding&nbsp;variables</h3>
+                                <p>Suppose&nbsp;that&nbsp;we&#039;ve&nbsp;indeed&nbsp;stopped&nbsp;at&nbsp;a&nbsp;breakpoint&nbsp;inside
+                                    <tt class="docutils literal">
+                                        <span class="pre">do_stuff</span>
+                                    </tt>
+                                    .&nbsp;We&nbsp;want&nbsp;to&nbsp;ask&nbsp;the&nbsp;debugger&nbsp;to&nbsp;show&nbsp;us&nbsp;the&nbsp;value&nbsp;of&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">my_local</span>
+                                    </tt>
+                                    variable.&nbsp;How&nbsp;does&nbsp;it&nbsp;know&nbsp;where&nbsp;to&nbsp;find&nbsp;it?&nbsp;Turns&nbsp;out&nbsp;this&nbsp;is&nbsp;much&nbsp;trickier&nbsp;than&nbsp;finding&nbsp;functions.&nbsp;Variables&nbsp;can&nbsp;be&nbsp;located&nbsp;in&nbsp;global&nbsp;storage,&nbsp;on&nbsp;the&nbsp;stack,&nbsp;and&nbsp;even&nbsp;in&nbsp;registers.&nbsp;Additionally,&nbsp;variables&nbsp;with&nbsp;the&nbsp;same&nbsp;name&nbsp;can&nbsp;have&nbsp;different&nbsp;values&nbsp;in&nbsp;different&nbsp;lexical&nbsp;scopes.&nbsp;The&nbsp;debugging&nbsp;information&nbsp;has&nbsp;to&nbsp;be&nbsp;able&nbsp;to&nbsp;reflect&nbsp;all&nbsp;these&nbsp;variations,&nbsp;and&nbsp;indeed&nbsp;DWARF&nbsp;does.
+                                </p>
+                                <p>I&nbsp;won&#039;t&nbsp;cover&nbsp;all&nbsp;the&nbsp;possibilities,&nbsp;but&nbsp;as&nbsp;an&nbsp;example&nbsp;I&#039;ll&nbsp;demonstrate&nbsp;how&nbsp;the&nbsp;debugger&nbsp;can&nbsp;find
+                                    <tt class="docutils literal">
+                                        <span class="pre">my_local</span>
+                                    </tt>
+                                    in
+                                    <tt class="docutils literal">
+                                        <span class="pre">do_stuff</span>
+                                    </tt>
+                                    .&nbsp;Let&#039;s&nbsp;start&nbsp;at
+                                    <tt class="docutils literal">
+                                        <span class="pre">.debug_info</span>
+                                    </tt>
+                                    and&nbsp;look&nbsp;at&nbsp;the&nbsp;entry&nbsp;for
+                                    <tt class="docutils literal">
+                                        <span class="pre">do_stuff</span>
+                                    </tt>
+                                    again,&nbsp;this&nbsp;time&nbsp;also&nbsp;looking&nbsp;at&nbsp;a&nbsp;couple&nbsp;of&nbsp;its&nbsp;sub&ndash;entries:
+                                </p>
+                                <div class="highlight">
+                                    <pre>
+&lt;1&gt;&lt;71&gt;: Abbrev Number: 5 (DW_TAG_subprogram)
+    &lt;72&gt;   DW_AT_external    : 1
+    &lt;73&gt;   DW_AT_name        : (...): do_stuff
+    &lt;77&gt;   DW_AT_decl_file   : 1
+    &lt;78&gt;   DW_AT_decl_line   : 4
+    &lt;79&gt;   DW_AT_prototyped  : 1
+    &lt;7a&gt;   DW_AT_low_pc      : 0x8048604
+    &lt;7e&gt;   DW_AT_high_pc     : 0x804863e
+    &lt;82&gt;   DW_AT_frame_base  : 0x0      (location list)
+    &lt;86&gt;   DW_AT_sibling     : &lt;0xb3&gt;
+ &lt;2&gt;&lt;8a&gt;: Abbrev Number: 6 (DW_TAG_formal_parameter)
+    &lt;8b&gt;   DW_AT_name        : (...): my_arg
+    &lt;8f&gt;   DW_AT_decl_file   : 1
+    &lt;90&gt;   DW_AT_decl_line   : 4
+    &lt;91&gt;   DW_AT_type        : &lt;0x4b&gt;
+    &lt;95&gt;   DW_AT_location    : (...)       (DW_OP_fbreg: 0)
+ &lt;2&gt;&lt;98&gt;: Abbrev Number: 7 (DW_TAG_variable)
+    &lt;99&gt;   DW_AT_name        : (...): my_local
+    &lt;9d&gt;   DW_AT_decl_file   : 1
+    &lt;9e&gt;   DW_AT_decl_line   : 6
+    &lt;9f&gt;   DW_AT_type        : &lt;0x4b&gt;
+    &lt;a3&gt;   DW_AT_location    : (...)      (DW_OP_fbreg: -20)
+&lt;2&gt;&lt;a6&gt;: Abbrev Number: 8 (DW_TAG_variable)
+    &lt;a7&gt;   DW_AT_name        : i
+    &lt;a9&gt;   DW_AT_decl_file   : 1
+    &lt;aa&gt;   DW_AT_decl_line   : 7
+    &lt;ab&gt;   DW_AT_type        : &lt;0x4b&gt;
+    &lt;af&gt;   DW_AT_location    : (...)      (DW_OP_fbreg: -24)
+                                    </pre>
+                                </div>
+                                <p>Note&nbsp;the&nbsp;first&nbsp;number&nbsp;inside&nbsp;the&nbsp;angle&nbsp;brackets&nbsp;in&nbsp;each&nbsp;entry.&nbsp;This&nbsp;is&nbsp;the&nbsp;nesting&nbsp;level&nbsp;&ndash;&nbsp;in&nbsp;this&nbsp;example&nbsp;entries&nbsp;with
+                                    <tt class="docutils literal">
+                                        <span class="pre">&lt;2&gt;</span>
+                                    </tt>
+                                    are&nbsp;children&nbsp;of&nbsp;the&nbsp;entry&nbsp;with
+                                    <tt class="docutils literal">
+                                        <span class="pre">&lt;1&gt;</span>
+                                    </tt>
+                                    .&nbsp;So&nbsp;we&nbsp;know&nbsp;that&nbsp;the&nbsp;variable
+                                    <tt class="docutils literal">
+                                        <span class="pre">my_local</span>
+                                    </tt>
+                                    (marked&nbsp;by&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">DW_TAG_variable</span>
+                                    </tt>
+                                    tag)&nbsp;is&nbsp;a&nbsp;child&nbsp;of&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">do_stuff</span>
+                                    </tt>
+                                    function.&nbsp;The&nbsp;debugger&nbsp;is&nbsp;also&nbsp;interested&nbsp;in&nbsp;a&nbsp;variable&#039;s&nbsp;type&nbsp;to&nbsp;be&nbsp;able&nbsp;to&nbsp;display&nbsp;it&nbsp;correctly.&nbsp;In&nbsp;the&nbsp;case&nbsp;of
+                                    <tt class="docutils literal">
+                                        <span class="pre">my_local</span>
+                                    </tt>
+                                    the&nbsp;type&nbsp;points&nbsp;to&nbsp;another&nbsp;DIE&nbsp;&ndash;
+                                    <tt class="docutils literal">
+                                        <span class="pre">&lt;0x4b&gt;</span>
+                                    </tt>
+                                    .&nbsp;If&nbsp;we&nbsp;look&nbsp;it&nbsp;up&nbsp;in&nbsp;the&nbsp;output&nbsp;of
+                                    <tt class="docutils literal">
+                                        <span class="pre">objdump</span>
+                                    </tt>
+                                    we&#039;ll&nbsp;see&nbsp;it&#039;s&nbsp;a&nbsp;signed&nbsp;4&ndash;byte&nbsp;integer.
+                                </p>
+                                <p>To&nbsp;actually&nbsp;locate&nbsp;the&nbsp;variable&nbsp;in&nbsp;the&nbsp;memory&nbsp;image&nbsp;of&nbsp;the&nbsp;executing&nbsp;process,&nbsp;the&nbsp;debugger&nbsp;will&nbsp;look&nbsp;at&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">DW_AT_location</span>
+                                    </tt>
+                                    attribute.&nbsp;For
+                                    <tt class="docutils literal">
+                                        <span class="pre">my_local</span>
+                                    </tt>
+                                    it&nbsp;says
+                                    <tt class="docutils literal">
+                                        <span class="pre">DW_OP_fbreg:</span>
+                                        <span class="pre">&ndash;20</span>
+                                    </tt>
+                                    .&nbsp;This&nbsp;means&nbsp;that&nbsp;the&nbsp;variable&nbsp;is&nbsp;stored&nbsp;at&nbsp;offset&nbsp;&ndash;20&nbsp;from&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">DW_AT_frame_base</span>
+                                    </tt>
+                                    attribute&nbsp;of&nbsp;its&nbsp;containing&nbsp;function&nbsp;&ndash;&nbsp;which&nbsp;is&nbsp;the&nbsp;base&nbsp;of&nbsp;the&nbsp;frame&nbsp;for&nbsp;the&nbsp;function.
+                                </p>
+                                <p>The
+                                    <tt class="docutils literal">
+                                        <span class="pre">DW_AT_frame_base</span>
+                                    </tt>
+                                    attribute&nbsp;of
+                                    <tt class="docutils literal">
+                                        <span class="pre">do_stuff</span>
+                                    </tt>
+                                    has&nbsp;the&nbsp;value
+                                    <tt class="docutils literal">
+                                        <span class="pre">0x0</span>
+                                        <span class="pre">(location</span>
+                                        <span class="pre">list)</span>
+                                    </tt>
+                                    ,&nbsp;which&nbsp;means&nbsp;that&nbsp;this&nbsp;value&nbsp;actually&nbsp;has&nbsp;to&nbsp;be&nbsp;looked&nbsp;up&nbsp;in&nbsp;the&nbsp;location&nbsp;list&nbsp;section.&nbsp;Let&#039;s&nbsp;look&nbsp;at&nbsp;it:
+                                </p>
+                                <div class="highlight">
+                                    <pre>
+$ objdump --dwarf=loc tracedprog2
+
+tracedprog2:     file format elf32-i386
+
+Contents of the .debug_loc section:
+
+    Offset   Begin    End      Expression
+    00000000 08048604 08048605 (DW_OP_breg4: 4 )
+    00000000 08048605 08048607 (DW_OP_breg4: 8 )
+    00000000 08048607 0804863e (DW_OP_breg5: 8 )
+    00000000 &lt;End of list&gt;
+    0000002c 0804863e 0804863f (DW_OP_breg4: 4 )
+    0000002c 0804863f 08048641 (DW_OP_breg4: 8 )
+    0000002c 08048641 0804865a (DW_OP_breg5: 8 )
+    0000002c &lt;End of list&gt;
+                                    </pre>
+                                </div>
+                                <p>The&nbsp;location&nbsp;information&nbsp;we&#039;re&nbsp;interested&nbsp;in&nbsp;is&nbsp;the&nbsp;first&nbsp;one
+                                    <a href="http://eli.thegreenplace.net/#id10" id="id4" class="footnote-reference">[4]</a>
+                                    .&nbsp;For&nbsp;each&nbsp;address&nbsp;where&nbsp;the&nbsp;debugger&nbsp;may&nbsp;be,&nbsp;it&nbsp;specifies&nbsp;the&nbsp;current&nbsp;frame&nbsp;base&nbsp;from&nbsp;which&nbsp;offsets&nbsp;to&nbsp;variables&nbsp;are&nbsp;to&nbsp;be&nbsp;computed&nbsp;as&nbsp;an&nbsp;offset&nbsp;from&nbsp;a&nbsp;register.&nbsp;For&nbsp;x86,
+                                    <tt class="docutils literal">
+                                        <span class="pre">bpreg4</span>
+                                    </tt>
+                                    refers&nbsp;to
+                                    <tt class="docutils literal">
+                                        <span class="pre">esp</span>
+                                    </tt>
+                                    and
+                                    <tt class="docutils literal">
+                                        <span class="pre">bpreg5</span>
+                                    </tt>
+                                    refers&nbsp;to
+                                    <tt class="docutils literal">
+                                        <span class="pre">ebp</span>
+                                    </tt>
+                                    .
+                                </p>
+                                <p>It&#039;s&nbsp;educational&nbsp;to&nbsp;look&nbsp;at&nbsp;the&nbsp;first&nbsp;several&nbsp;instructions&nbsp;of
+                                    <tt class="docutils literal">
+                                        <span class="pre">do_stuff</span>
+                                    </tt>
+                                    again:
+                                </p>
+                                <div class="highlight">
+                                    <pre>
+08048604 &lt;do_stuff&gt;:
+ 8048604:       55          push   ebp
+ 8048605:       89 e5       mov    ebp,esp
+ 8048607:       83 ec 28    sub    esp,0x28
+ 804860a:       8b 45 08    mov    eax,DWORD PTR [ebp+0x8]
+ 804860d:       83 c0 02    add    eax,0x2
+ 8048610:       89 45 f4    mov    DWORD PTR [ebp-0xc],eax
+                                    </pre>
+                                </div>
+                                <p>Note&nbsp;that
+                                    <tt class="docutils literal">
+                                        <span class="pre">ebp</span>
+                                    </tt>
+                                    becomes&nbsp;relevant&nbsp;only&nbsp;after&nbsp;the&nbsp;second&nbsp;instruction&nbsp;is&nbsp;executed,&nbsp;and&nbsp;indeed&nbsp;for&nbsp;the&nbsp;first&nbsp;two&nbsp;addresses&nbsp;the&nbsp;base&nbsp;is&nbsp;computed&nbsp;from
+                                    <tt class="docutils literal">
+                                        <span class="pre">esp</span>
+                                    </tt>
+                                    in&nbsp;the&nbsp;location&nbsp;information&nbsp;listed&nbsp;above.&nbsp;Once
+                                    <tt class="docutils literal">
+                                        <span class="pre">ebp</span>
+                                    </tt>
+                                    is&nbsp;valid,&nbsp;it&#039;s&nbsp;convenient&nbsp;to&nbsp;compute&nbsp;offsets&nbsp;relative&nbsp;to&nbsp;it&nbsp;because&nbsp;it&nbsp;stays&nbsp;constant&nbsp;while
+                                    <tt class="docutils literal">
+                                        <span class="pre">esp</span>
+                                    </tt>
+                                    keeps&nbsp;moving&nbsp;with&nbsp;data&nbsp;being&nbsp;pushed&nbsp;and&nbsp;popped&nbsp;from&nbsp;the&nbsp;stack.
+                                </p>
+                                <p>So&nbsp;where&nbsp;does&nbsp;it&nbsp;leave&nbsp;us&nbsp;with
+                                    <tt class="docutils literal">
+                                        <span class="pre">my_local</span>
+                                    </tt>
+                                    ?&nbsp;We&#039;re&nbsp;only&nbsp;really&nbsp;interested&nbsp;in&nbsp;its&nbsp;value&nbsp;after&nbsp;the&nbsp;instruction&nbsp;at
+                                    <tt class="docutils literal">
+                                        <span class="pre">0x8048610</span>
+                                    </tt>
+                                    (where&nbsp;its&nbsp;value&nbsp;is&nbsp;placed&nbsp;in&nbsp;memory&nbsp;after&nbsp;being&nbsp;computed&nbsp;in
+                                    <tt class="docutils literal">
+                                        <span class="pre">eax</span>
+                                    </tt>
+                                    ),&nbsp;so&nbsp;the&nbsp;debugger&nbsp;will&nbsp;be&nbsp;using&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">DW_OP_breg5:</span>
+                                        <span class="pre">8</span>
+                                    </tt>
+                                    frame&nbsp;base&nbsp;to&nbsp;find&nbsp;it.&nbsp;Now&nbsp;it&#039;s&nbsp;time&nbsp;to&nbsp;rewind&nbsp;a&nbsp;little&nbsp;and&nbsp;recall&nbsp;that&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">DW_AT_location</span>
+                                    </tt>
+                                    attribute&nbsp;for
+                                    <tt class="docutils literal">
+                                        <span class="pre">my_local</span>
+                                    </tt>
+                                    says
+                                    <tt class="docutils literal">
+                                        <span class="pre">DW_OP_fbreg:</span>
+                                        <span class="pre">&ndash;20</span>
+                                    </tt>
+                                    .&nbsp;Let&#039;s&nbsp;do&nbsp;the&nbsp;math:&nbsp;&ndash;20&nbsp;from&nbsp;the&nbsp;frame&nbsp;base,&nbsp;which&nbsp;is
+                                    <tt class="docutils literal">
+                                        <span class="pre">ebp</span>
+                                        <span class="pre">+</span>
+                                        <span class="pre">8</span>
+                                    </tt>
+                                    .&nbsp;We&nbsp;get
+                                    <tt class="docutils literal">
+                                        <span class="pre">ebp</span>
+                                        <span class="pre">&ndash;</span>
+                                        <span class="pre">12</span>
+                                    </tt>
+                                    .&nbsp;Now&nbsp;look&nbsp;at&nbsp;the&nbsp;disassembly&nbsp;again&nbsp;and&nbsp;note&nbsp;where&nbsp;the&nbsp;data&nbsp;is&nbsp;moved&nbsp;from
+                                    <tt class="docutils literal">
+                                        <span class="pre">eax</span>
+                                    </tt>
+                                    &ndash;&nbsp;indeed,
+                                    <tt class="docutils literal">
+                                        <span class="pre">ebp</span>
+                                        <span class="pre">&ndash;</span>
+                                        <span class="pre">12</span>
+                                    </tt>
+                                    is&nbsp;where
+                                    <tt class="docutils literal">
+                                        <span class="pre">my_local</span>
+                                    </tt>
+                                    is&nbsp;stored.
+                                </p>
+                            </div>
+                            <div class="section" id="looking-up-line-numbers">
+                                <h3>Looking&nbsp;up&nbsp;line&nbsp;numbers</h3>
+                                <p>When&nbsp;we&nbsp;talked&nbsp;about&nbsp;finding&nbsp;functions&nbsp;in&nbsp;the&nbsp;debugging&nbsp;information,&nbsp;I&nbsp;was&nbsp;cheating&nbsp;a&nbsp;little.&nbsp;When&nbsp;we&nbsp;debug&nbsp;C&nbsp;source&nbsp;code&nbsp;and&nbsp;put&nbsp;a&nbsp;breakpoint&nbsp;in&nbsp;a&nbsp;function,&nbsp;we&#039;re&nbsp;usually&nbsp;not&nbsp;interested&nbsp;in&nbsp;the&nbsp;first
+                                    <em>machine&nbsp;code</em>
+                                    instruction
+                                    <a href="http://eli.thegreenplace.net/#id11" id="id5" class="footnote-reference">[5]</a>
+                                    .&nbsp;What&nbsp;we&#039;re
+                                    <em>really</em>
+                                    interested&nbsp;in&nbsp;is&nbsp;the&nbsp;first
+                                    <em>C&nbsp;code</em>
+                                    line&nbsp;of&nbsp;the&nbsp;function.
+                                </p>
+                                <p>This&nbsp;is&nbsp;why&nbsp;DWARF&nbsp;encodes&nbsp;a&nbsp;full&nbsp;mapping&nbsp;between&nbsp;lines&nbsp;in&nbsp;the&nbsp;C&nbsp;source&nbsp;code&nbsp;and&nbsp;machine&nbsp;code&nbsp;addresses&nbsp;in&nbsp;the&nbsp;executable.&nbsp;This&nbsp;information&nbsp;is&nbsp;contained&nbsp;in&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">.debug_line</span>
+                                    </tt>
+                                    section&nbsp;and&nbsp;can&nbsp;be&nbsp;extracted&nbsp;in&nbsp;a&nbsp;readable&nbsp;form&nbsp;as&nbsp;follows:
+                                </p>
+                                <div class="highlight">
+                                    <pre>
+$ objdump --dwarf=decodedline tracedprog2
+
+tracedprog2:     file format elf32-i386
+
+Decoded dump of debug contents of section .debug_line:
+
+CU: /home/eliben/eli/eliben-code/debugger/tracedprog2.c:
+File name           Line number    Starting address
+tracedprog2.c                5           0x8048604
+tracedprog2.c                6           0x804860a
+tracedprog2.c                9           0x8048613
+tracedprog2.c               10           0x804861c
+tracedprog2.c                9           0x8048630
+tracedprog2.c               11           0x804863c
+tracedprog2.c               15           0x804863e
+tracedprog2.c               16           0x8048647
+tracedprog2.c               17           0x8048653
+tracedprog2.c               18           0x8048658
+                                    </pre>
+                                </div>
+                                <p>It&nbsp;shouldn&#039;t&nbsp;be&nbsp;hard&nbsp;to&nbsp;see&nbsp;the&nbsp;correspondence&nbsp;between&nbsp;this&nbsp;information,&nbsp;the&nbsp;C&nbsp;source&nbsp;code&nbsp;and&nbsp;the&nbsp;disassembly&nbsp;dump.&nbsp;Line&nbsp;number&nbsp;5&nbsp;points&nbsp;at&nbsp;the&nbsp;entry&nbsp;point&nbsp;to
+                                    <tt class="docutils literal">
+                                        <span class="pre">do_stuff</span>
+                                    </tt>
+                                    &ndash;
+                                    <tt class="docutils literal">
+                                        <span class="pre">0x8040604</span>
+                                    </tt>
+                                    .&nbsp;The&nbsp;next&nbsp;line,&nbsp;6,&nbsp;is&nbsp;where&nbsp;the&nbsp;debugger&nbsp;should&nbsp;really&nbsp;stop&nbsp;when&nbsp;asked&nbsp;to&nbsp;break&nbsp;in
+                                    <tt class="docutils literal">
+                                        <span class="pre">do_stuff</span>
+                                    </tt>
+                                    ,&nbsp;and&nbsp;it&nbsp;points&nbsp;at
+                                    <tt class="docutils literal">
+                                        <span class="pre">0x804860a</span>
+                                    </tt>
+                                    which&nbsp;is&nbsp;just&nbsp;past&nbsp;the&nbsp;prologue&nbsp;of&nbsp;the&nbsp;function.&nbsp;This&nbsp;line&nbsp;information&nbsp;easily&nbsp;allows&nbsp;bi&ndash;directional&nbsp;mapping&nbsp;between&nbsp;lines&nbsp;and&nbsp;addresses:
+                                </p>
+                                <ul class="simple">
+                                    <li>When&nbsp;asked&nbsp;to&nbsp;place&nbsp;a&nbsp;breakpoint&nbsp;at&nbsp;a&nbsp;certain&nbsp;line,&nbsp;the&nbsp;debugger&nbsp;will&nbsp;use&nbsp;it&nbsp;to&nbsp;find&nbsp;which&nbsp;address&nbsp;it&nbsp;should&nbsp;put&nbsp;its&nbsp;trap&nbsp;on&nbsp;(remember&nbsp;our&nbsp;friend
+                                        <tt class="docutils literal">
+                                            <span class="pre">int</span>
+                                            <span class="pre">3</span>
+                                        </tt>
+                                        from&nbsp;the&nbsp;previous&nbsp;article?)
+                                    </li>
+                                    <li>When&nbsp;an&nbsp;instruction&nbsp;causes&nbsp;a&nbsp;segmentation&nbsp;fault,&nbsp;the&nbsp;debugger&nbsp;will&nbsp;use&nbsp;it&nbsp;to&nbsp;find&nbsp;the&nbsp;source&nbsp;code&nbsp;line&nbsp;on&nbsp;which&nbsp;it&nbsp;happened.</li>
+                                </ul>
+                            </div>
+                            <div class="section" id="libdwarf-working-with-dwarf-programmatically">
+                                <h3>
+                                    <tt class="docutils literal">
+                                        <span class="pre">libdwarf</span>
+                                    </tt>
+                                    &ndash;&nbsp;Working&nbsp;with&nbsp;DWARF&nbsp;programmatically
+                                </h3>
+                                <p>Employing&nbsp;command&ndash;line&nbsp;tools&nbsp;to&nbsp;access&nbsp;DWARF&nbsp;information,&nbsp;while&nbsp;useful,&nbsp;isn&#039;t&nbsp;fully&nbsp;satisfying.&nbsp;As&nbsp;programmers,&nbsp;we&#039;d&nbsp;like&nbsp;to&nbsp;know&nbsp;how&nbsp;to&nbsp;write&nbsp;actual&nbsp;code&nbsp;that&nbsp;can&nbsp;read&nbsp;the&nbsp;format&nbsp;and&nbsp;extract&nbsp;what&nbsp;we&nbsp;need&nbsp;from&nbsp;it.</p>
+                                <p>Naturally,&nbsp;one&nbsp;approach&nbsp;is&nbsp;to&nbsp;grab&nbsp;the&nbsp;DWARF&nbsp;specification&nbsp;and&nbsp;start&nbsp;hacking&nbsp;away.&nbsp;Now,&nbsp;remember&nbsp;how&nbsp;everyone&nbsp;keeps&nbsp;saying&nbsp;that&nbsp;you&nbsp;should&nbsp;never,&nbsp;ever&nbsp;parse&nbsp;HTML&nbsp;manually&nbsp;but&nbsp;rather&nbsp;use&nbsp;a&nbsp;library?&nbsp;Well,&nbsp;with&nbsp;DWARF&nbsp;it&#039;s&nbsp;even&nbsp;worse.&nbsp;DWARF&nbsp;is
+                                    <em>much</em>
+                                    more&nbsp;complex&nbsp;than&nbsp;HTML.&nbsp;What&nbsp;I&#039;ve&nbsp;shown&nbsp;here&nbsp;is&nbsp;just&nbsp;the&nbsp;tip&nbsp;of&nbsp;the&nbsp;iceberg,&nbsp;and&nbsp;to&nbsp;make&nbsp;things&nbsp;even&nbsp;harder,&nbsp;most&nbsp;of&nbsp;this&nbsp;information&nbsp;is&nbsp;encoded&nbsp;in&nbsp;a&nbsp;very&nbsp;compact&nbsp;and&nbsp;compressed&nbsp;way&nbsp;in&nbsp;the&nbsp;actual&nbsp;object&nbsp;file
+                                    <a href="http://eli.thegreenplace.net/#id12" id="id6" class="footnote-reference">[6]</a>
+                                    .
+                                </p>
+                                <p>So&nbsp;we&#039;ll&nbsp;take&nbsp;another&nbsp;road&nbsp;and&nbsp;use&nbsp;a&nbsp;library&nbsp;to&nbsp;work&nbsp;with&nbsp;DWARF.&nbsp;There&nbsp;are&nbsp;two&nbsp;major&nbsp;libraries&nbsp;I&#039;m&nbsp;aware&nbsp;of&nbsp;(plus&nbsp;a&nbsp;few&nbsp;less&nbsp;complete&nbsp;ones):</p>
+                                <ol class="arabic simple">
+                                    <li>BFD&nbsp;(
+                                        <tt class="docutils literal">
+                                            <span class="pre">libbfd</span>
+                                        </tt>
+                                        )&nbsp;is&nbsp;used&nbsp;by&nbsp;the
+                                        <a class="reference external" href="http://www.gnu.org/software/binutils/">GNU&nbsp;binutils</a>
+                                        ,&nbsp;including
+                                        <tt class="docutils literal">
+                                            <span class="pre">objdump</span>
+                                        </tt>
+                                        which&nbsp;played&nbsp;a&nbsp;star&nbsp;role&nbsp;in&nbsp;this&nbsp;article,
+                                        <tt class="docutils literal">
+                                            <span class="pre">ld</span>
+                                        </tt>
+                                        (the&nbsp;GNU&nbsp;linker)&nbsp;and
+                                        <tt class="docutils literal">
+                                            <span class="pre">as</span>
+                                        </tt>
+                                        (the&nbsp;GNU&nbsp;assembler).
+                                    </li>
+                                    <li>
+                                        <tt class="docutils literal">
+                                            <span class="pre">libdwarf</span>
+                                        </tt>
+                                        &ndash;&nbsp;which&nbsp;together&nbsp;with&nbsp;its&nbsp;big&nbsp;brother
+                                        <tt class="docutils literal">
+                                            <span class="pre">libelf</span>
+                                        </tt>
+                                        are&nbsp;used&nbsp;for&nbsp;the&nbsp;tools&nbsp;on&nbsp;Solaris&nbsp;and&nbsp;FreeBSD&nbsp;operating&nbsp;systems.
+                                    </li>
+                                </ol>
+                                <p>I&#039;m&nbsp;picking
+                                    <tt class="docutils literal">
+                                        <span class="pre">libdwarf</span>
+                                    </tt>
+                                    over&nbsp;BFD&nbsp;because&nbsp;it&nbsp;appears&nbsp;less&nbsp;arcane&nbsp;to&nbsp;me&nbsp;and&nbsp;its&nbsp;license&nbsp;is&nbsp;more&nbsp;liberal&nbsp;(
+                                    <tt class="docutils literal">
+                                        <span class="pre">LGPL</span>
+                                    </tt>
+                                    vs.
+                                    <tt class="docutils literal">
+                                        <span class="pre">GPL</span>
+                                    </tt>
+                                    ).
+                                </p>
+                                <p>Since
+                                    <tt class="docutils literal">
+                                        <span class="pre">libdwarf</span>
+                                    </tt>
+                                    is&nbsp;itself&nbsp;quite&nbsp;complex&nbsp;it&nbsp;requires&nbsp;a&nbsp;lot&nbsp;of&nbsp;code&nbsp;to&nbsp;operate.&nbsp;I&#039;m&nbsp;not&nbsp;going&nbsp;to&nbsp;show&nbsp;all&nbsp;this&nbsp;code&nbsp;here,&nbsp;but
+                                    <a class="reference external" href="https://github.com/eliben/code-for-blog/blob/master/2011/dwarf_get_func_addr.c">you&nbsp;can&nbsp;download</a>
+                                    and&nbsp;run&nbsp;it&nbsp;yourself.&nbsp;To&nbsp;compile&nbsp;this&nbsp;file&nbsp;you&#039;ll&nbsp;need&nbsp;to&nbsp;have
+                                    <tt class="docutils literal">
+                                        <span class="pre">libelf</span>
+                                    </tt>
+                                    and
+                                    <tt class="docutils literal">
+                                        <span class="pre">libdwarf</span>
+                                    </tt>
+                                    installed,&nbsp;and&nbsp;pass&nbsp;the
+                                    <tt class="docutils literal">
+                                        <span class="pre">&ndash;lelf</span>
+                                    </tt>
+                                    and
+                                    <tt class="docutils literal">
+                                        <span class="pre">&ndash;ldwarf</span>
+                                    </tt>
+                                    flags&nbsp;to&nbsp;the&nbsp;linker.
+                                </p>
+                                <p>The&nbsp;demonstrated&nbsp;program&nbsp;takes&nbsp;an&nbsp;executable&nbsp;and&nbsp;prints&nbsp;the&nbsp;names&nbsp;of&nbsp;functions&nbsp;in&nbsp;it,&nbsp;along&nbsp;with&nbsp;their&nbsp;entry&nbsp;points.&nbsp;Here&#039;s&nbsp;what&nbsp;it&nbsp;produces&nbsp;for&nbsp;the&nbsp;C&nbsp;program&nbsp;we&#039;ve&nbsp;been&nbsp;playing&nbsp;with&nbsp;in&nbsp;this&nbsp;article:</p>
+                                <div class="highlight">
+                                    <pre>
+$ dwarf_get_func_addr tracedprog2
+DW_TAG_subprogram: &#39;do_stuff&#39;
+low pc  : 0x08048604
+high pc : 0x0804863e
+DW_TAG_subprogram: &#39;main&#39;
+low pc  : 0x0804863e
+high pc : 0x0804865a
+                                    </pre>
+                                </div>
+                                <p>The&nbsp;documentation&nbsp;of
+                                    <tt class="docutils literal">
+                                        <span class="pre">libdwarf</span>
+                                    </tt>
+                                    (linked&nbsp;in&nbsp;the&nbsp;References&nbsp;section&nbsp;of&nbsp;this&nbsp;article)&nbsp;is&nbsp;quite&nbsp;good,&nbsp;and&nbsp;with&nbsp;some&nbsp;effort&nbsp;you&nbsp;should&nbsp;have&nbsp;no&nbsp;problem&nbsp;pulling&nbsp;any&nbsp;other&nbsp;information&nbsp;demonstrated&nbsp;in&nbsp;this&nbsp;article&nbsp;from&nbsp;the&nbsp;DWARF&nbsp;sections&nbsp;using&nbsp;it.
+                                </p>
+                            </div>
+                            <div class="section" id="conclusion-and-next-steps">
+                                <h3>Conclusion&nbsp;and&nbsp;next&nbsp;steps</h3>
+                                <p>Debugging&nbsp;information&nbsp;is&nbsp;a&nbsp;simple&nbsp;concept&nbsp;in&nbsp;principle.&nbsp;The&nbsp;implementation&nbsp;details&nbsp;may&nbsp;be&nbsp;intricate,&nbsp;but&nbsp;in&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;day&nbsp;what&nbsp;matters&nbsp;is&nbsp;that&nbsp;we&nbsp;now&nbsp;know&nbsp;how&nbsp;the&nbsp;debugger&nbsp;finds&nbsp;the&nbsp;information&nbsp;it&nbsp;needs&nbsp;about&nbsp;the&nbsp;original&nbsp;source&nbsp;code&nbsp;from&nbsp;which&nbsp;the&nbsp;executable&nbsp;it&#039;s&nbsp;tracing&nbsp;was&nbsp;compiled.&nbsp;With&nbsp;this&nbsp;information&nbsp;in&nbsp;hand,&nbsp;the&nbsp;debugger&nbsp;bridges&nbsp;between&nbsp;the&nbsp;world&nbsp;of&nbsp;the&nbsp;user,&nbsp;who&nbsp;thinks&nbsp;in&nbsp;terms&nbsp;of&nbsp;lines&nbsp;of&nbsp;code&nbsp;and&nbsp;data&nbsp;structures,&nbsp;and&nbsp;the&nbsp;world&nbsp;of&nbsp;the&nbsp;executable,&nbsp;which&nbsp;is&nbsp;just&nbsp;a&nbsp;bunch&nbsp;of&nbsp;machine&nbsp;code&nbsp;instructions&nbsp;and&nbsp;data&nbsp;in&nbsp;registers&nbsp;and&nbsp;memory.</p>
+                                <p>This&nbsp;article,&nbsp;with&nbsp;its&nbsp;two&nbsp;predecessors,&nbsp;concludes&nbsp;an&nbsp;introductory&nbsp;series&nbsp;that&nbsp;explains&nbsp;the&nbsp;inner&nbsp;workings&nbsp;of&nbsp;a&nbsp;debugger.&nbsp;Using&nbsp;the&nbsp;information&nbsp;presented&nbsp;here&nbsp;and&nbsp;some&nbsp;programming&nbsp;effort,&nbsp;it&nbsp;should&nbsp;be&nbsp;possible&nbsp;to&nbsp;create&nbsp;a&nbsp;basic&nbsp;but&nbsp;functional&nbsp;debugger&nbsp;for&nbsp;Linux.</p>
+                                <p>As&nbsp;for&nbsp;the&nbsp;next&nbsp;steps,&nbsp;I&#039;m&nbsp;not&nbsp;sure&nbsp;yet.&nbsp;Maybe&nbsp;I&#039;ll&nbsp;end&nbsp;the&nbsp;series&nbsp;here,&nbsp;maybe&nbsp;I&#039;ll&nbsp;present&nbsp;some&nbsp;advanced&nbsp;topics&nbsp;such&nbsp;as&nbsp;backtraces,&nbsp;and&nbsp;perhaps&nbsp;debugging&nbsp;on&nbsp;Windows.&nbsp;Readers&nbsp;can&nbsp;also&nbsp;suggest&nbsp;ideas&nbsp;for&nbsp;future&nbsp;articles&nbsp;in&nbsp;this&nbsp;series&nbsp;or&nbsp;related&nbsp;material.&nbsp;Feel&nbsp;free&nbsp;to&nbsp;use&nbsp;the&nbsp;comments&nbsp;or&nbsp;send&nbsp;me&nbsp;an&nbsp;email.</p>
+                            </div>
+                            <div class="section" id="references">
+                                <h3>References</h3>
+                                <ul class="simple">
+                                    <li>
+                                        <tt class="docutils literal">
+                                            <span class="pre">objdump</span>
+                                        </tt>
+                                        man&nbsp;page
+                                    </li>
+                                    <li>Wikipedia&nbsp;pages&nbsp;for
+                                        <a class="reference external" href="http://en.wikipedia.org/wiki/Executable_and_Linkable_Format">ELF</a>
+                                        and
+                                        <a class="reference external" href="http://en.wikipedia.org/wiki/DWARF">DWARF</a>
+                                        .
+                                    </li>
+                                    <li>
+                                        <a class="reference external" href="http://dwarfstd.org/">Dwarf&nbsp;Debugging&nbsp;Standard&nbsp;home&nbsp;page</a>
+                                        &ndash;&nbsp;from&nbsp;here&nbsp;you&nbsp;can&nbsp;obtain&nbsp;the&nbsp;excellent&nbsp;DWARF&nbsp;tutorial&nbsp;by&nbsp;Michael&nbsp;Eager,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;DWARF&nbsp;standard&nbsp;itself.&nbsp;You&#039;ll&nbsp;probably&nbsp;want&nbsp;version&nbsp;2&nbsp;since&nbsp;it&#039;s&nbsp;what
+                                        <tt class="docutils literal">
+                                            <span class="pre">gcc</span>
+                                        </tt>
+                                        produces.
+                                    </li>
+                                    <li>
+                                        <a class="reference external" href="http://reality.sgiweb.org/davea/dwarf.html">libdwarf&nbsp;home&nbsp;page</a>
+                                        &ndash;&nbsp;the&nbsp;download&nbsp;package&nbsp;includes&nbsp;a&nbsp;comprehensive&nbsp;reference&nbsp;document&nbsp;for&nbsp;the&nbsp;library
+                                    </li>
+                                    <li>
+                                        <a class="reference external" href="http://sourceware.org/binutils/docs-2.21/bfd/index.html">BFD&nbsp;documentation</a>
+                                    </li>
+                                </ul>
+                                <div align="center" class="align-center">
+                                    <img src="How debuggers work Part 3 Debugging information Eli Bendersky s website_files/hline.jpg" style="width: 320px; height: 5px;" class="align-center"></img>
+                                </div>
+                                <table class="docutils footnote" frame="void" id="id7" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id1" class="fn-backref">[1]</a>
+                                            </td>
+                                            <td>DWARF&nbsp;is&nbsp;an&nbsp;open&nbsp;standard,&nbsp;published
+                                                <a class="reference external" href="http://dwarfstd.org/">here</a>
+                                                by&nbsp;the&nbsp;DWARF&nbsp;standards&nbsp;committee.&nbsp;The&nbsp;DWARF&nbsp;logo&nbsp;displayed&nbsp;above&nbsp;is&nbsp;taken&nbsp;from&nbsp;that&nbsp;website.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="docutils footnote" frame="void" id="id8" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id2" class="fn-backref">[2]</a>
+                                            </td>
+                                            <td>At&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;article&nbsp;I&#039;ve&nbsp;collected&nbsp;some&nbsp;useful&nbsp;resources&nbsp;that&nbsp;will&nbsp;help&nbsp;you&nbsp;get&nbsp;more&nbsp;familiar&nbsp;with&nbsp;DWARF,&nbsp;if&nbsp;you&#039;re&nbsp;interested.&nbsp;Particularly,&nbsp;start&nbsp;with&nbsp;the&nbsp;DWARF&nbsp;tutorial.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="docutils footnote" frame="void" id="id9" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id3" class="fn-backref">[3]</a>
+                                            </td>
+                                            <td>Here&nbsp;and&nbsp;in&nbsp;subsequent&nbsp;examples,&nbsp;I&#039;m&nbsp;placing
+                                                <tt class="docutils literal">
+                                                    <span class="pre">(...)</span>
+                                                </tt>
+                                                instead&nbsp;of&nbsp;some&nbsp;longer&nbsp;and&nbsp;un&ndash;interesting&nbsp;information&nbsp;for&nbsp;the&nbsp;sake&nbsp;of&nbsp;more&nbsp;convenient&nbsp;formatting.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="docutils footnote" frame="void" id="id10" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id4" class="fn-backref">[4]</a>
+                                            </td>
+                                            <td>Because&nbsp;the
+                                                <tt class="docutils literal">
+                                                    <span class="pre">DW_AT_frame_base</span>
+                                                </tt>
+                                                attribute&nbsp;of
+                                                <tt class="docutils literal">
+                                                    <span class="pre">do_stuff</span>
+                                                </tt>
+                                                contains&nbsp;offset
+                                                <tt class="docutils literal">
+                                                    <span class="pre">0x0</span>
+                                                </tt>
+                                                into&nbsp;the&nbsp;location&nbsp;list.&nbsp;Note&nbsp;that&nbsp;the&nbsp;same&nbsp;attribute&nbsp;for
+                                                <tt class="docutils literal">
+                                                    <span class="pre">main</span>
+                                                </tt>
+                                                contains&nbsp;the&nbsp;offset
+                                                <tt class="docutils literal">
+                                                    <span class="pre">0x2c</span>
+                                                </tt>
+                                                which&nbsp;is&nbsp;the&nbsp;offset&nbsp;for&nbsp;the&nbsp;second&nbsp;set&nbsp;of&nbsp;location&nbsp;expressions.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="docutils footnote" frame="void" id="id11" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id5" class="fn-backref">[5]</a>
+                                            </td>
+                                            <td>Where&nbsp;the&nbsp;function&nbsp;prologue&nbsp;is&nbsp;usually&nbsp;executed&nbsp;and&nbsp;the&nbsp;local&nbsp;variables&nbsp;aren&#039;t&nbsp;even&nbsp;valid&nbsp;yet.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="docutils footnote" frame="void" id="id12" rules="none">
+                                    <colgroup>
+                                        <col class="label"></col>
+                                        <col></col>
+                                    </colgroup>
+                                    <tbody valign="top">
+                                        <tr>
+                                            <td class="label">
+                                                <a href="http://eli.thegreenplace.net/#id6" class="fn-backref">[6]</a>
+                                            </td>
+                                            <td>Some&nbsp;parts&nbsp;of&nbsp;the&nbsp;information&nbsp;(such&nbsp;as&nbsp;location&nbsp;data&nbsp;and&nbsp;line&nbsp;number&nbsp;data)&nbsp;are&nbsp;encoded&nbsp;as&nbsp;instructions&nbsp;for&nbsp;a&nbsp;specialized&nbsp;virtual&nbsp;machine.&nbsp;Yes,&nbsp;really.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <hr></hr>
+                  
+                    </article>
+                </section>
+            </div>
+        </div>
+        
+    <!-- AutoExtract End-->
+        </div>
+
+    <li><font color="#000080" size="2">Update Time: Sun May 14 16:24:40 CST 2017</font></li>
+    <li><font color="#000080" size="2">&reg; UNI TOOL - &copy; 2016. All rights reserved - to0d@outlook.com</font></li>
+    <hr/>
+</body></html>

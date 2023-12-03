@@ -1,0 +1,161 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT021001.cpp (Course Schedule II)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT021001.cpp (Course Schedule II)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-07</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0210.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0210</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/sort-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>sort-OJ</a>&nbsp;<a href="../tags/2e69c79b.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>拓扑排序</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_b3aed82" href="#TOC_HEAD_b3aed82">Problem 0210 <strong>Course Schedule II</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/course-schedule-ii/" target="_blank">https://leetcode.com/problems/course&ndash;schedule&ndash;ii/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>56.16</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_da18ea52" href="#TOC_HEAD_da18ea52">LT021001.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_ffa3e59a">LT0210 (name=Course Schedule II, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0210.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0210</a>&nbsp;<a href="../tags/sort-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>sort-OJ</a>&nbsp;<a href="../tags/2e69c79b.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>拓扑排序</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_bd59cabd"><a href="https://leetcode.com/problems/course-schedule-ii/" target="_blank">Course Schedule II &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0210.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0210</a></li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_160d11f1"><a href="LT020701.cpp.html" target="_blank">LT020701.cpp</a> &nbsp;<a href="../tags/LT0210.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0210</a>&nbsp;<a href="../tags/Ref.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Ref</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_8e0de9f" href="#TOC_HEAD_8e0de9f">LT021001.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+int topologicalOrder(int total, vector&lt;vector&lt;int&gt;&gt;& prerequisites, vector&lt;int&gt;& orders) {
+    vector&lt;vector&lt;int&gt;&gt; nextIndexs(total);
+    vector&lt;int&gt; preCount(total, 0);
+    for( auto p : prerequisites)
+    {   nextIndexs[p[1]].push_back(p[0]);
+        preCount[p[0]]++;
+    }
+
+    queue&lt;int&gt; noPreQueue;
+    for( int i = 0; i &lt; total; ++i)
+        if( preCount[i] == 0 )
+            noPreQueue.push(i);
+
+    int count = 0;
+    while( !noPreQueue.empty() )
+    {   int pre = noPreQueue.front(); noPreQueue.pop();
+        orders.push_back(pre);
+        ++count;
+        for( int next : nextIndexs[pre] )
+            if( --preCount[next] == 0 )
+                noPreQueue.push( next );
+    }
+
+    return count;
+}
+
+class Solution {
+public:
+    vector&lt;int&gt; findOrder(int numCourses, vector&lt;vector&lt;int&gt;&gt;& prerequisites) {
+        vector&lt;int&gt; courses;
+        int count = topologicalOrder(numCourses, prerequisites, courses);
+        return count == numCourses ? courses : vector&lt;int&gt;();
+    }
+};
+
+
+
+void test(int numCourses, vector&lt;vector&lt;int&gt;&gt; prerequisite)
+{
+    cout &lt;&lt; "input: num=" &lt;&lt; numCourses &lt;&lt; "pre=";
+    outputVector(prerequisite);
+    vector&lt;int&gt; r = Solution().findOrder(numCourses, prerequisite);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(4, {{1,0},{2,0},{3,1},{3,2}});
+}
+
+
+// Result
+//
+// 2022-11-24: Runtime 61ms 7.48% Memory 14.6MB 26.5%, https://leetcode.com/problems/course-schedule-ii/submissions/849024852/
+// 2023-02-22: Runtime 26ms 52.91% Memory 14.7MB 24.24%, https://leetcode.com/problems/course-schedule-ii/submissions/902634171/
+// 2023-03-07: Runtime 25ms 56.16% Memory 14.2MB 34.95%, https://leetcode.com/problems/course-schedule-ii/submissions/910708858/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: num=4pre=[[1,0],[2,0],[3,1],[3,2]]; output: [0,1,2,3];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

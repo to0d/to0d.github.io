@@ -1,0 +1,143 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT062101.cpp (Task Scheduler)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT062101.cpp (Task Scheduler)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-11</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0621.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0621</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_82f76cfa" href="#TOC_HEAD_82f76cfa">Problem 0621 <strong>Task Scheduler</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/task-scheduler/description/" target="_blank">https://leetcode.com/problems/task&ndash;scheduler/description/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>98.18</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_30bb5c76" href="#TOC_HEAD_30bb5c76">LT062101.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_c4869e92">LT0621 (name=Task Scheduler, ptag=Leetcode) &nbsp;<a href="../tags/LT0621.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0621</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_12d281dd"><a href="https://leetcode.com/problems/task-scheduler/description/" target="_blank">Task Scheduler &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0621.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0621</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_f6ba02c3" href="#TOC_HEAD_f6ba02c3">LT062101.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int leastInterval(vector&lt;char&gt;& tasks, int n) {
+        int size = tasks.size(), _max = 0, max_count = 0;
+        vector&lt;int&gt; counter(26, 0);
+        for( char task : tasks )
+        {   int num = ++(counter[(int)(task-'A')]);
+            if( _max == num )
+                ++max_count;
+            else if ( _max &lt; num )
+            {   _max = num;
+                max_count = 1;
+            }
+        }
+
+        int partCount  = _max - 1;
+        int partLength = n - (max_count - 1);
+        int emptySlots = partCount * partLength;
+        int availableTasks = size - _max * max_count;
+        int idles = max(0, emptySlots - availableTasks);
+        return size + idles;
+    }
+};
+
+
+
+void test(vector&lt;char&gt; tasks, int n)
+{
+    cout &lt;&lt; "input: n=" &lt;&lt; n &lt;&lt; ", task=";
+    outputVector(tasks);
+    int r = Solution().leastInterval(tasks, n);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test({'A','A','A','B','B','B'}, 2);
+}
+
+
+// Result
+//
+// 2023-03-11: Runtime 55ms 98.18% Memory 34.5MB 74.55%, https://leetcode.com/problems/task-scheduler/submissions/913104856/, https://leetcode.com/problems/task-scheduler/solutions/104500/java-o-n-time-o-1-space-1-pass-no-sorting-solution-with-detailed-explanation/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: n=2, task=[A,A,A,B,B,B]; output: 8;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

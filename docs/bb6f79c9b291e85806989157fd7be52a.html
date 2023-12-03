@@ -1,0 +1,38 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>How to remove a submodule</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>How to remove a submodule</h1>
+            <h3></h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Git-submodule.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git-submodule</a>&nbsp;<a href="../tags/HowTo.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>HowTo</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    <ul>
+	<li>Refer <a href="http://stackoverflow.com/questions/1260748/how-do-i-remove-a-submodule/36593218#36593218" target="_blank">git &ndash; How do I remove a submodule? &ndash; Stack Overflow</a></li>
+	<br />
+	<pre><code># Remove the submodule entry from .git/config
+git submodule deinit -f path/to/submodule
+
+# Remove the submodule directory from the superproject's .git/modules directory
+rm -rf .git/modules/path/to/submodule
+
+# Remove the entry in .gitmodules and remove the submodule directory located at path/to/submodule
+git rm -f path/to/submodule	</code></pre>
+</ul>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

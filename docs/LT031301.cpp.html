@@ -1,0 +1,219 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT031301.cpp (Super Ugly Number)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT031301.cpp (Super Ugly Number)</h1>
+        <h3>Wrong Answer</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2016-06-18</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0313.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0313</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Prime.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Prime</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_c9cafc2b" href="#TOC_HEAD_c9cafc2b">Problem 0313 <strong>Super Ugly Number</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/super-ugly-number/" target="_blank">https://leetcode.com/problems/super&ndash;ugly&ndash;number/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_874a0916" href="#TOC_HEAD_874a0916">LT031301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_b280811d">LT0313 (name=Super Ugly Number, ptag=Leetcode) &nbsp;<a href="../tags/LT0313.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0313</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Prime.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Prime</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_a81f25f3"><a href="https://leetcode.com/problems/super-ugly-number/" target="_blank">Super Ugly Number &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0313.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0313</a></li>
+		<br />
+	</ul>
+	<p>
+		A super ugly number is a positive integer whose prime factors are in the array primes.
+	</p>
+	<p>
+		Given an integer n and an array of integers primes, return the nth super ugly number.
+	</p>
+	<p>
+		The nth super ugly number is guaranteed to fit in a 32&ndash;bit signed integer.
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input: n = 12, primes = [2,7,13,19]
+Output: 32
+Explanation: [1,2,4,7,8,13,14,16,19,26,28,32] is the sequence of the first 12 super ugly numbers given primes = [2,7,13,19].	</code></pre>
+	<p>
+		Example 2:
+	</p>
+	<pre><code>Input: n = 1, primes = [2,3,5]
+Output: 1
+Explanation: 1 has no prime factors, therefore all of its prime factors are in the array primes = [2,3,5].	</code></pre>
+	<p>
+		Constraints:
+	</p>
+	<pre><code>1 &lt;= n &lt;= 105
+1 &lt;= primes.length &lt;= 100
+2 &lt;= primes[i] &lt;= 1000
+primes[i] is guaranteed to be a prime number.
+All the values of primes are unique and sorted in ascending order.	</code></pre>
+</ul>
+	<H3><a name="HEAD_3bd7ff63" href="#TOC_HEAD_3bd7ff63">LT031301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+// #define _DBG
+
+class Solution {
+public:
+
+    int nthSuperUglyNumber(int n, vector&lt;int&gt;& primes) {
+
+#ifdef _DBG
+        cout &lt;&lt; "nthSuperUglyNumber: " &lt;&lt; n &lt;&lt; endl;
+#endif
+        vector&lt;int&gt; uglyNumbers;
+        uglyNumbers.push_back(1);
+        uglyNumbers.push_back(primes[0]);
+
+        typedef vector&lt;int&gt;::iterator iter;
+
+        int maxFactor = primes[primes.size() - 1];
+
+        while( n &gt; (int) uglyNumbers.size() )
+        {
+            int maxUgly = uglyNumbers[ uglyNumbers.size() - 1] + 1;
+            int minNextUgly = INT_MAX;
+            int factorCount = primes.size();
+            int nextFactor = -1;
+#ifdef _DBG
+            cout &lt;&lt; "      uglyNumbers.size(): " &lt;&lt; uglyNumbers.size() &lt;&lt; endl;
+            cout &lt;&lt; "                 maxUgly: " &lt;&lt; maxUgly &lt;&lt; endl;
+#endif
+            if( maxUgly &lt; maxFactor )
+            {
+                iter factorPos = lower_bound( primes.begin(), primes.end(), maxUgly);
+                factorCount = factorPos - primes.begin();
+                nextFactor = * factorPos;
+            }
+#ifdef _DBG
+            cout &lt;&lt; "      uglyNumbers.size(): " &lt;&lt; uglyNumbers.size() &lt;&lt; endl;
+            cout &lt;&lt; "             factorCount: " &lt;&lt; factorCount &lt;&lt; endl;
+            cout &lt;&lt; "              nextFactor: " &lt;&lt; nextFactor &lt;&lt; endl;
+#endif
+
+            for(int i = 0; i &lt; factorCount; ++i)
+            {
+                int factor = primes[i];
+                int lowUgly = uglyNumbers[ uglyNumbers.size() - 1] / factor + 1;
+                iter lastUglyPos = lower_bound( uglyNumbers.begin(), uglyNumbers.end(), lowUgly);
+                int lastUgly = *lastUglyPos;
+                int ugly = lastUgly * factor;
+                minNextUgly = min( ugly, minNextUgly);
+                if( lastUgly == lowUgly && lastUglyPos == (uglyNumbers.begin() + 1) )
+                    break;
+
+#ifdef _DBG
+            cout &lt;&lt; "factor=" &lt;&lt; factor &lt;&lt; ",ugly=" &lt;&lt; ugly &lt;&lt;",minNextUgly=" &lt;&lt;minNextUgly &lt;&lt; endl;
+#endif
+            }
+
+            if( nextFactor != -1 )
+                minNextUgly = min( nextFactor, minNextUgly);
+
+            uglyNumbers.push_back(minNextUgly);
+        }
+
+        return uglyNumbers[ n-1 ];
+    }
+};
+
+void test(int n, vector&lt;int&gt;& primes)
+{
+    cout &lt;&lt; "input: n=" &lt;&lt; n &lt;&lt; ", primes=";
+    outputVector(primes);
+    cout &lt;&lt; "; output: ";
+    int r = Solution().nthSuperUglyNumber(n, primes);
+    cout &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    vector&lt;int&gt; primes = {2,7,13,19};
+    test(12, primes);
+}
+
+
+// Result
+//
+// 2022/11/16
+// 35
+// [2,3,11,13,17,23,29,31,37,47]
+// Wrong Answer</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: n=12, primes=[2,7,13,19]; output: 32;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

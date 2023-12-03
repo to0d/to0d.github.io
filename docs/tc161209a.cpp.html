@@ -1,0 +1,82 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161209A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161209A.cpp</h1>
+            <h3>Quick Sort</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/QuickSort.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>QuickSort</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+static void swap(vector&lt;int&gt;& nums, int a, int b) {
+    int t   = nums[a];
+    nums[a] = nums[b];
+    nums[b] = t;
+}
+
+void _heapAdjust(vector&lt;int&gt;& nums, int s, int m) {
+    if( ( 2*s + 1) &gt; m )
+        return;
+
+    int guard = nums[s], count = 0;
+    for(int j = 2*s + 1; j &lt;= m ; j = 2*j+1)
+    {   if( j &lt; m && nums[j] &lt; nums[j+1] )
+            ++j;
+        if( guard &gt;= nums[j] )
+            break;
+        nums[s] = nums[j];
+        ++count;
+        s = j;
+    }
+
+    if( count &gt; 0 )
+        nums[s] = guard;
+}
+
+void heapSort(vector&lt;int&gt;& nums) {
+    int size = nums.size();
+    for (int h = size/2; h &gt;= 0; --h)
+        _heapAdjust(nums, h, size-1);
+
+    for(int h = size - 1; h &gt; 0 ; --h)
+    {   swap(nums, 0, h);
+        _heapAdjust(nums, 0, h-1);
+    }
+}
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    heapSort(nums);
+    cout &lt;&lt; "; output: ";
+    outputVector(nums);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main( void )
+{
+    test({8,9,3,2,6,5,7,1,4});
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

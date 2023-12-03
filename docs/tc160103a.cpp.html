@@ -1,0 +1,104 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC160103A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC160103A.cpp</h1>
+            <h3>Singleton example</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Singleton.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Singleton</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+// Simple Singleton class
+// unable to free resource which it hold
+class CSingleton1
+{
+    static CSingleton1* m_pInstance;
+
+public:
+    static CSingleton1* getInstance(){
+        if( m_pInstance == NULL)
+            m_pInstance = new CSingleton1();
+        return m_pInstance;
+    }
+
+    CSingleton1(){
+        cout&lt;&lt; "CSingleton1::construct" &lt;&lt; endl;
+    }
+
+    ~CSingleton1(){
+        cout&lt;&lt; "CSingleton1::destruct" &lt;&lt; endl;
+    }
+
+    int value;
+};
+
+CSingleton1* CSingleton1::m_pInstance = NULL;
+
+// use inner static member to free resource which it hold
+class CSingleton2
+{
+    static CSingleton2* m_pInstance;
+    class Garbo
+    {
+    public:
+        ~Garbo(){
+            if(CSingleton2::m_pInstance != NULL)
+            {   delete CSingleton2::m_pInstance;
+                CSingleton2::m_pInstance = NULL;
+            }
+        }
+    };
+
+    static Garbo garbo;
+
+public:
+    static CSingleton2* getInstance(){
+        if( m_pInstance == NULL)
+            m_pInstance = new CSingleton2();
+        return m_pInstance;
+    }
+
+    CSingleton2(){
+        cout&lt;&lt; "CSingleton2::construct" &lt;&lt; endl;
+    }
+
+    ~CSingleton2(){
+        cout&lt;&lt; "CSingleton2::destruct" &lt;&lt; endl;
+    }
+
+    int value;
+};
+
+CSingleton2* CSingleton2::m_pInstance = NULL;
+
+
+int main(void)
+{
+    CSingleton1::getInstance()-&gt;value = 101;
+    CSingleton2::getInstance()-&gt;value = 102;
+
+    cout &lt;&lt; "output: ";
+    cout &lt;&lt; "CSingleton1=" &lt;&lt; CSingleton1::getInstance()-&gt;value &lt;&lt; ", ";
+    cout &lt;&lt; "CSingleton2=" &lt;&lt; CSingleton2::getInstance()-&gt;value &lt;&lt; endl;
+
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

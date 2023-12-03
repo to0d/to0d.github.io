@@ -1,0 +1,64 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC150402A.sh</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC150402A.sh</h1>
+            <h3>Special shell variable</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> </li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#!/bin/sh
+#####################################################
+
+test_fun()
+{
+    echo $0 | awk '{ printf("%-8s:=%-12s;","$0",$1) }'
+    echo "Shell script name"
+
+    echo $1 | awk '{ printf("%-8s:=%-12s;","$1",$1) }'
+    echo "#1 para"
+
+    echo $? | awk '{ printf("%-8s:=%-12s;","$?",$1) }'
+    echo "last statment status"
+
+    echo $# | awk '{ printf("%-8s:=%-12s;","$#",$1) }'
+    echo "para count"
+
+    echo -e "\$*      :=\c"
+    echo -e "$*    ;\c"
+    echo "para list"
+
+
+    shift
+    echo "" | awk '{ printf("%-8s:=%-12s;","shift(N)",$1) }'
+    echo "shift(N),para move forward N($2-&gt;$1,$3-&gt;2,.)"
+
+    echo -e "\$@      :=\c"
+    echo -e "$@    ;\c"
+    echo "para list"
+
+}
+
+echo "test_fun p1 p2 p3"
+echo "-------------------------------------"
+test_fun p1 p2 p3
+
+echo "output: done."</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

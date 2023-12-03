@@ -1,0 +1,213 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT038501.cpp (Mini Parser)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT038501.cpp (Mini Parser)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-01-05</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0385.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0385</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_9d487929" href="#TOC_HEAD_9d487929">Problem 0385 <strong>Mini Parser</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/mini-parser/" target="_blank">https://leetcode.com/problems/mini&ndash;parser/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>38</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_e6eef431" href="#TOC_HEAD_e6eef431">LT038501.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_43467ddb">LT0385 (name=Mini Parser, ptag=Leetcode) &nbsp;<a href="../tags/LT0385.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0385</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_6962dd4c"><a href="https://leetcode.com/problems/mini-parser/" target="_blank">Mini Parser &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0385.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0385</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_7cccaffe" href="#TOC_HEAD_7cccaffe">LT038501.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+
+// This is the interface that allows for creating nested lists.
+// You should not implement it, or speculate about its implementation
+class NestedInteger {
+public:
+    // Constructor initializes an empty nested list.
+    NestedInteger();
+
+    // Constructor initializes a single integer.
+    NestedInteger(int value);
+
+    // Return true if this NestedInteger holds a single integer, rather than a nested list.
+    bool isInteger() const;
+
+    // Return the single integer that this NestedInteger holds, if it holds a single integer
+    // The result is undefined if this NestedInteger holds a nested list
+    int getInteger() const;
+
+    // Set this NestedInteger to hold a single integer.
+    void setInteger(int value);
+
+    // Set this NestedInteger to hold a nested list and adds a nested integer to it.
+    void add(const NestedInteger &ni);
+
+    // Return the nested list that this NestedInteger holds, if it holds a nested list
+    // The result is undefined if this NestedInteger holds a single integer
+    const vector&lt;NestedInteger&gt; &getList() const;
+};
+
+
+class Solution {
+public:
+    NestedInteger deserialize(string s) {
+        m_p = s.c_str();
+        return _nextNested();
+    }
+
+    NestedInteger _nextNested()
+    {
+        char c = *m_p;
+        bool isNested = false, hasVal = false;
+        int val;
+        // cout &lt;&lt; "_nextNested=" &lt;&lt; string(m_p, strlen(m_p)) &lt;&lt; ", c=" &lt;&lt; c &lt;&lt; endl;
+
+        if( c == '[' )
+        {   ++m_p;
+            isNested = true;
+        }
+
+        if( _isNum(*m_p) )
+        {   val = _nextVal();
+            hasVal = true;
+        }
+
+        NestedInteger nested;
+
+        if( !isNested )
+        {   if( hasVal )
+                nested.setInteger(val);
+        }
+        else
+        {
+            if( hasVal )
+                nested.add(NestedInteger(val));
+
+            while( (c = *(m_p++)) != 0)
+            {   if( c == ',' )
+                    nested.add(_nextNested());
+                else if( c == '[' )
+                {   --m_p;
+                    nested.add(_nextNested());
+                }
+                else
+                    break;
+            }
+        }
+
+        return nested;
+    }
+
+    int _nextVal()
+    {   const char* p2 = m_p;
+        char c;
+        while( (c = *p2) != 0 && _isNum(c) )
+            ++p2;
+        if( m_p == p2 )
+            return 0;
+        int val = std::stoi(string(m_p, p2-m_p));
+        m_p = p2;
+        //cout &lt;&lt; "p2=" &lt;&lt; string(p2, strlen(p2)) &lt;&lt; ", val=" &lt;&lt; val &lt;&lt; endl;
+        return val;
+    }
+
+    bool _isNum(char c)
+    {   return (c &gt;= '0' && c &lt;= '9') || c == '-';
+    }
+
+    const char* m_p;
+};
+
+
+
+int main(void)
+{
+    cout &lt;&lt; "output: done!" &lt;&lt; endl;
+}
+
+// Result
+//
+// 2023-01-05: Runtime 19ms 38% Memory 12.4MB 48%, https://leetcode.com/problems/mini-parser/submissions/872004020/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>output: done!</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

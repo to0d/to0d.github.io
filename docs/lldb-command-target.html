@@ -1,0 +1,178 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>CommandObjectTarget.cpp</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>CommandObjectTarget.cpp</h1>
+        <h3>todo(1)</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-15</time>
+            <i><a href="../tags/LLDB-target.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB-target</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">what value if m_arch_option is not set &ndash; 2023/10/14 </a></li>
+</ol>
+</div>
+        <div class="entry-content">
+	<H3><a name="HEAD_17a177f" href="#TOC_HEAD_17a177f">1. How target list works</a></H3><ul><a href="../tags/LLDB-target.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB-target</a>&nbsp;<a href="../tags/lldb-target-list.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>lldb-target-list</a>&nbsp;</ul>
+<ul>
+	<li>Test</li>
+	<br />
+	<pre><code>(lldb) target create a.out
+Current executable set to 'xxx/a.out' (x86_64).
+(lldb) target list
+Current targets:
+* target #0: xxxx/a.out ( arch=x86_64-*-linux, platform=host )	</code></pre>
+	<li><a name="HEAD_HIDDEN_987fa73b">add arch &amp; core &amp; os in ArchSpec.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Utility/ArchSpec.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Utility/ArchSpec.cpp" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<ul>
+		<li>g_core_definitions</li>
+		<li>g_elf_arch_entries</li>
+		<li>update <strong>SetArchitecture()</strong></li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_7247e26b">target create &nbsp;<a href="../tags/lldb-target-create.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>lldb-target-create</a></li>
+	<br />
+	<ul>
+		<li><a name="HEAD_HIDDEN_ca28e55d">parse arch_cstr in class CommandObjectTargetCreate &ndash; CommandObjectTarget.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Commands/CommandObjectTarget.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Commands/CommandObjectTarget.cpp" target="_blank"><font color="red"><i>link</i></font></a></li>
+		<br />
+		<pre><code>bool DoExecute(
+...
+llvm::StringRef arch_cstr = m_arch_option.GetArchitectureName();		</code></pre>
+		<ul>
+			<li><a name="HEAD_HIDDEN_3f11202b">what value if m_arch_option is not set &ndash; 2023/10/14  <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></li>
+			<br />
+		</ul>
+		<li><a name="HEAD_HIDDEN_fb13ba9e"><code>TargetList::CreateTarget()</code> &ndash; TargetList.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Target/TargetList.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Target/TargetList.cpp" target="_blank"><font color="red"><i>link</i></font></a></li>
+		<ul>
+			<li><code>TargetList::CreateTargetInternal()</code></li>
+			<br />
+			<ol>
+				<li><code>const ArchSpec arch(triple_str);</code></li>
+				<ul>
+					<li><a name="HEAD_HIDDEN_c343c159"><code>SetTriple(triple_str)</code> &ndash; &ndash; ArchSpec.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Utility/ArchSpec.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Utility/ArchSpec.cpp" target="_blank"><font color="red"><i>link</i></font></a></li>
+					<br />
+					<pre><code>ArchSpec::ArchSpec(llvm::StringRef triple_str) { SetTriple(triple_str); }
+
+bool ArchSpec::SetTriple(llvm::StringRef triple) {
+...
+if (ParseMachCPUDashSubtypeTriple(triple, *this))					</code></pre>
+					<ul>
+						<li><code>ParseMachCPUDashSubtypeTriple()</code></li>
+						<br />
+						<pre><code>bool lldb_private::ParseMachCPUDashSubtypeTriple(llvm::StringRef triple_str,
+                                            ArchSpec &arch) {
+...
+if (!arch.SetArchitecture(eArchTypeMachO, cpu, sub))						</code></pre>
+						<ul>
+							<li>call <strong>SetArchitecture()</strong></li>
+							<br />
+						</ul>
+					</ul>
+				</ul>
+				<li>new target</li>
+				<br />
+				<pre><code>target_sp.reset(new Target(debugger, arch, platform_sp, is_dummy_target));				</code></pre>
+				<li>Register target</li>
+				<br />
+				<pre><code>debugger.GetTargetList().RegisterInProcessTarget(target_sp);				</code></pre>
+			</ol>
+		</ul>
+	</ul>
+	<li><a name="HEAD_HIDDEN_804481cd">target list &nbsp;<a href="../tags/lldb-target-create.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>lldb-target-create</a></li>
+	<br />
+	<ul>
+		<li><a name="HEAD_HIDDEN_8ded2d8f"><code>DumpTargetList()</code> in class CommandObjectTargetSelect &ndash; CommandObjectTarget.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Commands/CommandObjectTarget.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Commands/CommandObjectTarget.cpp" target="_blank"><font color="red"><i>link</i></font></a></li>
+		<ul>
+			<li><code>DumpTargetInfo()</code></li>
+			<ul>
+				<li><code>const ArchSpec &amp;target_arch = target&ndash;&gt;GetArchitecture();</code></li>
+				<li><code>target_arch.DumpTriple(strm.AsRawOstream());</code></li>
+				<ul>
+					<li><a name="HEAD_HIDDEN_d823fd39"><code>ArchSpec::DumpTriple()</code> &ndash; ArchSpec.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Utility/ArchSpec.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Utility/ArchSpec.cpp" target="_blank"><font color="red"><i>link</i></font></a></li>
+					<br />
+				</ul>
+			</ul>
+		</ul>
+	</ul>
+</ul>
+	<H3><a name="HEAD_4b2fc60" href="#TOC_HEAD_4b2fc60">2. Refer</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_3fcce6ba"><a href="learn-lldb-tutorial.html" target="_blank">2023&ndash;09&ndash;16 Learn LLDB&ndash;tutorial.pdf</a>&nbsp;<a href="../pdfs/LLDB-tutorial.pdf" title="LLDB-tutorial.pdf" target="_blank"><font color="red"><i>pdf</i></font></a></li>
+	<li>[%how&ndash;lldb&ndash;load&ndash;symbol&ndash;table]</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_4cf5967" href="#TOC_HEAD_4cf5967">3. Terms</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_809da498">lldb&ndash;target&ndash;list (ptag=LLDB&ndash;cli) &nbsp;<a href="../tags/LLDB-target.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB-target</a>&nbsp;<a href="../tags/lldb-target-list.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>lldb-target-list</a>&nbsp;<a href="../tags/LLDB-cli.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB-cli</a></li>
+	<li><a name="HEAD_HIDDEN_5356d8d2">lldb&ndash;target&ndash;create (ptag=LLDB&ndash;cli, alias=lldb&ndash;file) &nbsp;<a href="../tags/LLDB-target.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB-target</a>&nbsp;<a href="../tags/lldb-target-create.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>lldb-target-create</a>&nbsp;<a href="../tags/LLDB-cli.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB-cli</a>&nbsp;<a href="../tags/lldb-target-create.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>lldb-file</a></li>
+	<br />
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

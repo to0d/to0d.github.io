@@ -1,0 +1,110 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>ToolChain: How gprof works</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">ToolChain: How gprof works</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-05</time>
+            <i><a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;<a href="../tags/gprof.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gprof</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_d600036e" href="#TOC_HEAD_d600036e">what changed when add <strong>&ndash;pg</strong> option</a></H3><ul><a href="../tags/gcc-pg.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gcc-pg</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_2a011f9f">In <a href="tc231005a.sh.html" target="_blank">TC231005A.sh</a> :</li>
+	<br />
+	<pre><code>objdump -d hello_pg.a
+
+00000000000011e9 &lt;func&gt;:
+
+    11f5:	ff 15 ed 2d 00 00    	callq  *0x2ded(%rip)        # 3fe8 &lt;mcount@GLIBC_2.2.5&gt;
+
+0000000000001161 &lt;main&gt;:
+
+    1217:	ff 15 cb 2d 00 00    	callq  *0x2dcb(%rip)        # 3fe8 &lt;mcount@GLIBC_2.2.5&gt;	</code></pre>
+	<li><a name="How-gprof-works-1">通过编译，实现 <strong>mcount</strong> 插桩  &nbsp;<a href="../tags/c7ed7.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>插桩</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_4b2fc60" href="#TOC_HEAD_4b2fc60">Refer</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_ca15b820"><a href="tc231005a.sh.html" target="_blank">TC231005A.sh</a></li>
+	<li><a name="HEAD_HIDDEN_849e114c"><a href="../refers/10ed1ccd780812643503484d743cfbe8.html" target="_blank">2010&ndash;06&ndash;08 Linux性能评测工具之一 gprof篇 我本书生 博客频道 CSDN NET.html</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_27b88c" href="#TOC_HEAD_27b88c">Term</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_cdac8a0">gcc&ndash;pg (ptag=gcc&ndash;option) &nbsp;<a href="../tags/gcc-pg.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gcc-pg</a>&nbsp;<a href="../tags/gprof.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gprof</a>&nbsp;<a href="../tags/gcc-option.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gcc-option</a></li>
+	<li><a name="HEAD_HIDDEN_3f1ecbae">源插桩 (ptag=插桩) &nbsp;<a href="../tags/1ab8967.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>源插桩</a>&nbsp;<a href="../tags/c7ed7.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>插桩</a></li>
+	<br />
+</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

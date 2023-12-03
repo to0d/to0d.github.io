@@ -1,0 +1,53 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC170310F.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC170310F.cpp</h1>
+            <h3>erase map iterator</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/std-map.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-map</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+int main()
+{
+    map&lt;int,int&gt; m;
+    for(int i=0;i&lt;4;++i)
+        m[i] = i + 10;
+
+    cout &lt;&lt; "input: ";
+    outputMap(m);
+
+    auto it = m.begin();
+    while( it != m.end())
+    {
+        if(it-&gt;first % 2 == 0)
+            m.erase(it++); // the deleted iterator will be useless,
+                        // use it++ to make a clone one
+        else
+            ++it;
+    }
+
+    cout &lt;&lt; "; output: ";
+    outputMap(m);
+    cout &lt;&lt; endl;
+
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

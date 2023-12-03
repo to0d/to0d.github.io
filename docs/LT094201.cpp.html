@@ -1,0 +1,151 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT094201.cpp (DI String Match)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT094201.cpp (DI String Match)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-24</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0942.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0942</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_f8543b99" href="#TOC_HEAD_f8543b99">Problem 0942 <strong>DI String Match</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/di-string-match/" target="_blank">https://leetcode.com/problems/di&ndash;string&ndash;match/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>5.20</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_a08c6d78" href="#TOC_HEAD_a08c6d78">LT094201.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_1a4dca4b">LT0942 (name=DI String Match, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0942.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0942</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_735ec2c7"><a href="https://leetcode.com/problems/di-string-match/" target="_blank">DI String Match &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0942.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0942</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_b82fe4c5" href="#TOC_HEAD_b82fe4c5">LT094201.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+bool less_interval(const vector&lt;int&gt;& a, const vector&lt;int&gt;& b){
+    return a[0] &lt; b[0];
+}
+
+class Solution {
+public:
+    vector&lt;int&gt; diStringMatch(string s) {
+        vector&lt;vector&lt;int&gt;&gt; tmp;
+        tmp.push_back({0, 0});
+        int len = s.length();
+        for(int i = 0;i &lt; len; ++i)
+        {   char c = s.at(i);
+            int v = i+1;
+            if( c == 'D' )
+                v = -v;
+            vector&lt;int&gt; ex = {v, i+1};
+            tmp.push_back(ex);
+        }
+
+        std::sort(tmp.begin(), tmp.end(), less_interval);
+
+        vector&lt;int&gt; rst(len+1, 0);
+        int idx = 0;
+        for(vector&lt;int&gt;& vec : tmp)
+            rst[vec[1]] = idx++;
+
+        return rst;
+    }
+};
+
+
+
+void test(string s)
+{
+    cout &lt;&lt; "input: " &lt;&lt; s;
+    vector&lt;int&gt; r = Solution().diStringMatch(s);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test("IDID");
+}
+
+
+// Result
+//
+// 2022-12-22: Runtime 55ms 5.19% Memory 17.9MB 5.2%, https://leetcode.com/problems/di-string-match/submissions/863785726/
+// 2023-02-24: Runtime 63ms 5.20% Memory 17.9MB 25.26%, https://leetcode.com/problems/di-string-match/submissions/904200541/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: IDID; output: [2,3,1,4,0];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

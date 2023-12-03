@@ -1,0 +1,171 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT053001.cpp (Minimum Absolute Difference in BST)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT053001.cpp (Minimum Absolute Difference in BST)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-09</time>
+            <i><a href="../tags/BST.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>BST</a>&nbsp;<a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/Inorder.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Inorder</a>&nbsp;<a href="../tags/LT0530.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0530</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_e3773611" href="#TOC_HEAD_e3773611">Problem 0530 <strong>Minimum Absolute Difference in BST</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/minimum-absolute-difference-in-bst/" target="_blank">https://leetcode.com/problems/minimum&ndash;absolute&ndash;difference&ndash;in&ndash;bst/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>77.66</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_b5054893" href="#TOC_HEAD_b5054893">LT053001.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_80727a69">LT0530 (name=Minimum Absolute Difference in BST, ptag=Leetcode) &nbsp;<a href="../tags/BST.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>BST</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/Inorder.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Inorder</a>&nbsp;<a href="../tags/LT0530.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0530</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_d3f65add"><a href="https://leetcode.com/problems/minimum-absolute-difference-in-bst/" target="_blank">Minimum Absolute Difference in BST &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0530.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0530</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a binary search tree with non&ndash;negative values, find the minimum
+		<a href="https://en.wikipedia.org/wiki/Absolute_difference" target="_blank">absolute difference</a>
+		between values of any two nodes.
+	</p>
+	<p>
+		<strong>Example:</strong>
+	</p>
+	<pre><code>&lt;b&gt;Input:&lt;/b&gt;
+
+1
+\
+3
+/
+2
+
+&lt;b&gt;Output:&lt;/b&gt;
+1
+
+&lt;b&gt;Explanation:&lt;/b&gt;
+The minimum absolute difference is 1, which is the difference between 2 and 1 (or between 2 and 3).	</code></pre>
+	<p>
+		<strong>Note:</strong> There are at least two nodes in this BST.
+	</p>
+</ul>
+	<H3><a name="HEAD_95708560" href="#TOC_HEAD_95708560">LT053001.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int getMinimumDifference(TreeNode* root) {
+        m_minDiff = INT_MAX, m_lastVal = INT_MIN + root-&gt;val + 1;
+        _inorderTraversal(root);
+        return m_minDiff;
+    }
+
+    void _inorderTraversal(TreeNode* node) {
+        if(node == NULL)
+            return;
+
+        _inorderTraversal(node-&gt;left);
+
+        int diff = node-&gt;val - m_lastVal;
+        m_minDiff = std::min(m_minDiff, diff);
+        m_lastVal = node-&gt;val;
+
+        _inorderTraversal(node-&gt;right);
+    }
+
+    int m_lastVal;
+    int m_minDiff;
+};
+
+
+
+void test(TreeNode* root)
+{
+    cout &lt;&lt; "input: ";
+    outputTree(root);
+    int r = Solution().getMinimumDifference(root);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(makeTree("{4,2,6,1,3}"));
+}
+
+// Result
+//
+// 2022-11-23: Runtime 46ms 9.29% Memory 25.1MB 97.5%, https://leetcode.com/problems/minimum-absolute-difference-in-bst/submissions/848455519/
+// 2023-02-24: Runtime 11ms 96.67% Memory 25.3MB 59.5%, https://leetcode.com/problems/minimum-absolute-difference-in-bst/submissions/904150665/
+// 2023-03-09: Runtime 16ms 77.66% Memory 25.2MB 85.55%, https://leetcode.com/problems/minimum-absolute-difference-in-bst/submissions/911553456/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [4,2,6,1,3]; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

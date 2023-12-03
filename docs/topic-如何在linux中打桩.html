@@ -1,0 +1,151 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>ToolChain: 如何在Linux中打桩</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>ToolChain: 如何在Linux中打桩</h1>
+        <h3>library interpositioning</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-05</time>
+            <i><a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;<a href="../tags/c5076.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>打桩</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H2><a name="HEAD_ae4d23b6" href="#TOC_HEAD_ae4d23b6">1. 打桩几个方式</a></H2>
+	<H3><a name="HEAD_3ff8ab91" href="#TOC_HEAD_3ff8ab91">1.1. 编译时打桩</a></H3>
+<ul>
+	<li>使用 <strong>预处理器</strong> , 将目标函数用包装函数替换掉</li>
+	<li><a name="HEAD_HIDDEN_92f5c027"><a href="tc231005b.c.html" target="_blank">TC231005B.c</a></li>
+	<br />
+	<li>Tips:</li>
+	<br />
+	<ul>
+		<li>定义同名头文件 &ndash; <code>malloc.h</code></li>
+		<li>定义同名函数 &ndash; <strong>malloc</strong></li>
+		<br />
+		<pre><code>malloc.h:
+#define malloc(size) mymalloc(size)
+#define free(ptr) myfree(ptr)
+
+void *mymalloc(size_t size);
+void myfree(void *ptr);		</code></pre>
+		<li>使用宏开关</li>
+		<br />
+		<pre><code>makefile:
+gcc -DCOMPILETIME -c mymalloc.c		</code></pre>
+		<li>指定了当前路径为头文件路径 &ndash; <strong>&ndash;I</strong></li>
+		<br />
+		<pre><code>makefile:
+gcc -I. -o test.a TC231005B.c mymalloc.o -g		</code></pre>
+	</ul>
+</ul>
+	<H3><a name="HEAD_6268b525" href="#TOC_HEAD_6268b525">1.2. 链接时打桩</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_6f32180b">使用 <strong>––wrap f</strong> 标志进行链接时打桩 &nbsp;<a href="../tags/ld-wrap.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ld-wrap</a></li>
+	<li><a name="HEAD_HIDDEN_9303d7a8"><a href="tc231005c.c.html" target="_blank">TC231005C.c</a></li>
+	<br />
+	<li>Tips:</li>
+	<ul>
+		<li>使用 <strong>––wrap f</strong> 在链接时将 <strong>malloc</strong> 解析为 <strong>__wrap_malloc</strong> 而将 <strong>__real_malloc</strong> 解析为 <strong>malloc</strong></li>
+		<li>自定义 <strong>__wrap_malloc</strong> ,  其内部调用配函数 <strong>__real_malloc</strong></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_2a143cf0" href="#TOC_HEAD_2a143cf0">1.3. 运行时打桩</a></H3><ul><a href="../tags/2705c0f6.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>动态加载</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_e231f639">基于动态链接器的 <strong>LD_PRELOAD</strong> 环境变量 &nbsp;<a href="../tags/LD_PRELOAD.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LD_PRELOAD</a></li>
+	<li><a name="HEAD_HIDDEN_9311ef29"><a href="tc231005d.c.html" target="_blank">TC231005D.c</a></li>
+	<br />
+	<li>Tips:</li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_ec3ebc2">重新实现 malloc 等函数, 内部用 <strong>dlsym</strong> <strong>RTLD_NEXT</strong> 动态调用真正的函数地 &nbsp;<a href="../tags/RTLD_NEXT.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>RTLD_NEXT</a>&nbsp;<a href="../tags/dlsym.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>dlsym</a></li>
+		<li>调用时，把自定义动态库放入 <strong>LD_PRELOAD</strong> 实现替换 &ndash; <code>LD_PRELOAD=&quot;./mymalloc.so&quot; ./test.a</code></li>
+		<br />
+	</ul>
+</ul>
+	<H2><a name="HEAD_eefbec1e" href="#TOC_HEAD_eefbec1e">2. <strong>打桩</strong> 与 <strong>插桩</strong> 区别</a></H2><ul><a href="../tags/c5076.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>打桩</a>&nbsp;<a href="../tags/c7ed7.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>插桩</a>&nbsp;</ul>
+<ul>
+	<li><strong>打桩</strong> : 替换函数</li>
+	<li><strong>插桩</strong> : 插入代码/指令</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_4b2fc60" href="#TOC_HEAD_4b2fc60">3. Refer</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_23aa51de"><a href="../refers/2a5f263724cf79e987af1922c5721318.html" target="_blank">2023&ndash;09&ndash;09 库打桩机制 知乎.html</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_4cf5967" href="#TOC_HEAD_4cf5967">4. Terms</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_e2150798">打桩 (name=Interpositioning) &nbsp;<a href="../tags/c5076.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>打桩</a></li>
+	<li><a name="HEAD_HIDDEN_5b4053f">dlsym &nbsp;<a href="../tags/2705c0f6.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>动态加载</a></li>
+	<li><a name="HEAD_HIDDEN_c190a4d8">RTLD_NEXT &nbsp;<a href="../tags/dlsym.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>dlsym</a></li>
+	<br />
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

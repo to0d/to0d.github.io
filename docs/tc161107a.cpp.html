@@ -1,0 +1,53 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161107A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161107A.cpp</h1>
+            <h3>LFC Unit Test</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/GTest.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>GTest</a>&nbsp;<a href="../tags/UT.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>UT</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;limits.h&gt;
+#include &lt;gtest/gtest.h&gt;
+#include &lt;lfc/lfc.h&gt;
+
+
+TEST(Trace, lfc_dump_memory_hex)
+{
+    lfc_dump_memory_hex(NULL, 0);
+}
+
+TEST(String, lfc_memrchr)
+{
+    // EXPECT_STREQ(".z",(char*) lfc_memrchr("xx.yy.z", '.', 100));
+    EXPECT_STREQ(".z",(char*) lfc_memrchr("xx.yy.z", '.', 7));
+    EXPECT_STREQ(NULL,(char*) lfc_memrchr(NULL, '.', 7));
+    EXPECT_STREQ(".z",(char*) lfc_memrchr("xx.yy.z", '.', 6));
+    EXPECT_STREQ(".yy.z",(char*) lfc_memrchr("xx.yy.z", '.', 5));
+    EXPECT_STREQ(".yy.z",(char*) lfc_memrchr("xx.yy.z", '.', 4));
+    EXPECT_STREQ(".yy.z",(char*) lfc_memrchr("xx.yy.z", '.', 3));
+    EXPECT_STREQ(NULL,(char*) lfc_memrchr("xx.yy.z", '.', 2));
+    EXPECT_STREQ(NULL,(char*) lfc_memrchr("xx.yy.z", '.', 1));
+    EXPECT_STREQ(NULL,(char*) lfc_memrchr("xx.yy.z", '.', 0));
+    // EXPECT_STREQ(NULL,(char*) lfc_memrchr("xx.yy.z", '.', -1));
+
+    printf( "output: done.\n" );
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

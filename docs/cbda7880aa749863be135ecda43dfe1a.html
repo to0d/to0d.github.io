@@ -1,0 +1,42 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Git 换行符的问题</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>Git 换行符的问题</h1>
+            <h3></h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/ad335f4.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>回车换行符</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    <blockquote>
+	<p>
+	Git可以在你提交时自动地把行结束符 <strong>CRLF</strong> 转换成 <strong>LF</strong> , 而在签出代码时把LF转换成 <strong>CRLF</strong> . 用 <em>core.autocrlf</em> 来打开此项功能, 如果是在Windows系统上, 把它设置成 <em>true</em> , 这样当签出代码时, LF会被转换成 <strong>CRLF</strong>
+	</p>
+	<p>
+	</p>
+</blockquote>
+<pre><code>    $ git config --global core.autocrlf true</code></pre>
+<blockquote>
+	<p>
+	修改git设置 <em>core.autocrlf=input</em> 检出时不转换, 提交转换为 <strong>LF</strong>, 这样可以避免提交windows换行符的情况
+	</p>
+	<p>
+	</p>
+</blockquote>
+<pre><code>    $ git config --global core.autocrlf input</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

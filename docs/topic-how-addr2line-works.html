@@ -1,0 +1,126 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>DBG: How addr2line works</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>DBG: How addr2line works</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-04</time>
+            <i><a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;<a href="../tags/addr2line.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>addr2line</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_91200953" href="#TOC_HEAD_91200953">addr2line logic</a></H3>
+<ul>
+	<li>addr2line loop sections</li>
+	<ul>
+		<li>find the addr is in the current section</li>
+		<ul>
+			<li>call <em>bfd</em>dwarf2_find_nearest_line_with_alt to get the <strong>source line</strong></li>
+			<ul>
+				<li><a name="HEAD_HIDDEN_adca765b">check line info table &ndash; <code>lookup_address_in_line_info_table</code> &ndash; <a href="6495876c76e00e1caf674ddf6a2fe3a9.html" target="_blank">dwarf2.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/dwarf2.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/dwarf2.c" target="_blank"><font color="red"><i>link</i></font></a> &nbsp;<a href="../tags/debug_line-section.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>debug_line-section</a></li>
+				<br />
+			</ul>
+		</ul>
+	</ul>
+	<li><a name="HEAD_HIDDEN_63c6f61e"><a href="2602b0787683ebc2c9bd53240f74b46f.html#ADDR2LINE-LOGIC-1" target="_blank">addr2line logic</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/binutils/addr2line.c" title="https://github.com/to0d/binutils-gdb/tree/master/binutils/addr2line.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_cfbb28b5" href="#TOC_HEAD_cfbb28b5">dump <strong>debug_line</strong> section via <strong>dwarfdump</strong></a></H3><ul><a href="../tags/debug_line-section.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>debug_line-section</a>&nbsp;<a href="../tags/dwarfdump.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>dwarfdump</a>&nbsp;</ul>
+<pre><code>dwarfdump -l hello.a
+
+.debug_line: line number info f
+Source lines (from CU-DIE at .d
+
+            NS new statement, B
+            PE prologue end, EB
+            IS=val ISA number,
+&lt;pc&gt;        [lno,col] NS BB ET
+0x00001149  [   4, 1] NS uri: "
+0x00001157  [   5,12] NS            &lt;=========== 115e &gt; 115b &gt; 1157
+0x0000115e  [   6, 1] NS
+0x00001160  [   9, 1] NS
+0x0000116c  [  10, 7] NS
+0x00001173  [  11, 7] NS
+0x0000117a  [  12, 3] NS
+0x000011a4  [  13,10] NS
+0x000011a9  [  14, 1] NS
+0x000011ab  [  14, 1] NS ET</code></pre>
+<ul>
+	<li><a name="HEAD_HIDDEN_96e4557e"><a href="tc231004b.sh.html" target="_blank">TC231004B.sh</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_27b88c" href="#TOC_HEAD_27b88c">Term</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_6859155b">addr2line (ptag=Tool) &nbsp;<a href="../tags/Embedded-Debug.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Embedded-Debug</a>&nbsp;<a href="../tags/addr2line.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>addr2line</a>&nbsp;<a href="../tags/Tool.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tool</a></li>
+	<br />
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

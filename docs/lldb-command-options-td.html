@@ -1,0 +1,154 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Options.td</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Options.td</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-15</time>
+            <i><a href="../tags/LLDB-cli-option.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB-cli-option</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_980b0be7" href="#TOC_HEAD_980b0be7">1. How to build Options.td</a></H3>
+<ul>
+	<li>generated <strong>CommandOptions.inc</strong> : <code>build/tools/lldb/source/Commands/CommandOptions.inc</code></li>
+	<br />
+	<pre><code>// Options for alias
+#ifdef LLDB_OPTIONS_alias
+constexpr static OptionDefinition g_alias_options[] = {
+{LLDB_OPT_SET_ALL, false, "help", 'h', OptionParser::eRequiredArgument, nullptr, {}, CommandCompletions::eNoCompletion,
+{LLDB_OPT_SET_ALL, false, "long-help", 'H', OptionParser::eRequiredArgument, nullptr, {}, CommandCompletions::eNoComple
+};
+#undef LLDB_OPTIONS_alias
+#endif // alias command
+...	</code></pre>
+	<li><a name="HEAD_HIDDEN_24eff78f">build <strong>lldb&ndash;tblgen</strong> &nbsp;<a href="../tags/lldb-tblgen.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>lldb-tblgen</a></li>
+	<ul>
+		<li><code>add_tablegen(lldb&ndash;tblgen LLDB</code> &ndash; <code>lldb\utils\TableGen\CMakeLists.txt</code></li>
+		<ul>
+			<li><code>macro(add_tablegen target project)</code> &ndash; <code>llvm\cmake\modules\TableGen.cmake</code></li>
+			<ul>
+				<li>set <strong>LLDB_TABLEGEN_EXE</strong></li>
+				<br />
+				<pre><code>set(${project}_TABLEGEN_EXE ${${project}_TABLEGEN} PARENT_SCOPE)				</code></pre>
+			</ul>
+		</ul>
+	</ul>
+	<li>call <strong>lldb&ndash;tblgen</strong> to generate <strong>CommandOptions.inc</strong></li>
+	<br />
+	<ul>
+		<li><code>lldb_tablegen(CommandOptions.inc &ndash;gen&ndash;lldb&ndash;option&ndash;defs</code> &ndash; <code>lldb\source\Commands\CMakeLists.txt</code></li>
+		<br />
+		<pre><code>lldb_tablegen(CommandOptions.inc -gen-lldb-option-defs
+SOURCE Options.td
+TARGET LLDBOptionsGen)		</code></pre>
+		<ul>
+			<li><code>function(lldb_tablegen)</code> &ndash; <code>lldb\cmake\modules\AddLLDB.cmake</code></li>
+			<ul>
+				<li><code>tablegen(LLDB ${LTG_UNPARSED_ARGUMENTS})</code></li>
+				<ul>
+					<li><code>function(tablegen project ofn)</code> &ndash; <code>llvm\cmake\modules\TableGen.cmake</code></li>
+					<ul>
+						<li>use <strong>LLDB_TABLEGEN_EXE</strong></li>
+						<br />
+						<pre><code>set(tablegen_exe ${${project}_TABLEGEN_EXE})						</code></pre>
+					</ul>
+				</ul>
+			</ul>
+		</ul>
+		<li>option -gen-lldb-option-defs</li>
+		<ul>
+			<li>used in <code>lldb\source\Commands\CMakeLists.txt</code></li>
+			<br />
+			<pre><code>lldb_tablegen(CommandOptions.inc -gen-lldb-option-defs			</code></pre>
+			<li><a name="HEAD_HIDDEN_6cc5be5b">defined in <a href="a1910da8775ed7eba841030754a173e6.html" target="_blank">LLDBTableGen.cpp</a>&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/utils/TableGen/LLDBTableGen.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/utils/TableGen/LLDBTableGen.cpp" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<br />
+			<pre><code>enum ActionType {
+...
+GenOptionDefs,
+...
+};
+
+...
+clEnumValN(GenOptionDefs, "gen-lldb-option-defs",
+    "Generate lldb option definitions"),
+
+
+static bool LLDBTableGenMain(raw_ostream &OS, RecordKeeper &Records) {
+...
+case GenOptionDefs:
+EmitOptionDefs(Records, OS);
+break;			</code></pre>
+		</ul>
+	</ul>
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

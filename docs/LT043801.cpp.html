@@ -1,0 +1,156 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT043801.cpp (Find All Anagrams in a String)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT043801.cpp (Find All Anagrams in a String)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-11</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0438.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0438</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/String-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>String-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_584af643" href="#TOC_HEAD_584af643">Problem 0438 <strong>Find All Anagrams in a String</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/find-all-anagrams-in-a-string/" target="_blank">https://leetcode.com/problems/find&ndash;all&ndash;anagrams&ndash;in&ndash;a&ndash;string/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>51.54</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_6da7d81a" href="#TOC_HEAD_6da7d81a">LT043801.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_8f7f8bb5">LT0438 (name=Find All Anagrams in a String, ptag=Leetcode) &nbsp;<a href="../tags/LT0438.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0438</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/String-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>String-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_d6211130"><a href="https://leetcode.com/problems/find-all-anagrams-in-a-string/" target="_blank">Find All Anagrams in a String &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0438.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0438</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_a85df067" href="#TOC_HEAD_a85df067">LT043801.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    vector&lt;int&gt; findAnagrams(string s, string p) {
+        int s_len = s.length(), p_len = p.length();
+        if( s_len &lt; p_len )
+            return {};
+        vector&lt;int&gt; pc(26, 0), sc(26, 0), rst;
+        count(pc, p, 0, p_len);
+        count(sc, s, 0, p_len);
+        if( is_equal(pc, sc) )
+            rst.push_back(0);
+        for(int pos = 0; pos &lt; s_len - p_len; ++pos )
+        {   sc[s.at(pos) - 'a']--;
+            sc[s.at(pos+p_len) - 'a']++;
+            if( is_equal(pc, sc) )
+                rst.push_back(pos+1);
+        }
+        return rst;
+    }
+
+    bool is_equal(vector&lt;int&gt;& a, vector&lt;int&gt;& b) {
+        int size = a.size();
+        for(int i = 0;i &lt; size; ++i)
+            if( a[i] != b[i] )
+                return false;
+        return true;
+    }
+
+    void count(vector&lt;int&gt;& count, string& s, int pos, int len) {
+        for(int i = 0; i &lt; len; ++i)
+        {   char c = s.at(pos+i);
+            count[c-'a']++;
+        }
+    }
+};
+
+
+
+void test(string s, string p)
+{
+    cout &lt;&lt; "input: s=" &lt;&lt; s &lt;&lt; ", p=" &lt;&lt; p;
+    vector&lt;int&gt; r = Solution().findAnagrams(s, p);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test("cbaebabacd", "abc");
+}
+
+
+// Result
+//
+// 2023-03-11: Runtime 16ms 51.54% Memory 8.7MB 41.93%, https://leetcode.com/problems/find-all-anagrams-in-a-string/submissions/913280370/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: s=cbaebabacd, p=abc; output: [0,6];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

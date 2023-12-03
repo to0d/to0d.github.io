@@ -1,0 +1,195 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Test_JSSE_Example1.java</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Test_JSSE_Example1.java</h1>
+        <h3>JSSE安全链接</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-02-24</time>
+            <i><a href="../tags/JSSE.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>JSSE</a>&nbsp;<a href="../tags/Publication.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Publication</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_34e3e39d" href="#TOC_HEAD_34e3e39d">Create <a href="../tags/jks.html" target="_blank"><i class="fa fa-tags fa-fw"></i>jks</a> <a><b>Certificate</b></a> by tool <a href="../tags/keytool.html" target="_blank"><i class="fa fa-tags fa-fw"></i>keytool</a></a></H3><ul><a href="../tags/jks.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>jks</a>&nbsp;<a href="../tags/keytool.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>keytool</a>&nbsp;</ul>
+<pre><code>keytool -genkey -alias test -keypass 123456 -keyalg RSA -keysize 1024 -validity 365 -keystore test.jks -storepass 123456
+
+keytool -list -v -keystore test.jks</code></pre>
+	<H3><a name="HEAD_2e5c6b52" href="#TOC_HEAD_2e5c6b52">用 <a href="../tags/JSSE.html" target="_blank"><i class="fa fa-tags fa-fw"></i>JSSE</a> 创建安全链接</a></H3><ul><a href="../tags/JSSE.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>JSSE</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_a5327bd"><a href="../refers/ddef9645fee016e71f17bf0a857f2d12.htm" target="_blank">2015&ndash;10&ndash;20 Java中使用JSSE实现SSL_TLS安全协议_爵士陈的博客&ndash;CSDN博客_jsse.htm</a>&nbsp;<a href="f92644313ad968b6be184de9fa10655f.html" title="2015-10-20 Java中使用JSSE实现SSL_TLS安全协议_爵士陈的博客-CSDN博客_jsse.htm" target="_blank"><font color="red"><i>ext</i></font></a></li>
+	<br />
+</ul>
+	<hr/>
+<pre><code>package test.jsse;
+
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.KeyStore;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
+
+public class Test_JSSE_Example1 {
+
+    static void run_server() throws Exception {
+
+        KeyStore serverKeyStore = KeyStore.getInstance("JKS");
+        serverKeyStore.load(new FileInputStream("test\\test.jks"), "123456".toCharArray());
+
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+        kmf.init(serverKeyStore, "123456".toCharArray());
+
+        KeyStore clientKeyStore = KeyStore.getInstance("JKS");
+        clientKeyStore.load(new FileInputStream("test\\test.jks"), "123456".toCharArray());
+
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+        tmf.init(clientKeyStore);
+
+        SSLContext sslContext = SSLContext.getInstance("SSL");
+        sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+
+        // SSLServerSocket
+        SSLServerSocketFactory serverFactory = sslContext.getServerSocketFactory();
+        SSLServerSocket svrSocket = (SSLServerSocket) serverFactory.createServerSocket(34567);
+        // svrSocket.setNeedClientAuth(true);
+
+        String[] supported = svrSocket.getEnabledCipherSuites();
+        svrSocket.setEnabledCipherSuites(supported);
+
+        System.out.println("server: socket open");
+
+        SSLSocket cntSocket = (SSLSocket) svrSocket.accept();
+        InputStream in = cntSocket.getInputStream();
+
+        byte buf[] = new byte[102];
+        int bytes = in.read(buf);
+
+        System.out.println("server: receive:" + bytes + " bytes");
+
+    }
+
+    static void run_client() throws Exception {
+
+        KeyStore clientKeyStore = KeyStore.getInstance("JKS");
+        clientKeyStore.load(new FileInputStream("test\\test.jks"), "123456".toCharArray());
+
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+        kmf.init(clientKeyStore, "123456".toCharArray());
+
+        KeyStore serverKeyStore = KeyStore.getInstance("JKS");
+        serverKeyStore.load(new FileInputStream("test\\test.jks"), "123456".toCharArray());
+
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+        tmf.init(serverKeyStore);
+
+        SSLContext sslContext = SSLContext.getInstance("SSL");
+        sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+
+        SSLSocketFactory sslcntFactory = (SSLSocketFactory) sslContext.getSocketFactory();
+        SSLSocket sslSocket = (SSLSocket) sslcntFactory.createSocket("127.0.0.1", 34567);
+
+        String[] supported = sslSocket.getSupportedCipherSuites();
+        sslSocket.setEnabledCipherSuites(supported);
+
+        OutputStream out = sslSocket.getOutputStream();
+        out.write("hello".getBytes());
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        new Thread(() -&gt; {
+            try {
+                run_server();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+
+        new Thread(() -&gt; {
+            try {
+                Thread.sleep(1000);
+                run_client();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+
+    }
+}</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT070001.cpp (Search in a Binary Search Tree)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT070001.cpp (Search in a Binary Search Tree)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-24</time>
+            <i><a href="../tags/BST.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>BST</a>&nbsp;<a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0700.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0700</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_8e6bf191" href="#TOC_HEAD_8e6bf191">Problem 0700 <strong>Search in a Binary Search Tree</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/search-in-a-binary-search-tree/" target="_blank">https://leetcode.com/problems/search&ndash;in&ndash;a&ndash;binary&ndash;search&ndash;tree/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>98.39</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_7af66578" href="#TOC_HEAD_7af66578">LT070001.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_94b6d9e9">LT0700 (name=Search in a Binary Search Tree, ptag=Leetcode) &nbsp;<a href="../tags/BST.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>BST</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0700.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0700</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_fe2645d0"><a href="https://leetcode.com/problems/search-in-a-binary-search-tree/" target="_blank">Search in a Binary Search Tree &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0700.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0700</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_8655dcc5" href="#TOC_HEAD_8655dcc5">LT070001.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+        if( root == NULL )
+            return NULL;
+
+        if( root-&gt;val == val )
+            return root;
+
+        TreeNode* node = searchBST(root-&gt;left, val);
+        if( node != NULL )
+            return node;
+
+        return searchBST(root-&gt;right, val);
+    }
+};
+
+
+
+void test(TreeNode* root, int val)
+{
+    cout &lt;&lt; "input: val=" &lt;&lt; val &lt;&lt; ", tree=";
+    outputTree(root);
+    TreeNode* r = Solution().searchBST(root, val);
+    cout &lt;&lt; "; output: ";
+    outputTree(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test(makeTree("{4,2,7,1,3}"), 2);
+}
+
+
+// Result
+//
+// 2022-12-01: Runtime 94ms 6.77% Memory 34.8MB 71%, https://leetcode.com/problems/search-in-a-binary-search-tree/submissions/852605609/
+// 2023-02-24: Runtime 31ms 98.39% Memory 34.8MB 71.18%, https://leetcode.com/problems/search-in-a-binary-search-tree/submissions/904187983/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: val=2, tree=[4,2,7,1,3]; output: [2,1,3];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

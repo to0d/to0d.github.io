@@ -1,0 +1,63 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161101A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161101A.cpp</h1>
+            <h3>test c++ inner class</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Cxx-Class.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Class</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+int main(void)
+{
+    std::cout &lt;&lt; "output: ";
+
+    class InnerA
+    {
+    public:
+        class Inner2A
+        {
+        public:
+            Inner2A()
+            {
+                std::cout &lt;&lt; "Inner2A::Inner2A()" &lt;&lt; ", ";
+            }
+        };
+
+    public:
+        InnerA()
+        {
+            std::cout &lt;&lt; "InnerA::InnerA()" &lt;&lt; std::endl;
+        }
+    private:
+        Inner2A a;
+
+    };
+
+    {
+        InnerA a;
+    }
+
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

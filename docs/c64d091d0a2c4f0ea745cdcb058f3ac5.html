@@ -1,0 +1,66 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>llvm-query-commit-riscv.sh</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>llvm-query-commit-riscv.sh</h1>
+            <h3>query all riscv commits</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/LLVM.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM</a>&nbsp;<a href="../tags/RISCV.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>RISCV</a>&nbsp;<a href="../tags/git-log.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>git-log</a>&nbsp;<a href="../tags/git-log-grep.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>git-log-grep</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#!/bin/sh
+
+LLVM_PATH=~/llvm-project
+
+commit_count=0
+
+cd $LLVM_PATH
+
+rm -f riscv_sources.txt
+rm -f riscv_commits.txt
+rm -f riscv_total.txt
+
+commit_list=$(git log --before="2018-12-30" --grep="riscv" -i | grep -e "^commit" | awk '{print $2}' | tac)
+for commit in $commit_list
+{
+    echo "check: " $commit
+    git show $commit &gt; _tmp1.txt
+    title=$(cat _tmp1.txt | grep -e "\[RISCV" -e "\[riscv" -e "\[RISC-V" -e "\[risc-v")
+    if [ ! "$title" = "" ]
+    then
+        git show $commit | grep "+++ b" | cut -b 7- &gt; _tmp1.txt
+        source_count=$(cat _tmp1.txt | wc -l)
+        echo "title: "$title", source: "$source_count
+        cat _tmp1.txt &gt;&gt; _tmp2.txt
+        commit_count=`expr $commit_count + 1`
+        echo $commit &gt;&gt; riscv_commits.txt
+        echo "commit: "$commit &gt;&gt; riscv_total.txt
+        echo "title: "$title &gt;&gt; riscv_total.txt
+        cat _tmp1.txt &gt;&gt; riscv_total.txt
+        echo "" &gt;&gt; riscv_total.txt
+    fi
+}
+
+cat _tmp2.txt | sort | uniq | grep -v "/test/" | grep -v "unittests" &gt;&gt; riscv_sources.txt
+total_source_count=$(cat riscv_sources.txt | wc -l)
+echo "done: "$commit_count" commits, "$total_source_count" sources"
+
+rm -f _tmp1.txt
+rm -f _tmp2.txt</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

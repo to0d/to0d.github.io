@@ -1,0 +1,329 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>DBG: LLDB architecture</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">DBG: LLDB architecture</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-15</time>
+            <i><a href="../tags/LLDB.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB</a>&nbsp;<a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H1><a name="HEAD_5c2a540b" href="#TOC_HEAD_5c2a540b">1. Componnent</a></H1>
+	<H2><a name="HEAD_a7e3d279" href="#TOC_HEAD_a7e3d279">1.1. Libraries</a></H2>
+<ul>
+	<li>defined by <strong>add_lldb_library</strong> (cmake)</li>
+	<br />
+	<li><a name="HEAD_HIDDEN_f8b8456c">129 ibraries (107 plugin lib) &nbsp;<a href="../tags/LLDB-Plugin.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB-Plugin</a></li>
+	<ul>
+		<li>liblldb</li>
+		<li>lldbBreakpoint</li>
+		<li>lldbCommands</li>
+		<li>lldbCore</li>
+		<li>lldbDataFormatters</li>
+		<li>lldbExpression</li>
+		<li>lldbHost</li>
+		<li>lldbHostMacOSXObjCXX</li>
+		<li>lldbInitialization</li>
+		<li>lldbInterpreter</li>
+		<li>lldbSymbol</li>
+		<li>lldbTarget</li>
+		<li>lldbUtility</li>
+		<li>lldbVersion</li>
+		<li>lldbDebugserverCommon</li>
+		<li>lldbDebugserverCommon_NonUI</li>
+		<li>lldbIntelFeatures</li>
+		<li>lldbIntelMPX</li>
+		<li>lldbFuzzerUtils</li>
+		<li>lldbUtilityHelpers</li>
+		<li>lldbHostHelpers</li>
+		<li>lldbSymbolHelpers</li>
+		<li>lldbPluginABIAArch64</li>
+		<li>lldbPluginABIARC</li>
+		<li>lldbPluginABIARM</li>
+		<li>lldbPluginABIHexagon</li>
+		<li>lldbPluginABIMips</li>
+		<li><a name="HEAD_HIDDEN_1aa8907e">lldbPluginABIMSP430 &nbsp;<a href="../tags/MSP430.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>MSP430</a></li>
+		<li>lldbPluginABIPowerPC</li>
+		<li>lldbPluginABISystemZ</li>
+		<li>lldbPluginABIX86</li>
+		<li>lldbPluginArchitectureAArch64</li>
+		<li>lldbPluginArchitectureArm</li>
+		<li>lldbPluginArchitectureMips</li>
+		<li>lldbPluginArchitecturePPC64</li>
+		<li>lldbPluginDisassemblerLLVMC</li>
+		<li>lldbPluginDynamicLoaderDarwinKernel</li>
+		<li>lldbPluginDynamicLoaderHexagonDYLD</li>
+		<li>lldbPluginDynamicLoaderMacOSXDYLD</li>
+		<li>lldbPluginDynamicLoaderPosixDYLD</li>
+		<li>lldbPluginDynamicLoaderStatic</li>
+		<li>lldbPluginDynamicLoaderWasmDYLD</li>
+		<li>lldbPluginDynamicLoaderWindowsDYLD</li>
+		<li>lldbPluginExpressionParserClang</li>
+		<li>lldbPluginInstructionARM</li>
+		<li>lldbPluginInstructionARM64</li>
+		<li>lldbPluginInstructionLoongArch</li>
+		<li>lldbPluginInstructionMIPS</li>
+		<li>lldbPluginInstructionMIPS64</li>
+		<li>lldbPluginInstructionPPC64</li>
+		<li>lldbPluginInstructionRISCV</li>
+		<li>lldbPluginInstrumentationRuntimeASan</li>
+		<li>lldbPluginInstrumentationRuntimeMainThreadChecker</li>
+		<li>lldbPluginInstrumentationRuntimeTSan</li>
+		<li>lldbPluginInstrumentationRuntimeUBSan</li>
+		<li>lldbPluginJITLoaderGDB</li>
+		<li>lldbPluginClangCommon</li>
+		<li>lldbPluginCPlusPlusLanguage</li>
+		<li>lldbPluginObjCLanguage</li>
+		<li>lldbPluginObjCPlusPlusLanguage</li>
+		<li>lldbPluginCPPRuntime</li>
+		<li>lldbPluginCXXItaniumABI</li>
+		<li>lldbPluginAppleObjCRuntime</li>
+		<li>lldbPluginObjCRuntime</li>
+		<li>lldbPluginGNUstepObjCRuntime</li>
+		<li>lldbPluginMemoryHistoryASan</li>
+		<li>lldbPluginObjectContainerBSDArchive</li>
+		<li>lldbPluginObjectContainerMachOFileset</li>
+		<li>lldbPluginObjectContainerMachOArchive</li>
+		<li>lldbPluginObjectFileBreakpad</li>
+		<li>lldbPluginObjectFileCOFF</li>
+		<li>lldbPluginObjectFileELF</li>
+		<li>lldbPluginObjectFileJSON</li>
+		<li>lldbPluginObjectFileMachO</li>
+		<li>lldbPluginObjectFileMinidump</li>
+		<li>lldbPluginObjectFilePDB</li>
+		<li>lldbPluginObjectFilePECOFF</li>
+		<li>lldbPluginObjectFilePlaceholder</li>
+		<li>lldbPluginObjectFileWasm</li>
+		<li>lldbPluginOperatingSystemPython</li>
+		<li>lldbPluginPlatformAndroid</li>
+		<li>lldbPluginPlatformFreeBSD</li>
+		<li>lldbPluginPlatformGDB</li>
+		<li>lldbPluginPlatformLinux</li>
+		<li>lldbPluginPlatformMacOSX</li>
+		<li>lldbPluginPlatformMacOSXObjCXX</li>
+		<li>lldbPluginPlatformNetBSD</li>
+		<li>lldbPluginPlatformOpenBSD</li>
+		<li>lldbPluginPlatformPOSIX</li>
+		<li>lldbPluginPlatformQemuUser</li>
+		<li>lldbPluginPlatformWindows</li>
+		<li>lldbPluginProcessElfCore</li>
+		<li>lldbPluginProcessFreeBSD</li>
+		<li>lldbPluginProcessFreeBSDKernel</li>
+		<li>lldbPluginProcessGDBRemote</li>
+		<li>lldbPluginProcessLinux</li>
+		<li>lldbPluginProcessMachCore</li>
+		<li>lldbPluginProcessMacOSXKernel</li>
+		<li>lldbPluginProcessMinidump</li>
+		<li>lldbPluginProcessNetBSD</li>
+		<li>lldbPluginProcessPOSIX</li>
+		<li>lldbPluginScriptedProcess</li>
+		<li>lldbPluginProcessUtility</li>
+		<li>lldbPluginProcessWindowsCommon</li>
+		<li>lldbPluginRegisterTypeBuilderClang</li>
+		<li>lldbPluginClangREPL</li>
+		<li>lldbPluginScriptInterpreterLua</li>
+		<li>lldbPluginScriptInterpreterNone</li>
+		<li>lldbPluginScriptInterpreterPython</li>
+		<li>lldbPluginStructuredDataDarwinLog</li>
+		<li>lldbPluginSymbolFileBreakpad</li>
+		<li>lldbPluginSymbolFileCTF</li>
+		<li>lldbPluginSymbolFileDWARF</li>
+		<li>lldbPluginSymbolFileJSON</li>
+		<li>lldbPluginSymbolFileNativePDB</li>
+		<li>lldbPluginSymbolFilePDB</li>
+		<li>lldbPluginSymbolFileSymtab</li>
+		<li>lldbPluginSymbolVendorELF</li>
+		<li>lldbPluginSymbolVendorMacOSX</li>
+		<li>lldbPluginSymbolVendorPECOFF</li>
+		<li>lldbPluginSymbolVendorWasm</li>
+		<li>lldbPluginSystemRuntimeMacOSX</li>
+		<li>lldbPluginTraceCommon</li>
+		<li>lldbPluginTraceIntelPT</li>
+		<li>lldbPluginTraceExporterCommon</li>
+		<li>lldbPluginTraceExporterCTF</li>
+		<li>lldbPluginTypeSystemClang</li>
+		<li>lldbPluginUnwindAssemblyInstEmulation</li>
+		<li>lldbPluginUnwindAssemblyX86</li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_b8f8ddaa" href="#TOC_HEAD_b8f8ddaa">1.1.1. Dependencies found in CMakeLists</a></H3>
+<blockquote>
+	<p>
+	by add_lldb_library or add_lldb_tool
+	</p>
+	<p>
+	</p>
+</blockquote>
+<ul>
+	<li>clangDriver</li>
+	<li>Support</li>
+	<li>Demangle</li>
+	<li>TargetParser</li>
+	<li>Core</li>
+	<li>ExecutionEngine</li>
+	<li>Object</li>
+	<li>Option</li>
+	<li>clangAST (and others clangXXX)</li>
+	<li>MCDisassembler</li>
+	<li>${EXTRA_LIBS}</li>
+	<li>${EXTRA_PLUGINS}</li>
+	<li>${LLDBObjCLibs}</li>
+	<li>${LLDB_LIBEDIT_LIBS}</li>
+	<br />
+	<li>${LLDB_SYSTEM_LIBS}</li>
+	<li>${FEATURE_LIBS}</li>
+	<li>Others</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_dff06ea8" href="#TOC_HEAD_dff06ea8">1.2. Commands</a></H2><ul><a href="../tags/LLDB-cli.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB-cli</a>&nbsp;</ul>
+	<H3><a name="HEAD_d3921aae" href="#TOC_HEAD_d3921aae">1.2.1. Commands classes</a></H3>
+<ul>
+	<li>78 files</li>
+	<ul>
+		<li>CommandObjectXXX.h/.cpp</li>
+		<li>CommandOptionsXXX.h/.cpp</li>
+		<li>CommandCompletions.h/.cpp</li>
+		<li>Options.td</li>
+		<li>OptionsBase.td</li>
+		<br />
+	</ul>
+	<li>369 classes</li>
+	<br />
+	<ul>
+		<li>CommandObject</li>
+		<ul>
+			<li>CommandObjectParsed</li>
+			<ul>
+				<li>CommandObjectTargetCreate</li>
+				<li>...</li>
+			</ul>
+			<li>CommandObjectMultiword</li>
+			<ul>
+				<li>CommandObjectBreakpointName</li>
+				<li>...</li>
+			</ul>
+			<li>CommandObjectRaw</li>
+			<ul>
+				<li>CommandObjectCommandsAlias</li>
+				<li>...</li>
+				<br />
+			</ul>
+		</ul>
+		<li>Options</li>
+		<ul>
+			<li>CommandOptions</li>
+			<br />
+		</ul>
+		<li>OptionGroup</li>
+		<ul>
+			<li>BreakpointOptionGroup</li>
+			<br />
+		</ul>
+		<li>Searcher</li>
+		<ul>
+			<li>Completer</li>
+			<ul>
+				<li>SymbolCompleter</li>
+				<li>ModuleCompleter</li>
+				<br />
+			</ul>
+		</ul>
+	</ul>
+</ul>
+	<H1><a name="HEAD_4b2fc60" href="#TOC_HEAD_4b2fc60">2. Refer</a></H1>
+<ul>
+	<li><a href=""2023-09-16 Learn LLDB-tutorial.pdf"" target="_blank">&quot;2023&ndash;09&ndash;16 Learn LLDB&ndash;tutorial.pdf&quot;</a></li>
+	<br />
+</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    ﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_5c2a540b" href="#HEAD_5c2a540b">1. Componnent</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_a7e3d279" href="#HEAD_a7e3d279">1.1. Libraries</a></li>
+		<menu>
+			<li><a name="TOC_HEAD_b8f8ddaa" href="#HEAD_b8f8ddaa">1.1.1. Dependencies found in CMakeLists</a></li>
+		</menu>
+		<li><a name="TOC_HEAD_dff06ea8" href="#HEAD_dff06ea8">1.2. Commands </a></li>
+		<menu>
+			<li><a name="TOC_HEAD_d3921aae" href="#HEAD_d3921aae">1.2.1. Commands classes</a></li>
+		</menu>
+	</menu>
+	<b><a name="TOC_HEAD_4b2fc60" href="#HEAD_4b2fc60">2. Refer</a></b><br>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

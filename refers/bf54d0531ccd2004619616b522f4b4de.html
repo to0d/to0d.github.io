@@ -1,0 +1,135 @@
+<html>
+	<head>
+		<meta charset="UTF-8"></meta>
+		<title>Ubuntu&nbsp;&nbsp;运行Shell&nbsp;以及&nbsp;修改Ubuntu默认Shell_DarrenXf的专栏&ndash;CSDN博客_ubuntu&nbsp;shell</title>
+	</head>
+	<body class="nodata " data-gr-c-s-loaded="true">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2016. All rights reserved - to0d@outlook.com, at Sat Jun 20 21:50:26 CST 2020</font>
+			</b>
+			<br>
+
+			<a href="https://blog.csdn.net/DarrenXf/article/details/82078427" target="_blank">
+				<font color="red" size="3">Ubuntu&nbsp;&nbsp;运行Shell&nbsp;以及&nbsp;修改Ubuntu默认Shell_DarrenXf的专栏&ndash;CSDN博客_ubuntu&nbsp;shell</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="blog-content-box">
+			<div class="article-header-box">
+				<div class="article-header">
+					<div class="article-title-box">
+						<h1 class="title-article">Ubuntu&nbsp;&nbsp;运行Shell&nbsp;以及&nbsp;修改Ubuntu默认Shell</h1>
+					</div>
+					<div class="article-info-box">
+						<div class="article-bar-top">
+							<img class="article-type-img" src="Ubuntu 运行Shell 以及 修改Ubuntu默认Shell_DarrenXf的专栏-CSDN博客_ubuntu shell_files/original.png" alt="">
+								<div class="bar-content">
+									<a class="follow-nickName" href="https://me.csdn.net/DarrenXf" target="_blank" rel="noopener">DarrenXf</a>
+									<span class="time">2018&ndash;08&ndash;26&nbsp;11:00:53</span>
+									<img class="article-read-img article-heard-img" src="Ubuntu 运行Shell 以及 修改Ubuntu默认Shell_DarrenXf的专栏-CSDN博客_ubuntu shell_files/articleReadEyes.png" alt="">
+										<span class="read-count">7621</span>
+										<a id="blog_detail_zk_collection" class="un-collection" data-report-click="{&quot;mod&quot;:&quot;popu_823&quot;,&quot;ab&quot;:&quot;new&quot;}">
+											<img class="article-collect-img article-heard-img un-collect-status" style="display:inline-block" src="Ubuntu 运行Shell 以及 修改Ubuntu默认Shell_DarrenXf的专栏-CSDN博客_ubuntu shell_files/tobarCollect.png" alt="">
+												<img class="article-collect-img article-heard-img collect-status" style="display:none" src="Ubuntu 运行Shell 以及 修改Ubuntu默认Shell_DarrenXf的专栏-CSDN博客_ubuntu shell_files/tobarCollectionActive.png" alt="">
+													<span class="name">收藏</span>
+													<span class="get-collection">2</span>
+												</img>
+											</img>
+										</a>
+									</img>
+								</div>
+							</img>
+						</div>
+						<div class="blog-tags-box">
+							<div class="tags-box artic-tag-box">
+								<span class="label">分类专栏：</span>
+								<a class="tag-link" target="_blank" rel="noopener" href="https://blog.csdn.net/darrenxf/category_7960683.html">Ubuntu</a>
+								<a class="tag-link" target="_blank" rel="noopener" href="https://blog.csdn.net/darrenxf/category_7970825.html">Shell</a>
+								<a class="tag-link" target="_blank" rel="noopener" href="https://blog.csdn.net/darrenxf/category_7970826.html">bash</a>
+								<a class="tag-link" target="_blank" rel="noopener" href="https://blog.csdn.net/darrenxf/category_7970827.html">dash</a>
+							</div>
+						</div>
+						<div class="up-time">
+							<span>最后发布:2018&ndash;08&ndash;26&nbsp;11:00:53</span>
+							<span>首发:2018&ndash;08&ndash;26&nbsp;11:00:53</span>
+						</div>
+						<div class="slide-content-box">
+							<div class="all-tags-box"></div>
+							<div class="article-copyright">
+								<div class="creativecommons">
+									<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"></a>
+								</div>
+								<div class="creativecommons">版权声明：本文为博主原创文章，遵循
+									<a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC&nbsp;4.0&nbsp;BY&ndash;SA</a>
+									版权协议，转载请附上原文出处链接和本声明。
+								</div>
+								<div class="article-source-link">本文链接：
+									<a href="https://blog.csdn.net/DarrenXf/article/details/82078427">https://blog.csdn.net/DarrenXf/article/details/82078427</a>
+								</div>
+							</div>
+						</div>
+						<div class="operating">
+							<a class="href-article-edit slide-toggle">版权</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<article class="baidu_pl">
+				<div id="article_content" class="article_content clearfix">
+					<link rel="stylesheet" href="Ubuntu%20%E8%BF%90%E8%A1%8CShell%20%E4%BB%A5%E5%8F%8A%20%E4%BF%AE%E6%94%B9Ubuntu%E9%BB%98%E8%AE%A4Shell_DarrenXf%E7%9A%84%E4%B8%93%E6%A0%8F-CSDN%E5%8D%9A%E5%AE%A2_ubuntu%20shell_files/ck_htmledit_views-211130ba7a.css">
+						<div class="htmledit_views" id="content_views">
+							<p>平时写的Shell都是bash，在Ubuntu上写Shell有些不习惯。因为buntu6.10已将先前默认的bashshell更换为了dash。其表现是/bin/sh链接到了/bin/dash而不是传统的/bin/bash。</p>
+							<pre class="has" name="code">
+<code class="language-bash hljs"><ol class="hljs-ln"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">$ <span class="hljs-built_in">cd</span> /bin</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">$ ll</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    sh  -&gt; dash*</div></div></li></ol></code><div class="hljs-button signin" data-title="登录后复制" onclick="hljs.signin(event)"></div>
+							</pre>
+							<p>在现在的Ubuntu中，/bin/sh默认是指向dash，不是传统的bash&nbsp;shell。dash是为了执行脚本而出现，并不是为了交互，dash速度更快，但功能较少。语法严格遵守POSIX标准。</p>
+							<p>这意味着如果用&nbsp;sh&nbsp;运行我们写的脚本。会调用dash&nbsp;shell。</p>
+							<p>我们现在把它修改成默认的bash。</p>
+							<p>方法一</p>
+							<p>尝试</p>
+							<pre class="has" name="code">
+<code class="language-bash hljs"><ol class="hljs-ln"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">$ sudo ln -s /bin/bash /bin/sh</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    ln: failed to create symbolic link <span class="hljs-string">'/bin/sh'</span>: File exists</div></div></li></ol></code><div class="hljs-button signin" data-title="登录后复制" onclick="hljs.signin(event)"></div>
+							</pre>
+							<p>然后，当然也可以直接运行下面的代码，上面代码只是尝试。</p>
+							<pre class="has" name="code">
+<code class="language-bash hljs"><ol class="hljs-ln"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">$ sudo rm /bin/sh</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">$ sudo ln -s /bin/bash /bin/sh</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li></ol></code><div class="hljs-button signin" data-title="登录后复制" onclick="hljs.signin(event)"></div>
+							</pre>
+							<p>然后查看是否成功</p>
+							<pre class="has" name="code">
+<code class="language-bash hljs"><ol class="hljs-ln"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">$ <span class="hljs-built_in">cd</span> /bin</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">$ ll</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    sh -&gt; /bin/bash*</div></div></li></ol></code><div class="hljs-button signin" data-title="登录后复制" onclick="hljs.signin(event)"></div>
+							</pre>
+							<p>&nbsp;</p>
+							<p>方法二</p>
+							<pre class="has" name="code">
+<code class="language-bash hljs">sudo dpkg-reconfigure dash</code><div class="hljs-button signin" data-title="登录后复制" onclick="hljs.signin(event)"></div>
+							</pre>
+							<p>这会弹出一个选项卡，把&ldquo;dash设为默认shell&rdquo;选择no。&nbsp;然后查看是否成功。</p>
+							<pre class="has" name="code">
+<code class="language-bash hljs"><ol class="hljs-ln"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">$ <span class="hljs-built_in">cd</span> /bin</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">$ ll</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    sh -&gt; /bin/bash*</div></div></li></ol></code><div class="hljs-button signin" data-title="登录后复制" onclick="hljs.signin(event)"></div>
+							</pre>
+							<p>这样就把Ubuntu的默认dash&nbsp;shell&nbsp;修改成了&nbsp;bash&nbsp;shell。</p>
+							<p>即使不修改默认shell，也可以用bash&nbsp;执行&nbsp;我们的shell文件。</p>
+							<pre class="has" name="code">
+<code class="language-bash hljs">$ bash your_shell_file.sh</code><div class="hljs-button signin" data-title="登录后复制" onclick="hljs.signin(event)"></div>
+							</pre>
+							<p>另外，需要给shell文件增加执行权限，这个shell文件在自己执行的时候会读取第一行带#号的代码。类似</p>
+							<pre class="has" name="code">
+<code class="language-bash hljs"><span class="hljs-meta">#!/bin/bash</span></code><div class="hljs-button signin" data-title="登录后复制" onclick="hljs.signin(event)"></div>
+							</pre>
+							<p>给文件增加执行权限，如果没有增加成功自己找原因。可能文件所在的文件系统不支持。</p>
+							<pre class="has" name="code">
+<code class="language-bash hljs"><ol class="hljs-ln"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">$ chmod +x your_shell_file.sh</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">$ ll</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    -rwxr-xr-x your your ================== your_shell_file.sh</div></div></li></ol></code><div class="hljs-button signin" data-title="登录后复制" onclick="hljs.signin(event)"></div>
+							</pre>
+							<p>然后就可以下面这样调用我们的shell</p>
+							<pre class="has" name="code">
+<code class="language-bash hljs">$ ./your_shell_file.sh</code><div class="hljs-button signin" data-title="登录后复制" onclick="hljs.signin(event)"></div>
+							</pre>
+							<p>&nbsp;</p>
+						</div>
+					</link>
+				</div>
+			</article>
+		</div>
+	</body>
+</html>

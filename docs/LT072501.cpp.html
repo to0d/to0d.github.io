@@ -1,0 +1,160 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT072501.cpp (Split Linked List in Parts)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT072501.cpp (Split Linked List in Parts)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-07</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0725.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0725</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/List-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>List-OJ</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_2a90ad1b" href="#TOC_HEAD_2a90ad1b">Problem 0725 <strong>Split Linked List in Parts</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/split-linked-list-in-parts/" target="_blank">https://leetcode.com/problems/split&ndash;linked&ndash;list&ndash;in&ndash;parts/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>94.23</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_72d12dfb" href="#TOC_HEAD_72d12dfb">LT072501.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_15fbfef3">LT0725 (name=Split Linked List in Parts, ptag=Leetcode) &nbsp;<a href="../tags/LT0725.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0725</a>&nbsp;<a href="../tags/List-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>List-OJ</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_a9c045d"><a href="https://leetcode.com/problems/split-linked-list-in-parts/" target="_blank">Split Linked List in Parts &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0725.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0725</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_5e975ec8" href="#TOC_HEAD_5e975ec8">LT072501.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+ListNode* travelList(ListNode *head, int& len) { // refer LT006101.cpp
+    len = 0;
+    ListNode *tail = head;
+    if( tail == NULL )
+        return NULL;
+    for(++len; tail-&gt;next != NULL; tail = tail-&gt;next)
+        ++len;
+    return tail;
+}
+
+class Solution {
+public:
+    vector&lt;ListNode*&gt; splitListToParts(ListNode* head, int k) {
+        vector&lt;ListNode*&gt; rst;
+        int size = 0;
+        travelList(head, size);
+
+        int size2 = size/k;
+        int add   = size - size2*k;
+        for(int i = 0; i &lt; k ; ++i )
+        {   int size3 = size2;
+            if( i &lt; add )
+                size3++;
+            rst.push_back(head);
+            ListNode* last = NULL;
+            for(int j = 0; head!= NULL && j &lt; size3 ; ++j)
+            {   last = head;
+                head = head-&gt;next;
+            }
+            if( last != NULL )
+                last-&gt;next = NULL;
+        }
+
+        rst.resize(k);
+        return rst;
+    }
+};
+
+
+
+void test(ListNode* head, int k)
+{
+    cout &lt;&lt; "input: k=" &lt;&lt; k &lt;&lt; ", list=";
+    outputList(head);
+    vector&lt;ListNode*&gt; r = Solution().splitListToParts(head, k);
+    cout &lt;&lt; "; output: ";
+    outputList(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(makeList(10, 1,2,3,4,5,6,7,8,9,10), 3);
+}
+
+// Result
+//
+// 2023-01-18: Runtime 8ms 74.51% Memory 9.1MB 8.36%, https://leetcode.com/problems/split-linked-list-in-parts/submissions/880422266/
+// 2023-03-07: Runtime 4ms 94.23% Memory 8.9MB 65.27%, https://leetcode.com/problems/split-linked-list-in-parts/submissions/910919290/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: k=3, list=[1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;6-&gt;7-&gt;8-&gt;9-&gt;10]; output: [[1-&gt;2-&gt;3-&gt;4],[5-&gt;6-&gt;7],[8-&gt;9-&gt;10]];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>reverse.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>reverse.c</h1>
+            <h3>todo(1)</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/gdb-reverse-debug.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-reverse-debug</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/reverse-step.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>reverse-step</a>&nbsp;</li></ul>
+            <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl"><strong>exec_reverse_once</strong> : &ndash; 2023/05/16 </a></li>
+</ol>
+</div>
+            <hr/>
+        </div>
+    
+    	<H2><a name="HEAD_180d0ba9" href="#TOC_HEAD_180d0ba9">How <strong>reverse&ndash;step</strong> works</a></H2><ul><a href="../tags/reverse-step.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>reverse-step</a>&nbsp;</ul>
+<ul>
+	<li><strong><em>initialize</em>reverse</strong> :</li>
+	<br />
+	<pre><code>cmd_list_element *reverse_step_cmd
+= add_com ("reverse-step", class_run, reverse_step, _("\
+Step program backward until it reaches the beginning of another source line.\n\
+Argument N means do this N times (or till program stops for another reason)."));
+add_com_alias ("rs", reverse_step_cmd, class_run, 1);	</code></pre>
+	<li><strong>reverse_step</strong> :</li>
+	<br />
+	<pre><code>static void
+reverse_step (const char *args, int from_tty)
+{
+exec_reverse_once ("step", args, from_tty);
+}	</code></pre>
+	<li><a name="HEAD_HIDDEN_1a37f44c"><strong>exec_reverse_once</strong> : &ndash; 2023/05/16  <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></li>
+	<br />
+</ul>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

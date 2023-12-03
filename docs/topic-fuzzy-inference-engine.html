@@ -1,0 +1,255 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>FSRL 模糊推理机的设计与实现.pdf</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-MML-AM_CHTML" >
+</script>
+
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>FSRL 模糊推理机的设计与实现.pdf</h1>
+        <h3>KR: Fuzzy Inference Engine</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2009-06-02</time>
+            <i><a href="../tags/FSRL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>FSRL</a>&nbsp;<a href="../tags/Paper.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Paper</a>&nbsp;<a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+<p>
+	<strong>Design and Implementation of FSRL Fuzzy Inference Engine</strong>
+</p>
+	<H1><a name="HEAD_1793bb9" href="#TOC_HEAD_1793bb9">摘 要</a></H1>
+<p>
+	新一代的万维网&mdash;&mdash;语义网，使自动化处理信息和信息的机器理解更加容易。然而随着网络的发展，大量含糊的不确定的模糊信息也需要表达和推理。这就需要一种能够处理模糊信息的本体推理机。本文以此为目标，对现有的本体语言及其推理机制进行了深入的研究，取得了一些成果；
+</p>
+<ol>
+	<li><a name="HEAD_HIDDEN_a8d58e89">以F&ndash;SHIQ模糊描述逻辑作为理论基础，通过扩展本体语言OWL的概念和特性，增加模糊推理规则，设计出一种新的模糊本体语言FSRL，并在F&ndash;SHIQ定理的基础上，推导出FSRL本体推理规则； &nbsp;<a href="../tags/ccda7.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>本体</a></li>
+	<li>在FSRL本体理论基础上，通过扩展Jena代码架构及规则文件的方法，增加Jena处理FSRL本体的功能，设计出FSRL推理机，从而实现了模糊本体的推理；</li>
+	<li>设计开发了一个具有FSRL本体简单编辑功能的推理测试软件；并应用此软件对FSRL每条推理规则，单独设计了相应的测试数据，通过黑盒测试，证明其有效性和正确性。</li>
+	<br />
+</ol>
+<p>
+	本文的研究工作，实现了F&ndash;SHIQ模糊理论到实际应用的转化，提出了一种模糊本体语言FSRL，增强了本体理论对模糊信息的处理能力，并提供了一个简单的模糊推理软件，对以后模糊推理及本体理论的发展有着较好的促进作用。
+</p>
+	<H1><a name="HEAD_b23e69a4" href="#TOC_HEAD_b23e69a4">第一章 绪论</a></H1>
+<p>
+	Web是信息化时代到来的标志，Web也是互联网上最重要的应用。自1989年诞生以来，其高速的发展使它成为了一个庞大的知识库，其中包含了许多具有不确定性的复杂信息。要在这种海量的数据中提取有用的信息，已经使人们越来越感到力不从心。这种不确定性大多是由模糊性引起的，因此模糊概念及推理的研究就显得至关重要。模糊推理是利用模糊性知识进行的一种不确定性推理，它的理论基础是模糊集理论以及在此基础上发展起来的模糊逻辑。F&ndash;SHIQ是基于SHIQ描述逻辑的一个全新的能处理模糊信息的公理体系，它是基于Zadeh的模糊集理论的概念进行扩展的。在此基础上，通过扩展已有的本体推理引擎Jena，构造出FSRL(Fuzzy SHIQ Rule Language)推理机。
+</p>
+	<H2><a name="HEAD_ebb2bba2" href="#TOC_HEAD_ebb2bba2">1.1 模糊推理机的研究背景</a></H2><ul><a href="../tags/321f4de7.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>模糊推理</a>&nbsp;</ul>
+	<H3><a name="HEAD_3d9bfcc2" href="#TOC_HEAD_3d9bfcc2">1.1.1 模糊信息处理</a></H3>
+<p>
+	现实世界是非常复杂的，这种复杂性通常是由于模糊不定所引起的。自从人类能思考以来，人们越来越了解到事物的复杂性和模糊性。这种普遍存在的特性遍及人类所面对的大多数社会、技术、经济等问题之中。人类有近似推理的能力，在分析复杂事物时，人类需要对事物做一般了解就能做出简单的推理，而目前的计算机尚没有这样的能力。
+</p>
+<p>
+	在众多的不确定性中，有两个是主要现象：一是随机性，另一是模糊性。随机性是由于事物的因果关系不确定造成的，是概率统计、分析、设计等所设计的范畴，它通常由概率统计加以研究；而模糊性是模糊分析、控制所涉及的范畴，通常采用模糊数学理论进行研究。随着科学技术的不断进步和信息产业应用于各行各业的不断深入，人们不可避免的要处理大量的模糊现象。而传统方法和已有工具面对模糊问题又显得力不从心，以至于解决精确性和模糊性的矛盾也显得越来越重要。精确性与模糊性的对立已成为当今科学发展所面临的一个十分突出的矛盾。各门科学迫切要求数量化、定量化，但是科学的深化意味着研究对象的复杂化，而复杂的东西又是难于精确化的。
+</p>
+<p>
+	Zadeh教授曾提出过一个不相容原理：&ldquo;随着系统的复杂性的增加，我们描述系统行为的精确性和有效性就随之下降，一旦超过其阀值，其精确性和有效性(相似程度)几乎变成了相互排斥的特性了。&rdquo;正如不相容原理表达的，复杂性越高，得以精确化能力便越低；而精确化的能力越低，便意味着系统具有的模糊性越强。因此，对于复杂的系统的分析和控制，必然要考虑模糊因素，这就涉及了处理这种模糊概念的模糊论方法学的问题。
+</p>
+<p>
+	19世纪末，德国数学家康德首创集合论，对数学基础的奠定做出了重大的贡献。1965年，美国著名学者L.A.Zadeh发表创建性论文&ldquo;模糊集合论&rdquo;[1]，打破了0&ndash;1的界限，为建立模糊逻辑，描述模糊信息，处理模糊现象提供了新的数学工具。1971年R.C.T.Lee等学者提出了真值取在[0,1]区间上的模糊逻辑。到了1975年，Zadeh又提出了模糊语言变量的新概念，并研究了真值取在语言集上的模糊逻辑，建立了模糊逻辑上的假言式模糊推理[2]。1981年，日本学者M.Mizumoto等人提出了基于模糊逻辑的推理方法，并开始应用到控制领域中。
+</p>
+<p>
+	这些模糊集合理论引起了学术界的广泛关注，迄今已经发展成为一个完善的分支，并且在许多领域取得了明显的成果和经济效益。例如，在视频图像方面，菲希尔、三洋等公司生产的&ldquo;模糊逻辑&rdquo;照相机具有模糊聚焦和图像稳定功能；Matsushita公司制造了能够智能选择水温、洗涤剂数量等参数的模糊洗衣机；日本的Sendai市的地铁系统，它由一台模糊计算机控制，其列车控制器的失误率低于人工操作的70%以下；甚至东京的股票市场都采用了一个基于模糊逻辑的股票交易系统。同样，为了保持竞争力，许多美国公司也在计划着模糊理论技术方面的应用。美国国家宇航局也为了模糊逻辑应用于太空飞行器的轨道对接控制器，做了多年的研究。
+</p>
+	<H3><a name="HEAD_4ff50f35" href="#TOC_HEAD_4ff50f35">1.1.2 推理技术</a></H3>
+<p>
+	推理是由一个或几个已知的事实推出一个结论的思维形式。推理是人类重要的智能活动，人类专家之所以能够高效率的求解复杂问题，除了因为他们拥有大量的专门知识外，还体现在他们选择知识和运用知识的能力方面。自从人工智能诞生以来，推理技术取得了很大的进展。
+</p>
+<p>
+	传统的推理技术是以经典的谓词逻辑为基础的，精确的、严格的推理技术，通常被认为是&ldquo;绝对正确的真理&rdquo;[6]。传统的推理方式是由后果或现象推导原因的演绎过程，即从已知的事实出发，运用一阶谓词演算的解析方法，演绎出逻辑上蕴含的结论。20世纪50年代末60年代初的机器定理证明[7]主要采用传统的推理技术。典型的代表是1965年建立在J.A.Robinson归结原理基础上的机器定理证明，这是人工智能最早采用的一种推理模型。
+</p>
+<p>
+	20世纪70年代后期至80年代，随着人工智能所求解问题的复杂化，推理技术得到迅速发展，开始了非单调推理、定性推理和不确定推理等方法的研究。
+</p>
+<p>
+	对于非单调推理的研究始于70年代。对常识、歧义性等的探讨，导致了知识表示的研究，非单调逻辑这种知识表示方法有效地改善了传统逻辑描述不完备知识时的不足。非单调推理可以在推理过程中当增加某些新事实时，取消以前得出的一些结论。为简化问题的描述，1977年Reiger发表了第一篇定性推理的论文，提出了处理问题时，忽略被描述对象的次要因素，掌握主要因素进行定性推理的思想。定性推理技术的处理模型有deKleer提出的定性方程法，Forbus提出定性进程法，Kuipers提出的定性模拟法和Willianms提出代数系统等[9]。
+</p>
+<p>
+	不确定推理方法是20世纪70年代提出并加以研究的，主要考虑到事实或知识存在不确定性因素，它一般基于概率、可信度、隶属度等。1973年E.Shortliffe等人在MYCIN系统中采用了可信度模型，把用户提供的原始证据的不确定性沿推理网络传播给非原始证据，由领域专家给出规则强度CF，从而求出顶层结论的不确定性值。1976年，Duda又提出了主观概率模型，由领域专家给出规则强度LN和LS即每个命题的先验可能性，结合用户提供的原始证据的不确定值，运用不确定性更新传播算法或合成算法，求出结论的不确定性值。其它的处理不确定性问题的模型还有，1976年Depster和Shafer提出的证据理论，1978年Zadeh提出的模糊推理和信念网络，1985年Cohen提出的批注理论等模型[9]。
+</p>
+<p>
+	模糊推理是类似于人类日常推理方式的一种近似推理。它是以模糊集合理论为基础对推理作定量研究的一门学科。由于诸多工业生产领域特别是在系统家电产品开发上的成功应用，使它在近几十年来模糊逻辑系统理论的研究中始终处于重要的地位。1973年，Zadeh教授首次提出了模糊推理的基本框架。模糊推理作为近似推理的一个分支，研究已经非常广泛。模糊推理有三种基本类型：简单模糊推理、多维模糊推理和多重模糊推理。除此之外，还有合情推理、区间值推理、模糊值推理和真值流推理等。模糊推理也应用于许多领域，尤其是其在模糊控制中的重要应用，一直是学术界的一个热门研究方向。它是蓬勃发展中的模糊控制技术的数学核心。模糊控制在各种领域出人意料地解决了传统控制理论无法解决或难以解决的问题，并取得了一些令人信服的成效。1974年，英国科学家Mamdani首次将模糊推理技术应用于工业自动控制并获得成功。20世纪80年代末，随着计算机技术的飞速发展，模糊控制技术得以广泛应用并获得蓬勃发展。
+</p>
+	<H3><a name="HEAD_7f140cae" href="#TOC_HEAD_7f140cae">1.1.3 语义网</a></H3>
+<p>
+	语义网(Semantic Web)，是一种使用可以被计算机理解的方式描述事物的网络。语义网是对未来网络的一个设想，在这样的网络中，信息都被赋予了明确的含义，机器能够自动地处理和集成网上可用的信息。
+	1998年9月，Berners&ndash;Lee首次提出了语义网的设想，给出他的总体框架，并概括介绍了它的各个组成部分，从而拉开了语义网研究的序幕。根据Berners&ndash;Lee的设想，语义网是由七个功能增强的层次体系机构构成，如图1&ndash;1
+</p>
+<ol>
+	<li>URI和Unicode。URI是Web的核心概念之一，它能够唯一地标识出Web上的任意一个资源。Unicode是一种新的字符编码标准，它支持世界上所有的语言。它们是语义网多语种支持的基础。</li>
+	<li>XML、名称空间和XML Schema。XML提供了文档结构化的语法，实现了文档表现形式与文档结构的分离。XML名称空间是名称的一个集合，用于文档元素和属性名的有效验证。XML Schema是约束XML文档结构的语言。</li>
+	<li>RDF和RDFS。XML实现了文档的结构化，但文档信息不包含任何语义。RDF数据模型提供了简单的语义。RDF Schema为RDF模型提供了一个基本的类型系统，其目的就是定义资源的属性，定义被描述资源的类，并对类和关系的可能组合进行约束。</li>
+	<li>本体层。提供了一个能明确的形式化语言，以准确定义术语语义及术语间的关系。</li>
+	<li>逻辑、证明、信任。除了本体层定义的术语关系和推理规则外，还需要一个功能强大的逻辑语言来实现推理。证明语言允许服务代理发送断言的同时将推理路径也发给客户。但证明语言不能保证Web上的所有信息都为&ldquo;真&rdquo;。因此，还需要数字签名和加密技术来保证Web信息的可信任性。</li>
+	<br />
+</ol>
+	<H2><a name="HEAD_919231ae" href="#TOC_HEAD_919231ae">1.2 Jena推理机简介</a></H2><ul><a href="../tags/Jena.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Jena</a>&nbsp;</ul>
+<p>
+	Jena是由惠普语义网络实验室开发的一种用来构建语义Web应用的Java框架，提供了有关操作RDF，RDFS和OWL的接口方法以及基于规则的推理引擎编程环境。在Jena框架中，主要提供了以下一些Java包、接口和方法：
+</p>
+<ol>
+	<li>RDF应用编程接口；</li>
+	<li>读写各种语法形式的RDF文件；</li>
+	<li>操作OWL文件的应用编程接口；</li>
+	<li>基于内存和持久存储两种方式；</li>
+	<li>一种RDF实例数据查询语言。</li>
+	<br />
+</ol>
+<p>
+	任何一个推理模型都可以围绕一个推理图来构建。Jena自身提供了基于规则的推理机(Rule&ndash;Based Reasoner)。该推理机可以应用于RDFS和OWL本体中，支持基于RDF有向图的规则推理，提供前向、后向和混和推理模式。规则集合被绑定到数据模型中，形成新的推理数据模型，用于用户查询操作，返回的查询结果不仅包含原始数据集中的三元组，还包括使用推理规则得出的数据。
+</p>
+<p>
+	Jena是面向语义Web的应用开发包，包含的内容比较全面，推理机只是其中一部分。Jena推理子系统提供多种推理引擎来对不同语言建立的本体进行推理，这些推理引擎用本体Model里明确指定的断言加上公理和规则，来获得额外的、隐含的断言
+</p>
+	<H2><a name="HEAD_f6417b0b" href="#TOC_HEAD_f6417b0b">1.3 论文组织结构</a></H2>
+<p>
+	本论文以FSRL模糊描述逻辑为理论，通过构建FSRL本体，将FSRL定理转化为FSRL本体规则，进而扩展开源软件Jena，实现模糊本体的推理。按此顺序，论文共分六章，组织如下：
+</p>
+<ul>
+	<li>前两章，主要介绍模糊推理的技术背景及F&ndash;SHIQ模糊描述逻辑。</li>
+	<li>第三章，主要介绍FSRL本体及其特性，并比较FSRL本体与OWL本体之间的关系，最后将F&ndash;SHIQ中定理通过变形转化为FSRL本体规则。</li>
+	<li>第四章，首先简单介绍Jena的推理机制，然后通过扩展Jena软件包实现简单的模糊本体推理。</li>
+	<li>第五章，主要是测试FSRL推理的正确性和有效性，并给出测试数据。</li>
+	<li>第六章，对全文的研究工作进行了总结，并在此基础上，对今后的研究方向进行了展望。</li>
+	<br />
+</ul>
+	<H1><a name="HEAD_4791e87e" href="#TOC_HEAD_4791e87e">第二章 F&ndash;SHIQ 模糊描述逻辑公理体系</a></H1><ul><a href="../tags/F-SHIQ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>F-SHIQ</a>&nbsp;</ul>
+<p>
+	语义网采用本体作为领域内共享知识的形式化建模工具。语义网中本体的表示需要有良构的本体语言：首先，该语言的语义是形式化的，否则它不能支持领域共享知识的描述；其次，该语言必须有充分的表达能力，以描述复杂本体；最后，该语言具有可接受的推理复杂性。
+</p>
+<p>
+	描述逻辑(Description Logic)是基于对象的知识表示的形式化，它吸取了KL&ndash;ONE的主要思想，是一阶谓词逻辑的一个可判定子集。它以结构化的和易理解的形式来表示领域知识。描述逻辑能更好的满足本体语言在语义、表达能力，以及复杂性上的要求。F.Baader等人明确提出描述逻辑可以作为语义网的本体语言，为语义网提供必要的逻辑基础。当前的本体语言普遍将描述逻辑作为语言的逻辑基础：如DAML+OIL等价于描述逻辑SHOIQ(D)，OWL DL等价于描述逻辑SHOIN(D)。
+</p>
+<p>
+	为了在语义网中应用模糊逻辑以及解决现在复杂的经典模糊逻辑的局限性，本章简单介绍一种结合了模糊逻辑理论的描述逻辑公理体系F&ndash;SHIQ。
+</p>
+<ul>
+	<li><a name="HEAD_HIDDEN_ff567683">F&ndash;SHIQ (name=模糊描述逻辑) &nbsp;<a href="../tags/F-SHIQ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>F-SHIQ</a>&nbsp;<a href="../tags/2f8d3077.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>描述逻辑</a>&nbsp;<a href="../tags/d56c9.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>模糊</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_40f323f2" href="#TOC_HEAD_40f323f2">2.1描述逻辑基础</a></H2>
+	<H3><a name="HEAD_cd2ad446" href="#TOC_HEAD_cd2ad446">2.1.1公理系统的产生</a></H3>
+<p>
+	公理化方法的思想最早可追溯到亚里士多德那个时代，其应用是随着欧几里得几何学的产生而开始的。主要特征是：从少数几个原始概念以及少数几个原始命题（或称公理）出发，演绎出本学科其他所有的概念和命题，从而构成这一学科的全貌。运用这种方法的学科被认为是严密的演绎体系。因此，欧几里得几何学被认为是最早成熟的自然科学分支。几何学的成熟使得人们普遍认为数学是最严密的。在这之后，其他学科也试图采用公理化方法来建立。例如牛顿把他的力学建立在万有引力和三大定律的基础上，爱因斯坦把相对论只建立在两条公理之上。
+</p>
+<p>
+	关于公理化方法的逻辑理论产生的较晚，三百多年前，德国数学家莱布尼茨提出了一种设想：&ldquo;如果能够创造一套表达概念的符号语言，并且把人类的推理过程用某种公式来表示，那么就能够发明一种思维演算，把逻辑推理过程转化为计算过程，这样，解决人与人之间争论的困难就可以像做数学题那样给以解决了。&rdquo;到一百多年以后，英国数学家布尔以他的布尔代数提供了一套初步可用的思维演算工具，才使得这方面的研究有了本质性的进展。后来的德国数学家弗雷格完成了数理逻辑的创建，弗雷格不但完成了命题演算，还构造了命题演算的第一个公理系统。不过我们现在看到的大多数文献和命题演算系统，已经不是弗雷格最初的工作了，它们是在希尔伯特等人建立的命题演算的公理系统的基础上，不断改进，不断完善的形式公理系统。因此，现在人们称它们为希尔伯特型的公理系统。
+</p>
+<p>
+	由此，我们可以认识到用公理系统来表示一个学科的意义，为了使模糊描述逻辑也能被更可靠的发展和应用，本章也采用了公理方法，把一些较为自明的基本性质作为公理或公设，以此为出发点，构建与演绎出一系列的定理。
+</p>
+	<H3><a name="HEAD_ffb942df" href="#TOC_HEAD_ffb942df">2.1.2 描述逻辑 SHIQ</a></H3>
+<p>
+	描述逻辑 是在数量约束，逆关系，关系包含公理和传递关系等方面扩展了ALC的一个表现能力很强的知识表示形式和工具。我们称这个逻辑为S是因为它与命题逻辑S4(m)的关系，基本的描述逻辑在三个方面被扩展：反向关系(I)、关系层次(H)以及资格数量约束(Q)。
+</p>
+	<H3><a name="HEAD_3a08e5b2" href="#TOC_HEAD_3a08e5b2">2.2 F&ndash;SHIQ公理系统基础</a></H3>
+<p>
+	形式化的公理系统使用的语言是形式语言，由于其本身具有严格、精确的特点，所以避免了自然语言的种种弊端。
+</p>
+	<H3><a name="HEAD_5d2a9c1e" href="#TOC_HEAD_5d2a9c1e">2.2.1 公理系统的初始符号</a></H3>
+<ol>
+	<li>变项</li>
+	<br />
+	<p>
+		. 命题变项： 小写拉丁字母 $p,q,r,s,p_1,...$
+		. 个体变项：小写拉丁字母 $u,v,w,x,y,z,u_1,...$
+		. 谓词变项： 大写拉丁字母 $F,G,H,P,Q,F_1,...$
+	</p>
+	<li>常项</li>
+	<br />
+	<p>
+		. 命题联结词： $\neg$ 非； $\lor$  或
+		. 量词： $\forall$ 全称； $\exists$ 存在
+	</p>
+	<li>括号或逗号： ( , )</li>
+	<br />
+</ol>
+	<H3><a name="HEAD_abac04c" href="#TOC_HEAD_abac04c">2.2.2 公理系统中基本的形成规则</a></H3>
+<p>
+	合式公式定义：
+</p>
+<ul>
+	<li>一个命题变元是一个合式公式。</li>
+	<li>若 F 为 <code>n</code> 元谓词变元， 1 x ，&hellip;， n x 为个体变元，则F( 1 x ，&hellip;， n x )为合式公式。</li>
+	<li>如果 A 是合式公式，则¬A 是合式公式。</li>
+	<li>如果 A 和B 是合式公式，且没有这样的一个个体变元，使得它在其中的一个公式内为约束的，而在另一公式内为自由的，则A∨ B 是合式公式。</li>
+	<li>如果 A 是合式公式，其中个体变元x 在A 中为自由的，则∀ xA(x)都是合式公式。</li>
+	<br />
+</ul>
+<p>
+	只有适合以上各条的有限组合是合式公式。
+</p>
+<ul>
+	<li><strong><font color="red">Continue to update &ndash; 2017/07/27</font></strong></li>
+	<br />
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT086301.cpp (All Nodes Distance K in Binary Tree)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT086301.cpp (All Nodes Distance K in Binary Tree)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-01-12</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0863.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0863</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_abf9e03a" href="#TOC_HEAD_abf9e03a">Problem 0863 <strong>All Nodes Distance K in Binary Tree</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/" target="_blank">https://leetcode.com/problems/all&ndash;nodes&ndash;distance&ndash;k&ndash;in&ndash;binary&ndash;tree/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>70.62</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_56516476" href="#TOC_HEAD_56516476">LT086301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_5144c1ac">LT0863 (name=All Nodes Distance K in Binary Tree, ptag=Leetcode) &nbsp;<a href="../tags/LT0863.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0863</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_4e523fc1"><a href="https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/" target="_blank">All Nodes Distance K in Binary Tree &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0863.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0863</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_28940ac3" href="#TOC_HEAD_28940ac3">LT086301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+
+class Solution {
+public:
+    vector&lt;int&gt; distanceK(TreeNode* root, TreeNode* target, int k) {
+        vector&lt;int&gt; rst;
+        if( k == 0 )
+        {   rst.push_back(target-&gt;val);
+            return rst;
+        }
+
+        m_targetPath.clear();
+        m_target = target;
+        m_targetDepth = _findTarget(root);
+
+        vector&lt;TreeNode*&gt; path;
+        m_k = k;
+        _visit(root, 0, path, rst, true, 0);
+        return rst;
+    }
+
+    void _visit(TreeNode* node, int depth, vector&lt;TreeNode*&gt;& path, vector&lt;int&gt;& rst, bool inBranch, int commonDepth)
+    {
+        path.push_back(node);
+
+        if( inBranch )
+        {   if( depth &lt;= m_targetDepth && m_targetPath[depth] != node)
+                inBranch = false;
+            else
+                commonDepth = depth;
+        }
+
+        if( inBranch )
+        {   if( std::abs(depth - m_targetDepth) == m_k )
+            {   rst.push_back(node-&gt;val);
+                if( depth &gt;= m_targetDepth )
+                {   path.pop_back();
+                    return;
+                }
+            }
+        }
+        else
+        {
+            if( (m_targetDepth + depth - 2*commonDepth) == m_k )
+            {   rst.push_back(node-&gt;val);
+                path.pop_back();
+                return;
+            }
+        }
+
+        if( node-&gt;left != NULL )
+            _visit(node-&gt;left, depth+1, path, rst, inBranch, commonDepth);
+
+        if( node-&gt;right != NULL )
+            _visit(node-&gt;right, depth+1, path, rst, inBranch, commonDepth);
+
+        path.pop_back();
+    }
+
+    int _findTarget(TreeNode* node)
+    {
+        m_targetPath.push_back(node);
+        if( node == m_target )
+            return 0;
+        if( node-&gt;left != NULL )
+        {   int d = _findTarget(node-&gt;left);
+            if( d != -1 )
+                return d + 1;
+        }
+        if( node-&gt;right != NULL )
+        {   int d = _findTarget(node-&gt;right);
+            if( d != -1 )
+                return d + 1;
+        }
+        m_targetPath.pop_back();
+        return -1;
+
+    }
+
+    vector&lt;TreeNode*&gt; m_targetPath;
+    TreeNode* m_target;
+    int m_targetDepth;
+    int m_k;
+};
+
+
+
+void test(TreeNode* root, TreeNode* target, int k)
+{
+    cout &lt;&lt; "input: target=" &lt;&lt; target-&gt;val &lt;&lt; ", k=" &lt;&lt; k &lt;&lt; ", tree=";
+    outputTree(root);
+    vector&lt;int&gt; r = Solution().distanceK(root, target, k);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    TreeNode* root = makeTree("{3,5,1,6,2,0,8,null,null,7,4}");
+    test(root, root-&gt;left, 2);
+}
+
+// Result
+//
+// 2023-01-12: Runtime 6ms 70.62% Memory 12.6MB 84.3%, https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/submissions/876868515/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: target=5, k=2, tree=[3,5,1,6,2,0,8,null,null,7,4]; output: [7,4,1];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

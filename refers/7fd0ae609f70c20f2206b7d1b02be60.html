@@ -1,0 +1,152 @@
+<html>
+	<head>
+		<meta charset="UTF-8"></meta>
+		<title>git&nbsp;&ndash;&nbsp;key&nbsp;load&nbsp;public：格式无效&nbsp;代码日志</title>
+	</head>
+	<body class="post-template-default single single-post postid-222084 single-format-standard comment-open site-layout-2">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2016. All rights reserved - to0d@outlook.com, at Sun Jan 12 20:51:25 CST 2020</font>
+			</b>
+			<br>
+
+			<a href="https://codeday.me/bug/20180817/222084.html" target="_blank">
+				<font color="red" size="3">git&nbsp;&nbsp;&#8211;&nbsp;&nbsp;key_load_public：格式无效&nbsp;&ndash;&nbsp;代码日志</font>
+			</a>
+			<p></p>
+		</body>
+
+		<section class="container">
+			<div class="content-wrap">
+				<div class="content">
+					<header class="article-header">
+						<h4 class="article-title">
+							<a href>git&nbsp;&nbsp;&#8211;&nbsp;&nbsp;key_load_public：格式无效</a>
+						</h4>
+						<div class="article-meta">
+							<span class="item">时间:&nbsp;2018&ndash;08&ndash;17&nbsp;16:34:22.0</span>
+						 
+							<br>
+
+							<span class="article-es-url">译文:
+								<a href="https://stackoverflow.com/questions/42863913/key-load-public-invalid-format" target="_blank">来源</a>
+							</span>
+							<i class="fa fa-warning"></i>
+							<span class="article-es-url">
+								<a href="https://publish.codeday.me/post/publist?site=cn&id=222084" target="_blank">翻译纠错</a>
+							</span>
+						</div>
+					</header>
+					<article class="article-2018">
+                        <br>
+						<div class='question'>我使用PuTTY&nbsp;Key&nbsp;Generator生成带密码的4096位RSA&ndash;2密钥。
+							<p>我保存.ppk和openSSL格式的公钥。&nbsp;putty格式的公钥不起作用。</p>
+							<p>无论如何，我的错误如下：</p>
+							<p></p>
+							<pre>
+<code>$ ssh -T git@github.com
+key_load_public: invalid format
+Enter passphrase for key '/c/Users/Dan/.ssh/id_rsa':
+Hi Dan! You've successfully authenticated, but GitHub does not provide shell access.
+</code>
+							</pre>
+							<p>有什么问题？</p>
+							<p>我使用Pageant来加载密钥，我使用Git&nbsp;Bash来尝试ssh连接。我还把密钥加载到GitHub中，不知道我做错了什么。</p>
+							<p>我尝试添加一个新行，而不是在GitHub中添加新行</p>
+						</div>
+						<div class='answers_count'>最佳答案</div>
+						<div class='answers'>正如他们的回答中提到的
+							<a href="https://stackoverflow.com/a/42864089/3068190">Roland</a>
+							，这是一个警告，即ssh&ndash;agent不了解公钥的格式并且在本地未使用。
+							<p>但是，我也可以详细说明并回答警告的原因。它简单地归结为PuTTY&nbsp;Key&nbsp;Generator根据您在程序中执行的操作生成两种不同的公钥格式。</p>
+							<p>注意：在我的解释中，我将使用/生成的密钥文件将被命名为id_rsa及其相应的扩展名。此外，为了方便复制粘贴，键的父文件夹将被假定为〜/&nbsp;.ssh&nbsp;/。根据需要调整这些细节以满足您的需求。</p>
+							<p>格式</p>
+							<p>
+								<a href="https://the.earth.li/~sgtatham/putty/0.69/htmldoc/Chapter8.html#puttygen-savepub" rel="noreferrer">Link&nbsp;to&nbsp;the&nbsp;relevant&nbsp;PuTTY&nbsp;documentation</a>
+							</p>
+							<p>SSH&ndash;2</p>
+							<p>使用PuTTY&nbsp;Key&nbsp;Generator使用&ldquo;保存公钥&rdquo;按钮保存密钥时，它将以
+								<a href="https://tools.ietf.org/html/rfc4716#section-3" rel="noreferrer">RFC&nbsp;4716</a>
+								定义的格式保存。
+							</p>
+							<p>例：</p>
+							<p></p>
+							<pre>
+<code>---- BEGIN SSH2 PUBLIC KEY ----
+Comment: "github-example-key"
+AAAAB3NzaC1yc2EAAAABJQAAAQEAhl/CNy9wI1GVdiHAJQV0CkHnMEqW7+Si9WYF
+i2fSBrsGcmqeb5EwgnhmTcPgtM5ptGBjUZR84nxjZ8SPmnLDiDyHDPIsmwLBHxcp
+pY0fhRSGtWL5fT8DGm9EfXaO1QN8c31VU/IkD8niWA6NmHNE1qEqpph3DznVzIm3
+oMrongEjGw7sDP48ZTZp2saYVAKEEuGC1YYcQ1g20yESzo7aP70ZeHmQqI9nTyEA
+ip3mL20+qHNsHfW8hJAchaUN8CwNQABJaOozYijiIUgdbtSTMRDYPi7fjhgB3bA9
+tBjh7cOyuU/c4M4D6o2mAVYdLAWMBkSoLG8Oel6TCcfpO/nElw==
+---- END SSH2 PUBLIC KEY ----
+</code>
+							</pre>
+							<p>OpenSSH的</p>
+							<p>与流行的看法相反，这种格式不会被发生器保存。但是它会生成并显示在标题为&ldquo;粘贴到OpenSSH&nbsp;authorized_keys文件的公钥&rdquo;的文本框中。要将其另存为文件，您必须从文本框中手动复制并粘贴它。</p>
+							<p>对于上面显示的键，这将是：</p>
+							<p></p>
+							<pre>
+<code>ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAhl/CNy9wI1GVdiHAJQV0CkHnMEqW7+Si9WYFi2fSBrsGcmqeb5EwgnhmTcPgtM5ptGBjUZR84nxjZ8SPmnLDiDyHDPIsmwLBHxcppY0fhRSGtWL5fT8DGm9EfXaO1QN8c31VU/IkD8niWA6NmHNE1qEqpph3DznVzIm3oMrongEjGw7sDP48ZTZp2saYVAKEEuGC1YYcQ1g20yESzo7aP70ZeHmQqI9nTyEAip3mL20+qHNsHfW8hJAchaUN8CwNQABJaOozYijiIUgdbtSTMRDYPi7fjhgB3bA9tBjh7cOyuU/c4M4D6o2mAVYdLAWMBkSoLG8Oel6TCcfpO/nElw== github-example-key
+</code>
+							</pre>
+							<p>密钥的格式只是ssh&ndash;rsa&lt;&nbsp;signature&gt;&nbsp;&amp;LT;注释&amp;GT;并且可以通过重新排列SSH&ndash;2格式的文件来创建。</p>
+							<p>重新生成公钥</p>
+							<p>如果您正在使用ssh&ndash;agent，您可能还可以访问ssh&ndash;keygen。在使用此工具之前，您需要将现有的.ppk(PuTTY私钥)文件转换为OpenSSH私钥。对于这些说明，我将假设您的密钥名为id_rsa.ppk。</p>
+							<p>&gt;打开PuTTY&nbsp;Key&nbsp;Generator
+								<br>&gt;在菜单栏上，单击&ldquo;文件&rdquo;&gt;&nbsp;&ldquo;加载私钥&rdquo;
+
+								<br>&gt;选择您的id_rsa.ppk文件
+
+								<br>&gt;在菜单栏上，单击&ldquo;转化&rdquo;&gt;&nbsp;&ldquo;导出OpenSSH密钥&rdquo;
+
+								<br>&gt;将文件另存为id_rsa，最好是无扩展名
+
+							</p>
+							<p>现在您已拥有OpenSSH私钥，您可以使用ssh&ndash;keygen工具对密钥执行操作。</p>
+							<p>生成OpenSSH公钥文件：</p>
+							<p></p>
+							<pre><code>ssh-keygen -f ~/.ssh/id_rsa -y &gt; ~/.ssh/id_rsa.pub
+</code></pre>
+							<p>奖励：PKCS#1&nbsp;PEM编码的公钥格式</p>
+							<p>说实话，我不知道这把钥匙用的是什么，因为我不需要它。但是我在我多年来整理的笔记中都有它，我会把它包括在这里以获得健康的善良。该文件将如下所示：</p>
+							<p></p>
+							<pre>
+<code>-----BEGIN RSA PUBLIC KEY-----
+MIIBCAKCAQEAhl/CNy9wI1GVdiHAJQV0CkHnMEqW7+Si9WYFi2fSBrsGcmqeb5Ew
+gnhmTcPgtM5ptGBjUZR84nxjZ8SPmnLDiDyHDPIsmwLBHxcppY0fhRSGtWL5fT8D
+Gm9EfXaO1QN8c31VU/IkD8niWA6NmHNE1qEqpph3DznVzIm3oMrongEjGw7sDP48
+ZTZp2saYVAKEEuGC1YYcQ1g20yESzo7aP70ZeHmQqI9nTyEAip3mL20+qHNsHfW8
+hJAchaUN8CwNQABJaOozYijiIUgdbtSTMRDYPi7fjhgB3bA9tBjh7cOyuU/c4M4D
+6o2mAVYdLAWMBkSoLG8Oel6TCcfpO/nElwIBJQ==
+-----END RSA PUBLIC KEY-----
+</code>
+							</pre>
+							<p>可以使用OpenSSH私钥生成此文件(如上面&ldquo;重新生成公钥&rdquo;中所生成)，使用：</p>
+							<p></p>
+							<pre><code>ssh-keygen -f ~/.ssh/id_rsa -y -e -m pem &gt; ~/.ssh/id_rsa.pem
+</code></pre>
+							<p>或者，您可以使用OpenSSH公钥：</p>
+							<p></p>
+							<pre><code>ssh-keygen -f ~/.ssh/id_rsa.pub -e -m pem &gt; ~/.ssh/id_rsa.pem
+</code></pre>
+							<p>参考文献：</p>
+							<p>&gt;
+								<a href="https://askubuntu.com/a/700172/618994">&#8220;key_load_public:&nbsp;invalid&nbsp;format&#8230;&#8221;&nbsp;on&nbsp;AskUbuntu</a>
+								<br>&gt;
+
+								<a href="https://tools.ietf.org/html/rfc4716#section-3" rel="noreferrer">The&nbsp;Secure&nbsp;Shell&nbsp;(SSH)&nbsp;Public&nbsp;Key&nbsp;File&nbsp;Format</a>
+								<br>&gt;
+
+								<a href="http://blog.oddbit.com/2011/05/08/converting-openssh-public-keys/" rel="noreferrer">Converting&nbsp;OpenSSH&nbsp;public&nbsp;keys</a>
+							</p>
+						</div>
+                    </article>
+			 
+				</div>
+			</div>
+		 </section>
+ 
+	</body>
+</html>

@@ -1,0 +1,148 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT002701.cpp (Remove Element)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT002701.cpp (Remove Element)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-24</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0027.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0027</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_b3fae2fa" href="#TOC_HEAD_b3fae2fa">Problem 0027 <strong>Remove Element</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/remove-element/" target="_blank">https://leetcode.com/problems/remove&ndash;element/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_170565f6" href="#TOC_HEAD_170565f6">LT002701.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_1f3c5492">LT0027 (name=Remove Element, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0027.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0027</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_31a2f7aa"><a href="https://leetcode.com/problems/remove-element/" target="_blank">Remove Element &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0027.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0027</a></li>
+		<br />
+	</ul>
+	<p>
+		Given an array and a value, remove all instances of that value in place and return the new length.
+	</p>
+	<p>
+		Do not allocate extra space for another array, you must do this in place with constant memory.
+	</p>
+	<p>
+		The order of elements can be changed. It doesn&#039;t matter what you leave beyond the new length.
+	</p>
+	<p>
+		<strong>Example:</strong>
+	</p>
+	<p>
+		Given input array <em>nums</em> = <code>[3,2,2,3]</code> , val = <code>3</code>
+	</p>
+	<p>
+		Your function should return length = 2, with the first two elements of <em>nums</em> being 2.
+	</p>
+</ul>
+	<H3><a name="HEAD_ba84cc43" href="#TOC_HEAD_ba84cc43">LT002701.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int removeElement(vector&lt;int&gt;& nums, int val) {
+        int len = 0, size = nums.size();
+        for(int pos = 0; pos &lt; size; ++pos)
+            if( nums[pos] != val && len++ &lt; pos )
+                nums[len-1] = nums[pos];
+        return len;
+    }
+};
+
+
+void test(vector&lt;int&gt; nums, int val)
+{
+    cout &lt;&lt; "input: val=" &lt;&lt; val &lt;&lt; ", nums=";
+    outputVector(nums);
+    int r = Solution().removeElement(nums, val);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({3,2,2,3}, 3);
+}
+
+// Result
+//
+// 2023-02-16: Runtime 3ms 60.17% Memory 8.8MB 45.53%, https://leetcode.com/problems/remove-element/submissions/899192400/
+// 2023-07-24: Runtime 0ms 100% Memory 8.30MB 70.58%, https://leetcode.cn/problems/remove-element/submissions/449704649/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: val=3, nums=[3,2,2,3]; output: 2</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

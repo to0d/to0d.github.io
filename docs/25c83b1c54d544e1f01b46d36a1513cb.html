@@ -1,0 +1,276 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>2017-09-17 Learn HelloElfLoader</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">2017-09-17 Learn HelloElfLoader</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2017-09-17</time>
+            <i><a href="../tags/ELF.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ELF</a>&nbsp;<a href="../tags/HelloElfLoader.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>HelloElfLoader</a>&nbsp;<a href="../tags/LogicFlow.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LogicFlow</a>&nbsp;<a href="../tags/ReadCode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ReadCode</a>&nbsp;<a href="../tags/x86-Assembler.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>x86-Assembler</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">动态符号名称表 ??? </a></li>
+	<li><a name="TOC_MARK_2" href="#MARK_2" id="in-ttl">动态符号表 ??? <br/></a></li>
+	<li><a name="TOC_MARK_3" href="#MARK_3" id="in-ttl">How it works ? 2017&ndash;09&ndash;21 </a></li>
+</ol>
+</div>
+        <div class="entry-content">
+<ul>
+	<li><a name="HEAD_HIDDEN_db0c36e1">HelloElfLoader (ptag=Cross&ndash;Loader|Project) &nbsp;<a href="../tags/HelloElfLoader.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>HelloElfLoader</a>&nbsp;<a href="../tags/OpenSource.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>OpenSource</a>&nbsp;<a href="../tags/Cross-Loader.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cross-Loader</a>&nbsp;<a href="../tags/Project.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Project</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_f863c8d0" href="#TOC_HEAD_f863c8d0">Logic flow</a></H2>
+	<H3><a name="HEAD_87fa1c33" href="#TOC_HEAD_87fa1c33">Loader</a></H3>
+<ol>
+	<li>检查当前运行程序是否64位</li>
+	<br />
+	<pre><code>if (sizeof(intptr_t) != sizeof(std::int64_t)) {
+    throw std::runtime_error("please use x64 compile and run this program");
+}	</code></pre>
+	<li><a name="HEAD_HIDDEN_de0a10a5">读取ELF头 &ndash; 参考<a href="5bf6aecff130e17729e0b9b1d236f7aa.html#LEARN-SOLARIS-OBJFMT" target="_blank">文件格式</a>&nbsp;<a href="../pdfs/Oracle_Solaris_链接程序和库指南.pdf" title="Oracle Solaris 链接程序和库指南.pdf" target="_blank"><font color="red"><i>pdf</i></font></a></li>
+	<br />
+	<pre><code>Elf64_External_Ehdr elfHeader = {};
+fileStream_.seekg(0);
+fileStream_.read(reinterpret_cast&lt;char*&gt;(&elfHeader), sizeof(elfHeader));	</code></pre>
+	<ul>
+		<li>Defined in ELFDefine.h which coming from</li>
+		<br />
+		<pre><code>https://github.com/aeste/binutils/blob/develop/elfcpp/elfcpp.h
+https://github.com/aeste/binutils/blob/develop/include/elf/external.h		</code></pre>
+	</ul>
+	<li>检查 ELF 头，只支持64位且 byte order是 little endian 的程序</li>
+	<br />
+	<li><a name="HEAD_HIDDEN_9b187a4">获取 program table 的信息 &ndash; 参考<a href="5bf6aecff130e17729e0b9b1d236f7aa.html#LEARN-SOLARIS-PROGRAMTABLE" target="_blank">程序头</a>&nbsp;<a href="../pdfs/Oracle_Solaris_链接程序和库指南.pdf" title="Oracle Solaris 链接程序和库指南.pdf" target="_blank"><font color="red"><i>pdf</i></font></a></li>
+	<br />
+	<pre><code>std::uint32_t programTableOffset
+std::uint16_t programTableEntrySize
+std::uint16_t programTableEntryNum	</code></pre>
+	<li>获取 Section table的信息, <font color="red">not used in this example</font></li>
+	<br />
+	<blockquote>
+		<p>
+		section table只给linker用，loader中其实不需要访问section table
+		</p>
+		<p>
+		</p>
+	</blockquote>
+	<li>遍历 program header</li>
+	<ol>
+		<li>For PT_LOAD Segment(指定可装入段), 把文件内容(包含程序代码和数据)加载到 <strong><font color="red">虚拟内存</font></strong> ，这个示例不考虑地址冲突</li>
+		<ul>
+			<li>在指定的虚拟地址分配内存</li>
+			<ul>
+				<li>VirtualAlloc: Windows API函数，该函数的功能是在调用进程的虚地址空间,预定或者提交一部分页</li>
+				<br />
+			</ul>
+			<li>保存虚拟地址指针</li>
+			<br />
+			<pre><code>std::vector&lt;std::shared_ptr&lt;void&gt;&gt; loadedSegments;
+loadedSegments.emplace_back(addr, [](void* ptr) { ::VirtualFree(ptr, 0, MEM_RELEASE); });
+                            |-------------       析构函数 ----------------------|			</code></pre>
+			<li>复制文件内容到虚拟内存</li>
+			<br />
+			<pre><code>fileStream_.seekg(fileOffset);
+fileStream_.read(reinterpret_cast&lt;char*&gt;(addr), fileSize)			</code></pre>
+		</ul>
+		<li>For PT_DYNAMIC Segment(指定动态链接信息) 读取动态链接的信息</li>
+		<br />
+		<ul>
+			<li>动态链接的信息</li>
+			<br />
+			<pre><code>std::uint64_t jmpRelAddr = 0; // 重定位记录的开始地址
+std::uint64_t pltRelType = 0; // 重定位记录的类型 RELA或REL
+std::uint64_t pltRelSize = 0; // 重定位记录的总大小
+std::uint64_t symTabAddr = 0; // 动态符号表的开始地址
+std::uint64_t strTabAddr = 0; // 动态符号名称表的开始地址
+std::uint64_t strTabSize = 0; // 动态符号名称表的总大小			</code></pre>
+			<li>参考</li>
+			<ul>
+				<li><a name="HEAD_HIDDEN_fcbb6fb9"><a href="5bf6aecff130e17729e0b9b1d236f7aa.html#LEARN-SOLARIS-DYNAMICSECTION" target="_blank">动态节</a>&nbsp;<a href="../pdfs/Oracle_Solaris_链接程序和库指南.pdf" title="Oracle Solaris 链接程序和库指南.pdf" target="_blank"><font color="red"><i>pdf</i></font></a></li>
+				<li><a name="HEAD_HIDDEN_6e208113"><a href="5bf6aecff130e17729e0b9b1d236f7aa.html#LEARN-SOLARIS-RELSECTION" target="_blank">重定位节</a>&nbsp;<a href="../pdfs/Oracle_Solaris_链接程序和库指南.pdf" title="Oracle Solaris 链接程序和库指南.pdf" target="_blank"><font color="red"><i>pdf</i></font></a></li>
+				<li>动态符号表</li>
+				<li>动态符号名称表</li>
+				<br />
+			</ul>
+		</ul>
+	</ol>
+	<li>读取动态链接符号表</li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_66aee61a">动态符号名称表 ???  <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></li>
+		<li><a name="HEAD_HIDDEN_53cf213d">动态符号表 ???  <a name="MARK_2" href="#TOC_MARK_2"><strong><font color="red">@TODO</font></strong></a></li>
+		<br />
+	</ul>
+	<li>设置动态链接的函数地址</li>
+	<ul>
+		<li>遍历重定位记录</li>
+		<ul>
+			<li>获取符号</li>
+			<li>替换函数地址 by call function <strong><font color="red">resolveLibraryFunc</font></strong></li>
+			<br />
+			<pre><code>// 原本应该延迟解决，这里图简单就直接覆盖了
+void** relaPtr = reinterpret_cast&lt;void**&gt;(relaOffset);
+std::shared_ptr&lt;void&gt; func = resolveLibraryFunc(symbolName);
+if (func == nullptr) {
+throw std::runtime_error("unsupport symbol name");
+}
+libraryFuncs.emplace_back(func);
+*relaPtr = func.get();			</code></pre>
+		</ul>
+	</ul>
+	<li>获取入口点</li>
+	<br />
+	<pre><code>std::uint64_t entryPointAddress = *reinterpret_cast&lt;const std::uint64_t*&gt;(elfHeader.e_entry);
+void(*entryPointFunc)() = reinterpret_cast&lt;void(*)()&gt;(entryPointAddress);
+std::cout &lt;&lt; "entry point: " &lt;&lt; entryPointFunc &lt;&lt; std::endl;
+std::cout &lt;&lt; "====== finish loading elf ======" &lt;&lt; std::endl;	</code></pre>
+	<li>执行主程序</li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_f6cd1177">会先调用 <code>__libc_start_main</code> , 然后再调用 main &nbsp;<a href="../tags/libc.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>libc</a></li>
+		<li>调用 <code>__libc_start_main</code> 后的指令是 <code>hlt</code> ，所以必须在 <code>__libc_start_main</code> 中退出执行</li>
+		<br />
+	</ul>
+</ol>
+	<H3><a name="HEAD_28bde093" href="#TOC_HEAD_28bde093">resolveLibraryFunc</a></H3>
+<ul>
+	<li>Only support two functions, <code>__libc_start_main</code> &amp; <code>printf</code></li>
+	<li>在虚拟内存用 <strong><font color="red">汇编指令</font></strong> 直接构造 generic_func_loader 函数</li>
+	<li><a name="HEAD_HIDDEN_ce442d03">calling convention &ndash; 参考 <a href="../refers/1b6df80865fcbdea1b6e26bf0fb1e711.html" target="_blank">2014&ndash;01&ndash;15 X86调用约定.html</a></li>
+	<ul>
+		<li>System V AMD64 ABI:</li>
+		<li>Microsoft x64</li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_ee1b8386" href="#TOC_HEAD_ee1b8386">generic_func_loader</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_cb1e89de">How it works ? 2017&ndash;09&ndash;21 &nbsp;<a href="../tags/Invocation.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Invocation</a> <a name="MARK_3" href="#TOC_MARK_3"><strong><font color="red">@TODO</font></strong></a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_113bb3" href="#TOC_HEAD_113bb3">评价</a></H2>
+<ul>
+	<li>具有简单的ELF格式读取能力</li>
+	<li>代码逻辑简单，易于理解</li>
+	<li>巧妙的方法绕过System Call 技术难点</li>
+	<li>提示了一些新的需要注意的技术点，例如</li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_b982e11d">ABI (name=Application Binary Interface) &nbsp;<a href="../tags/ABI.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ABI</a>&nbsp;<a href="../tags/Calling-Convention.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Calling-Convention</a></li>
+		<ul>
+			<li>被调用者应保存调用者的哪个寄存器;</li>
+			<li>调用函数时如何为任务准备堆栈，任务完成如何恢复</li>
+		</ul>
+	</ul>
+	<li>没有解决虚地址冲突问题</li>
+	<li>AIX上如何直接操作虚内存?</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_92a96796" href="#TOC_HEAD_92a96796">其他类似项目</a></H2>
+	<H3><a name="HEAD_aacb0bd6" href="#TOC_HEAD_aacb0bd6">tel_ldr</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_ea0f14">tel_ldr (ptag=Cross&ndash;Loader) &nbsp;<a href="../tags/tel_ldr.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>tel_ldr</a>&nbsp;<a href="../tags/Cross-Loader.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cross-Loader</a></li>
+	<li><a name="HEAD_HIDDEN_31c26bba"><a href="https://github.com/shinh/tel_ldr" target="_blank">tel_ldr &ndash; github</a> &nbsp;<a href="../tags/tel_ldr.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>tel_ldr</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_6889f3be" href="#TOC_HEAD_6889f3be">gelfload</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_e3cdf2fc">gelfload (ptag=Cross&ndash;Loader) &nbsp;<a href="../tags/gelfload.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gelfload</a>&nbsp;<a href="../tags/Cross-Loader.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cross-Loader</a></li>
+	<li><a name="HEAD_HIDDEN_acc3771c"><a href="https://github.com/GregorR/gelfload" target="_blank">gelfload &ndash; github</a>  &nbsp;<a href="../tags/gelfload.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gelfload</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_4b2fc60" href="#TOC_HEAD_4b2fc60">Refer</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_5433e811"><a href="https://github.com/303248153/HelloElfLoader.git" target="_blank">HelloElfLoader &ndash; Github</a> &nbsp;<a href="../tags/GitHub.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>GitHub</a>&nbsp;<a href="../tags/HelloElfLoader.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>HelloElfLoader</a></li>
+	<li><a href="http://docs.oracle.com/cd/E24847_01/html/E22196/chapter6-14428.html" target="_blank">http://docs.oracle.com/cd/E24847_01/html/E22196/chapter6&ndash;14428.html</a></li>
+	<li><a name="HEAD_HIDDEN_51204d81"><a href="5bf6aecff130e17729e0b9b1d236f7aa.html" target="_blank">Oracle Solaris 链接程序和库指南.pdf</a>&nbsp;<a href="../pdfs/Oracle_Solaris_链接程序和库指南.pdf" title="Oracle Solaris 链接程序和库指南.pdf" target="_blank"><font color="red"><i>pdf</i></font></a></li>
+	<br />
+</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    <b><a href="#HEAD_todo"><font color="red">TODO: 3</font></a></b><br>﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_f863c8d0" href="#HEAD_f863c8d0">Logic flow</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_87fa1c33" href="#HEAD_87fa1c33">Loader</a></li>
+		<li><a name="TOC_HEAD_28bde093" href="#HEAD_28bde093">resolveLibraryFunc</a></li>
+		<li><a name="TOC_HEAD_ee1b8386" href="#HEAD_ee1b8386">generic_func_loader</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_113bb3" href="#HEAD_113bb3">评价</a></b><br>
+	<b><a name="TOC_HEAD_92a96796" href="#HEAD_92a96796">其他类似项目</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_aacb0bd6" href="#HEAD_aacb0bd6">tel_ldr</a></li>
+		<li><a name="TOC_HEAD_6889f3be" href="#HEAD_6889f3be">gelfload</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_4b2fc60" href="#HEAD_4b2fc60">Refer</a></b><br>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

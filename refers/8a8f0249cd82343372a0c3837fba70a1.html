@@ -1,0 +1,310 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"></meta>
+		<title>How&nbsp;gdb&nbsp;loads&nbsp;symbol&nbsp;files&nbsp;GDB&nbsp;Wiki</title>
+	</head>
+	<body lang="en" dir="ltr">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Fri Sep 29 10:15:02 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://sourceware.org/gdb/wiki/How%20gdb%20loads%20symbol%20files" target="_blank">
+				<font color="red" size="3">How&nbsp;gdb&nbsp;loads&nbsp;symbol&nbsp;files&nbsp;&ndash;&nbsp;GDB&nbsp;Wiki</font>
+			</a>
+			<p></p>
+		</body>
+		<div id="header">
+			 <H1>How&nbsp;gdb&nbsp;loads&nbsp;symbol&nbsp;files</H1>
+		 </div>
+		<div id="page" lang="en" dir="ltr">
+			<div dir="ltr" id="content" lang="en"> 
+				<p class="line874">The&nbsp;purpose&nbsp;of&nbsp;this&nbsp;page&nbsp;is&nbsp;to&nbsp;take&nbsp;a&nbsp;look&nbsp;at&nbsp;what&nbsp;happens&nbsp;when&nbsp;using&nbsp;the&nbsp;file&nbsp;command,&nbsp;more&nbsp;precisely&nbsp;what&nbsp;algorithms&nbsp;and&nbsp;data&nbsp;structures&nbsp;gdb&nbsp;uses&nbsp;to&nbsp;parse&nbsp;and&nbsp;store&nbsp;information&nbsp;about&nbsp;symbols.&nbsp;Obviously,&nbsp;gdb&nbsp;supports&nbsp;a&nbsp;vast&nbsp;combination&nbsp;of&nbsp;platforms,&nbsp;architectures&nbsp;and&nbsp;debug&nbsp;info&nbsp;formats.&nbsp;This&nbsp;focusses&nbsp;on&nbsp;what&nbsp;is&nbsp;probably&nbsp;the&nbsp;most&nbsp;common&nbsp;case,&nbsp;Linux&nbsp;on&nbsp;x86&nbsp;with&nbsp;DWARF&nbsp;debug&nbsp;info.
+					<span class="anchor" id="line-3"></span>
+					<span class="anchor" id="line-4"></span>
+					<p class="line862">The&nbsp;file&nbsp;command&nbsp;is&nbsp;essentially&nbsp;the
+						<tt>exec&ndash;file</tt>
+						command&nbsp;followed&nbsp;by&nbsp;the
+						<tt>symbol&ndash;file</tt>
+						command.
+						<tt>exec&ndash;file</tt>
+						does&nbsp;the&nbsp;necessary&nbsp;to&nbsp;open&nbsp;the&nbsp;executable&nbsp;and&nbsp;sets&nbsp;it&nbsp;as&nbsp;the&nbsp;current&nbsp;executable&nbsp;for&nbsp;the&nbsp;selected&nbsp;inferior.
+						<tt>symbol&ndash;file</tt>
+						indicates&nbsp;that&nbsp;gdb&nbsp;should&nbsp;use&nbsp;this&nbsp;file&nbsp;as&nbsp;a&nbsp;reference&nbsp;for&nbsp;symbols&nbsp;and&nbsp;debug&nbsp;information.&nbsp;This&nbsp;includes&nbsp;translating&nbsp;a&nbsp;symbol&nbsp;(function&nbsp;or&nbsp;variable&nbsp;name)&nbsp;into&nbsp;an&nbsp;address,&nbsp;a&nbsp;line&nbsp;number&nbsp;into&nbsp;a&nbsp;code&nbsp;address&nbsp;or&nbsp;vice&ndash;versa,&nbsp;etc.&nbsp;The
+						<tt>symbol&ndash;file</tt>
+						command&nbsp;makes&nbsp;gdb&nbsp;forget&nbsp;about&nbsp;any&nbsp;previously&nbsp;loaded&nbsp;symbols&nbsp;(FIXME:&nbsp;only&nbsp;for&nbsp;that&nbsp;inferior?&nbsp;for&nbsp;all&nbsp;of&nbsp;them?)&nbsp;and&nbsp;replaces&nbsp;them&nbsp;by&nbsp;those&nbsp;coming&nbsp;from&nbsp;the&nbsp;specified&nbsp;file.
+						<span class="anchor" id="line-5"></span>
+						<span class="anchor" id="line-6"></span>
+						<p class="line867">
+							<h2 id="objfile_instantiation">objfile&nbsp;instantiation</h2>
+							<span class="anchor" id="line-7"></span>
+							<span class="anchor" id="line-8"></span>
+							<p class="line862">The&nbsp;first&nbsp;thing&nbsp;gdb&nbsp;needs&nbsp;to&nbsp;do&nbsp;is&nbsp;to
+								<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/symfile.c;h=c2a71eca59882a8b47016521615c7abca46a53cb;hb=HEAD#l1171" class="https">create&nbsp;an&nbsp;objfile&nbsp;object</a>
+								that&nbsp;represents&nbsp;mybinary.&nbsp;For&nbsp;gdb,&nbsp;an
+								<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/objfiles.h;h=a0dc69b9207ba481993ec9dc3c861f15b5f6dd38;hb=HEAD#l251" class="https">objfile</a>
+								consists&nbsp;of&nbsp;one&nbsp;file&nbsp;from&nbsp;which&nbsp;it&nbsp;reads&nbsp;symbols&nbsp;or&nbsp;debug&nbsp;info.&nbsp;Therefore,&nbsp;mybinary&nbsp;itself&nbsp;will&nbsp;be&nbsp;represented&nbsp;by&nbsp;one&nbsp;objfile&nbsp;instance.&nbsp;If&nbsp;mybinary&nbsp;loads&nbsp;some&nbsp;shared&nbsp;libraries,&nbsp;gdb&nbsp;will&nbsp;read&nbsp;symbols&nbsp;from&nbsp;them&nbsp;as&nbsp;well,&nbsp;and&nbsp;will&nbsp;instantiate&nbsp;one&nbsp;objfile&nbsp;for&nbsp;each&nbsp;.so&nbsp;file.&nbsp;In&nbsp;the&nbsp;case&nbsp;where&nbsp;you&nbsp;have&nbsp;debug&nbsp;info&nbsp;in&nbsp;a&nbsp;separate&nbsp;file&nbsp;from&nbsp;the&nbsp;binary&nbsp;(common&nbsp;with&nbsp;various&nbsp;distribution&#039;s&nbsp;package&nbsp;managers),&nbsp;one&nbsp;objfile&nbsp;will&nbsp;be&nbsp;instantiated&nbsp;for&nbsp;the&nbsp;executable&nbsp;file&nbsp;(gdb&nbsp;will&nbsp;still&nbsp;be&nbsp;able&nbsp;to&nbsp;read&nbsp;some&nbsp;symbols&nbsp;from&nbsp;it)&nbsp;and&nbsp;another&nbsp;one&nbsp;will&nbsp;be&nbsp;for&nbsp;the&nbsp;debug&nbsp;info&nbsp;file.
+								<span class="anchor" id="line-9"></span>
+								<span class="anchor" id="line-10"></span>
+								<p class="line862">gdb&nbsp;has&nbsp;a&nbsp;concept&nbsp;of&nbsp;main&nbsp;objfile.&nbsp;The&nbsp;main&nbsp;objfile&nbsp;is&nbsp;the&nbsp;one&nbsp;the&nbsp;user&nbsp;has&nbsp;specified&nbsp;with&nbsp;the
+									<tt>symbol&ndash;file</tt>
+									(or&nbsp;transitively
+									<tt>file</tt>
+									)&nbsp;command.&nbsp;There&nbsp;is&nbsp;only&nbsp;one&nbsp;main&nbsp;objfile&nbsp;per&nbsp;inferior&nbsp;at&nbsp;any&nbsp;time.&nbsp;Other&nbsp;objfiles,&nbsp;such&nbsp;as&nbsp;the&nbsp;ones&nbsp;associated&nbsp;to&nbsp;shared&nbsp;libraries,&nbsp;are&nbsp;not&nbsp;main&nbsp;objfiles.
+									<span class="anchor" id="line-11"></span>
+									<span class="anchor" id="line-12"></span>
+									<p class="line862">When&nbsp;allocating&nbsp;the&nbsp;objfile,&nbsp;gdb&nbsp;starts&nbsp;by
+										<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/objfiles.c;h=ff20bc8fcffdef56c36451c77f6cfe3727e2e395;hb=HEAD#l323" class="https">building&nbsp;a&nbsp;section&nbsp;table</a>
+										representing&nbsp;the&nbsp;sections&nbsp;of&nbsp;the&nbsp;executable.&nbsp;Then,&nbsp;the&nbsp;program&nbsp;space&nbsp;of&nbsp;the&nbsp;inferior&nbsp;is&nbsp;associated&nbsp;to&nbsp;the&nbsp;objfile&nbsp;and&nbsp;a&nbsp;flag&nbsp;is&nbsp;set&nbsp;in&nbsp;that&nbsp;objfile&nbsp;to&nbsp;indicate&nbsp;that&nbsp;new&nbsp;sections&nbsp;related&nbsp;to&nbsp;that&nbsp;program&nbsp;space&nbsp;have&nbsp;been&nbsp;loaded.
+										<span class="anchor" id="line-13"></span>
+										<span class="anchor" id="line-14"></span>
+										<p class="line874">The&nbsp;created&nbsp;objfile&nbsp;is&nbsp;added&nbsp;to&nbsp;the&nbsp;linked&nbsp;list&nbsp;of&nbsp;all&nbsp;objfiles.
+											<span class="anchor" id="line-15"></span>
+											<span class="anchor" id="line-16"></span>
+											<p class="line867">
+												<h2 id="symbol_reading">symbol&nbsp;reading</h2>
+												<span class="anchor" id="line-17"></span>
+												<span class="anchor" id="line-18"></span>
+												<p class="line862">The&nbsp;next&nbsp;step&nbsp;is&nbsp;to&nbsp;start
+													<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/symfile.c;h=c2a71eca59882a8b47016521615c7abca46a53cb;hb=HEAD#l1191" class="https">reading&nbsp;symbols&nbsp;from&nbsp;the&nbsp;objfile</a>
+													.&nbsp;By&nbsp;symbols,&nbsp;we&nbsp;mean&nbsp;the&nbsp;mapping&nbsp;between&nbsp;a&nbsp;textual&nbsp;label&nbsp;(such&nbsp;as&nbsp;a&nbsp;function&nbsp;or&nbsp;variable&nbsp;name)&nbsp;and&nbsp;the&nbsp;address&nbsp;where&nbsp;the&nbsp;object&nbsp;of&nbsp;interest&nbsp;is&nbsp;found.&nbsp;It&nbsp;corresponds&nbsp;to&nbsp;the&nbsp;content&nbsp;of&nbsp;the&nbsp;ELF&nbsp;symbol&nbsp;table&nbsp;which&nbsp;you&nbsp;can&nbsp;see&nbsp;when&nbsp;using&nbsp;&ldquo;readelf&nbsp;&ndash;&ndash;syms&rdquo;&nbsp;on&nbsp;your&nbsp;executable.&nbsp;Even&nbsp;if&nbsp;the&nbsp;executable&nbsp;does&nbsp;not&nbsp;contain&nbsp;debug&nbsp;symbols,&nbsp;it&nbsp;may&nbsp;include&nbsp;a&nbsp;symbol&nbsp;table&nbsp;if&nbsp;it&nbsp;has&nbsp;not&nbsp;been&nbsp;stripped.&nbsp;gdb&nbsp;calls&nbsp;these
+													<strong>minimal&nbsp;symbols</strong>
+													.&nbsp;As&nbsp;the&nbsp;name&nbsp;suggests,&nbsp;it&nbsp;is&nbsp;the&nbsp;very&nbsp;least&nbsp;meta&ndash;data&nbsp;you&nbsp;can&nbsp;have&nbsp;about&nbsp;your&nbsp;program.&nbsp;It&nbsp;is&nbsp;&quot;better&nbsp;than&nbsp;nothing&quot;.&nbsp;If&nbsp;you&nbsp;don&rsquo;t&nbsp;have&nbsp;full&nbsp;debug&nbsp;infos,&nbsp;minimal&nbsp;symbols&nbsp;will&nbsp;at&nbsp;least&nbsp;allow&nbsp;you&nbsp;to&nbsp;locate&nbsp;the&nbsp;start&nbsp;of&nbsp;a&nbsp;function&nbsp;in&nbsp;order&nbsp;to&nbsp;place&nbsp;a&nbsp;breakpoint&nbsp;there&nbsp;or&nbsp;guess&nbsp;in&nbsp;which&nbsp;function&nbsp;a&nbsp;certain&nbsp;code&nbsp;address&nbsp;is.
+													<span class="anchor" id="line-19"></span>
+													<span class="anchor" id="line-20"></span>
+													<p class="line862">After&nbsp;minimal&nbsp;symbols&nbsp;are&nbsp;read,&nbsp;gdb&nbsp;will&nbsp;try&nbsp;to&nbsp;read&nbsp;more&nbsp;advanced&nbsp;information.&nbsp;In&nbsp;particular,&nbsp;it&nbsp;will&nbsp;probe&nbsp;for&nbsp;DWARF&nbsp;debug&nbsp;informations&nbsp;and&nbsp;load&nbsp;it&nbsp;if&nbsp;present.&nbsp;This&nbsp;allows&nbsp;for&nbsp;a&nbsp;more&nbsp;&ldquo;complete&rdquo;&nbsp;debugging&nbsp;experience,&nbsp;providing&nbsp;an&nbsp;extensive&nbsp;mapping&nbsp;between&nbsp;source&nbsp;code&nbsp;and&nbsp;instructions.&nbsp;Since&nbsp;this&nbsp;info&nbsp;represents&nbsp;a&nbsp;lot&nbsp;of&nbsp;data,&nbsp;it&nbsp;is&nbsp;done&nbsp;in&nbsp;two&nbsp;steps.&nbsp;A&nbsp;first&nbsp;quick&nbsp;pass&nbsp;over&nbsp;the&nbsp;debug&nbsp;info&nbsp;is&nbsp;done&nbsp;to&nbsp;build&nbsp;partial&nbsp;symbol&nbsp;tables.&nbsp;These&nbsp;contain&nbsp;just&nbsp;enough&nbsp;information&nbsp;to&nbsp;know&nbsp;what&nbsp;informations&nbsp;can&nbsp;be&nbsp;found&nbsp;in&nbsp;the&nbsp;debug&nbsp;info.&nbsp;When&nbsp;some&nbsp;specific&nbsp;information&nbsp;is&nbsp;required,&nbsp;the&nbsp;corresponding&nbsp;debug&nbsp;info&nbsp;section&nbsp;is&nbsp;read&nbsp;again&nbsp;in&nbsp;more&nbsp;details&nbsp;to&nbsp;build&nbsp;the&nbsp;full
+														<strong>symbol&nbsp;table</strong>
+														.&nbsp;Note&nbsp;that&nbsp;the&nbsp;user&nbsp;can&nbsp;force&nbsp;gdb&nbsp;to&nbsp;skip&nbsp;the&nbsp;partial&nbsp;symbol&nbsp;table&nbsp;step&nbsp;and&nbsp;immediately&nbsp;read&nbsp;the&nbsp;full&nbsp;debug&nbsp;symbols&nbsp;by&nbsp;using&nbsp;&ndash;&ndash;readnow.
+														<span class="anchor" id="line-21"></span>
+														<span class="anchor" id="line-22"></span>
+														<p class="line862">The&nbsp;way&nbsp;to&nbsp;read&nbsp;symbols&nbsp;from&nbsp;an&nbsp;objfile&nbsp;depends&nbsp;very&nbsp;much&nbsp;on&nbsp;the&nbsp;format&nbsp;of&nbsp;the&nbsp;executable.&nbsp;Symbols&nbsp;are&nbsp;not&nbsp;read&nbsp;the&nbsp;same&nbsp;way&nbsp;from&nbsp;an&nbsp;ELF&nbsp;binary&nbsp;than&nbsp;they&nbsp;are&nbsp;from&nbsp;a&nbsp;COFF&nbsp;binary.&nbsp;To&nbsp;keep&nbsp;the&nbsp;main&nbsp;algorithm&nbsp;independent&nbsp;from&nbsp;the&nbsp;binary&nbsp;format,&nbsp;gdb
+															<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/symfile.c;h=c2a71eca59882a8b47016521615c7abca46a53cb;hb=HEAD#l1008" class="https">loads&nbsp;a&nbsp;particular&nbsp;set&nbsp;of&nbsp;functions</a>
+															to&nbsp;do&nbsp;different&nbsp;symbol&ndash;related&nbsp;operations,&nbsp;which&nbsp;depends&nbsp;on&nbsp;the&nbsp;binary&nbsp;format.&nbsp;One&nbsp;such&nbsp;set&nbsp;of&nbsp;functions&nbsp;is&nbsp;implemented&nbsp;for&nbsp;each&nbsp;executable&nbsp;format&nbsp;that&nbsp;has&nbsp;support&nbsp;for&nbsp;symbols.&nbsp;In&nbsp;our&nbsp;case,&nbsp;gdb&nbsp;finds&nbsp;that&nbsp;the&nbsp;executable&nbsp;is&nbsp;an&nbsp;ELF&nbsp;and&nbsp;saves&nbsp;in&nbsp;the&nbsp;objfile&nbsp;object&nbsp;a&nbsp;pointer&nbsp;to&nbsp;the&nbsp;ELF&ndash;specific&nbsp;symbol&nbsp;functions&nbsp;(elf_sym_fns).
+															<span class="anchor" id="line-23"></span>
+															<span class="anchor" id="line-24"></span>
+															<p class="line862">First,&nbsp;it&nbsp;call&nbsp;the
+																<strong>sym_new_init</strong>
+																(
+																<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/elfread.c;h=65c63f053868edb471e3ca2b89dcf2e59f8d9380;hb=HEAD#l1392" class="https">elf_new_init</a>
+																)&nbsp;callback,&nbsp;which&nbsp;reinitializes&nbsp;the&nbsp;data&nbsp;structures&nbsp;associated&nbsp;with&nbsp;the&nbsp;machinery&nbsp;related&nbsp;to&nbsp;symbol&nbsp;table&nbsp;building.&nbsp;This&nbsp;callback&nbsp;resets&nbsp;all&nbsp;the&nbsp;state&nbsp;of&nbsp;the&nbsp;symbol&nbsp;reader&nbsp;to&nbsp;make&nbsp;it&nbsp;ready&nbsp;to&nbsp;read&nbsp;a&nbsp;completely&nbsp;new&nbsp;set&nbsp;of&nbsp;objfiles.&nbsp;This&nbsp;is&nbsp;only&nbsp;done&nbsp;if&nbsp;the&nbsp;objfile&nbsp;we&nbsp;are&nbsp;reading&nbsp;is&nbsp;loaded&nbsp;as&nbsp;the&nbsp;main&nbsp;objfile.
+																<span class="anchor" id="line-25"></span>
+																<span class="anchor" id="line-26"></span>
+																<p class="line862">Then,&nbsp;the
+																	<strong>sym_init</strong>
+																	callback&nbsp;is&nbsp;invoked.&nbsp;This&nbsp;one&nbsp;is&nbsp;also&nbsp;responsible&nbsp;for&nbsp;initializing&nbsp;some&nbsp;state&nbsp;of&nbsp;the&nbsp;symbol&nbsp;reader.&nbsp;The&nbsp;difference&nbsp;between&nbsp;this&nbsp;one&nbsp;and&nbsp;sym_new_init&nbsp;is&nbsp;that&nbsp;it&nbsp;is&nbsp;called&nbsp;for&nbsp;each&nbsp;and&nbsp;every&nbsp;new&nbsp;objfile&nbsp;loaded.&nbsp;In&nbsp;case&nbsp;of&nbsp;the&nbsp;ELF&nbsp;version,&nbsp;it&nbsp;does&nbsp;not&nbsp;do&nbsp;any&nbsp;significant&nbsp;work.
+																	<span class="anchor" id="line-27"></span>
+																	<span class="anchor" id="line-28"></span>
+																	<p class="line862">The&nbsp;following&nbsp;invoked&nbsp;callback&nbsp;is
+																		<strong>sym_offsets</strong>
+																		.&nbsp;It&nbsp;is&nbsp;responsible&nbsp;for&nbsp;(TODO...).
+																		<span class="anchor" id="line-29"></span>
+																		<span class="anchor" id="line-30"></span>
+																		<p class="line862">Finally,&nbsp;the&nbsp;actual&nbsp;symbol&nbsp;reading&nbsp;can&nbsp;take&nbsp;place:&nbsp;the
+																			<strong>sym_read</strong>
+																			callback&nbsp;is&nbsp;used.&nbsp;The&nbsp;first&nbsp;step&nbsp;is&nbsp;to
+																			<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/elfread.c;h=65c63f053868edb471e3ca2b89dcf2e59f8d9380;hb=HEAD#l1268" class="https">read&nbsp;minimal&nbsp;symbols</a>
+																			.
+																			<span class="anchor" id="line-31"></span>
+																			<span class="anchor" id="line-32"></span>
+																			<p class="line867">
+																				<h3 id="minimal_symbols_reading">minimal&nbsp;symbols&nbsp;reading</h3>
+																				<span class="anchor" id="line-33"></span>
+																				<span class="anchor" id="line-34"></span>
+																				<p class="line874">An&nbsp;executable&nbsp;contains&nbsp;two&nbsp;different&nbsp;symbol&nbsp;tables:
+																					<span class="anchor" id="line-35"></span>
+																					<span class="anchor" id="line-36"></span>
+																					<ul>
+																						<li><tt>.symtab</tt>
+																							,&nbsp;which&nbsp;contains&nbsp;all&nbsp;the&nbsp;symbols&nbsp;defined&nbsp;in&nbsp;the&nbsp;executable;
+                                                                                            </li>
+																							<li>
+																								<tt>.dynsym</tt>,&nbsp;which&nbsp;contains&nbsp;only&nbsp;the&nbsp;symbols&nbsp;needed&nbsp;for&nbsp;dynamic&nbsp;library&nbsp;loading&nbsp;operation.&nbsp;In&nbsp;the&nbsp;case&nbsp;of&nbsp;an&nbsp;executable,&nbsp;this&nbsp;means&nbsp;only&nbsp;references&nbsp;to&nbsp;symbols&nbsp;it&nbsp;needs&nbsp;to&nbsp;find&nbsp;in&nbsp;shared&nbsp;objects&nbsp;it&nbsp;depends&nbsp;on&nbsp;in&nbsp;order&nbsp;to&nbsp;run.&nbsp;For&nbsp;shared&nbsp;objects,&nbsp;it&rsquo;s&nbsp;the&nbsp;same,&nbsp;plus&nbsp;the&nbsp;symbols&nbsp;it&nbsp;exposes&nbsp;to&nbsp;other&nbsp;objects. 
+																							
+																						</p>
+																					</ul>
+																					<p class="line862">In&nbsp;fact,
+																						<tt>.dynsym</tt>
+																						is&nbsp;generally
+																						<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/elfread.c;h=65c63f053868edb471e3ca2b89dcf2e59f8d9380;hb=HEAD#l341" class="https">a&nbsp;subset</a>
+																						of
+																						<tt>.symtab</tt>
+																						.&nbsp;The&nbsp;purpose&nbsp;of&nbsp;keeping&nbsp;some&nbsp;duplicate&nbsp;information&nbsp;is&nbsp;that&nbsp;when&nbsp;a&nbsp;binary&nbsp;is&nbsp;stripped,&nbsp;the
+																						<tt>.symtab</tt>
+																						section&nbsp;is&nbsp;removed&nbsp;from&nbsp;the&nbsp;executable.&nbsp;The
+																						<tt>.dynsym</tt>
+																						section&nbsp;is&nbsp;kept&nbsp;so&nbsp;that&nbsp;dynamic&nbsp;loading&nbsp;still&nbsp;works.&nbsp;This&nbsp;means&nbsp;that&nbsp;when&nbsp;both&nbsp;sections&nbsp;are&nbsp;present,&nbsp;it&nbsp;is&nbsp;pointless&nbsp;to&nbsp;read&nbsp;the
+																						<tt>.dynsym</tt>
+																						section,&nbsp;since&nbsp;the&nbsp;same&nbsp;information&nbsp;is&nbsp;found&nbsp;in
+																						<tt>.symtab</tt>
+																						,&nbsp;which&nbsp;we&nbsp;need&nbsp;to&nbsp;read&nbsp;anyway.&nbsp;Therefore,&nbsp;gdb&nbsp;will&nbsp;adapt&nbsp;if&nbsp;both&nbsp;sections&nbsp;are&nbsp;present&nbsp;to&nbsp;avoid&nbsp;reading&nbsp;some&nbsp;symbols&nbsp;twice.
+																						<span class="anchor" id="line-40"></span>
+																						<span class="anchor" id="line-41"></span>
+																						<p class="line862">So,&nbsp;the&nbsp;ELF&nbsp;symbol&nbsp;reading&nbsp;code&nbsp;iterates&nbsp;on&nbsp;the&nbsp;symbols&nbsp;provided&nbsp;by&nbsp;the&nbsp;BFD&nbsp;library&nbsp;and,&nbsp;for&nbsp;each&nbsp;of&nbsp;the&nbsp;relevant&nbsp;ones,&nbsp;asks&nbsp;the
+																							<strong>minsyms</strong>
+																							machinery&nbsp;to&nbsp;create&nbsp;an&nbsp;instance&nbsp;of&nbsp;a
+																							<strong>struct&nbsp;minimal_symbol</strong>
+																							.&nbsp;The&nbsp;structure&nbsp;is&nbsp;put&nbsp;in&nbsp;some&nbsp;kind&nbsp;of&nbsp;staging&nbsp;area&nbsp;(called&nbsp;minsym&nbsp;bunches),&nbsp;I&nbsp;suppose&nbsp;to&nbsp;avoid&nbsp;memory&nbsp;fragmentation&nbsp;and&nbsp;allocation&nbsp;overhead.
+																							<span class="anchor" id="line-42"></span>
+																							<span class="anchor" id="line-43"></span>
+																							<p class="line874">(TODO:&nbsp;a&nbsp;word&nbsp;about&nbsp;special&nbsp;handling&nbsp;of&nbsp;got/plt&nbsp;sections?&nbsp;synthetic&nbsp;symbols?)
+																								<span class="anchor" id="line-44"></span>
+																								<span class="anchor" id="line-45"></span>
+																								<p class="line862">Once&nbsp;all&nbsp;the&nbsp;symbols&nbsp;are&nbsp;created,&nbsp;the&nbsp;ELF&nbsp;code&nbsp;asks&nbsp;the&nbsp;minsyms&nbsp;code&nbsp;to
+																									<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/elfread.c;h=65c63f053868edb471e3ca2b89dcf2e59f8d9380;hb=HEAD#l1228" class="https">install</a>
+																									the&nbsp;minimal&nbsp;symbols&nbsp;in&nbsp;the&nbsp;objfile,&nbsp;which&nbsp;consists&nbsp;of&nbsp;copying&nbsp;the&nbsp;structures&nbsp;from&nbsp;the&nbsp;staging&nbsp;area&nbsp;allocated&nbsp;by&nbsp;the&nbsp;minsyms&nbsp;module&nbsp;to&nbsp;some&nbsp;space&nbsp;belonging&nbsp;to&nbsp;the&nbsp;objfile.&nbsp;Symbols&nbsp;are&nbsp;stored&nbsp;sorted&nbsp;by&nbsp;order&nbsp;of&nbsp;increasing&nbsp;address.&nbsp;The&nbsp;table&nbsp;is&nbsp;then&nbsp;compacted&nbsp;by&nbsp;removing&nbsp;any&nbsp;possible&nbsp;duplicate&nbsp;entries.
+																									<span class="anchor" id="line-46"></span>
+																									<span class="anchor" id="line-47"></span>
+																									<p class="line862">Finally,&nbsp;a&nbsp;hash&nbsp;table
+																										<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/minsyms.c;h=83b20705baffdbf8cbf31367e0be3f72f12cdcfa;hb=HEAD#l1332" class="https">is&nbsp;built</a>
+																										to&nbsp;map&nbsp;symbol&nbsp;names&nbsp;to&nbsp;addresses.&nbsp;It&nbsp;is&nbsp;therefore&nbsp;quick&nbsp;to&nbsp;search&nbsp;the&nbsp;address&nbsp;matching&nbsp;a&nbsp;given&nbsp;symbol.&nbsp;Finding&nbsp;a&nbsp;symbol&nbsp;matching&nbsp;a&nbsp;given&nbsp;address&nbsp;is&nbsp;also&nbsp;possible&nbsp;by&nbsp;searching&nbsp;the&nbsp;sorted&nbsp;table&nbsp;dichotomically.
+																										<span class="anchor" id="line-48"></span>
+																										<span class="anchor" id="line-49"></span>
+																										<p class="line874">At&nbsp;this&nbsp;point,&nbsp;the&nbsp;objfile&nbsp;has&nbsp;a&nbsp;table&nbsp;of&nbsp;minimal&nbsp;symbols&nbsp;loaded&nbsp;an&nbsp;ready&nbsp;to&nbsp;be&nbsp;used.&nbsp;The&nbsp;work&nbsp;done&nbsp;so&nbsp;far&nbsp;can&nbsp;be&nbsp;done&nbsp;on&nbsp;any&nbsp;ELF&nbsp;executable,&nbsp;even&nbsp;those&nbsp;without&nbsp;debug&nbsp;info.&nbsp;The&nbsp;ELF&nbsp;symbol&nbsp;parser&nbsp;now&nbsp;goes&nbsp;onto&nbsp;the&nbsp;task&nbsp;of&nbsp;parsing&nbsp;the&nbsp;DWARF&nbsp;debug&nbsp;information.
+																											<span class="anchor" id="line-50"></span>
+																											<span class="anchor" id="line-51"></span>
+																											<p class="line867">
+																												<h3 id="debug_info_loading_-_partial_symbol_tables">debug&nbsp;info&nbsp;loading&nbsp;&ndash;&nbsp;partial&nbsp;symbol&nbsp;tables</h3>
+																												<span class="anchor" id="line-52"></span>
+																												<span class="anchor" id="line-53"></span>
+																												<p class="line862">The&nbsp;first&nbsp;thing&nbsp;gdb&nbsp;needs&nbsp;to&nbsp;do&nbsp;in&nbsp;order&nbsp;to&nbsp;load&nbsp;the&nbsp;DWARF&nbsp;info&nbsp;is&nbsp;to&nbsp;detect&nbsp;if&nbsp;there&nbsp;is&nbsp;actually&nbsp;some&nbsp;present&nbsp;in&nbsp;the&nbsp;executable.&nbsp;To&nbsp;do&nbsp;so,&nbsp;it&nbsp;iterates&nbsp;on&nbsp;the&nbsp;sections&nbsp;of&nbsp;the&nbsp;executable&nbsp;to&nbsp;see&nbsp;if&nbsp;any&nbsp;of&nbsp;them&nbsp;is
+																													<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/dwarf2read.c;h=a7643896c75ef2081c35b5b84ec62e3af72952c1;hb=HEAD#l318" class="https">related&nbsp;to&nbsp;DWARF</a>
+																													.&nbsp;gdb&nbsp;will&nbsp;save&nbsp;in&nbsp;the&nbsp;objfile&nbsp;structure&nbsp;some&nbsp;references&nbsp;to&nbsp;any&nbsp;relevant&nbsp;section&nbsp;it&nbsp;finds&nbsp;(such&nbsp;as&nbsp;the&nbsp;.debug_info&nbsp;section).
+																													<span class="anchor" id="line-54"></span>
+																													<span class="anchor" id="line-55"></span>
+																													<p class="line862">As&nbsp;mentioned&nbsp;earlier,&nbsp;the&nbsp;loading&nbsp;of&nbsp;debug&nbsp;info&nbsp;first&nbsp;generates
+																														<strong>partial&nbsp;symbol&nbsp;tables</strong>
+																														(
+																														<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/psymtab.c;h=4ee9dc1e82fe93812ae4f8ed0732303b6d7c06c8;hb=HEAD#l91" class="https">here</a>
+																														,&nbsp;but&nbsp;really&nbsp;ends&nbsp;up
+																														<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/elfread.c;h=65c63f053868edb471e3ca2b89dcf2e59f8d9380;hb=HEAD#l1363" class="https">here</a>
+																														).&nbsp;gdb&nbsp;does&nbsp;a&nbsp;quick&nbsp;pass&nbsp;over&nbsp;the&nbsp;.debug_info&nbsp;section,&nbsp;which&nbsp;describes&nbsp;all&nbsp;types,&nbsp;functions,&nbsp;declared&nbsp;variables,&nbsp;blocks&nbsp;of&nbsp;code,&nbsp;etc.
+																														<span class="anchor" id="line-56"></span>
+																														<span class="anchor" id="line-57"></span>
+																														<p class="line874">If&nbsp;an&nbsp;executable&nbsp;comes&nbsp;from&nbsp;multiple&nbsp;compilation&nbsp;units&nbsp;(e.g.&nbsp;main.o&nbsp;and&nbsp;other.o),&nbsp;the&nbsp;.debug_info&nbsp;section&nbsp;of&nbsp;the&nbsp;final&nbsp;executable&nbsp;is&nbsp;the&nbsp;concatenation&nbsp;of&nbsp;the&nbsp;.debug_info&nbsp;sections&nbsp;of&nbsp;all&nbsp;compilation&nbsp;units.&nbsp;gdb&nbsp;starts&nbsp;by&nbsp;creating&nbsp;an&nbsp;index&nbsp;of&nbsp;all&nbsp;compilation&nbsp;units&#039;&nbsp;debug&nbsp;info&nbsp;by&nbsp;recording&nbsp;their&nbsp;offset&nbsp;in&nbsp;the&nbsp;.debug_info&nbsp;section.&nbsp;To&nbsp;iterate&nbsp;over&nbsp;all&nbsp;compilation&nbsp;units&#039;&nbsp;debug&nbsp;info,&nbsp;it&nbsp;uses&nbsp;the&nbsp;length&nbsp;found&nbsp;in&nbsp;the&nbsp;header&nbsp;of&nbsp;each&nbsp;one&nbsp;of&nbsp;them&nbsp;to&nbsp;jump&nbsp;to&nbsp;the&nbsp;next.
+																															<span class="anchor" id="line-58"></span>
+																															<span class="anchor" id="line-59"></span>
+																															<p class="line862">Once&nbsp;the&nbsp;index&nbsp;is&nbsp;built,&nbsp;the&nbsp;debug&nbsp;info&nbsp;of&nbsp;each&nbsp;compilation&nbsp;unit&nbsp;is
+																																<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/dwarf2read.c;h=a7643896c75ef2081c35b5b84ec62e3af72952c1;hb=HEAD#l6458" class="https">processed&nbsp;individually</a>
+																																.
+																																<span class="anchor" id="line-60"></span>
+																																<span class="anchor" id="line-61"></span>
+																																<p class="line862">The&nbsp;header&nbsp;of&nbsp;the&nbsp;compilation&nbsp;unit&rsquo;s&nbsp;debug&nbsp;info
+																																	<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/dwarf2read.c;h=a7643896c75ef2081c35b5b84ec62e3af72952c1;hb=HEAD#l5463" class="https">is&nbsp;digested&nbsp;first</a>
+																																	followed&nbsp;by&nbsp;the
+																																	<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/dwarf2read.c;h=a7643896c75ef2081c35b5b84ec62e3af72952c1;hb=HEAD#l5516" class="https">abbreviations&nbsp;table</a>
+																																	.&nbsp;Then,&nbsp;the&nbsp;debug&nbsp;info&nbsp;entries&nbsp;(DIE)&nbsp;representing&nbsp;the&nbsp;compilation&nbsp;unit&nbsp;is&nbsp;read&nbsp;(
+																																	<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/dwarf2read.c;h=a7643896c75ef2081c35b5b84ec62e3af72952c1;hb=HEAD#l5684" class="https">here</a>
+																																	,&nbsp;but&nbsp;it&nbsp;ends&nbsp;up
+																																	<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/dwarf2read.c;h=a7643896c75ef2081c35b5b84ec62e3af72952c1;hb=HEAD#l5899" class="https">here</a>
+																																	).&nbsp;At&nbsp;this&nbsp;point,&nbsp;a
+																																	<strong>struct&nbsp;partial_symtab</strong>
+																																	is&nbsp;created&nbsp;for&nbsp;this&nbsp;compilation&nbsp;unit.&nbsp;An&nbsp;interesting&nbsp;thing&nbsp;to&nbsp;note&nbsp;is&nbsp;that&nbsp;the&nbsp;partial_symtab&nbsp;structure&nbsp;contains&nbsp;a
+																																	<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/psympriv.h;h=9daddea6d17cca0eea611b23d7712ca48780a36e;hb=HEAD#l200" class="https">pointer</a>
+																																	to&nbsp;the&nbsp;function&nbsp;to&nbsp;be&nbsp;used&nbsp;in&nbsp;order&nbsp;to&nbsp;read&nbsp;the&nbsp;corresponding&nbsp;full&nbsp;symbol&nbsp;table.
+																																	<span class="anchor" id="line-62"></span>
+																																	<span class="anchor" id="line-63"></span>
+																																	<p class="line874">An&nbsp;address&nbsp;map&nbsp;is&nbsp;maintained&nbsp;for&nbsp;the&nbsp;whole&nbsp;objfile.&nbsp;It&nbsp;maps&nbsp;ranges&nbsp;of&nbsp;code&nbsp;addresses&nbsp;to&nbsp;compilation&nbsp;units,&nbsp;allowing&nbsp;you&nbsp;to&nbsp;know&nbsp;very&nbsp;quickly&nbsp;from&nbsp;which&nbsp;compilation&nbsp;unit&nbsp;a&nbsp;given&nbsp;pc&nbsp;comes&nbsp;from.&nbsp;The&nbsp;pc&nbsp;range&nbsp;for&nbsp;the&nbsp;compilation&nbsp;unit&nbsp;is&nbsp;easily&nbsp;obtained&nbsp;from&nbsp;the&nbsp;compilation&nbsp;unit&nbsp;DIE.
+																																		<span class="anchor" id="line-64"></span>
+																																		<span class="anchor" id="line-65"></span>
+																																		<p class="line874">Then,&nbsp;the&nbsp;children&nbsp;of&nbsp;the&nbsp;compilation&nbsp;unit&nbsp;DIE&nbsp;are&nbsp;read,&nbsp;although&nbsp;gdb&nbsp;skips&nbsp;a&nbsp;lot&nbsp;of&nbsp;DIEs&nbsp;that&nbsp;are&nbsp;not&nbsp;useful&nbsp;for&nbsp;a&nbsp;partial&nbsp;symbol&nbsp;table.&nbsp;Even&nbsp;for&nbsp;DIEs&nbsp;that&nbsp;it&nbsp;does&nbsp;read,&nbsp;for&nbsp;some&nbsp;attributes,&nbsp;it&nbsp;just&nbsp;sets&nbsp;a&nbsp;flag&nbsp;indicating&nbsp;that&nbsp;this&nbsp;attribute&nbsp;is&nbsp;present.&nbsp;An&nbsp;example&nbsp;of&nbsp;interesting&nbsp;DIE&nbsp;to&nbsp;explore&nbsp;at&nbsp;this&nbsp;point&nbsp;is&nbsp;one&nbsp;representing&nbsp;an&nbsp;enumeration&nbsp;type.&nbsp;Since,&nbsp;in&nbsp;C&nbsp;at&nbsp;least,&nbsp;enumeration&nbsp;labels&nbsp;are&nbsp;in&nbsp;the&nbsp;global&nbsp;scope,&nbsp;we&nbsp;need&nbsp;to&nbsp;read&nbsp;them&nbsp;now,&nbsp;so&nbsp;that&nbsp;we&nbsp;know&nbsp;what&nbsp;the&nbsp;user&nbsp;refers&nbsp;to&nbsp;if&nbsp;he&nbsp;uses&nbsp;one&nbsp;of&nbsp;them&nbsp;in&nbsp;an&nbsp;expression.&nbsp;Subprogram&nbsp;children,&nbsp;however,&nbsp;are&nbsp;irrelevant&nbsp;at&nbsp;this&nbsp;point.&nbsp;We&nbsp;only&nbsp;need&nbsp;to&nbsp;know&nbsp;the&nbsp;function&nbsp;names,&nbsp;but&nbsp;we&nbsp;don&rsquo;t&nbsp;need&nbsp;to&nbsp;know&nbsp;about&nbsp;their&nbsp;arguments&nbsp;right&nbsp;away.
+																																			<span class="anchor" id="line-66"></span>
+																																			<span class="anchor" id="line-67"></span>
+																																			<p class="line862">For&nbsp;each&nbsp;interesting&nbsp;DIE,&nbsp;a
+																																				<strong>struct&nbsp;partial_die_info</strong>
+																																				is&nbsp;created,&nbsp;containing&nbsp;this&nbsp;basic&nbsp;information,&nbsp;such&nbsp;as&nbsp;the&nbsp;name.&nbsp;Depending&nbsp;on&nbsp;the&nbsp;kind&nbsp;of&nbsp;entry,&nbsp;the&nbsp;struct&nbsp;might&nbsp;be
+																																				<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/dwarf2read.c;h=a7643896c75ef2081c35b5b84ec62e3af72952c1;hb=HEAD" class="https">added</a>
+																																				to&nbsp;a&nbsp;hash&nbsp;table&nbsp;mapping&nbsp;the&nbsp;offset&nbsp;in&nbsp;the&nbsp;.debug_info&nbsp;section&nbsp;to&nbsp;the&nbsp;partial&nbsp;DIE&nbsp;structure.&nbsp;This&nbsp;way,&nbsp;if&nbsp;this&nbsp;DIE&nbsp;is&nbsp;referenced&nbsp;by&nbsp;offset&nbsp;at&nbsp;some&nbsp;point&nbsp;by&nbsp;another&nbsp;DIE,&nbsp;it&nbsp;will&nbsp;be&nbsp;possible&nbsp;to&nbsp;directly&nbsp;retrieve&nbsp;the&nbsp;partial_die_info&nbsp;structure&nbsp;we&nbsp;created&nbsp;for&nbsp;it.
+																																				<span class="anchor" id="line-68"></span>
+																																				<span class="anchor" id="line-69"></span>
+																																				<p class="line874">Once&nbsp;all&nbsp;relevant&nbsp;partial_die_info&nbsp;structures&nbsp;have&nbsp;been&nbsp;created,&nbsp;they&nbsp;are&nbsp;all&nbsp;visited&nbsp;in&nbsp;order&nbsp;to&nbsp;extract&nbsp;the&nbsp;valuable&nbsp;information&nbsp;and&nbsp;finally&nbsp;fill&nbsp;the&nbsp;partial&nbsp;symbol&nbsp;table.&nbsp;Essentially,&nbsp;function&nbsp;names,&nbsp;variable&nbsp;names,&nbsp;enumeration&nbsp;labels,&nbsp;etc,&nbsp;are&nbsp;added&nbsp;to&nbsp;one&nbsp;of&nbsp;two&nbsp;lists&nbsp;in&nbsp;the&nbsp;objfile.&nbsp;The&nbsp;latter&nbsp;contains&nbsp;a&nbsp;list&nbsp;for&nbsp;global/external&nbsp;symbols&nbsp;(those&nbsp;visible&nbsp;across&nbsp;compilation&nbsp;units)&nbsp;and&nbsp;another&nbsp;for&nbsp;static&nbsp;symbols,&nbsp;only&nbsp;visible&nbsp;from&nbsp;within&nbsp;the&nbsp;compilation&nbsp;unit.&nbsp;These&nbsp;lists&nbsp;in&nbsp;the&nbsp;objfile&nbsp;are&nbsp;actually&nbsp;temporary,&nbsp;as&nbsp;they&nbsp;are&nbsp;latter&nbsp;sorted&nbsp;(only&nbsp;the&nbsp;global&nbsp;one,&nbsp;not&nbsp;sure&nbsp;why)&nbsp;and&nbsp;copied&nbsp;to&nbsp;the&nbsp;partial_symtab&nbsp;structure.
+																																					<span class="anchor" id="line-70"></span>
+																																					<span class="anchor" id="line-71"></span>
+																																					<p class="line862">The&nbsp;next&nbsp;step&nbsp;is&nbsp;to&nbsp;create&nbsp;another&nbsp;kind&nbsp;of&nbsp;symbol&nbsp;table,
+																																						<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/dwarf2read.c;h=a7643896c75ef2081c35b5b84ec62e3af72952c1;hb=HEAD#l6019" class="https">the&nbsp;file&nbsp;symbol&nbsp;tables</a>
+																																						.&nbsp;These&nbsp;are&nbsp;generated&nbsp;from&nbsp;the&nbsp;line&nbsp;number&nbsp;information&nbsp;contained&nbsp;in&nbsp;the&nbsp;DWARF&nbsp;information,&nbsp;and&nbsp;allow&nbsp;mapping&nbsp;code&nbsp;addresses&nbsp;to&nbsp;a&nbsp;particular&nbsp;line&nbsp;of&nbsp;source&nbsp;code,&nbsp;and&nbsp;vice&ndash;versa.&nbsp;Again,&nbsp;for&nbsp;optimization&nbsp;purposes,&nbsp;gdb&nbsp;does&nbsp;not&nbsp;generate&nbsp;and&nbsp;read&nbsp;the&nbsp;whole&nbsp;line&nbsp;number&nbsp;tables&nbsp;right&nbsp;away.&nbsp;During&nbsp;the&nbsp;initial&nbsp;stage,&nbsp;it&nbsp;goes&nbsp;through&nbsp;the&nbsp;line&nbsp;number&nbsp;information&nbsp;of&nbsp;all&nbsp;compilation&nbsp;units&nbsp;only&nbsp;to&nbsp;gather&nbsp;the&nbsp;names&nbsp;of&nbsp;all&nbsp;source&nbsp;and&nbsp;included&nbsp;files.&nbsp;The&nbsp;purpose&nbsp;of&nbsp;the&nbsp;file&nbsp;partial&nbsp;symbol&nbsp;table&nbsp;is&nbsp;essentially&nbsp;to&nbsp;say&nbsp;that&nbsp;the&nbsp;file&nbsp;exists.&nbsp;If&nbsp;the&nbsp;user&nbsp;uses&nbsp;the&nbsp;filename&nbsp;in&nbsp;an&nbsp;expression,&nbsp;gdb&nbsp;will&nbsp;know&nbsp;what&nbsp;he&nbsp;is&nbsp;talking&nbsp;about&nbsp;and&nbsp;will&nbsp;be&nbsp;able&nbsp;to&nbsp;go&nbsp;back&nbsp;to&nbsp;the&nbsp;DWARF&nbsp;to&nbsp;read&nbsp;the&nbsp;full&nbsp;information&nbsp;about&nbsp;the&nbsp;file.&nbsp;So,&nbsp;for&nbsp;each&nbsp;source&nbsp;and&nbsp;include&nbsp;file&nbsp;that&nbsp;was&nbsp;used&nbsp;to&nbsp;generate&nbsp;a&nbsp;compilation&nbsp;unit,&nbsp;gdb&nbsp;creates&nbsp;one&nbsp;partial_symtab&nbsp;structure.&nbsp;If&nbsp;a&nbsp;particular&nbsp;header&nbsp;file&nbsp;is&nbsp;included&nbsp;in&nbsp;multiple&nbsp;compilation&nbsp;units,&nbsp;as&nbsp;is&nbsp;often&nbsp;the&nbsp;case,&nbsp;it&nbsp;will&nbsp;cause&nbsp;as&nbsp;many&nbsp;partial&nbsp;file&nbsp;symbol&nbsp;table&nbsp;to&nbsp;be&nbsp;created.
+																																						<span class="anchor" id="line-72"></span>
+																																						<span class="anchor" id="line-73"></span>
+																																						<p class="line867">
+																																							<h2 id="Conclusion">Conclusion</h2>
+																																							<span class="anchor" id="line-74"></span>
+																																							<span class="anchor" id="line-75"></span>
+																																							<p class="line874">This&nbsp;is&nbsp;pretty&nbsp;much&nbsp;all&nbsp;that&nbsp;happen&nbsp;when&nbsp;the&nbsp;user&nbsp;issues&nbsp;the&nbsp;file&nbsp;command&nbsp;on&nbsp;a&nbsp;common&nbsp;ELF&nbsp;executable&nbsp;containing&nbsp;DWARF&nbsp;debug&nbsp;information.&nbsp;At&nbsp;this&nbsp;point,&nbsp;the&nbsp;initial&nbsp;stage&nbsp;of&nbsp;symbol&nbsp;parsing&nbsp;has&nbsp;been&nbsp;completed:&nbsp;partial&nbsp;symbols&nbsp;have&nbsp;been&nbsp;generated&nbsp;to&nbsp;model&nbsp;the&nbsp;executable.&nbsp;To&nbsp;sum&nbsp;up,&nbsp;gdb&nbsp;has&nbsp;done&nbsp;the&nbsp;following&nbsp;work:
+																																								<span class="anchor" id="line-76"></span>
+																																								<ul>
+																																									<li>created&nbsp;an&nbsp;objfile&nbsp;to&nbsp;represent&nbsp;the&nbsp;executable;
+																																										<span class="anchor" id="line-77"></span>
+																																									</li>
+																																									<li>read&nbsp;minimal&nbsp;symbols&nbsp;from&nbsp;the&nbsp;ELF&rsquo;s&nbsp;symbol&nbsp;table;
+																																										<span class="anchor" id="line-78"></span>
+																																									</li>
+																																									<li>created&nbsp;a&nbsp;compilation&nbsp;unit&nbsp;partial&nbsp;symbol&nbsp;table&nbsp;for&nbsp;each&nbsp;compilation&nbsp;unit&nbsp;in&nbsp;the&nbsp;executable;
+																																										<span class="anchor" id="line-79"></span>
+																																									</li>
+																																									<li>stored&nbsp;two&nbsp;lists&nbsp;of&nbsp;partial&nbsp;symbols&nbsp;in&nbsp;the&nbsp;objfile,&nbsp;for&nbsp;external&nbsp;and&nbsp;static&nbsp;names;
+																																										<span class="anchor" id="line-80"></span>
+																																									</li>
+																																									<li>created&nbsp;a&nbsp;file&nbsp;partial&nbsp;symbol&nbsp;table&nbsp;for&nbsp;each&nbsp;involved&nbsp;source/header&nbsp;file.
+																																										<span class="anchor" id="line-81"></span>
+																																										<span class="anchor" id="line-82"></span>
+																																									</li>
+																																								</ul>
+																																								<p class="line874">This&nbsp;is&nbsp;pretty&nbsp;much&nbsp;all&nbsp;the&nbsp;information&nbsp;gdb&nbsp;needs&nbsp;in&nbsp;order&nbsp;to&nbsp;understand&nbsp;the&nbsp;expressions&nbsp;given&nbsp;by&nbsp;the&nbsp;user:&nbsp;file&nbsp;names,&nbsp;function&nbsp;names,&nbsp;type&nbsp;names...&nbsp;This&nbsp;is&nbsp;just&nbsp;enough&nbsp;to&nbsp;understand&nbsp;any&nbsp;query&nbsp;from&nbsp;the&nbsp;user&nbsp;and&nbsp;guide&nbsp;gdb&nbsp;to&nbsp;the&nbsp;place&nbsp;where&nbsp;it&nbsp;can&nbsp;find&nbsp;the&nbsp;remaining&nbsp;information,&nbsp;which&nbsp;will&nbsp;be&nbsp;fetched&nbsp;on&nbsp;an&nbsp;as&ndash;needed&nbsp;basis.
+																																									<span class="anchor" id="line-83"></span>
+																																									<span class="anchor" id="line-84"></span>
+																																									<p class="line862">Actually,&nbsp;the&nbsp;very&nbsp;last&nbsp;step&nbsp;executed&nbsp;when&nbsp;using&nbsp;the&nbsp;file&nbsp;command&nbsp;is&nbsp;to&nbsp;initialize&nbsp;the&nbsp;information&nbsp;about&nbsp;the&nbsp;entry&nbsp;point&nbsp;of&nbsp;the&nbsp;program&nbsp;(i.e.&nbsp;the&nbsp;main&nbsp;function).&nbsp;For&nbsp;various&nbsp;reasons,&nbsp;gdb&nbsp;wants&nbsp;to&nbsp;know&nbsp;where&nbsp;it&nbsp;is&nbsp;located,&nbsp;so&nbsp;it
+																																										<a href="../../git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/symfile.c;h=c2a71eca59882a8b47016521615c7abca46a53cb;hb=HEAD#l1698" class="https">looks&nbsp;up&nbsp;the&nbsp;symbol</a>
+																																										.&nbsp;This&nbsp;triggers&nbsp;for&nbsp;the&nbsp;compilation&nbsp;unit&nbsp;and&nbsp;file&nbsp;symtabs&nbsp;containing&nbsp;the&nbsp;entry&nbsp;point&nbsp;to&nbsp;be&nbsp;expanded&nbsp;and&nbsp;read&nbsp;into&nbsp;full&nbsp;symtabs.
+																																										<span class="anchor" id="line-85"></span>
+																																										<span class="anchor" id="bottom"></span>
+																																									</p>
+																																								</p>
+																																							</p>
+																																						</p>
+																																					</p>
+																																				</p>
+																																			</p>
+																																		</p>
+																																	</p>
+																																</p>
+																															</p>
+																														</p>
+																													</p>
+																												</p>
+																											</p>
+																										</p>
+																									</p>
+																								</p>
+																							</p>
+																						</p>
+																					</p>
+																				</p>
+																			</p>
+																		</p>
+																	</p>
+																</p>
+															</p>
+														</p>
+													</p>
+												</p>
+											</p>
+										</p>
+									</p>
+								</p>
+							</p>
+						</p>
+					</p>
+				</p>
+			</div>
+			<p id="pageinfo" class="info" lang="en" dir="ltr">None:&nbsp;How&nbsp;gdb&nbsp;loads&nbsp;symbol&nbsp;files&nbsp;&nbsp;(last&nbsp;edited&nbsp;2015&ndash;02&ndash;15&nbsp;01:11:15&nbsp;by
+				<span title="SimonMarchi @ cable-221.127.96-218.electronicbox.net[96.127.221.218]">
+					<a href="/gdb/wiki/SimonMarchi" title="SimonMarchi @ cable-221.127.96-218.electronicbox.net[96.127.221.218]">SimonMarchi</a>
+				</span>
+				)
+			</p>
+			<div id="pagebottom"></div>
+		</div>
+		<p id="pageinfo" class="info" dir="ltr">All&nbsp;content&nbsp;(C)&nbsp;2008&nbsp;Free&nbsp;Software&nbsp;Foundation.&nbsp;&nbsp;For&nbsp;terms&nbsp;of&nbsp;use,&nbsp;redistribution,&nbsp;and&nbsp;modification,&nbsp;please&nbsp;see&nbsp;the&nbsp;WikiLicense&nbsp;page.</p>
+	 
+	</body>
+</html>

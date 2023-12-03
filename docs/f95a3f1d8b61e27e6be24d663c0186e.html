@@ -1,0 +1,40 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>pid.h</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>pid.h</h1>
+            <h3></h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/PID.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PID</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/PID.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PID</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<H3><a name="HEAD_5d94b00" href="#TOC_HEAD_5d94b00">pid defination</a></H3><ul><a href="../tags/PID.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PID</a>&nbsp;</ul>
+<pre><code>struct pid
+{
+    refcount_t count;
+    unsigned int level;
+    spinlock_t lock;
+    /* lists of tasks that use this pid */
+    struct hlist_head tasks[PIDTYPE_MAX];
+    struct hlist_head inodes;
+    /* wait queue for pidfd notifications */
+    wait_queue_head_t wait_pidfd;
+    struct rcu_head rcu;
+    struct upid numbers[];
+};</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

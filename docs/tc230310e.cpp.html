@@ -1,0 +1,84 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC230310E.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC230310E.cpp</h1>
+            <h3>C11 Move semantics</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Cxxv11.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxxv11</a>&nbsp;<a href="../tags/rvalue-reference.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>rvalue-reference</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+using namespace std;
+
+static int init1 = 0;
+static int init2 = 0;
+
+class XX
+{
+public:
+    XX() {init1++;}
+    ~XX(){init2++;};
+    XX(const XX& x) {}
+    XX& operator=(const XX &src)
+    {   return *this;
+    }
+};
+
+class YY
+{
+public:
+    YY() {init1++;}
+    ~YY(){init2++;};
+    YY(const YY&& x) {}
+    YY& operator=(const YY &&src)
+    {   return *this;
+    }
+};
+
+XX fun1()
+{   XX x;
+    return x;
+}
+
+YY fun2()
+{   YY y;
+    return y;
+}
+
+void print()
+{   cout &lt;&lt; "init1=" &lt;&lt; init1 &lt;&lt; ", init2=" &lt;&lt; init2;
+}
+
+int main(void)
+{
+    int &&var = 10;
+
+    cout &lt;&lt; "output: ";
+    XX x = fun1();
+    print();
+
+    cout &lt;&lt; "; ";
+    YY y = fun2();
+    print();
+
+    cout &lt;&lt; endl;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

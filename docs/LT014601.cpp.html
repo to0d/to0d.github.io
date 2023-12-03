@@ -1,0 +1,198 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT014601.cpp (LRU Cache)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT014601.cpp (LRU Cache)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-01</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LRU.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LRU</a>&nbsp;<a href="../tags/LT0146.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0146</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_ae7f575" href="#TOC_HEAD_ae7f575">Problem 0146 <strong>LRU Cache</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/lru-cache/" target="_blank">https://leetcode.com/problems/lru&ndash;cache/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>5.4</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_80070474" href="#TOC_HEAD_80070474">LT014601.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_e464bee7">LT0146 (name=LRU Cache, ptag=Leetcode) &nbsp;<a href="../tags/LRU.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LRU</a>&nbsp;<a href="../tags/LT0146.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0146</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_d816bcb4"><a href="https://leetcode.com/problems/lru-cache/" target="_blank">LRU Cache &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0146.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0146</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_e9a559c1" href="#TOC_HEAD_e9a559c1">LT014601.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+struct LRUEntry
+{   int key;
+    int value;
+    int life;
+};
+
+class LRUCache {
+public:
+    LRUCache(int capacity) : m_capacity(capacity), m_life(0), m_update(false){}
+
+    int get(int key) {
+        auto it = m_map.find(key);
+        if( it == m_map.end() )
+            return -1;
+
+        LRUEntry* entry = it-&gt;second;
+        if( entry-&gt;life != m_life )
+        {   entry-&gt;life = m_life++;
+            m_update = true;
+        }
+
+        return entry-&gt;value;
+    }
+
+    void put(int key, int value) {
+        auto it = m_map.find(key);
+        if( it != m_map.end() )
+        {   LRUEntry* entry = it-&gt;second;
+            entry-&gt;value = value;
+            if( entry-&gt;life != m_life )
+            {   entry-&gt;life = m_life++;
+                m_update = true;
+            }
+        }
+        else if( m_list.size() &lt; m_capacity )
+        {   LRUEntry* entry = new LRUEntry();
+            entry-&gt;key = key;
+            entry-&gt;value = value;
+            entry-&gt;life = m_life++;
+            m_list.push_back(entry);
+            m_map[key] = entry;
+            m_update = true;
+        }
+        else
+        {
+            _update();
+
+            LRUEntry* entry = m_list[0];
+            m_map.erase(entry-&gt;key);
+
+            entry-&gt;key = key;
+            entry-&gt;value = value;
+            entry-&gt;life = m_life++;
+            m_map[key] = entry;
+            m_update = true;
+        }
+    }
+
+private:
+    void _update(){
+        if( !m_update )
+            return;
+
+        int minLife = m_list[0]-&gt;life, minIdx = 0;
+        for(int i = 1;i &lt; m_capacity; ++i)
+        {   LRUEntry* entry = m_list[i];
+            if( entry-&gt;life &lt; minLife )
+            {   minLife = entry-&gt;life;
+                minIdx  = i;
+            }
+        }
+
+        if( minIdx != 0 )
+        {   LRUEntry* tmp  = m_list[minIdx];
+            m_list[minIdx] = m_list[0];
+            m_list[0]      = tmp;
+        }
+
+        m_update = false;
+    }
+
+    unordered_map&lt;int, LRUEntry*&gt; m_map;
+    vector&lt;LRUEntry*&gt; m_list;
+    bool m_update;
+    int m_life;
+    int m_capacity;
+};
+
+
+int main(void)
+{
+    cout &lt;&lt; "output: done!;" &lt;&lt; endl;
+}
+
+// Result
+//
+// 2023-02-01: Runtime 806ms 5.4% Memory 163.3MB 98.46%, https://leetcode.com/problems/lru-cache/submissions/889501213/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>output: done!;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

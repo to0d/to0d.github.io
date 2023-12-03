@@ -1,0 +1,59 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC170310G.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC170310G.cpp</h1>
+            <h3>Set basic usage</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/std-set.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-set</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+int main(void)
+{
+    set&lt;int&gt; s;
+    s.insert(1);
+    s.insert(2);
+    s.insert(3);
+    s.insert(1);
+
+    cout&lt;&lt;"input: s=";
+    outputSet(s);
+    cout&lt;&lt;", max_size="&lt;&lt; s.max_size() ;
+    cout&lt;&lt;", *begin=" &lt;&lt;*s.begin();
+
+    /* error: attempt to dereference a past-the-end iterator. */
+    /*        but no error found in linux                     */
+    // cout&lt;&lt;"end()     :"&lt;&lt;*s.end()        &lt;&lt; endl;
+
+    s.clear();
+
+    cout&lt;&lt;"; output: s=";
+    outputSet(s);
+    cout&lt;&lt;", max_size="&lt;&lt; s.max_size() ;
+    cout&lt;&lt;", *begin=" &lt;&lt;*s.begin();
+    cout&lt;&lt; endl;
+
+    /* error: attempt to dereference a past-the-end iterator. */
+    /*        but no error found in linux                     */
+    // cout&lt;&lt;"bein()    :"&lt;&lt;*s.begin() &lt;&lt; endl;
+    // cout&lt;&lt;"end()     :"&lt;&lt;*s.end() &lt;&lt; endl;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,154 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT065701.cpp (Robot Return to Origin)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT065701.cpp (Robot Return to Origin)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-25</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0657.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0657</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_a9c54168" href="#TOC_HEAD_a9c54168">Problem 0657 <strong>Robot Return to Origin</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/robot-return-to-origin/" target="_blank">https://leetcode.com/problems/robot&ndash;return&ndash;to&ndash;origin/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>56.36</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_c52c7d19" href="#TOC_HEAD_c52c7d19">LT065701.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_6c56a100">LT0657 (name=Robot Return to Origin, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0657.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0657</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_27216410"><a href="https://leetcode.com/problems/robot-return-to-origin/" target="_blank">Robot Return to Origin &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0657.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0657</a></li>
+		<br />
+	</ul>
+	<p>
+		There is a robot starting at the position (0, 0), the origin, on a 2D plane. Given a sequence of its moves, judge if this robot ends up at (0, 0) after it completes its moves.
+	</p>
+	<p>
+		You are given a string moves that represents the move sequence of the robot where moves[i] represents its ith move. Valid moves are &#039;R&#039; (right), &#039;L&#039; (left), &#039;U&#039; (up), and &#039;D&#039; (down).
+	</p>
+	<p>
+		Return true if the robot returns to the origin after it finishes all of its moves, or false otherwise.
+	</p>
+	<p>
+		Note: The way that the robot is &quot;facing&quot; is irrelevant. &#039;R&#039; will always make the robot move to the right once, &#039;L&#039; will always make it move left, etc. Also, assume that the magnitude of the robot&#039;s movement is the same for each move.
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input: moves = "UD"
+Output: true
+Explanation: The robot moves up once, and then down once. All moves have the same magnitude, so it ended up at the origin where it started. Therefore, we return true.	</code></pre>
+</ul>
+	<H3><a name="HEAD_6bc2ece6" href="#TOC_HEAD_6bc2ece6">LT065701.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool judgeCircle(string moves) {
+        int len = moves.size(), x = 0, y = 0;
+        for( int i = 0; i &lt; len ; ++i)
+        {   char c = moves.at(i);
+            switch(c)
+            {   case 'U': ++y; break;
+                case 'D': --y; break;
+                case 'L': --x; break;
+                case 'R': ++x; break;
+            }
+        }
+        return x == 0 && y == 0;
+    }
+};
+
+
+
+void test(string moves)
+{
+    cout &lt;&lt; "input: " &lt;&lt; moves &lt;&lt; "; output: ";
+    bool r = Solution().judgeCircle(moves);
+    cout &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("UD");
+}
+
+// Result
+//
+// 2022-11-19: Runtime 8ms 58.62% Memory 5.9MB 72.41%, https://leetcode.com/problems/robot-return-to-origin/submissions/846379032/
+// 2023-02-25: Runtime 11ms 56.36% Memory 7.9MB 98.48%, https://leetcode.com/problems/robot-return-to-origin/submissions/904433284/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: UD; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC180402A.py</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC180402A.py</h1>
+            <h3>Class Example</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/L180315A.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>L180315A</a>&nbsp;<a href="../tags/Python-Class.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Python-Class</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+
+class Employee:
+
+    empCount = 0
+
+    def __init__(self, name, salary):
+        self.name = name
+        self.salary = salary
+        Employee.empCount += 1
+
+    def displayCount(self):
+        print ("Total Employee: ", Employee.empCount)
+
+    def displayEmployee(self):
+        print ("Name : ", self.name, ", Salary: ", self.salary)
+
+
+print ("Employee.__doc__   :", Employee.__doc__)
+print ("Employee.__name__  :", Employee.__name__)
+print ("Employee.__module__:", Employee.__module__)
+print ("Employee.__bases__ :", Employee.__bases__)
+print ("Employee.__dict__  :", Employee.__dict__)
+
+myObj = Employee('ABC', 123)
+
+myObj.displayCount()
+
+print('output: done.');</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

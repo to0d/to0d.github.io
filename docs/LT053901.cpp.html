@@ -1,0 +1,145 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT053901.cpp (Minimum Time Difference)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT053901.cpp (Minimum Time Difference)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-25</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0539.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0539</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_4f9432ca" href="#TOC_HEAD_4f9432ca">Problem 0539 <strong>Minimum Time Difference</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/minimum-time-difference/" target="_blank">https://leetcode.com/problems/minimum&ndash;time&ndash;difference/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>50.50</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_f10f915c" href="#TOC_HEAD_f10f915c">LT053901.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_4d0198bc">LT0539 (name=Minimum Time Difference, ptag=Leetcode) &nbsp;<a href="../tags/LT0539.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0539</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_50366e0d"><a href="https://leetcode.com/problems/minimum-time-difference/" target="_blank">Minimum Time Difference &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0539.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0539</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_71889aa9" href="#TOC_HEAD_71889aa9">LT053901.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int findMinDifference(vector&lt;string&gt;& timePoints) {
+        std::sort(timePoints.begin(), timePoints.end());
+        int size = timePoints.size(), minDiff = INT_MAX;
+        for(int i = 0; i &lt; size; ++i)
+            minDiff = std::min(minDiff, _diff(timePoints[i], timePoints[(i+1)%size]));
+        return minDiff;
+    }
+
+    int _diff(const string& a, const string& b) {
+        int dh = std::stoi(b.substr(0,2)) - std::stoi(a.substr(0,2));
+        int dm = std::stoi(b.substr(3,2)) - std::stoi(a.substr(3,2));
+        if( dh &lt; 0 || (dh == 0 && dm &lt; 0) )
+        {   dh = -dh;
+            dm = -dm;
+        }
+        int diff = dh*60 + dm;
+        if( diff &gt; 12*60 )
+            diff = 24*60 - diff;;
+        return diff;
+    }
+};
+
+
+
+void test(vector&lt;string&gt; timePoints)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(timePoints);
+    int r = Solution().findMinDifference(timePoints);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test({"23:59","00:00"});
+}
+
+// Result
+//
+// 2023-01-15: Runtime 25ms 30.85% Memory 13.3MB 93.97%, https://leetcode.com/problems/minimum-time-difference/submissions/878445319/
+// 2023-02-25: Runtime 19ms 50.50% Memory 13.2MB 98.57%, https://leetcode.com/problems/minimum-time-difference/submissions/904438775/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [23:59,00:00]; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

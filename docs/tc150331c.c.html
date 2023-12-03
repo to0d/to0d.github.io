@@ -1,0 +1,97 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC150331C.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC150331C.c</h1>
+            <h3>pthread, basic</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/pthread.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>pthread</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;pthread.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;dirent.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;sys/time.h&gt;
+
+void* new_thread(void *arg);
+
+#define TH_COUNT 3
+
+int main( void )
+{
+    pthread_t *thread;
+    int* thId;
+
+    if((( thread = (pthread_t *)malloc(sizeof(pthread_t)*TH_COUNT))==NULL)
+    ||(( thId = (int* )malloc(sizeof(int)*TH_COUNT))==NULL ))
+    {
+        fprintf(stderr,"Out Of Memory!\n");
+        return 1;
+    }
+
+    for(int i = 0; i&lt; TH_COUNT; ++i)
+    {
+        thId[i] = i + 1;
+        if(pthread_create(&thread[i],NULL, new_thread,(void *)&(thId[i]) )!=0 )
+        {
+            fprintf(stderr,"Create Thread[%d] Error��%s\n\a",i,strerror(errno));
+            return 1;
+        }
+
+    }
+
+    for(int i = 0; i&lt; TH_COUNT; ++i)
+    {
+        char* pRet;
+        if( pthread_join(thread[i],(void **)&pRet)!= 0 )
+        {
+            fprintf(stderr,"Create Thread[%d] Error��%s\n\a",i,strerror(errno));
+            return 1;
+        }
+        else
+        {
+            printf("%i: %s\n",i,pRet);
+            free(pRet);
+        }
+    }
+
+    free(thread);
+    free(thId);
+
+    printf("output: done!\n");
+
+    return 0;
+}
+
+void* new_thread(void *arg)
+{
+    int thId = *((int*) arg);
+    char* pRet = (char *) malloc(256);
+    usleep( thId * 100 * 1000);
+    sprintf(pRet,"Thread %d return.",thId);
+    pthread_exit(pRet);
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

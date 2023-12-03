@@ -1,0 +1,192 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Test_rmi_remote_call.java</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Test_rmi_remote_call.java</h1>
+        <h3>RMI远程调用</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2020-06-29</time>
+            <i><a href="../tags/Publication.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Publication</a>&nbsp;<a href="../tags/RMI.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>RMI</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H2><a name="HEAD_d9175b0b" href="#TOC_HEAD_d9175b0b">RMI 实现原理</a></H2>
+	<H3><a name="HEAD_91be87e0" href="#TOC_HEAD_91be87e0">RMI 对象在 Server 端运行</a></H3>
+<blockquote>
+	<p>
+	Add breakpoint at line 29 (函数 doAction)，然后运行，发现 XAction 对象在Server线程里运行
+	</p>
+	<p>
+	</p>
+</blockquote>
+<pre><code>test.rmi.TestRMI at localhost:58904	
+Thread [main] (Running)	
+Daemon System Thread [RMI TCP Connection(2)-192.168.56.1] (Susp
+    TestRMI$XAction.doAction(String) line: 29	
+    NativeMethodAccessorImpl.invoke0(Method, Object, Object[])
+    NativeMethodAccessorImpl.invoke(Object, Object[]) line: 62	
+    DelegatingMethodAccessorImpl.invoke(Object, Object[]) line:
+    Method.invoke(Object, Object...) line: 498	
+    UnicastServerRef.dispatch(Remote, RemoteCall) line: 357	
+    Transport$1.run() line: 200	
+    Transport$1.run() line: 197	
+    AccessController.doPrivileged(PrivilegedExceptionAction&lt;T&gt;,
+    TCPTransport(Transport).serviceCall(RemoteCall) line: 196	
+    TCPTransport.handleMessages(Connection, boolean) line: 573	
+    TCPTransport$ConnectionHandler.run0() line: 835	
+    TCPTransport$ConnectionHandler.lambda$run$0() line: 688	
+    335011686.run() line: not available	
+    AccessController.doPrivileged(PrivilegedAction&lt;T&gt;, AccessCo
+    TCPTransport$ConnectionHandler.run() line: 687	
+    ThreadPoolExecutor.runWorker(ThreadPoolExecutor$Worker) lin
+    ThreadPoolExecutor$Worker.run() line: 624	
+    Thread.run() line: 748	</code></pre>
+	<H3><a name="HEAD_d28ba4fa" href="#TOC_HEAD_d28ba4fa">对象方法检查应该是通过 <strong>网络传输对象序列化、反序列化</strong> 实现</a></H3><ul><a href="../tags/16d3aae.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>序列化</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_5732c28b">refer <a href="../refers/df13d8b169c90d3f4ab06d57042639f1.html" target="_blank">2022&ndash;08&ndash;31 RMI 理解 KKKKKento的博客 CSDN.html</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_f735f9cb" href="#TOC_HEAD_f735f9cb">使用RMI实现远程调用</a></H2><ul><a href="../tags/RMI.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>RMI</a>&nbsp;<a href="../tags/Remote-Call.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Remote-Call</a>&nbsp;</ul>
+	<hr/>
+<pre><code>package test.rmi;
+
+import java.net.MalformedURLException;
+import java.rmi.AlreadyBoundException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
+
+public class Test_rmi_remote_call {
+
+    static interface IAction extends Remote {
+
+        public String doAction(String arg) throws RemoteException;
+
+        public void shutdown() throws RemoteException;
+    }
+
+    static class XAction extends UnicastRemoteObject implements IAction {
+
+        private static final long serialVersionUID = 6530029834182302658L;
+
+        public XAction() throws RemoteException {
+        }
+
+        public String doAction(String arg) throws RemoteException {
+            return "doAction(" + arg + ")";
+        }
+
+        public void shutdown() throws RemoteException {
+            System.out.println("server shutdown");
+            System.exit(0);
+        }
+    }
+
+    static final String REMOTE_ACTION_NAME = "MY_Action";
+
+    static final int REMOTE_PORT = 8888;
+
+    public static void main(String args[]) {
+
+        /***************************************/
+        // Server part
+        /***************************************/
+        try {
+
+            // register remote action
+            LocateRegistry.createRegistry(REMOTE_PORT);
+            Naming.bind(String.format("rmi://localhost:%d/%s", REMOTE_PORT, REMOTE_ACTION_NAME), new XAction());
+            System.out.println("Remote: action register done");
+
+        } catch (RemoteException | AlreadyBoundException | MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        /***************************************/
+        // Client part
+        /***************************************/
+        try {
+            // Get remote action
+            IAction action = (IAction) Naming
+                    .lookup(String.format("rmi://localhost:%d/%s", REMOTE_PORT, REMOTE_ACTION_NAME));
+
+            System.out.println(action.doAction("abc"));
+            action.shutdown();
+
+        } catch (NotBoundException | RemoteException | MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

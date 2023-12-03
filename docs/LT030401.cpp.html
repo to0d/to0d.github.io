@@ -1,0 +1,206 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT030401.cpp (Range Sum Query 2D - Immutable)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT030401.cpp (Range Sum Query 2D - Immutable)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-22</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0304.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0304</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_89919869" href="#TOC_HEAD_89919869">Problem 0304 <strong>Range Sum Query 2D &ndash; Immutable</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/range-sum-query-2d-immutable/" target="_blank">https://leetcode.com/problems/range&ndash;sum&ndash;query&ndash;2d&ndash;immutable/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>22.65</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_147d1678" href="#TOC_HEAD_147d1678">LT030401.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_177426c1">LT0304 (name=Range Sum Query 2D &ndash; Immutable, ptag=Leetcode) &nbsp;<a href="../tags/LT0304.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0304</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_2daab302"><a href="https://leetcode.com/problems/range-sum-query-2d-immutable/" target="_blank">Range Sum Query 2D &ndash; Immutable &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0304.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0304</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a 2D matrix
+		<em>matrix</em> , find the sum of the elements inside the rectangle defined by its upper left corner (
+		<em>row</em> 1,
+		<em>col</em> 1) and lower right corner (
+		<em>row</em> 2,
+		<em>col</em> 2).
+	</p>
+	<p>
+		<img src="https://assets.leetcode.com/uploads/2021/03/14/sum-grid.jpg" />
+	</p>
+	<p>
+		&lt;small&gt;The&amp;nbsp;above&amp;nbsp;rectangle&amp;nbsp;(with&amp;nbsp;the&amp;nbsp;red&amp;nbsp;border)&amp;nbsp;is&amp;nbsp;defined&amp;nbsp;by&amp;nbsp;(row1,&amp;nbsp;col1)&amp;nbsp;=
+		&lt;b&gt;(2,&amp;nbsp;1)&lt;/b&gt;
+		and&amp;nbsp;(row2,&amp;nbsp;col2)&amp;nbsp;=
+		&lt;b&gt;(4,&amp;nbsp;3)&lt;/b&gt;
+		,&amp;nbsp;which&amp;nbsp;contains&amp;nbsp;sum&amp;nbsp;=
+		&lt;b&gt;8&lt;/b&gt;
+		.
+		&lt;/small&gt;
+	</p>
+	<p>
+		<strong>Example:</strong>
+	</p>
+	<pre><code>Given matrix = [
+[3, 0, 1, 4, 2],
+[5, 6, 3, 2, 1],
+[1, 2, 0, 1, 5],
+[4, 1, 0, 1, 7],
+[1, 0, 3, 0, 5]
+]
+
+sumRegion(2, 1, 4, 3) -&gt; 8
+sumRegion(1, 1, 2, 2) -&gt; 11
+sumRegion(1, 2, 2, 4) -&gt; 12	</code></pre>
+	<p>
+		<strong>Note:</strong>
+	</p>
+	<ol>
+		<li>You may assume that the matrix does not change.</li>
+		<li><p>
+		There are many calls to
+		<em>sumRegion</em> function.
+		<p></li>
+		<li><p>
+		You may assume that
+		<em>row</em> 1 &le;
+		<em>row</em> 2 and
+		<em>col</em> 1 &le;
+		<em>col</em> 2.
+		<p></li>
+	</ol>
+</ul>
+	<H3><a name="HEAD_8dd0dc5" href="#TOC_HEAD_8dd0dc5">LT030401.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class NumMatrix {
+public:
+    NumMatrix(vector&lt;vector&lt;int&gt;&gt; &matrix) {
+        row = matrix.size();
+        column = row == 0 ? 0 : matrix[0].size();
+        for( int r = 0; r &lt; row; ++r )
+        {   int lineSum = 0;
+            vector&lt;int&gt;& line = matrix[r];
+            for( int c = 0 ; c &lt; column; ++c )
+            {   lineSum += line[c];
+                sumMatrix.push_back( lineSum + getSum( r-1, c));
+            }
+        }
+    }
+
+    int sumRegion(int row1, int col1, int row2, int col2) {
+        return getSum(row2, col2) + getSum(row1-1, col1-1) - getSum(row2, col1-1) - getSum(row1-1, col2);
+    }
+
+    int getSum(int r, int c){
+        return (r &lt; 0 || c &lt; 0 ) ? 0 : sumMatrix[r*column + c];
+    }
+
+    vector&lt;int&gt; sumMatrix;
+    int row;
+    int column;
+};
+
+
+
+vector&lt;vector&lt;int&gt;&gt; matrix = {{3, 0, 1, 4, 2}, {5, 6, 3, 2, 1}, {1, 2, 0, 1, 5}, {4, 1, 0, 1, 7}, {1, 0, 3, 0, 5}};
+NumMatrix numMatrix(matrix);
+
+void test(int row1, int col1, int row2, int col2)
+{
+    cout &lt;&lt; "input: row1=" &lt;&lt; row1 &lt;&lt; ", col1=" &lt;&lt; col1 &lt;&lt; ", row2=" &lt;&lt; row2 &lt;&lt; ", col2=" &lt;&lt; col2;
+    int r = numMatrix.sumRegion(row1, col1, row2, col2);
+    cout &lt;&lt; "; output: ";
+    cout &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(2, 1, 4, 3);
+//test(1, 1, 2, 2);
+//test(1, 2, 2, 4);
+}
+
+
+// Result
+//
+// 2022-11-16: Runtime 926ms 7.67% Memory 146.3MB 6.33%, https://leetcode.com/problems/range-sum-query-2d-immutable/submissions/844634754/
+// 2023-02-22: Runtime 499ms 22.65% Memory 146.2MB 6.85%, https://leetcode.com/problems/range-sum-query-2d-immutable/submissions/902739782/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: row1=2, col1=1, row2=4, col2=3; output: 8;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

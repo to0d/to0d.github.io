@@ -1,0 +1,45 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Compiler.h</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>Compiler.h</h1>
+            <h3></h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> </li><li><strong>BLOCK TAGS: </strong> <a href="../tags/LLVM_FALLTHROUGH.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM_FALLTHROUGH</a>&nbsp;<a href="../tags/fallthrough.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>fallthrough</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    <ul>
+	<li><a name="HEAD_HIDDEN_90b26ec2">LLVM_FALLTHROUGH &nbsp;<a href="../tags/LLVM_FALLTHROUGH.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM_FALLTHROUGH</a></li>
+	<br />
+	<pre><code>/// LLVM_FALLTHROUGH - Mark fallthrough cases in switch statements.
+#if defined(__cplusplus) && __cplusplus &gt; 201402L && LLVM_HAS_CPP_ATTRIBUTE(fallthrough)
+#define LLVM_FALLTHROUGH [[fallthrough]]
+#elif LLVM_HAS_CPP_ATTRIBUTE(gnu::fallthrough)
+#define LLVM_FALLTHROUGH [[gnu::fallthrough]]
+#elif __has_attribute(fallthrough)
+#define LLVM_FALLTHROUGH __attribute__((fallthrough))
+#elif LLVM_HAS_CPP_ATTRIBUTE(clang::fallthrough)
+#define LLVM_FALLTHROUGH [[clang::fallthrough]]
+#else
+#define LLVM_FALLTHROUGH
+#endif	</code></pre>
+	<ul>
+		<li><a name="HEAD_HIDDEN_2b383c6a">LLVM_FALLTHROUGH (ptag=LLVM&ndash;Macro) &nbsp;<a href="../tags/LLVM_FALLTHROUGH.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM_FALLTHROUGH</a>&nbsp;<a href="../tags/fallthrough.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>fallthrough</a>&nbsp;<a href="../tags/LLVM-Macro.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-Macro</a></li>
+	</ul>
+</ul>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

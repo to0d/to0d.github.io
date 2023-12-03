@@ -1,0 +1,95 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>gdb-all-stop (3)</title>
+        <link href="../docs/img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="../docs/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="../docs/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="../docs/css/style.css">
+        <link rel="stylesheet" type="text/css" href="../docs/css/blog_all.css">
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="../docs/img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="../docs/about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span></a></li>
+                <li><a href="../docs/docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span> </a></li>
+                <li><a href="../docs/tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span> </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <H2>gdb-all-stop (3)</H2><table id="btrl">
+<tr><td id="btrc1">auto</td><td id="btrc2">&nbsp;<font size="2"><strong><a href="gdb.html" target="_blank"><i class="fa fa-tags fa-fw"></i><span>gdb</span></a></strong></font></td></tr>
+<tr><td id="btrc1">parent</td><td id="btrc2">&nbsp;<font size="2"><strong><a href="gdb-mode.html" target="_blank"><i class="fa fa-tags fa-fw"></i><span>gdb-mode</span></a></strong></font></td></tr>
+</table>
+
+        <hr/>
+        <div class="entry-content">
+<H3>Notes (1)</H3><br/><ol>
+<li><a href="../docs/gdb-user-manual.html" target="_blank">GDB User Manual</a>&nbsp;<font size="2" color="red">Debugging with GDB | todo(15)</font>&nbsp;<a href="https://sourceware.org/gdb/current/onlinedocs/gdb.html/" title="https://sourceware.org/gdb/current/onlinedocs/gdb.html/" target="_blank"><font color="red"><i>link</i></font></a>&nbsp;<font size="2"><strong><a href="gdb.html" target="_blank"><i class="fa fa-tags fa-fw"></i><span>gdb</span></a></strong></font>&nbsp;<font size="2"><strong><a href="gdb-doc.html" target="_blank"><i class="fa fa-tags fa-fw"></i><span>gdb-doc</span></a></strong></font>
+<ul>
+<li><a href="../docs/gdb-user-manual.html#HEAD_f5435ad4" target="_blank">5.5.1 All&ndash;Stop Mode</a>
+</ul>
+</ol><br/>
+<H3><a href="C-Code.html" target="_blank">C-Code</a> (1)</H3><br/><ol>
+<li><a href="../docs/tc170514c.c.html" target="_blank">2023-10-02 TC170514C.c</a>&nbsp;<font size="2" color="red">ptrace: set breakpoint in multi-thread</font>&nbsp;<font size="2"><strong><a href="TCC.html" target="_blank"><i class="fa fa-tags fa-fw"></i><span>TCC</span></a></strong></font>&nbsp;<font size="2"><strong><a href="ptrace.html" target="_blank"><i class="fa fa-tags fa-fw"></i><span>ptrace</span></a></strong></font>
+<ul>
+<li><a href="../docs/tc170514c.c.html#HEAD_4ae896cb" target="_blank">Debug multi&ndash;thread program in <strong>all&ndash;stop</strong> mode</a>
+<li><a href="../docs/tc170514c.c.html#TC170514C-1" target="_blank">So, by default, the other threads will <font color="red">not be stopped</font> when a thread hit a breakpoint, the gdb need to do something to stop other threads in <strong>all&ndash;stop</strong> mode</a>
+</ul>
+</ol><br/>
+<H3><a href="TOPIC.html" target="_blank">TOPIC</a> (1)</H3><br/><ol>
+<li><a href="../docs/topic-how-gdb-support-multi-thread-debugging.html" target="_blank">2023-09-25 DBG: How gdb support multi-thread debugging</a>&nbsp;<font size="2"><strong><a href="Thread-Debug.html" target="_blank"><i class="fa fa-tags fa-fw"></i><span>Thread-Debug</span></a></strong></font>&nbsp;<font size="2"><strong><a href="Topic.html" target="_blank"><i class="fa fa-tags fa-fw"></i><span>Topic</span></a></strong></font>&nbsp;<font size="2"><strong><a href="gdb.html" target="_blank"><i class="fa fa-tags fa-fw"></i><span>gdb</span></a></strong></font>
+<ul>
+<li><a href="../docs/topic-how-gdb-support-multi-thread-debugging.html#HEAD_HIDDEN_c5e0cf4" target="_blank">By deafult, the gdb is in <strong>gdb&ndash;all&ndash;stop</strong> mode, all threads will be stopped once one breakpoint is hit in one thread.</a>
+<li><a href="../docs/topic-how-gdb-support-multi-thread-debugging.html#HEAD_f78f97c8" target="_blank">How gdb suspend other threads in <strong>gdb&ndash;all&ndash;stop</strong> mode</a>&nbsp;<font size="2"><strong><a href="Thread-Debug.html" target="_blank"><i class="fa fa-tags fa-fw"></i><span>Thread-Debug</span></a></strong></font>
+</ul>
+</ol><br/>
+
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="jquery-2.js"></script>
+<script src="bootstrap.js"></script>
+
+</body>
+</html>

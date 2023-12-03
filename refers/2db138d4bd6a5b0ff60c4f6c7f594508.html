@@ -1,0 +1,1445 @@
+<html>
+    <head>
+        <meta http-equiv="Cache-Control" content="no-siteapp"></meta>
+        <title>Test&nbsp;Linux性能评测工具之一&nbsp;nmon篇&nbsp;我本书生&nbsp;博客频道&nbsp;CSDN&nbsp;NET</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+        <meta name="description" content="using System;&#160; &#160; using System.Collections.Generic;&#160; &#160; using System.Linq;&#160; &#160; using System.Text;&#160; &#160;&#160;&#160; &#160; namespace Tools&#160; &#160; {&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160; public static class PY&#160; &#160;&#160;&#160;&#160;&#160; {"></meta>
+    </head>
+    <body>
+        <body>Original&nbsp;Link:&nbsp;
+            <b >
+                <font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2016. All rights reserved - to0d@outlook.com, at Thu Feb 02 11:10:31 CST 2017</font>
+            </b>
+            <br>
+
+            <a href="http://blog.csdn.net/stanjiang2010/article/details/5655150" target="_blank">
+                <font color="red" size="3">Linux性能评测工具之一：nmon篇&nbsp;&nbsp;&ndash;&nbsp;我本书生
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ndash;&nbsp;博客频道&nbsp;&ndash;&nbsp;CSDN.NET</font>
+            </a>
+            <p></p>
+        </body>
+        <div id="container">
+            <div id="body">
+                <div id="main">
+                    <div class="main">
+                        <div id="article_details" class="details">
+                            <div id="article_content" class="article_content">
+                                <h1 style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21.25pt; text-indent: -21.25pt; line-height: 150%;">
+                                    <a name="_Toc7175"></a>
+                                    <span style="font-weight: bold; font-size: 22pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">1.&nbsp;</span>
+                                    <span style="font-weight: bold; font-size: 22pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <a name="_Toc26217"></a>
+                                        <a name="_Toc24703"></a>
+                                        <a name="_Toc243303759"></a>
+                                        <a name="_Toc506972944">nmon
+                                            <span style="font-family: 宋体;">概述</span>
+                                        </a>
+                                    </span>
+                                    <span style="font-weight: bold; font-size: 22pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </h1>
+                                <h2 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <a name="_Toc23866"></a>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: 'Arial'; mso-spacerun: 'yes';">1.1.&nbsp;</span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                        <a name="_Toc243303760">
+                                            <span style="font-family: 黑体;">概述</span>
+                                        </a>
+                                    </span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                </h2>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; text-indent: 21pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">nmon
+                                        <span style="font-family: 宋体;">是收集AIX或Linux主机的性能数据并分析的工具，使用简单易用。主要有两个，一个是nmon采集数据的工具，一般名称为nmon_**，例如nmon_aix5.3，另一个是分析结果的工具，它是一个excel的文件，名称为：nmon&nbsp;analyser&nbsp;v33A.xls。</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; text-indent: 21pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">nmon
+                                        <span style="font-family: 宋体;">在一个屏幕上显示所有重要的性能优化信息，并动态地对其进行更新。还可以将相同的数据捕获到一个文本文件，便于以后对报告进行分析和绘制图形。</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; text-indent: 21pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">nmon_analyser&nbsp;
+                                        <span style="font-family: 宋体;">工具以&nbsp;NMON&nbsp;性能工具生成的文件作为输入，然后将它们转换为&nbsp;Microsoft&nbsp;Excel&nbsp;电子表格，并自动地生成相应的图形。</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; text-indent: 21pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">nmon&nbsp;
+                                        <span style="font-family: 宋体;">工具可以为&nbsp;AIX&nbsp;和&nbsp;Linux&nbsp;性能专家提供监视和分析性能数据的功能，其中包括：&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; margin-left: 21pt; text-indent: -21pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">CPU&nbsp;
+                                        <span style="font-family: 宋体;">使用率&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; margin-left: 21pt; text-indent: -21pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">内存使用情况&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; margin-left: 21pt; text-indent: -21pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">内核统计信息和运行队列信息&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; margin-left: 21pt; text-indent: -21pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">磁盘&nbsp;I/O&nbsp;速度、传输和读/写比率&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; margin-left: 21pt; text-indent: -21pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">文件系统中的可用空间&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; margin-left: 21pt; text-indent: -21pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">磁盘适配器&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; margin-left: 21pt; text-indent: -21pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">网络&nbsp;I/O&nbsp;速度、传输和读/写比率&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; margin-left: 21pt; text-indent: -21pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">页面空间和页面速度&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; margin-left: 21pt; text-indent: -21pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">消耗资源最多的进程&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; margin-left: 21pt; text-indent: -21pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">计算机详细信息和资源&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; text-indent: 21pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">IBM&nbsp;
+                                        <span style="font-family: 宋体;">没有提供对该工具的正式支持，并且您在使用它的时候必须自己承担相应的风险，但是您可以从中获得大量有价值的性能统计信息。其中，nmon&nbsp;for&nbsp;linux版本已经在</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">2009</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">年7月27日开放源码。</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="padding-right: 15pt; margin-top: 0pt; padding-left: 15pt; margin-bottom: 0pt; padding-bottom: 7pt; line-height: 16.5pt; padding-top: 3pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <h2 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <a name="_Hlk184012655"></a>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: 'Arial'; mso-spacerun: 'yes';">1.2.&nbsp;</span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                        <a name="_Toc27047"></a>
+                                        <a name="_Toc3702"></a>
+                                        <a name="_Toc243303761">
+                                            <span style="font-family: 黑体;">适用范围</span>
+                                        </a>
+                                    </span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                </h2>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">本文档为使用nmon作为性能测试中监控linux服务器的应用，提供使用规范和帮助。</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <h2 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <a name="_Toc2797"></a>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: 'Arial'; mso-spacerun: 'yes';">1.3.&nbsp;</span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                        <a name="_Toc243303762"></a>
+                                        <a name="_Toc14504"></a>
+                                        <a name="_Toc19761">
+                                            <span style="font-family: 黑体;">词汇表</span>
+                                        </a>
+                                    </span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                </h2>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <table style="padding-right: 5.4pt; padding-left: 5.4pt; padding-bottom: 0pt; padding-top: 0pt; border-collapse: collapse; mso-table-layout-alt: fixed;" border="0" align="center">
+                                    <tbody>
+                                        <tr>
+                                            <td style="padding-right: 5.4pt; padding-left: 5.4pt; background: #a6a6a6; padding-bottom: 0pt; width: 216.1pt; padding-top: 0pt; border: #000000 0.5pt solid;" width="288" valign="top">
+                                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-align: left;">
+                                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">词汇</span>
+                                                    <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                </p>
+                                            </td>
+                                            <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: #000000 0.5pt solid; padding-left: 5.4pt; background: #a6a6a6; padding-bottom: 0pt; border-left: medium none; width: 192.75pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="257" valign="top">
+                                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-align: left;">
+                                                    <span style="font-size: 12pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                        <span style="font-family: 宋体;">解释</span>
+                                                    </span>
+                                                    <span style="font-size: 12pt; font-family: 'Times New Roman';"></span>
+                                                    <span style="font-size: 10pt; font-family: 'Times New Roman';"></span>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: #000000 0.5pt solid; width: 216.1pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="288" valign="top">
+                                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-align: left;">
+                                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman';">N</span>
+                                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">mon</span>
+                                                    <span style="font-size: 12pt; font-family: '宋体';"></span>
+                                                </p>
+                                            </td>
+                                            <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 192.75pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="257" valign="top">
+                                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-align: left;">
+                                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                        <span style="font-family: 宋体;">性能数据收集分析工具</span>
+                                                    </span>
+                                                    <span style="font-size: 10pt; font-family: '宋体';"></span>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: #000000 0.5pt solid; width: 216.1pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="288" valign="top">
+                                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-align: left;">
+                                                    <span style="font-size: 12pt; font-family: '宋体';">N</span>
+                                                    <span style="font-size: 12pt; font-family: '宋体'; mso-spacerun: 'yes';">mon&nbsp;</span>
+                                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">analyser</span>
+                                                    <span style="font-size: 12pt; font-family: '宋体';"></span>
+                                                </p>
+                                            </td>
+                                            <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 192.75pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="257" valign="top">
+                                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-align: left;">
+                                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                        <span style="font-family: 宋体;">性能数据分析工具，excel文件</span>
+                                                    </span>
+                                                    <span style="font-size: 10pt; font-family: '宋体';"></span>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: #000000 0.5pt solid; width: 216.1pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="288" valign="top">
+                                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-align: left;">
+                                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">nmon_x86_sles10</span>
+                                                    <span style="font-size: 12pt; font-family: '宋体';"></span>
+                                                </p>
+                                            </td>
+                                            <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 192.75pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="257" valign="top">
+                                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-align: left;">
+                                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman';">N</span>
+                                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">mon
+                                                        <span style="font-family: 宋体;">在</span>
+                                                    </span>
+                                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">x86_sles10</span>
+                                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                        <span style="font-family: 宋体;">下二进制执行文件</span>
+                                                    </span>
+                                                    <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <h2 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <a name="_Toc243303763"></a>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: 'Arial'; mso-spacerun: 'yes';">1.4.&nbsp;</span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 黑体;">参考资料</span>
+                                    </span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                </h2>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">N</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">mon
+                                        <span style="font-family: 宋体;">在IBM的官方网站</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span>
+                                        <a href="http://www.ibm.com/developerworks/wikis/display/WikiPtype/nmon">
+                                            <span class="15" style="font-size: 10pt; color: #0000ff; font-family: 'Times New Roman'; text-decoration: underline; mso-spacerun: 'yes';">http://www.ibm.com/developerworks/wikis/display/WikiPtype/nmon</span>
+                                        </a>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">nmon&nbsp;for&nbsp;linux
+                                        <span style="font-family: 宋体;">的官方网站</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span>
+                                        <a href="http://nmon.sourceforge.net/pmwiki.php">
+                                            <span class="15" style="font-size: 10pt; color: #0000ff; font-family: 'Times New Roman'; text-decoration: underline; mso-spacerun: 'yes';">http://nmon.sourceforge.net/pmwiki.php</span>
+                                        </a>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">文章一：《nmon&nbsp;性能：分析&nbsp;AIX&nbsp;和&nbsp;Linux&nbsp;性能的免费工具》</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span>
+                                        <a href="http://www.ibm.com/developerworks/cn/aix/library/analyze_aix/">
+                                            <span class="15" style="font-size: 10pt; color: #0000ff; font-family: 'Times New Roman'; text-decoration: underline; mso-spacerun: 'yes';">http://www.ibm.com/developerworks/cn/aix/library/analyze_aix/</span>
+                                        </a>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">文章二：《nmon&nbsp;analyser&mdash;&mdash;生成&nbsp;AIX&nbsp;性能报告的免费工具》</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span>
+                                        <a href="http://www.ibm.com/developerworks/cn/aix/library/nmon_analyser/index.html">
+                                            <span class="15" style="font-size: 10pt; color: #0000ff; font-family: 'Times New Roman'; text-decoration: underline; mso-spacerun: 'yes';">http://www.ibm.com/developerworks/cn/aix/library/nmon_analyser/index.html</span>
+                                        </a>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">：</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <h2 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <a name="_Toc243303764"></a>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: 'Arial'; mso-spacerun: 'yes';">1.5.&nbsp;</span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 黑体;">获取该工具</span>
+                                        &nbsp;
+                                    </span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                </h2>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">下载nmon工具的可执行文件</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">nmon_x86_sles10</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">。&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span>
+                                        <a href="http://nmon.sourceforge.net/pmwiki.php?n=Site.Download">
+                                            <span class="15" style="font-size: 10pt; color: #0000ff; font-family: 'Times New Roman'; text-decoration: underline; mso-spacerun: 'yes';">http://nmon.sourceforge.net/pmwiki.php?n=Site.Download</span>
+                                        </a>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">也可以下载源码自己编译特定的版本。（推荐这个）</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span>
+                                        <a href="http://nmon.sourceforge.net/pmwiki.php?n=Site.CompilingNmon">
+                                            <span class="15" style="font-size: 10pt; color: #0000ff; font-family: 'Times New Roman'; text-decoration: underline; mso-spacerun: 'yes';">http://nmon.sourceforge.net/pmwiki.php?n=Site.CompilingNmon</span>
+                                        </a>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">下载</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">nmon&nbsp;Analyser&nbsp;V3.3&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span>
+                                        <a href="http://www.ibm.com/developerworks/wikis/display/Wikiptype/nmonanalyser">
+                                            <span class="15" style="font-size: 10pt; color: #0000ff; font-family: 'Times New Roman'; text-decoration: underline; mso-spacerun: 'yes';">http://www.ibm.com/developerworks/wikis/display/Wikiptype/nmonanalyser</span>
+                                        </a>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">下载</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">nmon&nbsp;Consolidator</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span>
+                                        <a href="http://www.ibm.com/developerworks/wikis/display/WikiPtype/nmonconsolidator">
+                                            <span class="15" style="font-size: 10pt; color: #0000ff; font-family: 'Times New Roman'; text-decoration: underline; mso-spacerun: 'yes';">http://www.ibm.com/developerworks/wikis/display/WikiPtype/nmonconsolidator</span>
+                                        </a>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">ibm
+                                        <span style="font-family: 宋体;">的其他性能测试工具</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span>
+                                        <a href="http://www.ibm.com/developerworks/wikis/display/WikiPtype/Performance+Other+Tools">
+                                            <span class="15" style="font-size: 10pt; color: #0000ff; font-family: 'Times New Roman'; text-decoration: underline; mso-spacerun: 'yes';">http://www.ibm.com/developerworks/wikis/display/WikiPtype/Performance+Other+Tools</span>
+                                        </a>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <h1 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <a name="_Toc243303765"></a>
+                                    <span style="font-weight: bold; font-size: 22pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">2.&nbsp;</span>
+                                    <span style="font-weight: bold; font-size: 22pt; font-family: '宋体'; mso-spacerun: 'yes';">nmon&nbsp;</span>
+                                    <span style="font-weight: bold; font-size: 22pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </h1>
+                                <h2 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <a name="_Toc243303766"></a>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: 'Arial'; mso-spacerun: 'yes';">2.1.&nbsp;</span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 黑体;">安装</span>
+                                    </span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: 'Arial'; mso-spacerun: 'yes';"></span>
+                                </h2>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">该工具是一个独立的二进制文件（不同的&nbsp;AIX&nbsp;或&nbsp;Linux&nbsp;版本中该文件也有所不同）。安装过程非常简单：&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">1.&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">将&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">nmon_x86_sles10</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">文件复制到计算机，rz</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&mdash;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">&gt;
+                                        <span style="font-family: 宋体;">在弹出框选择</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">nmon_x86_sles10</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">。</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">2.&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">修改</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">nmon_x86_sles10</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">的文件权限，chmod&nbsp;777&nbsp;./</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">nmon_x86_sles10</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">3.&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">要启动&nbsp;nmon&nbsp;工具，输入&nbsp;./</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;nmon_x86_sles10</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">。&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <h2 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <a name="_Toc243303767"></a>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: 'Arial'; mso-spacerun: 'yes';">2.2.&nbsp;</span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 黑体;">运行</span>
+                                    </span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                </h2>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">N</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">mon
+                                        <span style="font-family: 宋体;">可以交互式运行</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">启动该工具&nbsp;./</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;nmon_x86_sles10</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">使用单键命令来查看您所需要的数据。例如，要获取&nbsp;CPU、内存和磁盘统计信息，启动&nbsp;nmon&nbsp;并输入：&nbsp;c&nbsp;m&nbsp;d&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">获取相关的帮助信息，按&nbsp;h&nbsp;键。</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">使用下面这些键来切换显示状态：</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';">c&nbsp;=&nbsp;CPU</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">l&nbsp;=&nbsp;CPU&nbsp;Long&ndash;term&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;&nbsp;=&nbsp;Faster&nbsp;screen&nbsp;updates&nbsp;&nbsp;&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';">m&nbsp;=&nbsp;Memory</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">j&nbsp;=&nbsp;Filesystems</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">+&nbsp;=&nbsp;Slower&nbsp;screen&nbsp;updates&nbsp;&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';">d&nbsp;=&nbsp;Disks</span>
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';">n&nbsp;=&nbsp;Network</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">V&nbsp;=&nbsp;Virtual&nbsp;Memory&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';">r&nbsp;=&nbsp;Resource</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">N&nbsp;=&nbsp;NFS</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">v&nbsp;=&nbsp;Verbose&nbsp;hints&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">k&nbsp;=&nbsp;kernel</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';">t&nbsp;=&nbsp;Top&ndash;processes</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';">.&nbsp;=&nbsp;only&nbsp;busy&nbsp;disks/procs&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">h&nbsp;=&nbsp;more&nbsp;options</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';">q&nbsp;=&nbsp;Quit&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <h2 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <a name="_Toc243303768"></a>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: 'Arial'; mso-spacerun: 'yes';">2.3.&nbsp;</span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 黑体;">捕获数据到文件</span>
+                                    </span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: 'Arial'; mso-spacerun: 'yes';"></span>
+                                </h2>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">捕获数据到文件，只要运行带&nbsp;&ndash;f&nbsp;标志的&nbsp;nmon&nbsp;命令。执行nmon&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">f&nbsp;***
+                                        <span style="font-family: 宋体;">后，nmon&nbsp;将转为后台运行。要查看该进程是否仍在运行，可以输入：&nbsp;ps&nbsp;&ndash;ef&nbsp;|&nbsp;grep&nbsp;nmon。</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">示例：</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">每1秒捕获数据快照，捕获20次</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">nmon&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">f&nbsp;&ndash;s&nbsp;1&nbsp;&ndash;c&nbsp;20</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">每30秒捕获数据快照，捕获120次，包含进程信息</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">nmon&nbsp;&ndash;f</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">t</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&ndash;s&nbsp;30&nbsp;&ndash;c&nbsp;120&nbsp;</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">命令将在当前目录中创建输出文件，其名称为：</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: '宋体'; mso-spacerun: 'yes';">&nbsp;&lt;hostname&gt;_date_time.nmo</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">n
+                                        <span style="font-family: 宋体;">。该文件采用逗号分隔值&nbsp;(CSV)&nbsp;的格式，并且可以将其直接导入到电子表格中，可进行分析和绘制图形</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <h2 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: 'Arial'; mso-spacerun: 'yes';">2.4.&nbsp;</span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: 'Arial'; mso-spacerun: 'yes';">N</span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';">mon
+                                        <span style="font-family: 黑体;">界面</span>
+                                    </span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                </h2>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">进入界面</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <img src="file:///C:/DOCUME~1/STANJI~1/LOCALS~1/Temp/ksohtml/wps_clip_image-3222.png" alt="" width="543" height="258"></img>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">监控界面一</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <img src="file:///C:/DOCUME~1/STANJI~1/LOCALS~1/Temp/ksohtml/wps_clip_image-3234.png" alt="" width="554" height="537"></img>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">监控界面二</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <img src="file:///C:/DOCUME~1/STANJI~1/LOCALS~1/Temp/ksohtml/wps_clip_image-3246.png" alt="" width="555" height="582"></img>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <h1 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-weight: bold; font-size: 22pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">3.&nbsp;</span>
+                                    <span style="font-weight: bold; font-size: 22pt; font-family: '宋体'; mso-spacerun: 'yes';">n</span>
+                                    <span style="font-weight: bold; font-size: 22pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">mon</span>
+                                    <span style="font-weight: bold; font-size: 22pt; font-family: '宋体'; mso-spacerun: 'yes';">_</span>
+                                    <span style="font-weight: bold; font-size: 22pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">analyser</span>
+                                    <span style="font-weight: bold; font-size: 22pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </h1>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">nmon_analyser&nbsp;
+                                        <span style="font-family: 宋体;">工具以&nbsp;NMON&nbsp;性能工具生成的文件作为输入，然后将它们转换为&nbsp;Microsoft&nbsp;Excel&nbsp;电子表格，并自动地生成相应的图形。</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; color: #ff0000; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">使用wps未能正确执行脚本生成*.xls文件。</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">建议Excel&amp;trade;&nbsp;2000&nbsp;或更高版本，必须在打开</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">nmon_analyser</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">选择启用宏。</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">nmon_analyser&nbsp;
+                                        <span style="font-family: 宋体;">工具设计用于最新版本的&nbsp;nmon，但出于向后兼容性的考虑，也使用旧版本对其进行了测试。每当在对&nbsp;nmon&nbsp;进行更新时，同时也将对该工具进行更新，</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <h1 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <a name="_Toc243303771"></a>
+                                    <span style="font-weight: bold; font-size: 22pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">4.&nbsp;</span>
+                                    <span style="font-weight: bold; font-size: 22pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">附录</span>
+                                    </span>
+                                    <span style="font-weight: bold; font-size: 22pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </h1>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <h2 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <a name="_Toc243303772"></a>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: 'Arial'; mso-spacerun: 'yes';">4.1.&nbsp;</span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: 'Arial'; mso-spacerun: 'yes';">N</span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';">mon
+                                        <span style="font-family: 黑体;">帮助信息</span>
+                                    </span>
+                                    <span style="font-weight: bold; font-size: 16pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                </h2>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">参阅&nbsp;nmon&nbsp;</span>
+                                    </span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">h</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Hint:&nbsp;nmon_x86_sles10&nbsp;[&ndash;h]&nbsp;[&ndash;s&nbsp;&lt;seconds&gt;]&nbsp;[&ndash;c&nbsp;&lt;count&gt;]&nbsp;[&ndash;f&nbsp;&ndash;d&nbsp;&lt;disks&gt;&nbsp;&ndash;t&nbsp;&ndash;r&nbsp;&lt;name&gt;]&nbsp;[&ndash;x]</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;h&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FULL&nbsp;help&nbsp;information</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Interactive&ndash;Mode</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">:</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">read&nbsp;startup&nbsp;banner&nbsp;and&nbsp;type:&nbsp;&quot;h&quot;&nbsp;once&nbsp;it&nbsp;is&nbsp;running</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">For&nbsp;</span>
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Data&ndash;Collect&ndash;Mode&nbsp;(&ndash;f)</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;f&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;spreadsheet&nbsp;output&nbsp;format&nbsp;[note:&nbsp;default&nbsp;&ndash;s300&nbsp;&ndash;c288]</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">optional</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;s&nbsp;&lt;seconds&gt;&nbsp;&nbsp;between&nbsp;refreshing&nbsp;the&nbsp;screen&nbsp;[default&nbsp;2]</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;c&nbsp;&lt;number&gt;&nbsp;&nbsp;&nbsp;of&nbsp;refreshes&nbsp;[default&nbsp;millions]</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;d&nbsp;&lt;disks&gt;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;increase&nbsp;the&nbsp;number&nbsp;of&nbsp;disks&nbsp;[default&nbsp;256]</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;spreadsheet&nbsp;includes&nbsp;top&nbsp;processes</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;capacity&nbsp;planning&nbsp;(15&nbsp;min&nbsp;for&nbsp;1&nbsp;day&nbsp;=&nbsp;&ndash;fdt&nbsp;&ndash;s&nbsp;900&nbsp;&ndash;c&nbsp;96)</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Version&nbsp;&ndash;&nbsp;nmon&nbsp;12c</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">For&nbsp;</span>
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Interactive&ndash;Mode</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;s&nbsp;&lt;seconds&gt;&nbsp;&nbsp;between&nbsp;refreshing&nbsp;the&nbsp;screen&nbsp;[default&nbsp;2]</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;c&nbsp;&lt;number&gt;&nbsp;&nbsp;&nbsp;of&nbsp;refreshes&nbsp;[default&nbsp;millions]</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;g&nbsp;&lt;filename&gt;&nbsp;User&nbsp;Defined&nbsp;Disk&nbsp;Groups&nbsp;[hit&nbsp;g&nbsp;to&nbsp;show&nbsp;them]</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ndash;&nbsp;file&nbsp;=&nbsp;on&nbsp;each&nbsp;line:&nbsp;group_name&nbsp;&lt;disks&nbsp;list&gt;&nbsp;sapce&nbsp;separated</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ndash;&nbsp;like:&nbsp;database&nbsp;sdb&nbsp;sdc&nbsp;sdd&nbsp;sde</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ndash;&nbsp;upto&nbsp;32&nbsp;disk&nbsp;groups,&nbsp;disks&nbsp;can&nbsp;appear&nbsp;more&nbsp;than&nbsp;once</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;b&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;black&nbsp;and&nbsp;white&nbsp;[default&nbsp;is&nbsp;colour]</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">example:&nbsp;nmon_x86_sles10&nbsp;&ndash;s&nbsp;1&nbsp;&ndash;c&nbsp;100</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">For</span>
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;Data&ndash;Collect&ndash;Mode</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;=&nbsp;spreadsheet&nbsp;format&nbsp;(comma&nbsp;separated&nbsp;values)</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Note:&nbsp;use&nbsp;only&nbsp;one&nbsp;of&nbsp;f,F,z,x&nbsp;or&nbsp;X&nbsp;and&nbsp;make&nbsp;it&nbsp;the&nbsp;first&nbsp;argument</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;f&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;spreadsheet&nbsp;output&nbsp;format&nbsp;[note:&nbsp;default&nbsp;&ndash;s300&nbsp;&ndash;c288]</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;output&nbsp;file&nbsp;is&nbsp;&lt;hostname&gt;_YYYYMMDD_HHMM.nmon</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;F&nbsp;&lt;filename&gt;&nbsp;same&nbsp;as&nbsp;&ndash;f&nbsp;but&nbsp;user&nbsp;supplied&nbsp;filename</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;r&nbsp;&lt;runname&gt;&nbsp;&nbsp;goes&nbsp;into&nbsp;spreadsheet&nbsp;file&nbsp;[default&nbsp;hostname]</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include&nbsp;top&nbsp;processes&nbsp;in&nbsp;the&nbsp;output</span>
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;T&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;&ndash;t&nbsp;plus&nbsp;saves&nbsp;command&nbsp;line&nbsp;arguments&nbsp;in&nbsp;UARG&nbsp;section</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;s&nbsp;&lt;seconds&gt;&nbsp;&nbsp;between&nbsp;snap&nbsp;shots</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;c&nbsp;&lt;number&gt;&nbsp;&nbsp;&nbsp;of&nbsp;refreshes</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;d&nbsp;&lt;disks&gt;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;increase&nbsp;the&nbsp;number&nbsp;of&nbsp;disks&nbsp;[default&nbsp;256]</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;l&nbsp;&lt;dpl&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;disks/line&nbsp;default&nbsp;150&nbsp;to&nbsp;avoid&nbsp;spreadsheet&nbsp;issues.&nbsp;EMC=64.</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;g&nbsp;&lt;filename&gt;&nbsp;User&nbsp;Defined&nbsp;Disk&nbsp;Groups&nbsp;(see&nbsp;above)</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;N&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include&nbsp;NFS&nbsp;Network&nbsp;File&nbsp;System</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;I&nbsp;&lt;percent&gt;&nbsp;&nbsp;Include&nbsp;precoess&nbsp;and&nbsp;disks&nbsp;busy&nbsp;threshold&nbsp;(default&nbsp;0.1)</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;don&#039;t&nbsp;save&nbsp;or&nbsp;show&nbsp;proc/disk&nbsp;using&nbsp;less&nbsp;than&nbsp;this&nbsp;percent</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;m&nbsp;&lt;directory&gt;&nbsp;nmon&nbsp;changes&nbsp;to&nbsp;this&nbsp;directory&nbsp;before&nbsp;saving&nbsp;to&nbsp;file</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;D&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Skip&nbsp;disk&nbsp;configuration&nbsp;sections</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">example:&nbsp;collect&nbsp;for&nbsp;1&nbsp;hour&nbsp;at&nbsp;30&nbsp;second&nbsp;intervals&nbsp;with&nbsp;top&nbsp;procs</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;nmon_x86_sles10&nbsp;&ndash;f&nbsp;&ndash;t&nbsp;&ndash;r&nbsp;Test1&nbsp;&ndash;s30&nbsp;&ndash;c120</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">To&nbsp;load&nbsp;into&nbsp;a&nbsp;spreadsheet&nbsp;like&nbsp;Lotus&nbsp;1&ndash;2&ndash;3:</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">sort&nbsp;&ndash;A&nbsp;*nmon&nbsp;&gt;stats.csv</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">transfer&nbsp;the&nbsp;stats.csv&nbsp;file&nbsp;to&nbsp;your&nbsp;PC</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Start&nbsp;1&ndash;2&ndash;3&nbsp;and&nbsp;then&nbsp;Open&nbsp;&lt;char&ndash;separated&ndash;value&nbsp;ASCII&nbsp;file&gt;</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Capacity&nbsp;planning&nbsp;mode</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&ndash;&nbsp;use&nbsp;cron&nbsp;to&nbsp;run&nbsp;each&nbsp;day</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sensible&nbsp;spreadsheet&nbsp;output&nbsp;for&nbsp;CP&nbsp;=&nbsp;&nbsp;one&nbsp;day</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;every&nbsp;15&nbsp;mins&nbsp;for&nbsp;1&nbsp;day&nbsp;(&nbsp;i.e.&nbsp;&ndash;ft&nbsp;&ndash;s&nbsp;900&nbsp;&ndash;c&nbsp;96)</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;X&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sensible&nbsp;spreadsheet&nbsp;output&nbsp;for&nbsp;CP&nbsp;=&nbsp;busy&nbsp;hour</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;every&nbsp;30&nbsp;secs&nbsp;for&nbsp;1&nbsp;hour&nbsp;(&nbsp;i.e.&nbsp;&ndash;ft&nbsp;&ndash;s&nbsp;30&nbsp;&ndash;c&nbsp;120)</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Set&ndash;up&nbsp;and&nbsp;installation</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;&nbsp;this&nbsp;adds&nbsp;the&nbsp;disk&nbsp;%&nbsp;busy&nbsp;numbers&nbsp;(otherwise&nbsp;they&nbsp;are&nbsp;zero)</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">If&nbsp;you&nbsp;have&nbsp;hundreds&nbsp;of&nbsp;disk&nbsp;this&nbsp;can&nbsp;take&nbsp;1%&nbsp;to&nbsp;2%&nbsp;CPU</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Interactive&nbsp;Mode&nbsp;Commands</span>
+                                    <span style="font-size: 10.5pt; color: #0000ff; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">key&nbsp;&ndash;&ndash;&ndash;&nbsp;Toggles&nbsp;to&nbsp;control&nbsp;what&nbsp;is&nbsp;displayed&nbsp;&ndash;&ndash;&ndash;</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">h&nbsp;&nbsp;&nbsp;=&nbsp;Online&nbsp;help&nbsp;information</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">r&nbsp;&nbsp;&nbsp;=&nbsp;Machine&nbsp;type,&nbsp;machine&nbsp;name,&nbsp;cache&nbsp;details&nbsp;and&nbsp;OS&nbsp;version&nbsp;+&nbsp;LPAR</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">c&nbsp;&nbsp;&nbsp;=&nbsp;CPU&nbsp;by&nbsp;processor&nbsp;stats&nbsp;with&nbsp;bar&nbsp;graphs</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">l&nbsp;&nbsp;&nbsp;=&nbsp;long&nbsp;term&nbsp;CPU&nbsp;(over&nbsp;75&nbsp;snapshots)&nbsp;with&nbsp;bar&nbsp;graphs</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">m&nbsp;&nbsp;&nbsp;=&nbsp;Memory&nbsp;stats</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">V&nbsp;&nbsp;&nbsp;=&nbsp;Virtual&nbsp;Memory&nbsp;and&nbsp;Swap&nbsp;stats</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">k&nbsp;&nbsp;&nbsp;=&nbsp;Kernel&nbsp;Internal&nbsp;stats</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">n&nbsp;&nbsp;&nbsp;=&nbsp;Network&nbsp;stats&nbsp;and&nbsp;errors</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">N&nbsp;&nbsp;&nbsp;=&nbsp;NFS&nbsp;Network&nbsp;File&nbsp;System</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">d&nbsp;&nbsp;&nbsp;=&nbsp;Disk&nbsp;I/O&nbsp;Graphs</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">D&nbsp;&nbsp;&nbsp;=&nbsp;Disk&nbsp;I/O&nbsp;Stats</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">o&nbsp;&nbsp;&nbsp;=&nbsp;Disk&nbsp;I/O&nbsp;Map&nbsp;(one&nbsp;character&nbsp;per&nbsp;disk&nbsp;showing&nbsp;how&nbsp;busy&nbsp;it&nbsp;is)</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">b&nbsp;&nbsp;&nbsp;=&nbsp;black&nbsp;and&nbsp;white&nbsp;mode&nbsp;(or&nbsp;use&nbsp;&ndash;b&nbsp;option)</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">.&nbsp;&nbsp;&nbsp;=&nbsp;minimum&nbsp;mode&nbsp;i.e.&nbsp;only&nbsp;busy&nbsp;disks&nbsp;and&nbsp;processes</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">key&nbsp;&ndash;&ndash;&ndash;&nbsp;Other&nbsp;Controls&nbsp;&ndash;&ndash;&ndash;</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">+&nbsp;&nbsp;&nbsp;=&nbsp;double&nbsp;the&nbsp;screen&nbsp;refresh&nbsp;time</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;&nbsp;&nbsp;&nbsp;=&nbsp;halves&nbsp;the&nbsp;screen&nbsp;refresh&nbsp;time</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">q&nbsp;&nbsp;&nbsp;=&nbsp;quit&nbsp;(also&nbsp;x,&nbsp;e&nbsp;or&nbsp;control&ndash;C)</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">0&nbsp;&nbsp;&nbsp;=&nbsp;reset&nbsp;peak&nbsp;counts&nbsp;to&nbsp;zero&nbsp;(peak&nbsp;=&nbsp;&quot;&gt;&quot;)</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">space&nbsp;=&nbsp;refresh&nbsp;screen&nbsp;now</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Startup&nbsp;Control</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">If&nbsp;you&nbsp;find&nbsp;you&nbsp;always&nbsp;type&nbsp;the&nbsp;same&nbsp;toggles&nbsp;every&nbsp;time&nbsp;you&nbsp;start</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">then&nbsp;place&nbsp;them&nbsp;in&nbsp;the&nbsp;NMON&nbsp;shell&nbsp;variable.&nbsp;For&nbsp;example:</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;export&nbsp;NMON=cmdrvtan</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Others:</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">a)&nbsp;To&nbsp;you&nbsp;want&nbsp;to&nbsp;stop&nbsp;nmon&nbsp;&ndash;&nbsp;kill&nbsp;&ndash;USR2&nbsp;&lt;nmon&ndash;pid&gt;</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">b)&nbsp;Use&nbsp;&ndash;p&nbsp;and&nbsp;nmon&nbsp;outputs&nbsp;the&nbsp;background&nbsp;process&nbsp;pid</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">c)&nbsp;To&nbsp;limit&nbsp;the&nbsp;processes&nbsp;nmon&nbsp;lists&nbsp;(online&nbsp;and&nbsp;to&nbsp;a&nbsp;file)</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;Either&nbsp;set&nbsp;NMONCMD0&nbsp;to&nbsp;NMONCMD63&nbsp;to&nbsp;the&nbsp;program&nbsp;names</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;or&nbsp;use&nbsp;&ndash;C&nbsp;cmd:cmd:cmd&nbsp;etc.&nbsp;example:&nbsp;&ndash;C&nbsp;ksh:vi:syncd</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">d)&nbsp;If&nbsp;you&nbsp;want&nbsp;to&nbsp;pipe&nbsp;nmon&nbsp;output&nbsp;to&nbsp;other&nbsp;commands&nbsp;use&nbsp;a&nbsp;FIFO:</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;mkfifo&nbsp;/tmp/mypipe</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;nmon&nbsp;&ndash;F&nbsp;/tmp/mypipe&nbsp;&amp;</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;grep&nbsp;/tmp/mypipe</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">e)&nbsp;If&nbsp;nmon&nbsp;fails&nbsp;please&nbsp;report&nbsp;it&nbsp;with:</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;1)&nbsp;nmon&nbsp;version&nbsp;like:&nbsp;12c</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;2)&nbsp;the&nbsp;output&nbsp;of&nbsp;cat&nbsp;/proc/cpuinfo</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;3)&nbsp;some&nbsp;clue&nbsp;of&nbsp;what&nbsp;you&nbsp;were&nbsp;doing</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;4)&nbsp;I&nbsp;may&nbsp;ask&nbsp;you&nbsp;to&nbsp;run&nbsp;the&nbsp;debug&nbsp;version</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;Copyright&nbsp;2009&nbsp;Nigel&nbsp;Griffiths</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License&nbsp;&lt;http://www.gnu.org/licenses/&gt;.</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;Feedback&nbsp;welcome&nbsp;&ndash;&nbsp;http:/nmon.sourceforge.net</span>
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;No&nbsp;warranty&nbsp;given&nbsp;or&nbsp;implied.</span>
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-weight: bold; font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                    <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p18" style="margin-top: 0pt; margin-bottom: 0pt; line-height: 150%; text-align: justify;">
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">附录二：nmon参数：</span>
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <span style="font-family: 宋体;">参考http://www.ibm.com/developerworks/wikis/display/Wikiptype/nmonanalyser</span>
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">nmon:&nbsp;</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;f&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;spreadsheet&nbsp;output&nbsp;format&nbsp;[note:&nbsp;default&nbsp;&ndash;s300&nbsp;&ndash;c288]</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output&nbsp;file&nbsp;is&nbsp;&lt;hostname&gt;_YYYYMMDD_HHMM.nmon</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p18" style="margin-top: 0pt; margin-bottom: 0pt; line-height: 150%; text-align: justify;">
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ndash;F&nbsp;&lt;filename&gt;&nbsp;&nbsp;same&nbsp;as&nbsp;&ndash;f&nbsp;but&nbsp;user&nbsp;supplied&nbsp;filename</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;c&nbsp;&lt;number&gt;&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;of&nbsp;snapshots</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;d&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;requests&nbsp;disk&nbsp;service&nbsp;and&nbsp;wait&nbsp;times&nbsp;(DISKSERV&nbsp;and&nbsp;DISKWAIT)</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;i&nbsp;&lt;percent&gt;&nbsp;&nbsp;&nbsp;Ignore&nbsp;processes&nbsp;using&nbsp;less&nbsp;than&nbsp;this&nbsp;amount&nbsp;of&nbsp;CPU&nbsp;when&nbsp;generating&nbsp;TOP&nbsp;section&nbsp;&ndash;&nbsp;useful&nbsp;for&nbsp;reducing&nbsp;data&nbsp;volumes</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;g&nbsp;&lt;filename&gt;&nbsp;file&nbsp;containing&nbsp;disk&nbsp;group&nbsp;definitions</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;l&nbsp;&lt;dpl&gt;&nbsp;&nbsp;number&nbsp;of&nbsp;hdisks&nbsp;per&nbsp;sheet&nbsp;&ndash;&nbsp;defaults&nbsp;to&nbsp;150,&nbsp;maximum&nbsp;250.&nbsp;&nbsp;See&nbsp;notes</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;m&nbsp;&lt;dir&gt;&nbsp;&nbsp;&nbsp;&nbsp;NMON&nbsp;changes&nbsp;to&nbsp;this&nbsp;directory&nbsp;before&nbsp;saving&nbsp;the&nbsp;file</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;r&nbsp;&lt;runname&gt;&nbsp;&nbsp;&nbsp;goes&nbsp;into&nbsp;spreadsheet&nbsp;file&nbsp;[default&nbsp;hostname]</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;s&nbsp;&lt;seconds&gt;&nbsp;&nbsp;&nbsp;interval&nbsp;between&nbsp;snap&nbsp;shots</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;x&nbsp;&nbsp;&nbsp;capacity&nbsp;planning&nbsp;(15&nbsp;mins&nbsp;for&nbsp;1&nbsp;day&nbsp;=&nbsp;&ndash;fdt&nbsp;&ndash;s900&nbsp;&ndash;c96)&nbsp;</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&nbsp;&ndash;t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include&nbsp;top&nbsp;processes&nbsp;in&nbsp;the&nbsp;output</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;T&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;&ndash;t&nbsp;plus&nbsp;saves&nbsp;command&nbsp;line&nbsp;arguments&nbsp;in&nbsp;UARG&nbsp;section</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include&nbsp;data&nbsp;for&nbsp;async&nbsp;I/O&nbsp;(PROCAIO)&nbsp;sections</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;D&nbsp;prevents&nbsp;DISK&nbsp;sections&nbsp;being&nbsp;produced&nbsp;(useful&nbsp;when&nbsp;Disk&nbsp;Groups&nbsp;are&nbsp;being&nbsp;used&nbsp;because&nbsp;there&nbsp;are&nbsp;too&nbsp;many&nbsp;hdisks&nbsp;to&nbsp;process)</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stops&nbsp;ESS&nbsp;sections&nbsp;being&nbsp;produced&nbsp;(necessary&nbsp;when&nbsp;Disk&nbsp;Groups&nbsp;are&nbsp;being&nbsp;used&nbsp;because&nbsp;there&nbsp;are&nbsp;too&nbsp;many&nbsp;vpaths&nbsp;to&nbsp;process)</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;J&nbsp;&nbsp;prevents&nbsp;JFS&nbsp;sections&nbsp;being&nbsp;produced&nbsp;(prevents&nbsp;Excel&nbsp;errors&nbsp;when&nbsp;you&nbsp;have&nbsp;more&nbsp;than&nbsp;255&nbsp;filesystems)</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;L&nbsp;includes&nbsp;LARGEPAGE&nbsp;section</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;N&nbsp;include&nbsp;NFS&nbsp;sections</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;S&nbsp;include&nbsp;WLM&nbsp;sections&nbsp;with&nbsp;subclasses</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;W&nbsp;include&nbsp;WLM&nbsp;sections&nbsp;without&nbsp;subclasses</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">
+                                        <br>
+
+                                    </span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&ndash;Y&nbsp;include&nbsp;SUMMARY&nbsp;section&nbsp;(very&nbsp;efficient&nbsp;alternative&nbsp;to&nbsp;&ndash;t&nbsp;if&nbsp;PID&nbsp;level&nbsp;data&nbsp;is&nbsp;not&nbsp;required)</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';"></span>
+                                </p>
+                                <p class="p18" style="margin-top: 0pt; margin-bottom: 0pt; line-height: 150%; text-align: justify;">
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example:&nbsp;nmon_aix51&nbsp;&ndash;F&nbsp;asterix.nmon&nbsp;&ndash;r&nbsp;Test1&nbsp;&ndash;s6&nbsp;&ndash;c12</span>
+                                    <span style="font-size: 8pt; color: #5e5e5e; font-family: 'Verdana'; mso-spacerun: 'yes';"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

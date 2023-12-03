@@ -1,0 +1,50 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC170310D.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC170310D.cpp</h1>
+            <h3>erase vector iterator</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/std-vector.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-vector</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+int main()
+{
+    vector&lt;int&gt; v;
+    for(int i=0;i&lt;10;++i)
+        v.push_back(i);
+
+    cout &lt;&lt; "input: ";
+    outputVector(v);
+
+    vector&lt;int&gt;::iterator it = v.begin();
+    while( it != v.end())
+    {   if(*it % 2 == 0)
+            it = v.erase(it);
+        else
+            ++it;
+    }
+
+    cout &lt;&lt; "; output: ";
+    outputVector(v);
+    cout &lt;&lt; endl;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

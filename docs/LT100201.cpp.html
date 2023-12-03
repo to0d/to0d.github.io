@@ -1,0 +1,162 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT100201.cpp (Find Common Characters)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT100201.cpp (Find Common Characters)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-12-07</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1002.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1002</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_5772c736" href="#TOC_HEAD_5772c736">Problem 1002 <strong>Find Common Characters</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/find-common-characters/" target="_blank">https://leetcode.com/problems/find&ndash;common&ndash;characters/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>78.45</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_1086712" href="#TOC_HEAD_1086712">LT100201.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_c4431ace">LT1002 (name=Find Common Characters, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1002.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1002</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_a664b59d"><a href="https://leetcode.com/problems/find-common-characters/" target="_blank">Find Common Characters &ndash; Leetcode</a> &nbsp;<a href="../tags/LT1002.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1002</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_d68cbb5f" href="#TOC_HEAD_d68cbb5f">LT100201.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+public:
+    vector&lt;string&gt; commonChars(vector&lt;string&gt;& words) {
+        int buf1[26], buf2[26], count1, size = words.size();
+        count1 = _count(words[0], buf1);
+        for(int i = 1 ; count1 &gt; 0 && i &lt; size; ++i)
+        {   _count(words[i], buf2);
+            // for(int k = 0; k &lt; 26; ++k) if(buf1[k] &gt; 0) cout &lt;&lt; " " &lt;&lt; (char)('a'+k) &lt;&lt; "=" &lt;&lt; buf1[k]; cout &lt;&lt; endl;
+            for(int j = 0; j &lt; 26; ++j )
+                if( buf1[j] != 0 )
+                    if( buf2[j] != 0)
+                        buf1[j] = std::min(buf1[j], buf2[j]);
+                    else
+                    {   buf1[j] = 0;
+                        --count1;
+                    }
+        }
+        vector&lt;string&gt; rst;
+        char b[1];
+        for(int i = 0 ; count1 &gt; 0 && i &lt; 26; ++i)
+            if( buf1[i] != 0 )
+            {   b[0] = (char)('a' + i);
+                string t(b, 1);
+                for( int j = 0; j &lt; buf1[i]; ++j)
+                    rst.push_back(t);
+                --count1;
+            }
+        return rst;
+    }
+    static int _count(string s, int* buf)
+    {   int len = s.length(), count = 0;
+        memset(buf, 0, sizeof(int)*26);
+        for(int i = 0; i &lt; len; ++i)
+            if(buf[s.at(i)-'a']++ == 0)
+                ++count;
+        //cout &lt;&lt; "_count: s=" &lt;&lt; s; for(int i = 0;i &lt; 26; ++i) if(buf[i] &gt; 0) cout &lt;&lt; " " &lt;&lt; (char)('a'+i) &lt;&lt; "=" &lt;&lt; buf[i]; cout &lt;&lt; endl;
+        return count;
+    }
+};
+
+
+void test(vector&lt;string&gt; words)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(words);
+    vector&lt;string&gt; r = Solution().commonChars(words);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test({"bella","label","roller"});
+}
+
+
+// Result
+//
+// 2022-12-07: Runtime 8ms 78.45% Memory 9.3MB 74.80%, https://leetcode.com/problems/find-common-characters/submissions/855899239/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [bella,label,roller]; output: [e,l,l];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

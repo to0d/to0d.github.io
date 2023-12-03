@@ -1,0 +1,134 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT019803.rs (House Robber)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT019803.rs (House Robber)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-01-04</time>
+            <i><a href="../tags/DP-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DP-OJ</a>&nbsp;<a href="../tags/LT0198.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0198</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Rulp-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Rulp-Code</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_c54b9649" href="#TOC_HEAD_c54b9649">Problem 0198 <strong>House Robber</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/house-robber/" target="_blank">https://leetcode.com/problems/house&ndash;robber/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_347b7ca4" href="#TOC_HEAD_347b7ca4">LT019803.rs</a></H3>
+<pre><code>#!/usr/bin/rs
+
+(load "tool")
+(load "opt")
+(load "test/pt_help")
+
+; f(n) = max( Vn+f(n-2), f(n-1))
+;      = V1                 n = 1
+;      = max(V1,V2)         n = 2
+;
+;
+
+(defun rob ((?nums list))
+
+    (defvar ?n (size-of ?nums))
+
+    (case ?n
+        (0 (return 0))
+        (1 (return (get ?nums 0)))
+        (2 (return (max (get ?nums 0) (get ?nums 1))))
+    )
+
+    (defvar ?a (get ?nums 0))
+    (defvar ?b (max (get ?nums 0) (get ?nums 1)))
+    (defvar ?c)
+
+    (loop for ?i from 2 to (- ?n 1) do
+        (setq ?c (max ?b (+ (get ?nums ?i) ?a)))
+        (setq ?a ?b)
+        (setq ?b ?c)
+    )
+
+    (return ?b)
+
+)[opt-full]
+
+(defun test ((?nums list))
+    (print "input: " ?nums)
+    (defvar ?r  (rob ?nums))
+    (println "; output: " ?r ";" )
+)
+
+(test '(2 7 9 3 1))
+
+(out_pt_summary)</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

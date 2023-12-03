@@ -1,0 +1,138 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT123201.cpp (Check If It Is a Straight Line)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT123201.cpp (Check If It Is a Straight Line)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-24</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1232.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1232</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/StraightLine-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>StraightLine-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_c353018e" href="#TOC_HEAD_c353018e">Problem 1232 <strong>Check If It Is a Straight Line</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/check-if-it-is-a-straight-line/" target="_blank">https://leetcode.com/problems/check&ndash;if&ndash;it&ndash;is&ndash;a&ndash;straight&ndash;line/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>90.60</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_f5236431" href="#TOC_HEAD_f5236431">LT123201.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_cc33bfa6">LT1232 (name=Check If It Is a Straight Line, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1232.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1232</a>&nbsp;<a href="../tags/StraightLine-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>StraightLine-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_3c78665d"><a href="https://leetcode.com/problems/check-if-it-is-a-straight-line/" target="_blank">Check If It Is a Straight Line &ndash; Leetcode</a> &nbsp;<a href="../tags/LT1232.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1232</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_36b91ffe" href="#TOC_HEAD_36b91ffe">LT123201.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool checkStraightLine(vector&lt;vector&lt;int&gt;&gt;& coordinates) {
+        int size = coordinates.size();
+        if( size &lt;= 2 )
+            return true;
+
+        int x0 = coordinates[0][0], y0 = coordinates[0][1];
+        int dx1 = coordinates[1][0] - x0, dy1 = coordinates[1][1] - y0;
+
+        for(int i = 2; i&lt; size; ++i)
+            if((coordinates[i][0] - x0)*dy1 != dx1*(coordinates[i][1] - y0))
+                return false;
+
+        return true;
+    }
+};
+
+
+
+void test(vector&lt;vector&lt;int&gt;&gt; coordinates)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(coordinates);
+    bool r = Solution().checkStraightLine(coordinates);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test({{1,2},{2,3},{3,4},{4,5},{5,6},{6,7}});
+}
+
+
+// Result
+//
+// 2022-12-12: Runtime 22ms 8.93% Memory 10.2MB 47.35%, https://leetcode.com/problems/check-if-it-is-a-straight-line/submissions/858413089/
+// 2023-02-24: Runtime 7ms 90.60% Memory 10MB 94.46%, https://leetcode.com/problems/check-if-it-is-a-straight-line/submissions/904206016/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [[1,2],[2,3],[3,4],[4,5],[5,6],[6,7]]; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,597 @@
+<html>
+	<head>
+		<meta charSet="utf-8"></meta>
+		<title data-rh="true">关于MLIR的学习实践分析与思考&nbsp;知乎</title>
+	</head>
+	<body class="WhiteBg-body PostIndex-body">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Sun Oct 29 15:30:47 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://zhuanlan.zhihu.com/p/599281935" target="_blank">
+				<font color="red" size="3">关于MLIR的学习实践分析与思考&nbsp;&ndash;&nbsp;知乎</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="RichText ztext Post-RichText css-117anjg" options="[object Object]">
+			<h2 data-first-child id="h_599281935_0" data-into-catalog-status="">前言</h2>
+			<p data-pid="aIvwp4ig">MLIR已经走过一些年头，开始有很多公司转向或者尝试MLIR。</p>
+			<h2 id="h_599281935_1" data-into-catalog-status="">认识：MLIR设计思想</h2>
+			<p data-pid="0SCoE_c3">首先，看了下MLIR的介绍文档，个人觉得MLIR的设计思想还是很好的，这里看了
+				<span class="nolink">张磊大佬的文章</span>
+				，深受启发。
+			</p>
+			<a target="_blank" href="https://link.zhihu.com/?target=https%3A//www.lei.chat/zh/posts/compilers-and-irs-llvm-ir-spirv-and-mlir/" data-draft-node="block" data-draft-type="link-card" data-image="https://pic1.zhimg.com/v2-178b258f99837d0f979be5f1d2b5f098_ipico.jpg" data-image-width="216" data-image-height="216" data-text="编译器与中间表示: LLVM IR, SPIR-V, 以及 MLIR | Lei.Chat()" class="LinkCard new">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<p data-pid="QxCKgQ4V">可以进去深入读下上面这篇文章，很具体的就不班门弄斧了，讲讲我自己的一小点理解。</p>
+			<p data-pid="nN50liw8">MLIR的设计思想和现在某些热门领域的
+				<b>去中性化</b>
+				思想不谋而合，挺有意思的。立意确实很高远，听闻学术界的人很多人都愿意去MLIR挖坑，与LLVM在同一个project，并且很多设计方法论与LLVM一脉相承，例如table&ndash;gen：
+			</p>
+			<a target="_blank" href="https://link.zhihu.com/?target=https%3A//mlir.llvm.org/docs/DeclarativeRewrites/" data-draft-node="block" data-draft-type="link-card" data-text="Table-driven Declarative Rewrite Rule (DRR)" class="LinkCard new">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<p data-pid="D9toAfeq">大大减少了重复代码的编写，对于AI编译器中常见的pattern&nbsp;match，只要掌握了书写规则，就可以很快写出来。从人类大脑容易接受程度来说，也是一大优势，毕竟科班做编译器的人还是LLVM的大佬为主。</p>
+			<h2 id="h_599281935_2" data-into-catalog-status="">学习：官方Tutorials</h2>
+			<a target="_blank" href="https://link.zhihu.com/?target=https%3A//mlir.llvm.org/docs/Tutorials/Toy/" data-draft-node="block" data-draft-type="link-card" data-image="https://pic4.zhimg.com/v2-4b955f0c82c18d39e07298e5a381ab8b_ipico.jpg" data-image-width="105" data-image-height="105" data-text="Toy Tutorial - MLIR" class="LinkCard new">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<p data-pid="-JJLJ5KU">网上也有很多中文翻译，在此不赘述。</p>
+			<h2 id="h_599281935_3" data-into-catalog-status="">实践：添加一个算子的支持</h2>
+			<p data-pid="G2W02FQZ">直接在LLVM&nbsp;Project里修改的，使用最新的LLVM&nbsp;main代码，commit&nbsp;ID：dca40e3288f481cda1ce37c647b782a3b468b7d1。Patch信息如下：</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/10277b4f06fa0fbe39f1de3c19942e8b.jpg"></img>
+				</div>
+				<img></img>
+				<figcaption>LLVM代码commit&nbsp;ID号</figcaption>
+			</figure>
+			<h3 id="h_599281935_4" data-into-catalog-status="">1.&nbsp;首先，生成MLIR表示</h3>
+			<p data-pid="uRI5de6K">参考：</p>
+			<a data-draft-type="link-card" data-draft-node="block" href="441237921" class="LinkCard new" target="_blank">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<p data-pid="GkfxSsn6">代码中作了如下修改，在Ops.td中添加了And算子的定义，并且修改parser添加对&amp;的支持，然后MLIRGen中修改，根据&amp;&nbsp;Op，创建AndOp的实体。</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="n">diff</span> <span class="o">--</span><span class="n">git</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch2</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ops</span><span class="p">.</span><span class="n">td</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch2</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ops</span><span class="p">.</span><span class="n">td</span>
+<span class="n">index</span> <span class="mf">4e2</span><span class="n">fb9ec397e</span><span class="p">.</span><span class="mf">.80</span><span class="n">c85747553c</span> <span class="mi">100644</span>
+<span class="o">---</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch2</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ops</span><span class="p">.</span><span class="n">td</span>
+<span class="o">+++</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch2</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ops</span><span class="p">.</span><span class="n">td</span>
+<span class="err">@@</span> <span class="o">-</span><span class="mi">37</span><span class="p">,</span><span class="mi">6</span> <span class="o">+</span><span class="mi">37</span><span class="p">,</span><span class="mi">25</span> <span class="err">@@</span> <span class="k">class</span> <span class="nc">Toy_Op</span><span class="o">&lt;</span><span class="n">string</span> <span class="n">mnemonic</span><span class="p">,</span> <span class="n">list</span><span class="o">&lt;</span><span class="n">Trait</span><span class="o">&gt;</span> <span class="n">traits</span> <span class="o">=</span> <span class="p">[]</span><span class="o">&gt;</span> <span class="o">:</span>
+ <span class="c1">// Toy Operations
+</span><span class="c1"></span> <span class="c1">//===----------------------------------------------------------------------===//
+</span><span class="c1"></span> 
+<span class="o">+</span><span class="c1">//===----------------------------------------------------------------------===//
+</span><span class="c1"></span><span class="o">+</span><span class="c1">// AndOp
+</span><span class="c1"></span><span class="o">+</span><span class="c1">//===----------------------------------------------------------------------===//
+</span><span class="c1"></span><span class="o">+</span><span class="n">def</span> <span class="nl">AndOp</span> <span class="p">:</span> <span class="n">Toy_Op</span><span class="o">&lt;</span><span class="s">&#34;And&#34;</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="o">+</span>  <span class="n">let</span> <span class="n">summary</span> <span class="o">=</span> <span class="s">&#34;element-wise logic And operation&#34;</span><span class="p">;</span>
+<span class="o">+</span>  <span class="n">let</span> <span class="n">description</span> <span class="o">=</span> <span class="p">[{</span>
+<span class="o">+</span>    <span class="n">The</span> <span class="s">&#34;and&#34;</span> <span class="n">operation</span> <span class="n">performs</span> <span class="n">element</span><span class="o">-</span><span class="n">wise</span> <span class="n">logic</span> <span class="n">or</span> <span class="n">between</span> <span class="n">two</span> <span class="n">tensors</span><span class="p">.</span>
+<span class="o">+</span>    <span class="n">The</span> <span class="n">shapes</span> <span class="n">of</span> <span class="n">the</span> <span class="n">tensor</span> <span class="n">operands</span> <span class="n">are</span> <span class="n">expected</span> <span class="n">to</span> <span class="n">match</span><span class="p">.</span>
+<span class="o">+</span>  <span class="p">}];</span>
+<span class="o">+</span>
+<span class="o">+</span>  <span class="n">let</span> <span class="n">arguments</span> <span class="o">=</span> <span class="p">(</span><span class="n">ins</span> <span class="nl">F64Tensor</span><span class="p">:</span> <span class="err">$</span><span class="n">lhs</span><span class="p">,</span> <span class="nl">F64Tensor</span><span class="p">:</span><span class="err">$</span><span class="n">rhs</span><span class="p">);</span>
+<span class="o">+</span>  <span class="n">let</span> <span class="n">results</span> <span class="o">=</span> <span class="p">(</span><span class="n">outs</span> <span class="n">F64Tensor</span><span class="p">);</span>
+<span class="o">+</span>
+<span class="o">+</span>  <span class="c1">// Add custom build methods for the and operation.
+</span><span class="c1"></span><span class="o">+</span>  <span class="n">let</span> <span class="n">builders</span> <span class="o">=</span> <span class="p">[</span>
+<span class="o">+</span>    <span class="n">OpBuilder</span><span class="o">&lt;</span><span class="p">(</span><span class="n">ins</span> <span class="s">&#34;Value&#34;</span><span class="o">:</span><span class="err">$</span><span class="n">lhs</span><span class="p">,</span> <span class="s">&#34;Value&#34;</span><span class="o">:</span><span class="err">$</span><span class="n">rhs</span><span class="p">)</span><span class="o">&gt;</span>
+<span class="o">+</span>  <span class="p">];</span>
+<span class="o">+</span><span class="p">}</span>
+<span class="o">+</span>
+ <span class="c1">//===----------------------------------------------------------------------===//
+</span><span class="c1"></span> <span class="c1">// ConstantOp
+</span><span class="c1"></span> <span class="c1">//===----------------------------------------------------------------------===//
+</span><span class="c1"></span><span class="n">diff</span> <span class="o">--</span><span class="n">git</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch2</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Parser</span><span class="p">.</span><span class="n">h</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch2</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Parser</span><span class="p">.</span><span class="n">h</span>
+<span class="n">index</span> <span class="mf">1f</span><span class="mi">20616</span><span class="n">ac6b4</span><span class="p">.</span><span class="mf">.8052</span><span class="n">ec9d39e2</span> <span class="mi">100644</span>
+<span class="o">---</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch2</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Parser</span><span class="p">.</span><span class="n">h</span>
+<span class="o">+++</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch2</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Parser</span><span class="p">.</span><span class="n">h</span>
+<span class="err">@@</span> <span class="o">-</span><span class="mi">457</span><span class="p">,</span><span class="mi">6</span> <span class="o">+</span><span class="mi">457</span><span class="p">,</span><span class="mi">8</span> <span class="err">@@</span> <span class="k">private</span><span class="o">:</span>
+ 
+     <span class="c1">// 1 is lowest precedence.
+</span><span class="c1"></span>     <span class="k">switch</span> <span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lexer</span><span class="p">.</span><span class="n">getCurToken</span><span class="p">()))</span> <span class="p">{</span>
+<span class="o">+</span>    <span class="k">case</span> <span class="sc">&#39;&amp;&#39;</span><span class="o">:</span>
+<span class="o">+</span>      <span class="k">return</span> <span class="mi">10</span><span class="p">;</span>
+     <span class="k">case</span> <span class="sc">&#39;-&#39;</span><span class="o">:</span>
+       <span class="k">return</span> <span class="mi">20</span><span class="p">;</span>
+     <span class="k">case</span> <span class="sc">&#39;+&#39;</span><span class="o">:</span>
+<span class="n">diff</span> <span class="o">--</span><span class="n">git</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch2</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">Dialect</span><span class="p">.</span><span class="n">cpp</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch2</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">Dialect</span><span class="p">.</span><span class="n">cpp</span>
+<span class="o">+</span>
+ <span class="c1">//===----------------------------------------------------------------------===//
+</span><span class="c1"></span> <span class="c1">// AddOp
+</span><span class="c1"></span> <span class="c1">//===----------------------------------------------------------------------===//
+</span><span class="c1"></span><span class="n">diff</span> <span class="o">--</span><span class="n">git</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch2</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">MLIRGen</span><span class="p">.</span><span class="n">cpp</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch2</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">MLIRGen</span><span class="p">.</span><span class="n">cpp</span>
+<span class="n">index</span> <span class="n">b1abd37c5725</span><span class="p">.</span><span class="mf">.43</span><span class="n">ea5e75ad64</span> <span class="mi">100644</span>
+<span class="o">---</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch2</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">MLIRGen</span><span class="p">.</span><span class="n">cpp</span>
+<span class="o">+++</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch2</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">MLIRGen</span><span class="p">.</span><span class="n">cpp</span>
+<span class="err">@@</span> <span class="o">-</span><span class="mi">191</span><span class="p">,</span><span class="mi">6</span> <span class="o">+</span><span class="mi">191</span><span class="p">,</span><span class="mi">8</span> <span class="err">@@</span> <span class="k">private</span><span class="o">:</span>
+     <span class="c1">// Derive the operation name from the binary operator. At the moment we only
+</span><span class="c1"></span>     <span class="c1">// support &#39;+&#39; and &#39;*&#39;.
+</span><span class="c1"></span>     <span class="k">switch</span> <span class="p">(</span><span class="n">binop</span><span class="p">.</span><span class="n">getOp</span><span class="p">())</span> <span class="p">{</span>
+<span class="o">+</span>    <span class="k">case</span> <span class="sc">&#39;&amp;&#39;</span><span class="o">:</span>
+<span class="o">+</span>      <span class="k">return</span> <span class="n">builder</span><span class="p">.</span><span class="n">create</span><span class="o">&lt;</span><span class="n">AndOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);</span>
+     <span class="k">case</span> <span class="sc">&#39;+&#39;</span><span class="o">:</span>
+       <span class="k">return</span> <span class="n">builder</span><span class="p">.</span><span class="n">create</span><span class="o">&lt;</span><span class="n">AddOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);</span>
+     <span class="k">case</span> <span class="sc">&#39;*&#39;</span><span class="o">:</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="YpV454qr">测试代码是：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-perl"><span class="n">def</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1"># Define a variable `a` with shape &lt;2, 3&gt;, initialized with the literal value.</span>
+  <span class="c1"># The shape is inferred from the supplied literal.</span>
+  <span class="n">var</span> <span class="n">a</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]];</span>
+  <span class="c1"># b is identical to a, the literal array is implicitly reshaped: defining new</span>
+  <span class="c1"># variables is the way to reshape arrays (element count in literal must match</span>
+  <span class="c1"># the size of specified shape).</span>
+  <span class="n">var</span> <span class="n">b</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">];</span>
+
+  <span class="c1"># add a new operation And</span>
+  <span class="n">var</span> <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">&amp;</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span></code>
+				</pre>
+			</div>
+			<p data-pid="i_aKjGcr">放在Toy例子测试代码相同的路劲：</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/1d9c7114b6b19e95b9eb789e3965c213.jpg"></img>
+				</div>
+				<img></img>
+				<figcaption>测试程序</figcaption>
+			</figure>
+			<h3 id="h_599281935_5" data-into-catalog-status="">2.&nbsp;接着，添加新增算子Shape&nbsp;Inference的支持</h3>
+			<p data-pid="RuSqynVO">参考：</p>
+			<a data-draft-type="link-card" data-draft-node="block" href="441471026" class="LinkCard new" target="_blank">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<p data-pid="D5SuREvV">遇到的一个问题是NoSideEffect在最新代码中已经修改为:
+				<b>NoMemoryEffect</b>
+				。细节和原因，详见这个patch的描述。
+			</p>
+			<a target="_blank" href="https://link.zhihu.com/?target=https%3A//github.com/llvm/llvm-project/commit/86771d0b65ee13242f89b8dfdf3c66f738eae4e5" data-draft-node="block" data-draft-type="link-card" data-text="https://github.com/llvm/llvm-project/commit/86771d0b65ee13242f89b8dfdf3c66f738eae4e5" class="LinkCard new">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<p data-pid="A3G6IbQ6">完整的patch为：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="n">diff</span> <span class="o">--</span><span class="n">git</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ops</span><span class="p">.</span><span class="n">td</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ops</span><span class="p">.</span><span class="n">td</span>
+<span class="n">index</span> <span class="n">cf2bc3f50480</span><span class="p">..</span><span class="n">eb72463d7946</span> <span class="mi">100644</span>
+<span class="o">---</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ops</span><span class="p">.</span><span class="n">td</span>
+<span class="o">+++</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ops</span><span class="p">.</span><span class="n">td</span>
+<span class="err">@@</span> <span class="o">-</span><span class="mi">87</span><span class="p">,</span><span class="mi">6</span> <span class="o">+</span><span class="mi">87</span><span class="p">,</span><span class="mi">26</span> <span class="err">@@</span> <span class="n">def</span> <span class="nl">ConstantOp</span> <span class="p">:</span> <span class="n">Toy_Op</span><span class="o">&lt;</span><span class="s">&#34;constant&#34;</span><span class="p">,</span> <span class="p">[</span><span class="n">Pure</span><span class="p">]</span><span class="o">&gt;</span> <span class="p">{</span>
+   <span class="n">let</span> <span class="n">hasVerifier</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+ <span class="p">}</span>
+ 
+<span class="o">+</span><span class="c1">//===----------------------------------------------------------------------===//
+</span><span class="c1"></span><span class="o">+</span><span class="c1">// AndOp
+</span><span class="c1"></span><span class="o">+</span><span class="c1">//===----------------------------------------------------------------------===//
+</span><span class="c1"></span><span class="o">+</span><span class="n">def</span> <span class="nl">AndOp</span> <span class="p">:</span> <span class="n">Toy_Op</span><span class="o">&lt;</span><span class="s">&#34;And&#34;</span><span class="p">,</span>
+<span class="o">+</span>    <span class="p">[</span><span class="n">NoMemoryEffect</span><span class="p">,</span> <span class="n">DeclareOpInterfaceMethods</span><span class="o">&lt;</span><span class="n">ShapeInferenceOpInterface</span><span class="o">&gt;</span><span class="p">]</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="o">+</span>  <span class="n">let</span> <span class="n">summary</span> <span class="o">=</span> <span class="s">&#34;element-wise logic And operation&#34;</span><span class="p">;</span>
+<span class="o">+</span>  <span class="n">let</span> <span class="n">description</span> <span class="o">=</span> <span class="p">[{</span>
+<span class="o">+</span>    <span class="n">The</span> <span class="s">&#34;and&#34;</span> <span class="n">operation</span> <span class="n">performs</span> <span class="n">element</span><span class="o">-</span><span class="n">wise</span> <span class="n">logic</span> <span class="n">or</span> <span class="n">between</span> <span class="n">two</span> <span class="n">tensors</span><span class="p">.</span>
+<span class="o">+</span>    <span class="n">The</span> <span class="n">shapes</span> <span class="n">of</span> <span class="n">the</span> <span class="n">tensor</span> <span class="n">operands</span> <span class="n">are</span> <span class="n">expected</span> <span class="n">to</span> <span class="n">match</span><span class="p">.</span>
+<span class="o">+</span>  <span class="p">}];</span>
+<span class="o">+</span>
+<span class="o">+</span>  <span class="n">let</span> <span class="n">arguments</span> <span class="o">=</span> <span class="p">(</span><span class="n">ins</span> <span class="nl">F64Tensor</span><span class="p">:</span> <span class="err">$</span><span class="n">lhs</span><span class="p">,</span> <span class="nl">F64Tensor</span><span class="p">:</span><span class="err">$</span><span class="n">rhs</span><span class="p">);</span>
+<span class="o">+</span>  <span class="n">let</span> <span class="n">results</span> <span class="o">=</span> <span class="p">(</span><span class="n">outs</span> <span class="n">F64Tensor</span><span class="p">);</span>
+<span class="o">+</span>
+<span class="o">+</span>  <span class="c1">// Add custom build methods for the and operation.
+</span><span class="c1"></span><span class="o">+</span>  <span class="n">let</span> <span class="n">builders</span> <span class="o">=</span> <span class="p">[</span>
+<span class="o">+</span>    <span class="n">OpBuilder</span><span class="o">&lt;</span><span class="p">(</span><span class="n">ins</span> <span class="s">&#34;Value&#34;</span><span class="o">:</span><span class="err">$</span><span class="n">lhs</span><span class="p">,</span> <span class="s">&#34;Value&#34;</span><span class="o">:</span><span class="err">$</span><span class="n">rhs</span><span class="p">)</span><span class="o">&gt;</span>
+<span class="o">+</span>  <span class="p">];</span>
+<span class="o">+</span><span class="p">}</span>
+<span class="o">+</span>
+ <span class="c1">//===----------------------------------------------------------------------===//
+</span><span class="c1"></span> <span class="c1">// AddOp
+</span><span class="c1"></span> <span class="c1">//===----------------------------------------------------------------------===//
+</span><span class="c1"></span><span class="n">diff</span> <span class="o">--</span><span class="n">git</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Parser</span><span class="p">.</span><span class="n">h</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Parser</span><span class="p">.</span><span class="n">h</span>
+<span class="n">index</span> <span class="mf">1f</span><span class="mi">20616</span><span class="n">ac6b4</span><span class="p">.</span><span class="mf">.8052</span><span class="n">ec9d39e2</span> <span class="mi">100644</span>
+<span class="o">---</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Parser</span><span class="p">.</span><span class="n">h</span>
+<span class="o">+++</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Parser</span><span class="p">.</span><span class="n">h</span>
+<span class="err">@@</span> <span class="o">-</span><span class="mi">457</span><span class="p">,</span><span class="mi">6</span> <span class="o">+</span><span class="mi">457</span><span class="p">,</span><span class="mi">8</span> <span class="err">@@</span> <span class="k">private</span><span class="o">:</span>
+ 
+     <span class="c1">// 1 is lowest precedence.
+</span><span class="c1"></span>     <span class="k">switch</span> <span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lexer</span><span class="p">.</span><span class="n">getCurToken</span><span class="p">()))</span> <span class="p">{</span>
+<span class="o">+</span>    <span class="k">case</span> <span class="sc">&#39;&amp;&#39;</span><span class="o">:</span>
+<span class="o">+</span>      <span class="k">return</span> <span class="mi">10</span><span class="p">;</span>
+     <span class="k">case</span> <span class="sc">&#39;-&#39;</span><span class="o">:</span>
+       <span class="k">return</span> <span class="mi">20</span><span class="p">;</span>
+     <span class="k">case</span> <span class="sc">&#39;+&#39;</span><span class="o">:</span>
+<span class="n">diff</span> <span class="o">--</span><span class="n">git</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">Dialect</span><span class="p">.</span><span class="n">cpp</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">Dialect</span><span class="p">.</span><span class="n">cpp</span>
+<span class="n">index</span> <span class="mo">04</span><span class="n">ae3149281f</span><span class="p">..</span><span class="n">a5e2a1fd4b49</span> <span class="mi">100644</span>
+<span class="o">---</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">Dialect</span><span class="p">.</span><span class="n">cpp</span>
+<span class="o">+++</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">Dialect</span><span class="p">.</span><span class="n">cpp</span>
+<span class="err">@@</span> <span class="o">-</span><span class="mi">330</span><span class="p">,</span><span class="mi">6</span> <span class="o">+</span><span class="mi">330</span><span class="p">,</span><span class="mi">18</span> <span class="err">@@</span> <span class="n">CallInterfaceCallable</span> <span class="n">GenericCallOp</span><span class="o">::</span><span class="n">getCallableForCallee</span><span class="p">()</span> <span class="p">{</span>
+ <span class="c1">/// call interface.
+</span><span class="c1"></span> <span class="n">Operation</span><span class="o">::</span><span class="n">operand_range</span> <span class="n">GenericCallOp</span><span class="o">::</span><span class="n">getArgOperands</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nf">getInputs</span><span class="p">();</span> <span class="p">}</span>
+ 
+<span class="o">+</span>
+<span class="o">+</span><span class="c1">//===----------------------------------------------------------------------===//
+</span><span class="c1"></span><span class="o">+</span><span class="c1">// AndOp
+</span><span class="c1"></span><span class="o">+</span><span class="c1">//===----------------------------------------------------------------------===//
+</span><span class="c1"></span><span class="o">+</span><span class="kt">void</span> <span class="n">AndOp</span><span class="o">::</span><span class="n">build</span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">OpBuilder</span> <span class="o">&amp;</span><span class="n">builder</span><span class="p">,</span> <span class="n">mlir</span><span class="o">::</span><span class="n">OperationState</span> <span class="o">&amp;</span><span class="n">state</span><span class="p">,</span>
+<span class="o">+</span>                 <span class="n">mlir</span><span class="o">::</span><span class="n">Value</span> <span class="n">lhs</span><span class="p">,</span> <span class="n">mlir</span><span class="o">::</span><span class="n">Value</span> <span class="n">rhs</span><span class="p">)</span> <span class="p">{</span>
+<span class="o">+</span>  <span class="n">state</span><span class="p">.</span><span class="n">addTypes</span><span class="p">(</span><span class="n">UnrankedTensorType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">builder</span><span class="p">.</span><span class="n">getF64Type</span><span class="p">()));</span>
+<span class="o">+</span>  <span class="n">state</span><span class="p">.</span><span class="n">addOperands</span><span class="p">({</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">});</span>
+<span class="o">+</span><span class="p">}</span>
+<span class="o">+</span>
+<span class="o">+</span><span class="kt">void</span> <span class="n">AndOp</span><span class="o">::</span><span class="n">inferShapes</span><span class="p">()</span> <span class="p">{</span> <span class="n">getResult</span><span class="p">().</span><span class="n">setType</span><span class="p">(</span><span class="n">getOperand</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="n">getType</span><span class="p">());</span> <span class="p">}</span>
+<span class="o">+</span>
+ <span class="c1">//===----------------------------------------------------------------------===//
+</span><span class="c1"></span> <span class="c1">// MulOp
+</span><span class="c1"></span> <span class="c1">//===----------------------------------------------------------------------===//
+</span><span class="c1"></span><span class="n">diff</span> <span class="o">--</span><span class="n">git</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">MLIRGen</span><span class="p">.</span><span class="n">cpp</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">MLIRGen</span><span class="p">.</span><span class="n">cpp</span>
+<span class="n">index</span> <span class="mi">0</span><span class="n">b200f105fbf</span><span class="p">..</span><span class="n">cc46cc01675b</span> <span class="mi">100644</span>
+<span class="o">---</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">MLIRGen</span><span class="p">.</span><span class="n">cpp</span>
+<span class="o">+++</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">MLIRGen</span><span class="p">.</span><span class="n">cpp</span>
+<span class="err">@@</span> <span class="o">-</span><span class="mi">195</span><span class="p">,</span><span class="mi">6</span> <span class="o">+</span><span class="mi">195</span><span class="p">,</span><span class="mi">8</span> <span class="err">@@</span> <span class="k">private</span><span class="o">:</span>
+     <span class="c1">// Derive the operation name from the binary operator. At the moment we only
+</span><span class="c1"></span>     <span class="c1">// support &#39;+&#39; and &#39;*&#39;.
+</span><span class="c1"></span>     <span class="k">switch</span> <span class="p">(</span><span class="n">binop</span><span class="p">.</span><span class="n">getOp</span><span class="p">())</span> <span class="p">{</span>
+<span class="o">+</span>    <span class="k">case</span> <span class="sc">&#39;&amp;&#39;</span><span class="o">:</span>
+<span class="o">+</span>      <span class="k">return</span> <span class="n">builder</span><span class="p">.</span><span class="n">create</span><span class="o">&lt;</span><span class="n">AndOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);</span>
+     <span class="k">case</span> <span class="sc">&#39;+&#39;</span><span class="o">:</span>
+       <span class="k">return</span> <span class="n">builder</span><span class="p">.</span><span class="n">create</span><span class="o">&lt;</span><span class="n">AddOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">);</span>
+     <span class="k">case</span> <span class="sc">&#39;*&#39;</span><span class="o">:</span>
+<span class="n">diff</span> <span class="o">--</span><span class="n">git</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">ShapeInferencePass</span><span class="p">.</span><span class="n">cpp</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">ShapeInferencePass</span><span class="p">.</span><span class="n">cpp</span>
+<span class="n">index</span> <span class="n">cf3e492989b0</span><span class="p">.</span><span class="mf">.124e9</span><span class="n">ebc6b1b</span> <span class="mi">100644</span>
+<span class="o">---</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">ShapeInferencePass</span><span class="p">.</span><span class="n">cpp</span>
+<span class="o">+++</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">ShapeInferencePass</span><span class="p">.</span><span class="n">cpp</span>
+<span class="err">@@</span> <span class="o">-</span><span class="mi">72</span><span class="p">,</span><span class="mi">7</span> <span class="o">+</span><span class="mi">72</span><span class="p">,</span><span class="mi">7</span> <span class="err">@@</span> <span class="k">struct</span> <span class="nc">ShapeInferencePass</span>
+       <span class="n">opWorklist</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+ 
+       <span class="c1">// Ask the operation to infer its output shapes.
+</span><span class="c1"></span><span class="o">-</span>      <span class="n">LLVM_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Inferring shape for: &#34;</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">op</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+<span class="o">+</span>      <span class="n">llvm</span><span class="o">::</span><span class="n">errs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Inferring shape for: &#34;</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">op</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+       <span class="k">if</span> <span class="p">(</span><span class="k">auto</span> <span class="n">shapeOp</span> <span class="o">=</span> <span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">ShapeInference</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span> <span class="p">{</span>
+         <span class="n">shapeOp</span><span class="p">.</span><span class="n">inferShapes</span><span class="p">();</span>
+       <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="aAyrM5xv">以上大部分代码和上一小节是一样的，并且原来的Toy实例就有shape&nbsp;inference操作，这里只是添加AndOp的shape&nbsp;inference代码，主要修改如下：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">// ops.td
+def AndOp : Toy_Op&lt;&#34;And&#34;,
+    [NoMemoryEffect, DeclareOpInterfaceMethods&lt;ShapeInferenceOpInterface&gt;]&gt; {
+    // ...
+}
+
+// dialect.cpp
+void AndOp::inferShapes() { getResult().setType(getOperand(0).getType()); }</code>
+				</pre>
+			</div>
+			<p data-pid="awFR28fZ">测试代码放在llvm&ndash;project/mlir/test/Examples/Toy/Ch6/codegen_leon.toy：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-perl6">def multiply_transpose(a, b) {
+  return transpose(a) * transpose(b);
+}
+
+def main() {
+  var a&lt;2, 3&gt; = [[1, 2, 3], [4, 5, 6]];
+  var b&lt;2, 3&gt; = [1, 2, 3, 4, 5, 6];
+
+  var c = multiply_transpose(a, b);
+  var d = multiply_transpose(b, a);
+
+  var e = c &amp; d;
+
+  print(e);
+}</code>
+				</pre>
+			</div>
+			<p data-pid="BQ_BKCQL">执行结果：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-powershell"><span class="n">llvm-project</span><span class="p">/</span><span class="n">build_debug</span><span class="p">$</span> <span class="p">./</span><span class="n">bin</span><span class="p">/</span><span class="n">toyc-ch6</span> <span class="p">../</span><span class="n">mlir</span><span class="p">/</span><span class="n">test</span><span class="p">/</span><span class="n">Examples</span><span class="p">/</span><span class="n">Toy</span><span class="p">/</span><span class="n">Ch6</span><span class="p">/</span><span class="n">codegen_leon</span><span class="p">.</span><span class="n">toy</span> <span class="p">-</span><span class="n">-emit</span><span class="p">=</span><span class="n">mlir</span> <span class="p">-</span><span class="n">-opt</span>
+<span class="n">Inferring</span> <span class="n">shape</span> <span class="k">for</span><span class="err">:</span> <span class="k">%</span><span class="n">2</span> <span class="p">=</span> <span class="n">toy</span><span class="p">.</span><span class="n">cast</span> <span class="k">%</span><span class="n">0</span> <span class="err">:</span> <span class="n">tensor</span><span class="p">&lt;</span><span class="n">2x3xf64</span><span class="p">&gt;</span> <span class="n">to</span> <span class="n">tensor</span><span class="p">&lt;*</span><span class="n">xf64</span><span class="p">&gt;</span>
+<span class="p">//</span> <span class="n">删掉了部分辅助log</span>
+<span class="n">Inferring</span> <span class="n">shape</span> <span class="k">for</span><span class="err">:</span> <span class="k">%</span><span class="n">12</span> <span class="p">=</span> <span class="s2">&#34;toy.And&#34;</span><span class="p">(</span><span class="k">%</span><span class="n">6</span><span class="p">,</span> <span class="k">%</span><span class="n">11</span><span class="p">)</span> <span class="err">:</span> <span class="p">(</span><span class="n">tensor</span><span class="p">&lt;</span><span class="n">3x2xf64</span><span class="p">&gt;,</span> <span class="n">tensor</span><span class="p">&lt;</span><span class="n">3x2xf64</span><span class="p">&gt;)</span> <span class="p">-&gt;</span> <span class="n">tensor</span><span class="p">&lt;*</span><span class="n">xf64</span><span class="p">&gt;</span>
+<span class="n">module</span> <span class="p">{</span>
+  <span class="n">toy</span><span class="p">.</span><span class="n">func</span> <span class="nv">@main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">%</span><span class="n">0</span> <span class="p">=</span> <span class="n">toy</span><span class="p">.</span><span class="n">constant</span> <span class="n">dense</span><span class="p">&lt;[[</span><span class="n">1</span><span class="p">.</span><span class="n">000000e</span><span class="p">+</span><span class="n">00</span><span class="p">,</span> <span class="n">2</span><span class="p">.</span><span class="n">000000e</span><span class="p">+</span><span class="n">00</span><span class="p">,</span> <span class="n">3</span><span class="p">.</span><span class="n">000000e</span><span class="p">+</span><span class="n">00</span><span class="p">],</span> <span class="p">[</span><span class="n">4</span><span class="p">.</span><span class="n">000000e</span><span class="p">+</span><span class="n">00</span><span class="p">,</span> <span class="n">5</span><span class="p">.</span><span class="n">000000e</span><span class="p">+</span><span class="n">00</span><span class="p">,</span> <span class="n">6</span><span class="p">.</span><span class="n">000000e</span><span class="p">+</span><span class="n">00</span><span class="p">]]&gt;</span> <span class="err">:</span> <span class="n">tensor</span><span class="p">&lt;</span><span class="n">2x3xf64</span><span class="p">&gt;</span>
+    <span class="k">%</span><span class="n">1</span> <span class="p">=</span> <span class="n">toy</span><span class="p">.</span><span class="n">transpose</span><span class="p">(</span><span class="k">%</span><span class="n">0</span> <span class="err">:</span> <span class="n">tensor</span><span class="p">&lt;</span><span class="n">2x3xf64</span><span class="p">&gt;)</span> <span class="n">to</span> <span class="n">tensor</span><span class="p">&lt;</span><span class="n">3x2xf64</span><span class="p">&gt;</span>
+    <span class="k">%</span><span class="n">2</span> <span class="p">=</span> <span class="n">toy</span><span class="p">.</span><span class="n">mul</span> <span class="k">%</span><span class="n">1</span><span class="p">,</span> <span class="k">%</span><span class="n">1</span> <span class="err">:</span> <span class="n">tensor</span><span class="p">&lt;</span><span class="n">3x2xf64</span><span class="p">&gt;</span>
+    <span class="k">%</span><span class="n">3</span> <span class="p">=</span> <span class="s2">&#34;toy.And&#34;</span><span class="p">(</span><span class="k">%</span><span class="n">2</span><span class="p">,</span> <span class="k">%</span><span class="n">2</span><span class="p">)</span> <span class="err">:</span> <span class="p">(</span><span class="n">tensor</span><span class="p">&lt;</span><span class="n">3x2xf64</span><span class="p">&gt;,</span> <span class="n">tensor</span><span class="p">&lt;</span><span class="n">3x2xf64</span><span class="p">&gt;)</span> <span class="p">-&gt;</span> <span class="n">tensor</span><span class="p">&lt;</span><span class="n">3x2xf64</span><span class="p">&gt;</span>
+    <span class="n">toy</span><span class="p">.</span><span class="n">print</span> <span class="k">%</span><span class="n">3</span> <span class="err">:</span> <span class="n">tensor</span><span class="p">&lt;</span><span class="n">3x2xf64</span><span class="p">&gt;</span>
+    <span class="n">toy</span><span class="p">.</span><span class="k">return</span>
+  <span class="p">}</span>
+<span class="p">}</span></code>
+				</pre>
+			</div>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<h3 id="h_599281935_6" data-into-catalog-status="">3.&nbsp;最后，新增算子Lowering到LLVM&nbsp;Dialect</h3>
+			<p data-pid="rj5vml87">参考：</p>
+			<a data-draft-type="link-card" data-draft-node="block" href="444428735" class="LinkCard new" target="_blank">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<a data-draft-type="link-card" data-draft-node="block" href="447202920" class="LinkCard new" target="_blank">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<p data-pid="F-MZwYKj">继续添加修改，有些细节可以参考上面两篇文章，这里主要讲修改部分。</p>
+			<blockquote data-pid="B61uQssm">Add和Mul都有对应的浮点和整型操作，但是And仅支持整型操作，但是输入数据是浮点型F64。因此，AndOp需要做一个浮点转整型的操作。同时由于后续操作都是在浮点上操作的，因此还需要将AndOp的结果操作数从整型转回浮点。</blockquote>
+			<p data-pid="3_Nz6HKs">以下代码有使用到MLIR自带的UIToFPOp和FPToUIOp，作为浮点和定点之间的转换。</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="n">diff</span> <span class="o">--</span><span class="n">git</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">LowerToAffineLoops</span><span class="p">.</span><span class="n">cpp</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">LowerToAffineLoops</span><span class="p">.</span><span class="n">cpp</span>
+<span class="n">index</span> <span class="n">c52f5bd2c59b</span><span class="p">..</span><span class="n">f47256889ceb</span> <span class="mi">100644</span>
+<span class="o">---</span> <span class="n">a</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">LowerToAffineLoops</span><span class="p">.</span><span class="n">cpp</span>
+<span class="o">+++</span> <span class="n">b</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">toy</span><span class="o">/</span><span class="n">Ch6</span><span class="o">/</span><span class="n">mlir</span><span class="o">/</span><span class="n">LowerToAffineLoops</span><span class="p">.</span><span class="n">cpp</span>
+<span class="err">@@</span> <span class="o">-</span><span class="mi">83</span><span class="p">,</span><span class="mi">6</span> <span class="o">+</span><span class="mi">83</span><span class="p">,</span><span class="mi">12</span> <span class="err">@@</span> <span class="k">static</span> <span class="kt">void</span> <span class="n">lowerOpToLoops</span><span class="p">(</span><span class="n">Operation</span> <span class="o">*</span><span class="n">op</span><span class="p">,</span> <span class="n">ValueRange</span> <span class="n">operands</span><span class="p">,</span>
+         <span class="c1">// and the loop induction variables. This function will return the value
+</span><span class="c1"></span>         <span class="c1">// to store at the current index.
+</span><span class="c1"></span>         <span class="n">Value</span> <span class="n">valueToStore</span> <span class="o">=</span> <span class="n">processIteration</span><span class="p">(</span><span class="n">nestedBuilder</span><span class="p">,</span> <span class="n">operands</span><span class="p">,</span> <span class="n">ivs</span><span class="p">);</span>
+<span class="o">+</span>
+<span class="o">+</span>        <span class="c1">// Patch to support &#34;toy.And&#34; Op
+</span><span class="c1"></span><span class="o">+</span>        <span class="k">if</span><span class="p">(</span><span class="n">nestedBuilder</span><span class="p">.</span><span class="n">getI64Type</span><span class="p">()</span> <span class="o">==</span> <span class="n">valueToStore</span><span class="p">.</span><span class="n">getType</span><span class="p">())</span> <span class="p">{</span>
+<span class="o">+</span>          <span class="n">valueToStore</span> <span class="o">=</span> <span class="n">nestedBuilder</span><span class="p">.</span><span class="n">create</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">UIToFPOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">nestedBuilder</span><span class="p">.</span><span class="n">getF64Type</span><span class="p">(),</span> <span class="n">valueToStore</span><span class="p">);</span>
+<span class="o">+</span>        <span class="p">}</span>
+<span class="o">+</span>
+         <span class="n">nestedBuilder</span><span class="p">.</span><span class="n">create</span><span class="o">&lt;</span><span class="n">AffineStoreOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">valueToStore</span><span class="p">,</span> <span class="n">alloc</span><span class="p">,</span> <span class="n">ivs</span><span class="p">);</span>
+       <span class="p">});</span>
+ 
+<span class="err">@@</span> <span class="o">-</span><span class="mi">105</span><span class="p">,</span><span class="mi">7</span> <span class="o">+</span><span class="mi">111</span><span class="p">,</span><span class="mi">7</span> <span class="err">@@</span> <span class="k">struct</span> <span class="nc">BinaryOpLowering</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ConversionPattern</span> <span class="p">{</span>
+                   <span class="n">ConversionPatternRewriter</span> <span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span> <span class="k">const</span> <span class="k">final</span> <span class="p">{</span>
+     <span class="k">auto</span> <span class="n">loc</span> <span class="o">=</span> <span class="n">op</span><span class="o">-&gt;</span><span class="n">getLoc</span><span class="p">();</span>
+     <span class="n">lowerOpToLoops</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">operands</span><span class="p">,</span> <span class="n">rewriter</span><span class="p">,</span>
+<span class="o">-</span>                   <span class="p">[</span><span class="n">loc</span><span class="p">](</span><span class="n">OpBuilder</span> <span class="o">&amp;</span><span class="n">builder</span><span class="p">,</span> <span class="n">ValueRange</span> <span class="n">memRefOperands</span><span class="p">,</span>
+<span class="o">+</span>                   <span class="p">[</span><span class="n">loc</span><span class="p">,</span> <span class="n">op</span><span class="p">](</span><span class="n">OpBuilder</span> <span class="o">&amp;</span><span class="n">builder</span><span class="p">,</span> <span class="n">ValueRange</span> <span class="n">memRefOperands</span><span class="p">,</span>
+                          <span class="n">ValueRange</span> <span class="n">loopIvs</span><span class="p">)</span> <span class="p">{</span>
+                      <span class="c1">// Generate an adaptor for the remapped operands of the
+</span><span class="c1"></span>                      <span class="c1">// BinaryOp. This allows for using the nice named accessors
+</span><span class="c1"></span><span class="err">@@</span> <span class="o">-</span><span class="mi">119</span><span class="p">,</span><span class="mi">15</span> <span class="o">+</span><span class="mi">125</span><span class="p">,</span><span class="mi">27</span> <span class="err">@@</span> <span class="k">struct</span> <span class="nc">BinaryOpLowering</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ConversionPattern</span> <span class="p">{</span>
+                      <span class="k">auto</span> <span class="n">loadedRhs</span> <span class="o">=</span> <span class="n">builder</span><span class="p">.</span><span class="n">create</span><span class="o">&lt;</span><span class="n">AffineLoadOp</span><span class="o">&gt;</span><span class="p">(</span>
+                          <span class="n">loc</span><span class="p">,</span> <span class="n">binaryAdaptor</span><span class="p">.</span><span class="n">getRhs</span><span class="p">(),</span> <span class="n">loopIvs</span><span class="p">);</span>
+ 
+<span class="o">+</span>                      <span class="c1">// Use FPToUIOp in stardard to add float to int logic for toy.And
+</span><span class="c1"></span><span class="o">+</span>                      <span class="k">auto</span> <span class="n">opname</span> <span class="o">=</span> <span class="n">op</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">();</span>
+<span class="o">+</span>                      <span class="k">if</span> <span class="p">(</span><span class="n">opname</span><span class="p">.</span><span class="n">getStringRef</span><span class="p">().</span><span class="n">str</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#34;toy.And&#34;</span><span class="p">)</span> <span class="p">{</span>
+<span class="o">+</span>                        <span class="k">auto</span> <span class="n">castLhs</span> <span class="o">=</span> <span class="n">builder</span><span class="p">.</span><span class="n">create</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">FPToUIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span>
+<span class="o">+</span>                                          <span class="n">builder</span><span class="p">.</span><span class="n">getI64Type</span><span class="p">(),</span> <span class="n">loadedLhs</span><span class="p">);</span>
+<span class="o">+</span>                        <span class="k">auto</span> <span class="n">castRhs</span> <span class="o">=</span> <span class="n">builder</span><span class="p">.</span><span class="n">create</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">FPToUIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span>
+<span class="o">+</span>                                          <span class="n">builder</span><span class="p">.</span><span class="n">getI64Type</span><span class="p">(),</span> <span class="n">loadedRhs</span><span class="p">);</span>
+<span class="o">+</span>
+<span class="o">+</span>                        <span class="k">return</span> <span class="n">builder</span><span class="p">.</span><span class="n">create</span><span class="o">&lt;</span><span class="n">LoweredBinaryOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">castLhs</span><span class="p">,</span> <span class="n">castRhs</span><span class="p">);</span>
+<span class="o">+</span>                      <span class="p">}</span>
+<span class="o">+</span>
+                      <span class="c1">// Create the binary operation performed on the loaded
+</span><span class="c1"></span>                      <span class="c1">// values.
+</span><span class="c1"></span>                      <span class="k">return</span> <span class="n">builder</span><span class="p">.</span><span class="n">create</span><span class="o">&lt;</span><span class="n">LoweredBinaryOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">loadedLhs</span><span class="p">,</span>
+                                                             <span class="n">loadedRhs</span><span class="p">);</span>
+                    <span class="p">});</span>
+     <span class="k">return</span> <span class="nf">success</span><span class="p">();</span>
+<span class="o">-</span>  <span class="p">}</span>
+<span class="o">+</span>  <span class="p">}</span><span class="n">builder</span><span class="p">.</span><span class="n">create</span><span class="o">&lt;</span><span class="n">LoweredBinaryOp</span><span class="o">&gt;</span>
+ <span class="p">};</span>
+ <span class="k">using</span> <span class="n">AddOpLowering</span> <span class="o">=</span> <span class="n">BinaryOpLowering</span><span class="o">&lt;</span><span class="n">toy</span><span class="o">::</span><span class="n">AddOp</span><span class="p">,</span> <span class="n">arith</span><span class="o">::</span><span class="n">AddFOp</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="o">+</span><span class="k">using</span> <span class="n">AndOpLowering</span> <span class="o">=</span> <span class="n">BinaryOpLowering</span><span class="o">&lt;</span><span class="n">toy</span><span class="o">::</span><span class="n">AndOp</span><span class="p">,</span> <span class="n">arith</span><span class="o">::</span><span class="n">AndIOp</span><span class="o">&gt;</span><span class="p">;</span>
+ <span class="k">using</span> <span class="n">MulOpLowering</span> <span class="o">=</span> <span class="n">BinaryOpLowering</span><span class="o">&lt;</span><span class="n">toy</span><span class="o">::</span><span class="n">MulOp</span><span class="p">,</span> <span class="n">arith</span><span class="o">::</span><span class="n">MulFOp</span><span class="o">&gt;</span><span class="p">;</span>
+ 
+ <span class="c1">//===----------------------------------------------------------------------===//
+</span><span class="c1"></span><span class="err">@@</span> <span class="o">-</span><span class="mi">346</span><span class="p">,</span><span class="mi">9</span> <span class="o">+</span><span class="mi">364</span><span class="p">,</span><span class="mi">9</span> <span class="err">@@</span> <span class="kt">void</span> <span class="n">ToyToAffineLoweringPass</span><span class="o">::</span><span class="n">runOnOperation</span><span class="p">()</span> <span class="p">{</span>
+   <span class="c1">// Now that the conversion target has been defined, we just need to provide
+</span><span class="c1"></span>   <span class="c1">// the set of patterns that will lower the Toy operations.
+</span><span class="c1"></span>   <span class="n">RewritePatternSet</span> <span class="nf">patterns</span><span class="p">(</span><span class="o">&amp;</span><span class="n">getContext</span><span class="p">());</span>
+<span class="o">-</span>  <span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">AddOpLowering</span><span class="p">,</span> <span class="n">ConstantOpLowering</span><span class="p">,</span> <span class="n">FuncOpLowering</span><span class="p">,</span> <span class="n">MulOpLowering</span><span class="p">,</span>
+<span class="o">-</span>               <span class="n">PrintOpLowering</span><span class="p">,</span> <span class="n">ReturnOpLowering</span><span class="p">,</span> <span class="n">TransposeOpLowering</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="o">-</span>      <span class="o">&amp;</span><span class="n">getContext</span><span class="p">());</span>
+<span class="o">+</span>  <span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">AddOpLowering</span><span class="p">,</span> <span class="n">AndOpLowering</span><span class="p">,</span> <span class="n">ConstantOpLowering</span><span class="p">,</span> <span class="n">FuncOpLowering</span><span class="p">,</span>
+<span class="o">+</span>               <span class="n">MulOpLowering</span><span class="p">,</span> <span class="n">PrintOpLowering</span><span class="p">,</span> <span class="n">ReturnOpLowering</span><span class="p">,</span>
+<span class="o">+</span>               <span class="n">TransposeOpLowering</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">getContext</span><span class="p">());</span>
+ 
+   <span class="c1">// With the target and rewrite patterns defined, we can now attempt the
+</span><span class="c1"></span>   <span class="c1">// conversion. The conversion will signal failure if any of our `illegal`
+</span></code>
+				</pre>
+			</div>
+			<p data-pid="d1907rbt">这里遇到个问题，就是这个的来源：</p>
+			<div class="highlight">
+				<pre><code class="language-text">using AndOpLowering = BinaryOpLowering&lt;toy::AndOp, arith::AndIOp&gt;;</code></pre>
+			</div>
+			<p data-pid="EvjTSm-3">其实可以看生成后的，像Add支持浮点和定点，是有AddFOp和AddIOp种，而逻辑&amp;只支持整形，就AddIOp。</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/b5be9a46925bce1d6d8fb335a80ab5cb.jpg"></img>
+				</div>
+				<img></img>
+				<figcaption>AddIOp来源</figcaption>
+			</figure>
+			<p data-pid="WrSCwonz">接下来就可以完全复用Toy中的代码，降级到LLVM&nbsp;Dialect啊，输出LLVM&nbsp;IR并使用JIT运行啊，可以参考这小节开始两片参考，或者官方Tutorials，就不赘述。</p>
+			<a target="_blank" href="https://link.zhihu.com/?target=https%3A//mlir.llvm.org/docs/Tutorials/Toy/Ch-5/" data-draft-node="block" data-draft-type="link-card" data-image="https://pic4.zhimg.com/v2-4b955f0c82c18d39e07298e5a381ab8b_ipico.jpg" data-image-width="105" data-image-height="105" data-text="Chapter 5: Partial Lowering to Lower-Level Dialects for Optimization" class="LinkCard new">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<a target="_blank" href="https://link.zhihu.com/?target=https%3A//mlir.llvm.org/docs/Tutorials/Toy/Ch-6/" data-draft-node="block" data-draft-type="link-card" data-image="https://pic4.zhimg.com/v2-4b955f0c82c18d39e07298e5a381ab8b_ipico.jpg" data-image-width="105" data-image-height="105" data-text="Chapter 6: Lowering to LLVM and CodeGeneration" class="LinkCard new">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<p data-pid="hvHJBY-h">官方Tutorials甚至更进一步，添加struct的支持。</p>
+			<a target="_blank" href="https://link.zhihu.com/?target=https%3A//mlir.llvm.org/docs/Tutorials/Toy/Ch-7/" data-draft-node="block" data-draft-type="link-card" data-image="https://pic4.zhimg.com/v2-4b955f0c82c18d39e07298e5a381ab8b_ipico.jpg" data-image-width="105" data-image-height="105" data-text="Chapter 7: Adding a Composite Type to Toy" class="LinkCard new">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<p data-pid="bRPYcQxG">通过看和实践，到此可以有了个感性认识，后面就可以深入基础组件，各个击破。</p>
+			<p data-pid="1maoEiJT">测试代码：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-perl6">def multiply_transpose(a, b) {
+  return transpose(a) * transpose(b);
+}
+
+def main() {
+  var a&lt;2, 3&gt; = [[1, 2, 3], [4, 5, 6]];
+  var b&lt;2, 3&gt; = [1, 2, 3, 4, 5, 6];
+
+  var c = multiply_transpose(a, b);
+  var d = multiply_transpose(b, a);
+
+  var e = c &amp; d;
+
+  print(e);
+}</code>
+				</pre>
+			</div>
+			<p data-pid="opLkn9G0">运行结果：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-powershell"><span class="p">./</span><span class="n">bin</span><span class="p">/</span><span class="n">toyc-ch6</span> <span class="p">../</span><span class="n">mlir</span><span class="p">/</span><span class="n">test</span><span class="p">/</span><span class="n">Examples</span><span class="p">/</span><span class="n">Toy</span><span class="p">/</span><span class="n">Ch6</span><span class="p">/</span><span class="n">codegen_leon</span><span class="p">.</span><span class="n">toy</span> <span class="p">-</span><span class="n">-emit</span><span class="p">=</span><span class="n">jit</span>
+<span class="n">1</span><span class="p">.</span><span class="n">000000</span> <span class="n">16</span><span class="p">.</span><span class="n">000000</span> 
+<span class="n">4</span><span class="p">.</span><span class="n">000000</span> <span class="n">25</span><span class="p">.</span><span class="n">000000</span> 
+<span class="n">9</span><span class="p">.</span><span class="n">000000</span> <span class="n">36</span><span class="p">.</span><span class="n">000000</span> </code>
+				</pre>
+			</div>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<h2 id="h_599281935_7" data-into-catalog-status="">思考：AI编译器框架选择，自研、MLIR&nbsp;or&nbsp;TVM?</h2>
+			<p data-pid="AWLnm99p">这里主要讨论中小规模的公司，大厂人力资源充分，专家众多，自己写一个强大的编译器都可以，甚至不用选择，多个小组同时进行，一个小组TVM，一个小组XXX&ndash;MLIR，再有一个小组纯自研都可以，这种大公司有几家。但中小规模的公司，尤其是金主爸爸耐心不是那么充分的情况下，就需要trade&ndash;off了，有点像编译优化的trade&ndash;off，在资源不充分的情况下，如何尽可能取得最好表现。&circ;_&circ;</p>
+			<p data-pid="15VLNv_H">对于很对最近几年新成立的AI芯片公司或者部门来说，如何在现有人力资源不充分的情况下，尤其是编译器专家极度缺乏的情况下，能不能走通MLIR这条路，还是要打个大大的问号。一是按照业内很多大佬的说法，这种底层框架成熟至少五年，目前也就三年多，但是公司不会给你这么久的时间做出基于MLIR的编译器，很多坑要自己去填充，还有多种前端接入，端到端部署性能调优，各种HW&nbsp;specific优化，codegen等等，尤其是对于DSA，几乎没有标准，每家都要自己实现一遍，MLIR中可参考的并不多。</p>
+			<p data-pid="ympi_V6D">目前业内能够完整提供端到端解决方案的开源AI编译器，并且相对达到成熟度的时间（五年以上），据我所知，就剩下TVM。TVM对于CPU和GPU比较友好，有自己的DSL，有很多前端的支持，能够做端到端tuning等，但是确实如很多大佬所说，目前Relay到TIR过于陡峭，碰到NPU这种DSA，很难充分用到它强大的TIR这层的优化技术，而Relay本身没多少优化pass，Relay的下一代Relax又处于演进中，什么时候相对成熟，时间节点也不好说。</p>
+			<p data-pid="1QfswG_7">个人觉得，MLIR作为基础设施编译器框架，成熟度相对而言需要更多的工作量，好在学术界参与度高。TVM作为AI领域的编译器，Relax相对的工作量会少，如果Relax能够满足所在公司DSA的需求，那就果断先走Relax，接入成功后，TVM的前端，端到端Tuning，DSL等都是现成的。并且，既然MLIR是基础设施编译器，那么后面MLIR成熟后，TVM走一条线到MLIR，部分性能瓶颈的优化offload到MLIR去做，也不失一种折中。小规模的公司直接上MLIR，需要补的东西太多，是不是有很大的项目风险。</p>
+			<p data-pid="Z8W7LwwO">走Relax也有很大的风险，毕竟还没合入TVM主线，如果退而求Relay，如果能够满足当前DSA需求，也不失一种折中，那就是TVM（Relay）&ndash;&gt;&nbsp;TVM（Relax）&ndash;&gt;&nbsp;TVM（Relax&nbsp;&ndash;&nbsp;MLIR）。</p>
+			<p data-pid="0dYCprKe">当然，好多公司，还是在走纯自研的AI编译器，有纯Python写的，有纯C++写的，也有Python+C++的。好处是，简单可控，当前项目进度把控容易，上手时间短，但是长远来说，很多编译器基础pass缺失，无论是编译优化泛化能力，还是端到端支持度，都会大打折扣，如果继续走纯自研，人力需求会逐渐上升。如果把这个也包含了，那就是先纯自研AI编译器&ndash;&gt;TVM/MLIR&nbsp;based&nbsp;compiler。也有可能就一直纯自研下去。听闻某家AI芯片公司里的编译器团队，没有用任何编译技术，就转换出来DSA的配置，后面商业化落地遇到了种种困难。</p>
+			<p data-pid="cv1aqO3K">这就造成两极分化：大厂有资源多方面投入并且来自项目的压力相对小很多；小公司技术专家少，走开源编译器，本身开源AI编译器远没有达到成熟的地步，走开源路线，学习路线陡峭，纯自研上手快，项目进度可控，但是商业化阶段难免多多少少遇到很多问题，尤其是芯片复杂度也提上去后。</p>
+			<p data-pid="gPFIFYNP">总的来说，有位大佬说的小步快跑理论，个人还是认可的，如果实在是项目紧迫，无论自研、TVM、MLIR，先做一个出来，软件的东西，不断迭代吧。</p>
+			<h2 id="h_599281935_8" data-into-catalog-status="">讨论：MLIR</h2>
+			<p data-pid="ALPJKsCr">这里有个讨论挺有意思，大家也可以看下：</p>
+			<a target="_blank" href="https://www.zhihu.com/question/442964082/answer/1718438248" data-draft-node="block" data-draft-type="link-card" data-text="如何评价MLIR项目中Linalg Dialect的设计思想？" class="LinkCard new">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<p data-pid="-C0Qo-4t">其中
+				<a class="member_mention" href="https://www.zhihu.com/people/59f76a6c40b262c91e0e8b9dbb100168" data-hash="59f76a6c40b262c91e0e8b9dbb100168" data-hovercard="p$b$59f76a6c40b262c91e0e8b9dbb100168">@mackler</a>
+				提到的一点，我也一直有这么个困惑，尤其是现在有很多基于MLIR的projects，Torch&ndash;MLIR，ONNX&ndash;MLIR，TOSA等，从实用主义角度来看，那我到底怎么选呢，我如果是个小规模的芯片公司，反而多了选择，甚至还不如有多前端支持的TVM来的实在。
+			</p>
+			<blockquote data-pid="Rp8ZRcp2">MLIR本身并没有真正把这种碎片化和混乱解决，只是把整个社区的碎片化转换为了MLIR内部的dialect的碎片化，虽然讲story的时候可以把他们MLIR画成一个&ldquo;unified&rdquo;节点，但实际打开来里面还是原来那些碎片，这个碎片化不是一个工程上的统一就能统一的。</blockquote>
+			<p data-pid="VGIQ7_fa">这里IREE的作者，MLIR参与者
+				<a class="member_mention" href="https://www.zhihu.com/people/ac2acee09a73fed406834bb8e1463777" data-hash="ac2acee09a73fed406834bb8e1463777" data-hovercard="p$b$ac2acee09a73fed406834bb8e1463777">@antiagainst</a>
+				里面的介绍和比喻，我还是非常认可的。尤其是&ldquo;
+				<b>MLIR&nbsp;core&nbsp;相当于编译器的&nbsp;C++。MLIR&nbsp;代码库里面的&nbsp;dialect&nbsp;就是&nbsp;STL。</b>
+				&rdquo;，写得挺好的，直接引用过来。
+			</p>
+			<blockquote data-pid="CXUhx8VK">1.&nbsp;MLIR&nbsp;core&nbsp;本身只是提供一套定义编译器&nbsp;IR&nbsp;和撰写编译器&nbsp;transformation&nbsp;的基础工具。
+				<br>ML&nbsp;编译器确实是&nbsp;MLIR&nbsp;想支持的很大的应用场景，也是&nbsp;MLIR&nbsp;开发的初衷，但是从&nbsp;MLIR&nbsp;脱离&nbsp;TensorFlow&nbsp;变为&nbsp;LLVM&nbsp;project&nbsp;的一个子项目之后，它基本就是一个比较中立的基础工具了。还有其他的完全与&nbsp;ML&nbsp;无关的项目，像是&nbsp;Crhis&nbsp;Lattner&nbsp;他们在做的&nbsp;CIRCT&nbsp;以及&nbsp;MLIR&nbsp;in&ndash;tree&nbsp;的&nbsp;PDL。MLIR&nbsp;!=&nbsp;end&ndash;to&ndash;end&nbsp;ML&nbsp;编译器。
+
+				<br>2.&nbsp;MLIR&nbsp;core&nbsp;代码库里面其实没有必要存在任何的&nbsp;dialect。
+
+				<br>MLIR&nbsp;core&nbsp;对&nbsp;out&ndash;of&ndash;tree&nbsp;dialect&nbsp;的支持是其非常重要的设计根本，现在也比较完善。
+
+				<br>那&nbsp;dialect&nbsp;在MLIR&nbsp;core&nbsp;里面存在的意义是什么呢？我个人认为有几点：
+
+				<br>1）提供复用的模块，2）让协作更容易，3）以及驱动&nbsp;MLIR&nbsp;core&nbsp;本身的演进。
+
+				<br>1）其实比较有意思。其实可以做一个类比。
+
+				<b>MLIR&nbsp;core&nbsp;相当于编译器的&nbsp;C++。</b>
+				那
+				<b>MLIR&nbsp;代码库里面的&nbsp;dialect&nbsp;就是&nbsp;STL。</b>
+				能够提供一套高效的共用库是语言成功的重要因素。（从这个角度考虑，
+				<b>end&ndash;to&ndash;end&nbsp;编译器相当于用&nbsp;C++&nbsp;和&nbsp;STL&nbsp;写成的具体项目。</b>
+				）从这个角度来考虑，能在&nbsp;MLIR&nbsp;core&nbsp;里面存在的&nbsp;dialect&nbsp;也是要过一个很高的标准的。
+				<br>
+
+				<b>MLIR&nbsp;的正确食用方式</b>
+				是
+				<b>用其提供的基础工具和共用模块，再加上自己的逻辑穿针引线，来实现一个&nbsp;end&ndash;to&ndash;end&nbsp;编译器。</b>
+				MLIR&nbsp;本身真的不能提供那个，也提供不过来。（Domain&ndash;specific&nbsp;编译器可以有很多很多。）
+				<br>3.&nbsp;MLIR&nbsp;生态尚处于早期，或者说很早期。MLIR&nbsp;加入&nbsp;LLVM&nbsp;project&nbsp;也就才一年多一点。一个生态没有三五年真的很难完善。（作为对比，LLVM&nbsp;project&nbsp;存在了快二十年了，TVM也快五年了吧。）
+
+				<br>4.&nbsp;MLIR&nbsp;最终想要建立一个有着各种比较独立的亚生态的生态圈。比如&nbsp;CIRCT&nbsp;可以形成自己的生态。我也可以用&nbsp;MLIR&nbsp;做&nbsp;graphics&nbsp;编译器，形成自己的生态。当然&nbsp;LLVM&nbsp;也有自己的亚生态，像是&nbsp;Clang，像是&nbsp;CodeGen。但这里是有区别的。CIRCT&nbsp;与&nbsp;基于&nbsp;MLIR&nbsp;的&nbsp;graphics&nbsp;编译器完全没有交集，而&nbsp;Clang&nbsp;和&nbsp;CodeGen&nbsp;是同一链条上的不同部分。MLIR&nbsp;从本质上就讲求分散的。所有的&nbsp;dialect&nbsp;都可以在私有代码库里面，MLIR&nbsp;core&nbsp;的变动引发的修改是比较低频和少量的。与上游交流的强驱动估计就是这些共用的&nbsp;dialect&nbsp;了
+
+			</blockquote>
+			<p data-pid="jpvg8iqv">如果从以上类比来看，用MLIR构建自己的end2end编译器，可能会遇到很多需要自己填的坑。DSA导致多种多样的编译器需求，正是MLIR存在的必要性。</p>
+			<h2 id="h_599281935_9" data-into-catalog-status="">总结：MLIR入门学习</h2>
+			<p data-pid="vbPhiQSN">可以参考我的一个回答，再次感谢知乎网友的分享，里面引用了几位大佬的文章。</p>
+			<a target="_blank" href="https://www.zhihu.com/question/435109274/answer/2849330076" data-draft-node="block" data-draft-type="link-card" data-text="怎样去学习mlir这套框架？" class="LinkCard new">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<h2 id="h_599281935_10" data-into-catalog-status="">参考文档</h2>
+			<ol>
+				<li data-pid="Fq4nnMh1">DRR：
+					<a href="https://link.zhihu.com/?target=https%3A//mlir.llvm.org/docs/DeclarativeRewrites/" class=" wrap external" target="_blank" rel="nofollow noreferrer">Table&ndash;driven&nbsp;Declarative&nbsp;Rewrite&nbsp;Rule&nbsp;(DRR)</a>
+				</li>
+				<li data-pid="ig33TrfU">编译器与中间表示:&nbsp;LLVM&nbsp;IR,&nbsp;SPIR&ndash;V,&nbsp;以及&nbsp;MLIR
+					<a href="https://link.zhihu.com/?target=https%3A//www.lei.chat/zh/posts/compilers-and-irs-llvm-ir-spirv-and-mlir/" class=" wrap external" target="_blank" rel="nofollow noreferrer">编译器与中间表示:&nbsp;LLVM&nbsp;IR,&nbsp;SPIR&ndash;V,&nbsp;以及&nbsp;MLIR&nbsp;|&nbsp;Lei.Chat()</a>
+				</li>
+				<li data-pid="7974su6V">如何评价MLIR项目中Linalg&nbsp;Dialect的设计思想？&nbsp;&ndash;&nbsp;antiagainst的回答&nbsp;&ndash;&nbsp;知乎
+					<a href="https://www.zhihu.com/question/442964082/answer/1722372800" class="internal">
+						<span class="invisible">https://www.</span>
+						<span class="visible">zhihu.com/question/4429</span>
+						<span class="invisible">64082/answer/1722372800</span>
+						<span class="ellipsis"></span>
+					</a>
+				</li>
+				<li data-pid="XOwjbJ6n">如何看待Google的MLIR项目？&nbsp;&ndash;&nbsp;杨军的回答&nbsp;&ndash;&nbsp;知乎
+					<a href="https://www.zhihu.com/question/319145946/answer/643929592" class="internal">
+						<span class="invisible">https://www.</span>
+						<span class="visible">zhihu.com/question/3191</span>
+						<span class="invisible">45946/answer/643929592</span>
+						<span class="ellipsis"></span>
+					</a>
+				</li>
+			</ol>
+		</div>
+	</body>
+</html>

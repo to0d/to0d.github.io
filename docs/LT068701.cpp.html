@@ -1,0 +1,202 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT068701.cpp (Longest Univalue Path)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT068701.cpp (Longest Univalue Path)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-11-23</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0687.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0687</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_e0b0c794" href="#TOC_HEAD_e0b0c794">Problem 0687 <strong>Longest Univalue Path</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/longest-univalue-path/" target="_blank">https://leetcode.com/problems/longest&ndash;univalue&ndash;path/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>72.74</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_dc416d36" href="#TOC_HEAD_dc416d36">LT068701.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_e690ba46">LT0687 (name=Longest Univalue Path, ptag=Leetcode) &nbsp;<a href="../tags/LT0687.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0687</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_f3507b2d"><a href="https://leetcode.com/problems/longest-univalue-path/" target="_blank">Longest Univalue Path &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0687.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0687</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a binary tree, find the length of the longest path where each node in the path has the same value. This path may or may not pass through the root.
+	</p>
+	<p>
+		<strong>Note:</strong> The length of path between two nodes is represented by the number of edges between them.
+	</p>
+	<p>
+		<strong>Example 1:</strong>
+	</p>
+	<p>
+		Input:
+	</p>
+	<pre><code>        5
+    / \
+    4   5
+    / \   \
+    1   1   5	</code></pre>
+	<p>
+		Output:
+	</p>
+	<pre><code>    2	</code></pre>
+	<p>
+		<strong>Example 2:</strong>
+	</p>
+	<p>
+		Input:
+	</p>
+	<pre><code>        1
+        / \
+    4   5
+    / \   \
+    4   4   5	</code></pre>
+	<p>
+		Output:
+	</p>
+	<pre><code>    2	</code></pre>
+	<p>
+		<strong>Note:</strong> The given binary tree has not more than 10000 nodes. The height of the tree is not more than 1000.
+	</p>
+</ul>
+	<H3><a name="HEAD_a3667383" href="#TOC_HEAD_a3667383">LT068701.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+
+class Solution {
+public:
+    int longestUnivaluePath(TreeNode* root) {
+
+        int leftRootUniLen, rightRootUnilen;
+        mMaxUniLength = 0;
+
+        visitTree(root, leftRootUniLen, rightRootUnilen);
+        return mMaxUniLength;
+    }
+
+    void visitTree(TreeNode* node, int& leftUniLen, int& rightUniLen)
+    {
+        int LLLen, LRLen, RLLen, RRLen;
+
+        if( node == NULL )
+        {   leftUniLen  = 0;
+            rightUniLen = 0;
+            return;
+        }
+
+        visitTree(node-&gt;left, LLLen, LRLen);
+        visitTree(node-&gt;right, RLLen, RRLen);
+
+        if( node-&gt;left != NULL && node-&gt;val == node-&gt;left-&gt;val )
+            leftUniLen = std::max(LLLen, LRLen) + 1;
+        else
+            leftUniLen = 0;
+
+        if( node-&gt;right != NULL && node-&gt;val == node-&gt;right-&gt;val )
+            rightUniLen = std::max(RLLen, RRLen) + 1;
+        else
+            rightUniLen = 0;
+
+        mMaxUniLength = std::max((leftUniLen+rightUniLen), mMaxUniLength);
+    }
+
+private:
+    int mMaxUniLength;
+};
+
+
+void test(TreeNode* root)
+{
+    cout &lt;&lt; "input: ";
+    outputTree(root);
+    int r = Solution().longestUnivaluePath(root);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(makeTree("{5,4,5,1,1,null,5}"));
+}
+
+// Result
+//
+// 2022-11-23: Runtime 145ms 72.74% Memory 72MB 20.51%, https://leetcode.com/problems/longest-univalue-path/submissions/848445787/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [5,4,5,1,1,null,5]; output: 2;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

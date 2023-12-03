@@ -1,0 +1,196 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT003401.cpp (Find First and Last Position of Element in Sorted Array)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT003401.cpp (Find First and Last Position of Element in Sorted Array)</h1>
+        <h3>O(log2(n))</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-09-24</time>
+            <i><a href="../tags/BinarySearch.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>BinarySearch</a>&nbsp;<a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0034.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0034</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Search-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Search-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_f19081f3" href="#TOC_HEAD_f19081f3">Problem 0034 <strong>Find First and Last Position of Element in Sorted Array</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/" target="_blank">https://leetcode.com/problems/find&ndash;first&ndash;and&ndash;last&ndash;position&ndash;of&ndash;element&ndash;in&ndash;sorted&ndash;array/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>66.19</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_6008f312" href="#TOC_HEAD_6008f312">LT003401.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_136f2d25">LT0034 (name=Find First and Last Position of Element in Sorted Array, ptag=Leetcode) &nbsp;<a href="../tags/LT0034.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0034</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Search-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Search-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_5752bab8"><a href="https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/" target="_blank">Find First and Last Position of Element in Sorted Array &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0034.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0034</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a sorted array of integers, find the starting and ending position of a given target value.
+		Your algorithm&#039;s runtime complexity must be in the order of
+		<em>O</em> (log
+		<em>n</em> ).
+		If the target is not found in the array, return
+		<code>[&ndash;1, &ndash;1]</code>
+		.
+		For example,
+	</p>
+	<p>
+		Given
+		<code>[5, 7, 7, 8, 8, 10]</code>
+		and target value 8,
+	</p>
+	<p>
+		return
+		<code>[3, 4]</code>
+		.
+	</p>
+</ul>
+	<H3><a name="HEAD_83b3475f" href="#TOC_HEAD_83b3475f">LT003401.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    vector&lt;int&gt; searchRange(vector&lt;int&gt;& nums, int target) {
+        int len = nums.size(), l = 0, h = len-1;
+        int find = biRange_equal(nums, l, h, target);
+        if( find == -1 )
+            return {-1, -1};
+        int left = biRange_blow(nums, 0, h, target) + 1;
+        int right = biRange_high(nums, l, len-1, target) - 1;
+        return {left, right};
+    }
+
+    int biRange_high(vector&lt;int&gt;& nums, int l, int h, int target) {
+        while( l &lt;= h ){
+            int m = (l+h)/2;
+            int v = nums[m];
+            if( v &lt;= target )
+                l = m + 1;
+            else
+                h = m - 1;
+        }
+        return l;
+    }
+
+    int biRange_blow(vector&lt;int&gt;& nums, int l, int h, int target) {
+        while( l &lt;= h ){
+            int m = (l+h)/2;
+            int v = nums[m];
+            if( v &gt;= target )
+                h = m - 1;
+            else
+                l = m + 1;
+        }
+        return h;
+    }
+
+    int biRange_equal(vector&lt;int&gt;& nums, int& l, int& h, int target) {
+        while( l &lt;= h ){
+            int m = (l+h)/2;
+            int v = nums[m];
+            if( v == target )
+                return m;
+            else if( v &lt; target )
+                l = m + 1;
+            else
+                h = m - 1;
+        }
+        return -1;
+    }
+};
+
+
+
+void test(vector&lt;int&gt; nums, int target)
+{
+    cout &lt;&lt; "input: nums=";
+    outputVector(nums);
+    cout &lt;&lt; ", target=" &lt;&lt; target;
+    vector&lt;int&gt; r = Solution().searchRange(nums, target);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({5,7,7,8,8,10}, 8);
+}
+
+// Result
+//
+// 2022-11-15: Runtime 23ms 5.42% Memory 13.7MB 24.3%, https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/submissions/843958017/
+// 2023-02-17: Runtime 8ms 75.52% Memory 13.7MB 24.19%, https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/submissions/899504320/
+// 2023-07-25: Runtime 4ms 94.29% Memory 12.92MB 72.39%, https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/submissions/450043622/
+// 2023-09-24: Runtime 8ms 66.19% Memory 13.35MB 7.39%, https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/submissions/469168657/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: nums=[5,7,7,8,8,10], target=8; output: [3,4]</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC160116A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC160116A.cpp</h1>
+            <h3>algo string FindCommonString</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/CommonString.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>CommonString</a>&nbsp;<a href="../tags/String-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>String-OJ</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+// Question :  common sub-string
+//
+//     Please implement a function to find the longest
+//          common sub–string of two given string.
+//     For example:
+//        string a: abcdefg12345
+//        string b: cdef234
+//        longest common sub-string:cdef
+//
+//
+// URL http://codepad.org/WB3SVKju
+//         Output:
+//         A=abcdefg12345,B=xxxx,C=null
+//         A=abcdefg12345,B=xxcdef234,C=cdef
+//         A=xxcdef234,B=abcdefg12345,C=cdef
+
+string findCommonString(string s, string t) {
+    int s_size = s.size(), t_size = t.size();
+    int max_pos = -1, max_len = 0;
+
+    for(int i = 0; i &lt; (s_size - max_len); ++i)
+        for(int j=0; j &lt; (t_size - max_len); ++j)
+        {   int k = 0;
+            while( k&lt;(s_size - max_len) && k&lt;(t_size - max_len) && s[i+k] == t[j+k] )
+                ++k;
+            if( k &gt; max_len)
+            {   max_len = k;
+                max_pos = i;
+            }
+        }
+
+    return s.substr(max_pos, max_len);
+}
+
+void test(string s, string t)
+{
+    cout &lt;&lt; "input: s=" &lt;&lt; s &lt;&lt; ", t=" &lt;&lt; t;
+    string r = findCommonString(s, t);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main( void )
+{
+    test("xxcdef234","abcdefg12345");
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

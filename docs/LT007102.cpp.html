@@ -1,0 +1,187 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT007102.cpp (Simplify Path)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT007102.cpp (Simplify Path)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-27</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0071.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0071</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Simplify-Path.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Simplify-Path</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_bbd1ad7" href="#TOC_HEAD_bbd1ad7">Problem 0071 <strong>Simplify Path</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/simplify-path/" target="_blank">https://leetcode.com/problems/simplify&ndash;path/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_84936099" href="#TOC_HEAD_84936099">LT007102.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+void simplify_path(char* path) {
+    char* stack[1024];
+    char c, *p1, *p2;
+    int n = 0;
+
+    if( path == NULL || path[0] != '/' )
+        return;
+
+    p1 = p2 = path;
+STR:while(( c = *p1++ ) != '\0' )
+    {   switch(c)
+        {
+        case '/':
+NEXT:           stack[n++] = p2;
+                *(p2++) = '/';
+SKIP:           while( *p1 == '/' )
+                    ++p1;
+                break;
+        case '.':
+                // a.b/ or a./
+                if( p2 &gt; path && *(p2-1) != '/' )
+                {
+UNTIL:              while(1)
+                    {   *(p2++) = c;
+                        switch((c=*p1++))
+                        {   case '/' :  goto NEXT;
+                            case '\0':  goto END;
+                        }
+                    }
+                }
+                switch(*p1)
+                {   case '/' :  ++p1; goto SKIP;    // ignore "./"
+                    case '\0':  goto STR;           // string end
+                    case '.' :                      // pop if "../"
+                        if( (*(p1+1)=='/') || (*(p1+1) == '\0') )
+                        {
+                            p1++;
+                            n--;
+                            if( n &lt;= 0 ) // assume the path start with "/"
+                            {   p2 = path;
+                                n = 0;
+                                goto NEXT;
+                            }
+                            p2 = stack[--n];
+                            goto NEXT;
+                        }
+                        //else:  "/..." or "/..a"
+                    default: ;// "/.a"
+                }
+        default: // /a/
+            goto UNTIL;
+        }
+    }
+END:
+    if( p2 == path )
+        *(p2++) = '/';
+    else if( *(p2-1) == '/' && p2 &gt; (path+1) )
+        --p2;
+    *(p2) = '\0';
+}
+
+class Solution {
+public:
+    string simplifyPath(string path) {
+        static char buf[3000];
+        strcpy(buf, path.c_str());
+        simplify_path(buf);
+        return string(buf, strlen(buf));
+    }
+};
+
+
+
+void test(string path)
+{
+    cout &lt;&lt; "input: " &lt;&lt; path &lt;&lt; "; output: ";
+    string r = Solution().simplifyPath(path);
+    cout &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("/home/");
+    test("/../");
+    test("/home//foo/");
+}
+
+// Result
+//
+// 2022-11-19: Runtime 3ms 76.92% Memory 6MB 92.31%, https://leetcode.com/problems/simplify-path/submissions/846154370/
+// 2023-02-18: Runtime 0ms 100% Memory 6MB 78.57%, https://leetcode.com/problems/simplify-path/submissions/900092384/
+// 2023-07-27: Runtime 0ms 100% Memory 6.50MB 99.48%, https://leetcode.cn/problems/simplify-path/submissions/450752854/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: /home/; output: /home;
+input: /../; output: /;
+input: /home//foo/; output: /home/foo;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

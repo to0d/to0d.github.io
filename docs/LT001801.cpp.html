@@ -1,0 +1,203 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT001801.cpp (4Sum)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT001801.cpp (4Sum)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-09-16</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0018.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0018</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/xSum-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>xSum-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_bf73562f" href="#TOC_HEAD_bf73562f">Problem 0018 <strong>4Sum</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/4sum" target="_blank">https://leetcode.com/problems/4sum</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>99.39</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_a4387358" href="#TOC_HEAD_a4387358">LT001801.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_971affc7">LT0018 (name=4Sum, ptag=Leetcode) &nbsp;<a href="../tags/LT0018.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0018</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/xSum-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>xSum-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_6f586d8e"><a href="https://leetcode.com/problems/4sum" target="_blank">4Sum &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0018.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0018</a></li>
+		<br />
+	</ul>
+	<p>
+		Given an array
+		<em>S</em> of
+		<em>n</em> integers, are there elements
+		<em>a</em> ,
+		<em>b</em> ,
+		<em>c</em> , and
+		<em>d</em> in
+		<em>S</em> such that
+		<em>a</em> +
+		<em>b</em> +
+		<em>c</em> +
+		<em>d</em> = target? Find all unique quadruplets in the array which gives the sum of target.
+	</p>
+	<p>
+		<strong>Note:</strong>
+		The solution set must not contain duplicate quadruplets.
+	</p>
+	<pre><code>For example, given array S = [1, 0, -1, 0, -2, 2], and target = 0.
+
+A solution set is:
+[
+[-1,  0, 0, 1],
+[-2, -1, 1, 2],
+[-2,  0, 0, 2]
+]	</code></pre>
+</ul>
+	<H3><a name="HEAD_8789daa5" href="#TOC_HEAD_8789daa5">LT001801.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; fourSum(vector&lt;int&gt;& nums, int target) {
+        vector&lt;vector&lt;int&gt;&gt; rst;
+        std::sort(nums.begin(), nums.end(), std::less&lt;int&gt;());
+        int size = nums.size();
+        for(int i = 0; i &lt; size - 3; ++i){
+            if( i &gt; 0 && nums[i] == nums[i-1] )
+                continue;
+            int a = nums[i];
+            if( a &gt; (long)target/4+1) // a+b+c+d = t ==&gt; a &lt;= t/4
+                break;
+            if( ((long)a + nums[size-3]  + nums[size-2] + nums[size-1]) &lt; target )
+                continue;
+            if( ((long)a + nums[i+1] + nums[i+2] + nums[i+3]) &gt; target )
+                break;
+
+            for(int j = i+1; j &lt; size - 2; ++j){
+                if( j &gt; (i+1) && nums[j] == nums[j-1] )
+                    continue;
+                int b = nums[j];  // b+c+d = t-a ==&gt; b &lt;= (t-a)/3
+                if( b &gt; (long)(target-a)/3+1)
+                    break;
+                if( ((long)a + b + nums[size-2] + nums[size-1]) &lt; target )
+                    continue;
+                if( ((long)a + b + nums[i+1] + nums[i+2]) &gt; target )
+                    break;
+
+                for(int k = size-1; k &gt; (j+1); --k){
+                    if( k &lt; (size-1) && nums[k] == nums[k+1] )
+                        continue;
+                    long d = nums[k];
+                    if( d &lt; ((long)target-a-b)/2 ) //  c+d = t-a-b ==&gt; d &gt; (t-a-b)/2
+                        break;
+                    long c = (long)target - a - b - d;
+                    if (c &lt; b || c &gt; d )
+                        continue;
+                    int l = j+1, h = k - 1;
+                    while(l &lt;= h ) {
+                        int m = (l+h)/2, r = nums[m];
+                        if( r == c ) {
+                            rst.push_back({a, b, (int)c, (int)d});
+                            break;
+                        }
+                        else if( r &lt; c)
+                            l = m + 1;
+                        else
+                            h = m - 1;
+                    }
+                }
+            }
+        }
+        return rst;
+    }
+};
+
+
+
+void test(vector&lt;int&gt; nums, int target)
+{
+    cout &lt;&lt; "input: target=" &lt;&lt; target &lt;&lt; ", nums=";
+    outputVector(nums);
+    vector&lt;vector&lt;int&gt;&gt; r = Solution().fourSum(nums, target);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({1,0,-1,0,-2,2}, 0);
+}
+
+// Result
+//
+// 2023-09-16: Runtime 4ms 99.39% Memory 12.96MB 7.05%, https://leetcode.cn/problems/4sum/submissions/466690866/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: target=0, nums=[1,0,-1,0,-2,2]; output: [[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

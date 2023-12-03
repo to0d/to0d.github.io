@@ -1,0 +1,62 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>addr2line.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>addr2line.c</h1>
+            <h3></h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/addr2line.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>addr2line</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<H3><a name="ADDR2LINE-LOGIC-1" href="#TOC_ADDR2LINE-LOGIC-1">addr2line logic</a></H3><ul></ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_f8944be8">main &ndash; addr2line.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/binutils/addr2line.c" title="https://github.com/to0d/binutils-gdb/tree/master/binutils/addr2line.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<ul>
+		<li>process_file</li>
+		<ul>
+			<li>slurp_symtab &ndash; Read in the symbol table</li>
+			<li>translate_addresses</li>
+			<ul>
+				<li><a name="HEAD_HIDDEN_794bb5fa">bfd_map_over_sections &ndash; section.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/section.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/section.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+				<ul>
+					<li><a name="HEAD_HIDDEN_5b108500"><strong>callback</strong> find_address_in_section &ndash; addr2line.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/binutils/addr2line.c" title="https://github.com/to0d/binutils-gdb/tree/master/binutils/addr2line.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+					<ul>
+						<li>bfd_find_nearest_line_discriminator</li>
+						<ul>
+							<li><a name="HEAD_HIDDEN_878ef5ae"><em>bfd</em>elf_find_nearest_line &ndash; elf.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/elf.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/elf.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+							<ul>
+								<li><em>bfd</em>elf_find_nearest_line_with_alt</li>
+								<ul>
+									<li><a name="HEAD_HIDDEN_72a9bb41"><em>bfd</em>dwarf2_find_nearest_line_with_alt &ndash; <a href="6495876c76e00e1caf674ddf6a2fe3a9.html" target="_blank">dwarf2.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/dwarf2.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/dwarf2.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+									<ul>
+										<li>comp_unit_find_nearest_line</li>
+										<ul>
+											<li>lookup_address_in_line_info_table</li>
+											<br />
+										</ul>
+									</ul>
+								</ul>
+							</ul>
+						</ul>
+					</ul>
+				</ul>
+			</ul>
+		</ul>
+	</ul>
+</ul>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

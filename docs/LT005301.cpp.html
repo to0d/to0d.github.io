@@ -1,0 +1,197 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT005301.cpp (Maximum Subarray)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT005301.cpp (Maximum Subarray)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-17</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0053.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0053</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_ca56ba7a" href="#TOC_HEAD_ca56ba7a">Problem 0053 <strong>Maximum Subarray</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/maximum-subarray/" target="_blank">https://leetcode.com/problems/maximum&ndash;subarray/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>49.56</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_da878b0f" href="#TOC_HEAD_da878b0f">LT005301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_6d2d3bd2">LT0053 (name=Maximum Subarray, ptag=Leetcode) &nbsp;<a href="../tags/LT0053.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0053</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_a09955c2"><a href="https://leetcode.com/problems/maximum-subarray/" target="_blank">Maximum Subarray &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0053.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0053</a></li>
+		<br />
+	</ul>
+	<p>
+		Find the contiguous subarray within an array (containing at least one number) which has the largest sum.
+	</p>
+	<p>
+		For example, given the array
+		<code>[&ndash;2,1,&ndash;3,4,&ndash;1,2,1,&ndash;5,4]</code> ,
+	</p>
+	<p>
+		the contiguous subarray
+		<code>[4,&ndash;1,2,1]</code> has the largest sum = <code>6</code> .
+	</p>
+	<p>
+		<strong>More practice:</strong>
+	</p>
+	<p>
+		If you have figured out the O( <em>n</em> ) solution, try coding another solution using the divide and conquer approach, which is more subtle.
+	</p>
+	<li>Best Solution</li>
+	<br />
+	<pre><code>class Solution {
+public:
+    int maxSubArray(const vector&lt;int&gt;& nums) {
+
+        int answer = INT_MIN;
+        int sub = 0;
+        for(size_t i = 0; i &lt; nums.size(); ++i)
+        {
+            sub = std::max( nums.at(i), sub + nums.at(i));
+            answer = std::max( answer, sub );
+        }
+
+        return answer;
+    }
+};	</code></pre>
+</ul>
+	<H3><a name="HEAD_1e8f65dc" href="#TOC_HEAD_1e8f65dc">LT005301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+//        +
+//       + +            +           +
+//     +     +         +   +      +   +
+// ---------------------------------------&gt; index: 0,1,2...n
+//           | +    +      |+   +
+//  			|  + +        |  +
+//           v             v
+//          max0         max1        max2   ....
+//
+//
+// MaxSub =  Max(Xi) - Min(Xj) ; when i &gt; j
+
+class Solution {
+public:
+    int maxSubArray(vector&lt;int&gt;& nums) {
+        int len = nums.size();
+        if( len == 0 ) return 0;
+        if( len == 1)  return nums[0];
+
+        int i = 0, val, max = INT_MIN;                  //-2147483648
+        for (; i &lt; len && (val = nums.at(i)) &lt; 0; ++i ) // find max value in negate numbers
+        {   if( val &gt; max )
+                max = val;
+        }
+
+        if( i == len )
+            return max;
+
+        for(int min = 0, sum = 0; i &lt; len; ++i )
+        {   sum += nums[i];
+            if ( sum &lt; min )
+                min = sum;
+            else
+            {   int sub = sum - min;
+                if( sub &gt; max)
+                    max = sub;
+            }
+        }
+
+        return max;
+    }
+};
+
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    int r = Solution().maxSubArray(nums);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({-2,1,-3,4,-1,2,1,-5,4});
+}
+
+// Result
+//
+// 2022-11-16: Runtime 344ms 6% Memory 67.8MB 16.10%, https://leetcode.com/problems/maximum-subarray/submissions/844590182/
+// 2023-02-17: Runtime 125ms 49.56% Memory 67.8MB 17.16%, https://leetcode.com/problems/maximum-subarray/submissions/899817811/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [-2,1,-3,4,-1,2,1,-5,4]; output: 6;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

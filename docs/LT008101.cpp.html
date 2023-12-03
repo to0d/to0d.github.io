@@ -1,0 +1,169 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT008101.cpp (Search in Rotated Sorted Array II)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT008101.cpp (Search in Rotated Sorted Array II)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-12-27</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0081.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0081</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/RotateArray-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>RotateArray-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_57f53c2a" href="#TOC_HEAD_57f53c2a">Problem 0081 <strong>Search in Rotated Sorted Array II</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/search-in-rotated-sorted-array-ii/" target="_blank">https://leetcode.com/problems/search&ndash;in&ndash;rotated&ndash;sorted&ndash;array&ndash;ii/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>94.98</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_c7d315aa" href="#TOC_HEAD_c7d315aa">LT008101.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_bb1792dc">LT0081 (name=Search in Rotated Sorted Array II, ptag=Leetcode) &nbsp;<a href="../tags/LT0081.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0081</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/RotateArray-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>RotateArray-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_fa5e7b7c"><a href="https://leetcode.com/problems/search-in-rotated-sorted-array-ii/" target="_blank">Search in Rotated Sorted Array II &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0081.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0081</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_ec6675f7" href="#TOC_HEAD_ec6675f7">LT008101.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+//#define DBG(x)  x
+#define DBG(x)
+public:
+    bool search(vector&lt;int&gt;& nums, int target) {
+        int n0 = nums[0], low = 0, high = nums.size()-1;
+        if ( n0 == target )
+            return true;
+        while( low &lt;= high && nums[low] == n0)
+            ++low;
+        while( low &lt;= high && nums[high] == n0)
+            --high;
+        if( low &gt; high )
+            return false;
+        if( nums[low] &gt; nums[high] )
+        {   int k = findK(nums, low, high);
+            if( nums[low] &lt;= target )
+                high = k-1;
+            else
+                low  = k;
+            DBG(cout &lt;&lt; "test: low=" &lt;&lt; low &lt;&lt; ", high=" &lt;&lt; high &lt;&lt; ", k=" &lt;&lt; k &lt;&lt; endl;)
+        }
+        while( low &lt;= high )
+        {   int m = (low+high)/2;
+            DBG(cout &lt;&lt; "low=" &lt;&lt; low &lt;&lt; ", high=" &lt;&lt; high &lt;&lt; ", m=" &lt;&lt; m &lt;&lt; ", nums[m]=" &lt;&lt; nums[m] &lt;&lt; endl;)
+            if( nums[m] == target )
+                return true;
+            else if( nums[m] &lt; target )
+                low = m+1;
+            else
+                high = m-1;
+        }
+        return false;
+    }
+    int findK(vector&lt;int&gt;& nums, int low, int high)
+    {   int n0 = nums[low];
+        while( low &lt;= high )
+        {   int m = (low+high)/2;
+            DBG(cout &lt;&lt; "findK: low=" &lt;&lt; low &lt;&lt; ", high=" &lt;&lt; high &lt;&lt; ", m=" &lt;&lt; m &lt;&lt; ", nums[m]=" &lt;&lt; nums[m] &lt;&lt; endl;)
+            if( nums[m] &gt;= n0 )
+                low = m+1;
+            else
+                high = m-1;
+        }
+        DBG(cout &lt;&lt; "findK: low=" &lt;&lt; low &lt;&lt; ", high=" &lt;&lt; high &lt;&lt; endl;)
+        return low;
+    }
+};
+
+
+void test(vector&lt;int&gt; nums, int target)
+{
+    cout &lt;&lt; "input: target=" &lt;&lt; target &lt;&lt; ", nums=";
+    outputVector(nums);
+    bool r = Solution().search(nums, target);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test({2,5,6,0,0,1,2}, 0);
+}
+
+
+// Result
+//
+// 2022-12-27: Runtime 3ms 94.98% Memory 14.1MB 51.34%, https://leetcode.com/problems/search-in-rotated-sorted-array-ii/submissions/866394129/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: target=0, nums=[2,5,6,0,0,1,2]; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT014001.cpp (Word Break II)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT014001.cpp (Word Break II)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-01-03</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0140.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0140</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_960a4015" href="#TOC_HEAD_960a4015">Problem 0140 <strong>Word Break II</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/word-break-ii/" target="_blank">https://leetcode.com/problems/word&ndash;break&ndash;ii/</a></li>
+	<li>Difficulty <strong>Hard</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_2aad3ee" href="#TOC_HEAD_2aad3ee">LT014001.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_cba68e07">LT0140 (name=Word Break II, ptag=Leetcode) &nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0140.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0140</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_e515fb81"><a href="https://leetcode.com/problems/word-break-ii/" target="_blank">Word Break II &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0140.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0140</a></li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_868d908f"><a href="LT013901.cpp.html" target="_blank">LT013901.cpp</a> &nbsp;<a href="../tags/LT0140.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0140</a>&nbsp;<a href="../tags/Ref.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Ref</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ac3ff63b" href="#TOC_HEAD_ac3ff63b">LT014001.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+public:
+    vector&lt;string&gt; wordBreak(string s, vector&lt;string&gt;& wordDict) {
+        vector&lt;string&gt; rst;
+        m_wordSet.clear();
+        m_maxWordLen = -1;
+        static char buf1[26], buf2[26], buf3[26];
+        cal(buf1, s);
+        memset(buf3, 0, 26);		
+        for(auto w : wordDict)
+        {	cal(buf2, w);
+            bool match = true;
+            for(int i = 0;i &lt; 26; ++i)
+            {	if( buf2[i] &gt; buf1[i] )
+                    match = false;
+                buf3[i] += buf2[i];
+            }
+            if( !match )
+                continue;
+
+            m_wordSet.insert(w);
+            int wlen = w.length();
+            m_maxWordLen = std::max(m_maxWordLen, wlen);
+        }
+        for(int i = 0;i &lt; 26; ++i)
+        {	if( buf1[i] &gt; 0 && buf3[i] == 0)
+            return rst;
+        }
+        static char buf[40];
+        int buf_len = 0;
+        _wordBreak(s.c_str(), s.length(), buf, buf_len, rst);
+        return rst;
+    }
+
+    void _wordBreak(const char* p, int len, char* buf, int buf_len, vector&lt;string&gt;& rst) {
+        if( len == 0 )
+        {	string w(buf, buf_len);
+            rst.push_back(w);
+            return;
+        }
+        int len2 = std::min(len, m_maxWordLen);
+        if( buf_len &gt; 0 )
+            buf[buf_len++] = ' ';
+        for(int i = len2; i &gt; 0; --i)
+        {	string w(p, i);
+            //cout &lt;&lt; "w: " &lt;&lt; w &lt;&lt; endl;
+            if( m_wordSet.count(w) == 0 )
+                continue;
+            memcpy(buf+buf_len, p, i);
+            _wordBreak(p+i, len-i, buf, buf_len+i, rst);
+        }
+    }
+    void cal(char* buf, string& s)
+    {   int size = s.length();
+        memset(buf, 0, 26);
+        for(int i = 0; i &lt; size; ++i)
+            buf[s.at(i)-'a']++;
+    }
+
+    unordered_set&lt;string&gt; m_wordSet;
+    int m_maxWordLen;
+};
+
+
+
+void test(string s, vector&lt;string&gt; wordDict)
+{
+    cout &lt;&lt; "input: s=" &lt;&lt; s &lt;&lt; ", dict=";
+    outputVector(wordDict);
+    vector&lt;string&gt; r = Solution().wordBreak(s, wordDict);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("catsanddog", {"cat","cats","and","sand","dog"});
+}
+
+
+// Result
+//
+// 2023-01-03: Runtime 0ms 100% Memory 7.2MB 85.60%, https://leetcode.com/problems/word-break/submissions/870119684/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: s=catsanddog, dict=[cat,cats,and,sand,dog]; output: [cats and dog,cat sand dog];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

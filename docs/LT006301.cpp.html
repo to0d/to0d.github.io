@@ -1,0 +1,188 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT006301.cpp (Unique Paths II)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT006301.cpp (Unique Paths II)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-27</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0063.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0063</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_426d035f" href="#TOC_HEAD_426d035f">Problem 0063 <strong>Unique Paths II</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/unique-paths-ii/" target="_blank">https://leetcode.com/problems/unique&ndash;paths&ndash;ii/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>7.29</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_e239306e" href="#TOC_HEAD_e239306e">LT006301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_d0dd1491">LT0063 (name=Unique Paths II, ptag=Leetcode) &nbsp;<a href="../tags/LT0063.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0063</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_23b488ad"><a href="https://leetcode.com/problems/unique-paths-ii/" target="_blank">Unique Paths II &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0063.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0063</a></li>
+		<br />
+	</ul>
+	<p>
+		Follow up for &quot;Unique Paths&quot;:
+	</p>
+	<p>
+		Now consider if some obstacles are added to the grids. How many unique paths would there be?
+	</p>
+	<p>
+		An obstacle and empty space is marked as
+		<code>1</code> and
+		<code>0</code> respectively in the grid.
+	</p>
+	<p>
+		For example,
+	</p>
+	<p>
+		There is one obstacle in the middle of a 3x3 grid as illustrated below.
+	</p>
+	<pre><code>[
+[0,0,0],
+[0,1,0],
+[0,0,0]
+]	</code></pre>
+	<p>
+		The total number of unique paths is
+		<code>2</code> .
+	</p>
+	<p>
+		<strong>Note:</strong>
+		<em>m</em> and
+		<em>n</em> will be at most 100.
+	</p>
+</ul>
+	<H3><a name="HEAD_867092bb" href="#TOC_HEAD_867092bb">LT006301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+class Solution {
+public:
+    int uniquePathsWithObstacles(vector&lt;vector&lt;int&gt;&gt;& obstacleGrid) {
+        int row = obstacleGrid.size(), colum = obstacleGrid[0].size();
+        if( obstacleGrid[0][0] == 1 )
+            return 0;
+
+        static int dp[2*100];                   // optimization: only use 2 static row - 2023/07/27
+#define dpf(i, j) dp[((i)%2)*colum + (j)]
+#define obs(i, j) obstacleGrid[(i)][(j)]
+
+        bool obs_column = false;
+        for(int j = 0;j &lt; colum; ++j)
+        {   if( !obs_column && obs(0, j) == 1 )
+                obs_column = true;
+            dpf(0, j) = obs_column ? 0 : 1;
+        }
+
+        int obs_row = false;
+        for(int i = 1;i &lt; row; ++i)
+        {   if( !obs_row && obs(i, 0) == 1 )
+                obs_row = true;
+            dpf(i, 0) = obs_row ? 0 : 1;
+            for(int j = 1;j &lt; colum; ++j)
+                if( obs(i, j) == 1 )
+                    dpf(i, j) = 0;
+                else
+                    dpf(i, j) = dpf(i-1, j)+dpf(i, j-1);
+        }
+
+        return dpf(row-1, colum-1);
+    }
+};
+
+
+void test(vector&lt;vector&lt;int&gt;&gt; obstacleGrid)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(obstacleGrid);
+    cout &lt;&lt; "; output: ";
+    int r = Solution().uniquePathsWithObstacles(obstacleGrid);
+    cout &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({{0,0,0},{0,1,0},{0,0,0}});
+}
+
+// Result
+//
+//
+// 2023-02-18: Runtime 0ms 100% Memory 9.4MB 16.53%, https://leetcode.com/problems/unique-paths-ii/submissions/900079277/
+// 2023-05-15: Runtime 3ms 73.28% Memory 7.6MB 92.51%, https://leetcode.com/problems/unique-paths-ii/submissions/950600404/
+// 2023-07-27: Runtime 0ms 7.29% Memory 7.13MB 96.11%, https://leetcode.cn/problems/unique-paths-ii/submissions/450762359</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [[0,0,0],[0,1,0],[0,0,0]]; output: 2;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

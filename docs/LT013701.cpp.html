@@ -1,0 +1,172 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT013701.cpp (Single Number II)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT013701.cpp (Single Number II)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-19</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0137.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0137</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_2e9f44f9" href="#TOC_HEAD_2e9f44f9">Problem 0137 <strong>Single Number II</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/single-number-ii/" target="_blank">https://leetcode.com/problems/single&ndash;number&ndash;ii/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>68.1</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_d3a11d6" href="#TOC_HEAD_d3a11d6">LT013701.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_ce32c791">LT0137 (name=Single Number II, ptag=Leetcode) &nbsp;<a href="../tags/LT0137.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0137</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_f60011d5"><a href="https://leetcode.com/problems/single-number-ii/" target="_blank">Single Number II &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0137.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0137</a></li>
+		<br />
+	</ul>
+	<p>
+		Given an integer array nums where every element appears three times except for one, which appears exactly once. Find the single element and return it.
+	</p>
+	<p>
+		You must implement a solution with a linear runtime complexity and use only constant extra space.
+	</p>
+	<p>
+		 
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input: nums = [2,2,3,2]
+Output: 3	</code></pre>
+	<p>
+		Example 2:
+	</p>
+	<pre><code>Input: nums = [0,1,0,1,0,1,99]
+Output: 99	</code></pre>
+	<p>
+		 
+	</p>
+	<p>
+		Constraints:
+	</p>
+	<pre><code>1 &lt;= nums.length &lt;= 3 * 104
+-231 &lt;= nums[i] &lt;= 231 - 1
+Each element in nums appears exactly three times except for one element which appears once.	</code></pre>
+</ul>
+	<H3><a name="HEAD_b6aa6823" href="#TOC_HEAD_b6aa6823">LT013701.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int singleNumber(vector&lt;int&gt;& nums) {
+        int c[32] = {0}, size = nums.size();
+        for( int i = 0;i &lt; size; ++i )
+        {   int v = nums[i];
+            for( int j = 0; j &lt; 32 && v != 0; ++j)
+            {   if( (v & 1) == 1)
+                    c[j]++;
+                v = v &gt;&gt; 1;
+            }
+        }
+
+        int r = 0;
+        for( int j = 0; j &lt; 32 ; ++j )
+        {   if( (c[j]%3) != 0 )
+                r |= 1 &lt;&lt; j;
+        }
+
+        return r;
+    }
+};
+
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: nums=";
+    outputVector(nums);
+    int r = Solution().singleNumber(nums);
+    cout &lt;&lt; "; output: ";
+    cout &lt;&lt; r  &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({2,2,3,2});
+}
+
+// Result
+//
+// 2022-11-18: Runtime 14ms 32.49% Memory 9.6MB 66.79%, https://leetcode.com/problems/single-number-ii/submissions/845885248/
+// 2023-02-19: Runtime 9ms 68.1% Memory 9.6MB 67.42%, https://leetcode.com/problems/single-number-ii/submissions/900657945/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: nums=[2,2,3,2]; output: 3;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT005101.cpp (N-Queens)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT005101.cpp (N-Queens)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-17</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0051.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0051</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/N-Queens.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>N-Queens</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_7c1672b" href="#TOC_HEAD_7c1672b">Problem 0051 <strong>N&ndash;Queens</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/n-queens/" target="_blank">https://leetcode.com/problems/n&ndash;queens/</a></li>
+	<li>Difficulty <strong>Hard</strong></li>
+	<li><strong>76.13</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_b0be258d" href="#TOC_HEAD_b0be258d">LT005101.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_283a60c3">LT0051 (name=N&ndash;Queens, ptag=Leetcode) &nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0051.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0051</a>&nbsp;<a href="../tags/N-Queens.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>N-Queens</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_88bfb095"><a href="https://leetcode.com/problems/n-queens/" target="_blank">N&ndash;Queens &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0051.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0051</a></li>
+		<br />
+	</ul>
+	<p>
+		The <strong>n&ndash;queens</strong> puzzle is the problem of placing <em>n</em> queens on an <em>n×n</em> chessboard such that no two queens attack each other.
+	</p>
+	<p>
+		Given an integer <em>n</em> , return all distinct solutions to the <em>n</em> &ndash;queens puzzle.
+	</p>
+	<p>
+		Each solution contains a distinct board configuration of the <em>n</em> &ndash;queens&#039; placement, where <code>&#039;Q&#039;</code> and <code>&#039;.&#039;</code> both indicate a queen and an empty space respectively.
+	</p>
+	<p>
+		<img src="https://assets.leetcode.com/uploads/2020/11/13/queens.jpg" />
+	</p>
+	<p>
+		For example,
+	</p>
+	<p>
+		There exist two distinct solutions to the 4&ndash;queens puzzle:
+	</p>
+	<pre><code>[
+[".Q..",  // Solution 1
+"...Q",
+"Q...",
+"..Q."],
+
+["..Q.",  // Solution 2
+"Q...",
+"...Q",
+".Q.."]
+]	</code></pre>
+</ul>
+	<H3><a name="HEAD_b4c2ef5a" href="#TOC_HEAD_b4c2ef5a">LT005101.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    vector&lt;vector&lt;string&gt;&gt; solveNQueens(int n){
+        vector&lt;vector&lt;string&gt;&gt; output;
+        if( n &gt;= 1 )
+        {   vector&lt;int&gt; vec(n, 0);
+            _findQueue(vec,0,n, output);
+        }
+
+        return output;
+    }
+
+private:
+    void _findQueue(vector&lt;int&gt;& vec, int x, int n, vector&lt;vector&lt;string&gt; &gt;& output){
+        if( x == n )
+        {   vector&lt;string&gt; r;
+            for( int i = 0; i &lt; n; ++i)
+            {   string rr(n,'.');
+                rr[vec[i]] = 'Q';
+                r.push_back(rr);
+            }
+            output.push_back(r);
+            return;
+        }
+
+        for( int v = 0; v &lt; n; ++v)
+        {   bool confic = false;
+
+            for(int x1 = 0; x1 &lt; x && !confic; ++x1)
+            {   int y1 = vec[x1];
+                if( y1 == v)
+                {   confic = true;
+                    break;
+                }
+
+                if( abs(x-x1) == abs(v-y1))
+                {   confic = true;
+                    break;
+                }
+            }
+
+            if(!confic)
+            {   vec[x] = v;
+                _findQueue(vec,x+1,n, output);
+            }
+        }
+    }
+};
+
+
+
+void test(int n)
+{
+    cout &lt;&lt; "input: " &lt;&lt; n;
+    vector&lt;vector&lt;string&gt;&gt; r = Solution().solveNQueens(n);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(4);
+}
+
+// Result
+//
+// 2022-11-10: Runtime 8ms 59.68% Memory 7.9MB 35.45%, https://leetcode.com/problems/n-queens/submissions/840595843/
+// 2023-02-17: Runtime 6ms 76.13% Memory 7.9MB 35.23%, https://leetcode.com/problems/n-queens/submissions/899815523/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 4; output: [[.Q..,...Q,Q...,..Q.],[..Q.,Q...,...Q,.Q..]]</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC150510A.py</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC150510A.py</h1>
+            <h3>test python - list, tuple</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/PY-List.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PY-List</a>&nbsp;<a href="../tags/PY-Tuple.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PY-Tuple</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#!/usr/bin/python
+#coding=utf-8
+
+classmates = ['Michael', 'Bob', 'Tracy']
+print '01:', classmates
+print '02:', 'Len   =', len(classmates)
+print '03:', 'At(1) =',  classmates[0]
+print '04:', 'At(-1)=',  classmates[-1]
+
+classmates.append('Adam')
+print '05:', 'add Adam:', classmates
+
+classmates.insert(1, 'Jack')
+print '06:', 'insert Jack:', classmates
+
+classmates.pop()
+print '07:', 'pop   :', classmates
+
+classmates.pop(1)
+print '08:', 'pop(1):', classmates
+
+classmates[1] = 'Sarah'
+print '09:', 'replace:', classmates
+
+#list�����Ԫ�ص���������Ҳ���Բ�ͬ
+L = ['Apple', 123, True]
+print '10:', L
+
+#listԪ��Ҳ��������һ��list
+s = ['python', 'java', L, 'scheme']
+print '11:', s
+print '12:', 'Len   =', len(s)
+print '13:', 's[2][0]=', s[2][0]
+
+# tupleһ����ʼ���Ͳ����޸�
+classmates = ('Michael', 'Bob', 'Tracy')
+print '14:', classmates
+print '15:', 'Len   =', len(classmates)
+
+t = (1,)
+print '16:', 't = (1,) is tuple:', t
+t = (1)
+print '17:', 't = (1) is not tuple:', t
+
+print('output: done.');</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

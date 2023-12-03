@@ -1,0 +1,148 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT041601.cpp (Partition Equal Subset Sum)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT041601.cpp (Partition Equal Subset Sum)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-12</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/DP-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DP-OJ</a>&nbsp;<a href="../tags/LT0416.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0416</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_99482fe5" href="#TOC_HEAD_99482fe5">Problem 0416 <strong>Partition Equal Subset Sum</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/partition-equal-subset-sum/" target="_blank">https://leetcode.com/problems/partition&ndash;equal&ndash;subset&ndash;sum/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>8.27</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_347b27da" href="#TOC_HEAD_347b27da">LT041601.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_d9810fbd">LT0416 (name=Partition Equal Subset Sum, ptag=Leetcode) &nbsp;<a href="../tags/DP-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DP-OJ</a>&nbsp;<a href="../tags/LT0416.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0416</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_864ed262"><a href="https://leetcode.com/problems/partition-equal-subset-sum/" target="_blank">Partition Equal Subset Sum &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0416.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0416</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_6ecf2027" href="#TOC_HEAD_6ecf2027">LT041601.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool canPartition(vector&lt;int&gt;& nums) {
+        if( nums.size() &lt;= 1)
+            return false;
+        int sum = 0;
+        for(int num : nums)
+            sum += num;
+        if( (sum%2) != 0 )
+            return false;
+        int target = sum/2;
+        unordered_set&lt;int&gt; _set, _set2;
+        _set.insert(0);
+        for(int num : nums)
+        {   _set2.clear();
+            for(int sum : _set)
+            {   int sum2 = sum + num;
+                if( sum2 == target )
+                    return true;
+                _set2.insert(sum2);
+                _set2.insert(sum);
+            }
+            _set.swap(_set2);
+        }
+        return false;
+    }
+};
+
+
+
+void test(vector&lt;int&gt; nums)
+{
+    bool out = Solution().canPartition(nums);
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    cout &lt;&lt; "; output: " &lt;&lt; out;
+    cout &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({1,5,11,5});
+}
+
+// Result
+//
+// 2023-03-12: Runtime 840ms 8.27% Memory 146.5MB 13.45%, https://leetcode.com/problems/partition-equal-subset-sum/submissions/913300974/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [1,5,11,5]; output: 1</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Test_sshd_remote_call.java</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Test_sshd_remote_call.java</h1>
+        <h3>实现ssh远程登录</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2021-04-30</time>
+            <i><a href="../tags/Publication.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Publication</a>&nbsp;<a href="../tags/apache-sshd.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>apache-sshd</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H2><a name="HEAD_ab6ba8ff" href="#TOC_HEAD_ab6ba8ff">Introduce</a></H2>
+<p>
+	<a href="../tags/apache-sshd.html" target="_blank"><i class="fa fa-tags fa-fw"></i>apache-sshd</a> 是一个100%纯Java类库用于在基于Java开发的客户端与服务器提供SSH协议支持。这个类库采用 <a><b>apache-mina</b></a> 开发，它是一个可扩展和高性能的异步IO类库.
+</p>
+	<H3><a name="HEAD_4b2fc60" href="#TOC_HEAD_4b2fc60">Refer</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_70f2bf8c"><a href="http://mina.apache.org/sshd-project/index.html" target="_blank">SSHD home</a> &nbsp;<a href="../tags/apache-sshd.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>apache-sshd</a></li>
+	<li><a name="HEAD_HIDDEN_fa8cc6d5"><a href="../refers/c5de494b70361ed5cc30aa7017393286.html" target="_blank">2020&ndash;04&ndash;13 Apache sshd客户端 CSDN.html</a></li>
+	<br />
+</ul>
+	<H2><a name="test-apache-sshd-1" href="#TOC_test-apache-sshd-1">使用 <a href="../tags/apache-sshd.html" target="_blank"><i class="fa fa-tags fa-fw"></i>apache-sshd</a> 实现 <a href="../tags/ssh.html" target="_blank"><i class="fa fa-tags fa-fw"></i>ssh</a> 远程登录</a></H2><ul><a href="../tags/Remote-Call.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Remote-Call</a>&nbsp;<a href="../tags/apache-sshd.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>apache-sshd</a>&nbsp;<a href="../tags/ssh.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ssh</a>&nbsp;</ul>
+	<hr/>
+<pre><code>package test.ssh;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.EnumSet;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.sshd.client.SshClient;
+import org.apache.sshd.client.channel.ClientChannel;
+import org.apache.sshd.client.channel.ClientChannelEvent;
+import org.apache.sshd.client.session.ClientSession;
+import org.apache.sshd.common.channel.Channel;
+
+public class Test_sshd_remote_call {
+
+    static SshClient client;
+
+    static ClientSession session;
+
+    static int timeout = 10 * 1000;
+
+    static ClientChannel channel;
+
+    static OutputStream pipedIn;
+
+    static InputStream pipeOut;
+
+    static String serverAddr = "192.168.3.20";
+
+    static int serverPort = 22;
+
+    static String userName = "todd";
+
+    static String password = "password";
+
+    public static void main(String[] args) throws IOException {
+
+        /*********************************************/
+        // Start connection
+        /*********************************************/
+        client = SshClient.setUpDefaultClient();
+        client.start();
+
+        session = client.connect(userName, serverAddr, serverPort).verify(timeout).getSession();
+        session.addPasswordIdentity(password);
+
+        if (!session.auth().verify(timeout).isSuccess()) {
+            throw new IOException("auth faild");
+        }
+
+        channel = session.createChannel(Channel.CHANNEL_SHELL);
+        if (!channel.open().verify(timeout).isOpened()) {
+            throw new IOException("open faild");
+        }
+
+        pipedIn = channel.getInvertedIn();
+        pipeOut = channel.getInvertedOut();
+
+        /*********************************************/
+        // Wait welcome info
+        /*********************************************/
+        readOutput(10);
+
+        /*********************************************/
+        // Execute remote command
+        /*********************************************/
+        execute("cd ~");
+        execute("ls");
+
+        /*********************************************/
+        // Close connection
+        /*********************************************/
+        pipeOut.close();
+        channel.waitFor(EnumSet.of(ClientChannelEvent.CLOSED), TimeUnit.SECONDS.toMillis(timeout));
+        channel.close();
+
+        if (client != null) {
+            client.stop();
+            client.close();
+        }
+    }
+
+    static void readOutput(int maxTry) throws IOException {
+
+        StringBuffer sb = new StringBuffer();
+        int len = 0;
+        int tryNum = 0;
+
+        while (tryNum &lt; 3) {
+
+            if ((len = pipeOut.available()) == 0) {
+                tryNum++;
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                continue;
+            }
+
+            tryNum = maxTry;
+
+            for (int i = 0; i &lt; len; ++i) {
+                sb.append((char) pipeOut.read());
+            }
+        }
+
+        System.out.println(sb.toString());
+    }
+
+    static void execute(String command) throws IOException {
+
+        pipedIn.write((command + "\n").getBytes());
+        pipedIn.flush();
+        readOutput(3);
+    }
+
+}</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

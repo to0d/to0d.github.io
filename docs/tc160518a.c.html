@@ -1,0 +1,84 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC160518A.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC160518A.c</h1>
+            <h3>fcntl fileflags</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/APUE.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>APUE</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<H3><a name="HEAD_8fc2d5ff" href="#TOC_HEAD_8fc2d5ff">issue: undefined reference to `err_quit&#039;</a></H3>
+<ul>
+	<li>Update &quot;apue.h&quot;</li>
+	<br />
+	<li><a name="HEAD_HIDDEN_f5a78f1c">see <a href="../refers/a23b7a3ee95e15096f8c71ecc0f3f5d7.html" target="_blank">2017&ndash;09&ndash;12 Linux下运行 UNIX环境高级编程 undefined reference to err_quit 编译出错的处理方法 李学文 博客园.html</a></li>
+	<br />
+</ul>
+	<hr/>
+<pre><code>#include "stdio.h"
+#include "apue.h"
+#include &lt;fcntl.h&gt;
+
+int main( int argc, char *argv[]  )
+{
+    int		val;
+
+    if (argc != 2)
+        err_quit("usage: a.out &lt;descriptor#&gt;");
+
+    if ((val = fcntl(atoi(argv[1]), F_GETFL, 0)) &lt; 0)
+        err_sys("fcntl error for fd %d", atoi(argv[1]));
+
+    switch (val & O_ACCMODE) {
+    case O_RDONLY:
+        printf("read only");
+        break;
+
+    case O_WRONLY:
+        printf("write only");
+        break;
+
+    case O_RDWR:
+        printf("read write");
+        break;
+
+    default:
+        err_dump("unknown access mode");
+    }
+
+    if (val & O_APPEND)
+        printf(", append");
+    if (val & O_NONBLOCK)
+        printf(", nonblocking");
+    if (val & O_SYNC)
+        printf(", synchronous writes");
+
+#if !defined(_POSIX_C_SOURCE) && defined(O_FSYNC) && (O_FSYNC != O_SYNC)
+    if (val & O_FSYNC)
+        printf(", synchronous writes");
+#endif
+
+    putchar('\n');
+
+    printf("output: done.\n");
+
+    exit(0);
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

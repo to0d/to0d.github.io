@@ -1,0 +1,162 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT023401.cpp (Palindrome Linked List)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT023401.cpp (Palindrome Linked List)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-04</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0234.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0234</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/List-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>List-OJ</a>&nbsp;<a href="../tags/290cb493.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Palindrome-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_ca10907a" href="#TOC_HEAD_ca10907a">Problem 0234 <strong>Palindrome Linked List</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/palindrome-linked-list/" target="_blank">https://leetcode.com/problems/palindrome&ndash;linked&ndash;list/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>98.72</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_3d0f0014" href="#TOC_HEAD_3d0f0014">LT023401.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_a277ce12">LT0234 (name=Palindrome Linked List, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0234.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0234</a>&nbsp;<a href="../tags/List-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>List-OJ</a>&nbsp;<a href="../tags/290cb493.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Palindrome-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_d6f6d4dd"><a href="https://leetcode.com/problems/palindrome-linked-list/" target="_blank">Palindrome Linked List &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0234.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0234</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a singly linked list, determine if it is a palindrome.
+	</p>
+	<p>
+		<strong>Follow up:</strong>
+	</p>
+	<p>
+		Could you do it in O(n) time and O(1) space?
+	</p>
+</ul>
+	<H3><a name="HEAD_ac3c2561" href="#TOC_HEAD_ac3c2561">LT023401.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        if( head == NULL || head-&gt;next == NULL )
+            return true;
+        if( head-&gt;next-&gt;next == NULL )
+            return head-&gt;val == head-&gt;next-&gt;val;
+
+        ListNode *fast = head, *node = head, *next = node-&gt;next;
+        while( fast-&gt;next != NULL && fast-&gt;next-&gt;next != NULL)
+        {   fast = fast-&gt;next-&gt;next;
+            ListNode* temp = next-&gt;next;
+            next-&gt;next = node;
+            node = next;
+            next = temp;
+        }
+        head-&gt;next = NULL;
+
+        ListNode *h1 = node, *h2 = next;
+        if( fast-&gt;next == NULL )  // odd list:
+            h1 = h1-&gt;next;
+
+        bool found = false;
+        for(; !found && h1 != NULL; h1 = h1-&gt;next, h2 = h2-&gt;next)
+            if( h1-&gt;val != h2-&gt;val )
+                found = true;
+
+        return !found;
+    }
+};
+
+
+
+void test(ListNode* head)
+{
+    cout &lt;&lt; "input: ";
+    outputList(head);
+    bool r = Solution().isPalindrome(head);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(makeList(4,1,2,2,1));
+}
+
+// Result
+//
+// 2022-11-19: Runtime 465ms 13.24% Memory 110.4MB 95.74%, https://leetcode.com/problems/palindrome-linked-list/submissions/846338425/
+// 2023-02-19: Runtime 187ms 98.63% Memory 110.4MB 98.3%, https://leetcode.com/problems/palindrome-linked-list/submissions/900662250/
+// 2023-03-04: Runtime 186ms 98.72% Memory 110.4MB 98.31%, https://leetcode.com/problems/palindrome-linked-list/submissions/908956788/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [1-&gt;2-&gt;2-&gt;1]; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

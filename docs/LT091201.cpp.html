@@ -1,0 +1,172 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT091201.cpp (Sort an Array)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT091201.cpp (Sort an Array)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-18</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0912.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0912</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/MergeSort.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>MergeSort</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_aac960b3" href="#TOC_HEAD_aac960b3">Problem 0912 <strong>Sort an Array</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/sort-an-array/" target="_blank">https://leetcode.com/problems/sort&ndash;an&ndash;array/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>45.49</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_89777d5b" href="#TOC_HEAD_89777d5b">LT091201.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_d922a3a5">LT0912 (name=Sort an Array, ptag=Leetcode) &nbsp;<a href="../tags/LT0912.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0912</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_59287119"><a href="https://leetcode.com/problems/sort-an-array/" target="_blank">Sort an Array &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0912.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0912</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_808c5e28" href="#TOC_HEAD_808c5e28">LT091201.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    vector&lt;int&gt; sortArray(vector&lt;int&gt;& nums) {
+        mergeSort(nums, 0, nums.size()-1);
+        return nums;
+    }
+
+    void mergeSort(vector&lt;int&gt;& nums, int start, int end){
+        if( start &gt;= end )
+            return;
+
+        int mid = (start+end)/2;
+        mergeSort(nums, start, mid);
+        mergeSort(nums, mid+1, end);
+
+        m_temp_len = 0;
+        int pos1 = start, pos2 = mid+1;
+        while( pos1 &lt;= mid && pos2 &lt;= end )
+        {   int v1 = nums[pos1], v2 = nums[pos2];
+            if( v1 &lt;= v2 )
+            {   _add_temp(v1);
+                ++pos1;
+            }
+            else
+            {   _add_temp(v2);
+                ++pos2;
+            }
+        }
+
+        for(; pos1 &lt;= mid; ++pos1)
+            _add_temp(nums[pos1]);
+
+        for(; pos2 &lt;= end; ++pos2 )
+            _add_temp(nums[pos2]);
+
+        for(int i = 0; i &lt; m_temp_len; ++i)
+            nums[start+i] = m_temp[i];
+    }
+
+    void _add_temp(int v){
+        if( m_temp.size() == m_temp_len )
+            m_temp.push_back(v);
+        else
+            m_temp[m_temp_len] = v;
+        m_temp_len++;
+    }
+
+    vector&lt;int&gt; m_temp;
+    int m_temp_len;
+};
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    vector&lt;int&gt; r = Solution().sortArray(nums);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({5,2,3,1});
+}
+
+// Result
+//
+// 2023-01-31: Runtime 236ms 49.78% Memory 62.1MB 48.31%, https://leetcode.com/problems/sort-an-array/submissions/888654862/
+// 2023-02-18: Runtime 260ms 45.49% Memory 66.2MB 37.29%, https://leetcode.com/problems/sort-an-array/submissions/900119788/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [5,2,3,1]; output: [1,2,3,5];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

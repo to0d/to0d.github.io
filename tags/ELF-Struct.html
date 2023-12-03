@@ -1,0 +1,86 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>ELF-Struct (1)</title>
+        <link href="../docs/img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="../docs/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="../docs/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="../docs/css/style.css">
+        <link rel="stylesheet" type="text/css" href="../docs/css/blog_all.css">
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="../docs/img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="../docs/about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span></a></li>
+                <li><a href="../docs/docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span> </a></li>
+                <li><a href="../docs/tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span> </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <H2>ELF-Struct (1)</H2><table id="btrl">
+<tr><td id="btrc1">auto</td><td id="btrc2">&nbsp;<font size="2"><strong><a href="ELF.html" target="_blank"><i class="fa fa-tags fa-fw"></i><span>ELF</span></a></strong></font></td></tr>
+</table>
+
+        <hr/>
+        <div class="entry-content">
+<H3>Child (4)</H3><br><ol><table id="btlt">
+<tr><td id="btlc1"><li><a href="ELF-PHT.html" target="_blank"><i class="fa fa-tags fa-fw"></i><span>ELF-PHT</span></a> (0)</li></td><td id="btlc2">Program Header Table</td></tr>
+<tr><td id="btlc1"><li><a href="ELF-SHT.html" target="_blank"><i class="fa fa-tags fa-fw"></i><span>ELF-SHT</span></a> (0)</li></td><td id="btlc2">Section Header Table</td></tr>
+<tr><td id="btlc1"><li><a href="ELF-Section.html" target="_blank"><i class="fa fa-tags fa-fw"></i><span>ELF-Section</span></a> (0)</li></td><td id="btlc2">节</td></tr>
+<tr><td id="btlc1"><li><a href="ELF-Segment.html" target="_blank"><i class="fa fa-tags fa-fw"></i><span>ELF-Segment</span></a> (0)</li></td><td id="btlc2">段</td></tr>
+</table></ol>
+<H3>HTML (1)</H3><br/><ol>
+<li><a href="../docs/77c4677e791bec996ca2134a137c971.html" target="_blank">2014-11-20 程序内存区域分配五个段 终于搞明白了 CSDN博客.html</a>&nbsp;<a href="../refers/69894772bac2493fb8338d74111e0ba8.html" title="2014-11-20 程序内存区域分配五个段 终于搞明白了 CSDN博客.html" target="_blank"><font color="red"><i>html</i></font></a>&nbsp;<font size="2"><strong><a href="ELF.html" target="_blank"><i class="fa fa-tags fa-fw"></i><span>ELF</span></a></strong></font>
+<ul>
+<li><a href="../docs/77c4677e791bec996ca2134a137c971.html#HEAD_HIDDEN_2b801bb4" target="_blank"><a href="ELF-Segment.html" target="_blank"><i class="fa fa-tags fa-fw"></i><ruby>ELF-Segment<rt>段</rt></ruby></a> 实际上就是由 <a href="ELF-Section.html" target="_blank"><i class="fa fa-tags fa-fw"></i><ruby>ELF-Section<rt>节</rt></ruby></a> 组成的，将相应的一些 <a href="ELF-Section.html" target="_blank"><i class="fa fa-tags fa-fw"></i><ruby>ELF-Section<rt>节</rt></ruby></a> 映射到一起就叫 <a href="ELF-Segment.html" target="_blank"><i class="fa fa-tags fa-fw"></i><ruby>ELF-Segment<rt>段</rt></ruby></a> 了,就是说 <a href="ELF-Segment.html" target="_blank"><i class="fa fa-tags fa-fw"></i><ruby>ELF-Segment<rt>段</rt></ruby></a> 是由0个或多个 <a href="ELF-Section.html" target="_blank"><i class="fa fa-tags fa-fw"></i><ruby>ELF-Section<rt>节</rt></ruby></a> 组成的，实际上本质都是 <a href="ELF-Section.html" target="_blank"><i class="fa fa-tags fa-fw"></i><ruby>ELF-Section<rt>节</rt></ruby></a> 。</a>
+</ul>
+</ol><br/>
+
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="jquery-2.js"></script>
+<script src="bootstrap.js"></script>
+
+</body>
+</html>

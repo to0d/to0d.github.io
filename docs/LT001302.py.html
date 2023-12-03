@@ -1,0 +1,123 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT001302.py (Roman to Integer)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT001302.py (Roman to Integer)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-11-02</time>
+            <i><a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0013.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0013</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Python-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Python-Code</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_c8d6f0f9" href="#TOC_HEAD_c8d6f0f9">Problem 0013 <strong>Roman to Integer</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/roman-to-integer/description/" target="_blank">https://leetcode.com/problems/roman&ndash;to&ndash;integer/description/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>13.39</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_1cdfc60b" href="#TOC_HEAD_1cdfc60b">LT001302.py</a></H3>
+<pre><code>#!/usr/bin/python
+
+class Solution(object):
+    roman_map = {"I":1,"V":5,"X":10,"L":50,"C":100,"D":500,"M":1000}
+    def romanToInt(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        n, idx, size = 0, 0, len(s)
+
+        if size == 0 :
+            raise ValueError
+
+        while idx &lt; size :
+            c = s[idx]
+            if (idx+1) &lt; size and self.roman_map[c] &lt; self.roman_map[s[idx+1]] :
+                n -= self.roman_map[c]
+            else:
+                n += self.roman_map[c]
+            idx += 1
+
+        return n
+
+s="MCMXCIV"
+print "input:", s,
+output = Solution().romanToInt(s)
+print "; output:", output
+
+# Result
+#
+# 2022-11-02: Runtime 84ms 13.39% Memory 13.5MB 63.99%, https://leetcode.com/problems/roman-to-integer/submissions/835440517/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: MCMXCIV ; output: 1994</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

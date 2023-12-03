@@ -1,0 +1,128 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>lldb remote debug example</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>lldb remote debug example</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-17</time>
+            <i><a href="../tags/LLDB.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB</a>&nbsp;<a href="../tags/Remote-Debug.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Remote-Debug</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+<ul>
+	<li><a name="HEAD_HIDDEN_813a1d87">start gdb server ( <font color="red">without</font> program) &nbsp;<a href="../tags/gdb-server.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-server</a></li>
+	<br />
+	<pre><code>&gt; gdbserver --multi 127.0.0.1:8059
+Listening on port 8059	</code></pre>
+	<li>start lldb</li>
+	<br />
+	<pre><code>&gt; lldb	</code></pre>
+	<li><a name="HEAD_HIDDEN_6071ef17">select platform &nbsp;<a href="../tags/lldb-platform-select.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>lldb-platform-select</a></li>
+	<br />
+	<pre><code>(lldb) platform list
+Available platforms:
+host: Local Linux user platform plug-in.
+...
+remote-gdb-server: A platform that uses the GDB remote protocol as the communication transport.
+(lldb) platform select remote-gdb-server
+Platform: remote-gdb-server
+Connected: no	</code></pre>
+	<li>connect remote target</li>
+	<br />
+	<pre><code>(lldb) platform connect connect://127.0.0.1:8059
+Platform: remote-gdb-server
+Hostname: (null)
+Connected: yes	</code></pre>
+	<li>debugging</li>
+	<br />
+	<pre><code>(lldb) file a.out
+Current executable set to '/home/todd-wsl/a.out' (x86_64).
+(lldb) l
+4    {
+5        int x = 0;
+6        x += 2;
+7        printf("hello, x=%d\n", x);
+8    }
+(lldb) b 7
+Breakpoint 1: where = a.out`main + 23 at test.c:7:5, address = 0x0000000000001160
+(lldb) r
+Process 443 launched: '/home/todd-wsl/a.out' (x86_64)	</code></pre>
+	<li><a name="HEAD_HIDDEN_18b5232f">enable lldb remote log &nbsp;<a href="../tags/LLDB-log.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB-log</a>&nbsp;<a href="../tags/RSP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>RSP</a></li>
+	<br />
+	<pre><code>log list
+log enable gdb-remote packets	</code></pre>
+	<ul>
+		<li><a name="HEAD_HIDDEN_4379d71a">refer <a href="learn-lldb-tutorial.html" target="_blank">2023&ndash;09&ndash;16 Learn LLDB&ndash;tutorial.pdf</a>&nbsp;<a href="../pdfs/LLDB-tutorial.pdf" title="LLDB-tutorial.pdf" target="_blank"><font color="red"><i>pdf</i></font></a></li>
+		<br />
+	</ul>
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

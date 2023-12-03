@@ -1,0 +1,106 @@
+<html>
+	<head>
+		<meta charset="utf-8"></meta>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8"></meta>
+		<title>gdb反汇编disassemble_gdb的disassemble&ndash;CSDN博客</title>
+	</head>
+	<body class="nodata " style="">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Sat Nov 04 17:52:48 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://blog.csdn.net/qq_28499879/article/details/120670684" target="_blank">
+				<font color="red" size="3">gdb反汇编disassemble_gdb的disassemble&ndash;CSDN博客</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="blog-content-box">
+			<div class="article-header-box">
+				<div class="article-header">
+					<div class="article-title-box">
+						<h1 class="title-article" id="articleContentId">gdb反汇编disassemble</h1>
+					</div>
+				</div>
+			</div>
+        <div id="content_views" class="htmledit_views">
+                <p>
+                    <br>
+
+                    <a href="https://visualgdb.com/gdbreference/commands/disassemble" title="GDB Command Reference - disassemble command">GDB&nbsp;Command&nbsp;Reference&nbsp;&ndash;&nbsp;disassemble&nbsp;command</a>
+                </p>
+                <p>gdb反汇编可用disassemble/disass命令。用法如下&amp;#xff1a;
+                    <br>
+
+                    <strong>disassemble</strong>
+                </p>
+                <p>
+                    <strong>disassemble&nbsp;[Function]</strong>
+                </p>
+                <p>        指定要反汇编的函数。如果指定&amp;#xff0c;反汇编命令将产生整个函数的反汇编输出。</p>
+                <pre><code class="language-bash">(gdb) disassemble main</code></pre>
+                <p></p>
+                <p>
+                    <strong>disassemble&nbsp;[Address]</strong>
+                </p>
+                <p>        指定要反汇编的地址。请注意&amp;#xff0c;当仅指定一个地址时&amp;#xff0c;此命令将反汇编包含给定地址的整个函数&amp;#xff0c;包括其上方的指令。</p>
+                <pre><code>(gdb) disassemble 0x00000000004008fd</code></pre>
+                <p></p>
+                <p>
+                    <strong>disassemble&nbsp;[Start],[End]</strong>
+                </p>
+                <p>        指定要反汇编的起始地址和结束地址。如果使用这种形式&amp;#xff0c;该命令将不会反汇编整个函数&amp;#xff0c;而只会反汇编起始地址和结束地址之间的指令。例如&amp;#xff1a;</p>
+                <pre><code>(gdb) disassemble 0x000000000040068a,0x00000000004006ac</code></pre>
+                <p></p>
+                <p>
+                    <strong>disassemble&nbsp;[Function],&#43;[Length]
+                        <br>disassemble&nbsp;[Address],&#43;[Length]
+
+                    </strong>
+                </p>
+                <p>        指定从给定地址或函数开始反汇编的字节数&amp;#xff0c;例如&amp;#xff1a;</p>
+                <pre><code>(gdb) disassemble main, &#43;10</code></pre>
+                <p>
+                    <strong>disassemble&nbsp;/m&nbsp;[...]</strong>
+                    <br>        指定此选项后&amp;#xff0c;反汇编命令将显示与反汇编指令相对应的源代码行。例如&amp;#xff1a;
+
+                </p>
+                <pre>
+<code>(gdb) disassemble /m main
+Dump of assembler code for function main:
+4 {
+0x00000000004005d6 &lt;&#43;0&gt;: push %rbp
+0x00000000004005d7 &lt;&#43;1&gt;: mov %rsp,%rbp
+0x00000000004005da &lt;&#43;4&gt;: sub $0xd0,%rsp
+
+
+5 float vcs[16] &#61; {0.931,0.928,0.925,0.922,0.920,0.917,0.914,0.911,0.904,0.896,0.889,0.881,0.874,0.866,0.859,0.851};
+0x00000000004005e1 &lt;&#43;11&gt;: movss 0x4a7(%rip),%xmm0 # 0x400a90
+0x00000000004005e9 &lt;&#43;19&gt;: movss %xmm0,-0x50(%rbp)
+0x00000000004005ee &lt;&#43;24&gt;: movss 0x49e(%rip),%xmm0 # 0x400a94
+0x00000000004005f6 &lt;&#43;32&gt;: movss %xmm0,-0x4c(%rbp)</code>
+                </pre>
+                <p>
+                    <strong>disassemble&nbsp;/r&nbsp;[...]</strong>
+                    <br>        当指定此选项时&amp;#xff0c;反汇编命令将显示所有反汇编指令的原始字节值。
+
+                </p>
+                <pre>
+<code>(gdb) disassemble /r main
+Dump of assembler code for function main:
+0x00000000004005d6 &lt;&#43;0&gt;: 55 push %rbp
+0x00000000004005d7 &lt;&#43;1&gt;: 48 89 e5 mov %rsp,%rbp
+0x00000000004005da &lt;&#43;4&gt;: 48 81 ec d0 00 00 00 sub $0xd0,%rsp
+0x00000000004005e1 &lt;&#43;11&gt;: f3 0f 10 05 a7 04 00 00 movss 0x4a7(%rip),%xmm0 # 0x400a90
+0x00000000004005e9 &lt;&#43;19&gt;: f3 0f 11 45 b0 movss %xmm0,-0x50(%rbp)
+0x00000000004005ee &lt;&#43;24&gt;: f3 0f 10 05 9e 04 00 00 movss 0x49e(%rip),%xmm0 # 0x400a94
+0x00000000004005f6 &lt;&#43;32&gt;: f3 0f 11 45 b4 movss %xmm0,-0x4c(%rbp)
+
+0x00000000004005fb &lt;&#43;37&gt;: f3 0f 10 05 95 04 00 00 movss 0x495(%rip),%xmm0 # 0x400a98</code>
+                </pre>
+                <p></p>
+            </div>
+         
+	</body>
+</html>

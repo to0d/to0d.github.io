@@ -1,0 +1,176 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>symfile.c</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>symfile.c</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-09-29</time>
+            <i><a href="../tags/symtab.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>symtab</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+<ul>
+	<li><a name="HEAD_HIDDEN_eb6c203c">symfile.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<br />
+</ul>
+	<H3><a name="SYMFILE-ADD-SYMBOL-FILE-CMD" href="#TOC_SYMFILE-ADD-SYMBOL-FILE-CMD">add &quot;symbol&ndash;file&quot; command</a></H3><ul><a href="../tags/gdb-symbol-file.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-symbol-file</a>&nbsp;</ul>
+<pre><code>add_cmd ("symbol-file", class_files, symbol_file_command, _("\</code></pre>
+<ul>
+	<li><a name="HEAD_HIDDEN_26c885f3">gdb&ndash;symbol&ndash;file (ptag=gdb&ndash;cli) &nbsp;<a href="../tags/gdb-symbol-file.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-symbol-file</a>&nbsp;<a href="../tags/gdb-cli.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-cli</a></li>
+	<br />
+</ul>
+	<H4><a name="HEAD_36c20acf" href="#TOC_HEAD_36c20acf">symbol_file_command</a></H4>
+<ul>
+	<li>symbol_file_add_main_1</li>
+	<br />
+	<ul>
+		<li>symbol_file_add</li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_b80ac20f">symfile_bfd_open (return <strong>bfd</strong> pointer) &nbsp;<a href="../tags/bfd_target.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>bfd_target</a></li>
+			<ul>
+				<li><a name="HEAD_HIDDEN_117b44f5">gdb_bfd_open  &ndash; gdb_bfd.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/gdb_bfd.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/gdb_bfd.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+				<ul>
+					<li><a name="HEAD_HIDDEN_b67f6d3a">bfd_fopen &ndash; opncls.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/opncls.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/opncls.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+					<br />
+					<ul>
+						<li><a name="HEAD_HIDDEN_dadea87e">bfd_find_target &ndash; <a href="topic-gdb-architecture.html#GDB-ARCH-NOTE-1" target="_blank">set <strong>bfd vector (xvec)</strong></a></li>
+						<li>open file &ndash; <code>nbfd&ndash;&gt;iostream = fdopen (fd, mode);</code></li>
+						<br />
+					</ul>
+				</ul>
+			</ul>
+			<li>symbol_file_add_from_bfd</li>
+			<ul>
+				<li>symbol_file_add_with_addrs</li>
+				<br />
+				<ul>
+					<li><a name="HEAD_HIDDEN_88ab687e">create objfile &ndash; <code>objfile = objfile::make (abfd, name, flags, parent)</code> &ndash; <a href="bc9047358b401401f2459dde351b5e6c.html" target="_blank">objfiles.h</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/objfiles.h" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/objfiles.h" target="_blank"><font color="red"><i>link</i></font></a></li>
+					<ul>
+						<li>add objfile to program_space</li>
+						<br />
+					</ul>
+					<li>syms_from_objfile</li>
+					<ul>
+						<li>syms_from_objfile_1</li>
+						<ul>
+							<li>sym_fns::sym_init</li>
+							<li>sym_fns::sym_offsets</li>
+							<li>read_symbols</li>
+							<ul>
+								<li><a name="HEAD_HIDDEN_f1e58a1c">sym_fns::sym_read (函数指针==&gt; elf_symfile_read) &ndash; symfile.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.h" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.h" target="_blank"><font color="red"><i>link</i></font></a> &nbsp;<a href="../tags/sym_fns.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>sym_fns</a></li>
+								<ul>
+									<li><a name="SYMFILE-ELF-SYMFILE-READ-1">elf_symfile_read &ndash; <a href="fd399851a8b2891c585549c2f377a5f3.html" target="_blank">elfread.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/elfread.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/elfread.c" target="_blank"><font color="red"><i>link</i></font></a> </li>
+									<ul>
+										<li><a name="HEAD_HIDDEN_2de78034">elf_read_minimal_symbols &nbsp;<a href="../tags/msymtabs.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>msymtabs</a></li>
+										<ul>
+											<li>minimal_symbol_reader <strong>reader</strong></li>
+											<li><a name="HEAD_HIDDEN_6210d776">bfd_alloc &ndash; 分配符号表空间 &ndash; opncls.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/opncls.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/opncls.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+											<li>bfd_canonicalize_symtab &ndash; get symcount</li>
+											<ul>
+												<li><a name="HEAD_HIDDEN_270c47fc">_bfd_elf_canonicalize_symtab &ndash; elf.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/elf.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/elf.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+												<ul>
+													<li><a name="HEAD_HIDDEN_6f10e351">elf_slurp_symbol_table &ndash; elfcode.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/elfcode.h" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/elfcode.h" target="_blank"><font color="red"><i>link</i></font></a></li>
+													<ul>
+														<li><a name="HEAD_HIDDEN_9b64c41b">read all symbols from <strong>symtab</strong> section &nbsp;<a href="../tags/symtab-section.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>symtab-section</a></li>
+													</ul>
+												</ul>
+											</ul>
+											<li><a name="HEAD_HIDDEN_ea9cdb26">elf_symtab_read ( <strong>reader</strong> ... ) &ndash;<a href="fd399851a8b2891c585549c2f377a5f3.html" target="_blank">elfread.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/elfread.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/elfread.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+											<ul>
+												<li>record_minimal_symbol</li>
+												<ul>
+													<li><a name="HEAD_HIDDEN_d3299738">reader.record_full &ndash; minsyms.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/minsyms.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/minsyms.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+												</ul>
+											</ul>
+											<li>reader.install</li>
+											<br />
+										</ul>
+										<li>elfmdebug_build_psymtabs &ndash; XCOFF</li>
+										<li>elfstab_build_psymtabs &ndash; Stab</li>
+										<li>elfctf_build_psymtabs &ndash; CTF</li>
+										<li>elf_symfile_read_dwarf2 &ndash; DWARF</li>
+										<br />
+									</ul>
+								</ul>
+								<li>require_partial_symbols</li>
+								<br />
+							</ul>
+						</ul>
+					</ul>
+				</ul>
+			</ul>
+		</ul>
+	</ul>
+	<li>solib_create_inferior_hook</li>
+	<br />
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

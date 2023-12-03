@@ -1,0 +1,160 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT011101.cpp (Minimum Depth of Binary Tree)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT011101.cpp (Minimum Depth of Binary Tree)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-08</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0111.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0111</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_f319ce1" href="#TOC_HEAD_f319ce1">Problem 0111 <strong>Minimum Depth of Binary Tree</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/minimum-depth-of-binary-tree/" target="_blank">https://leetcode.com/problems/minimum&ndash;depth&ndash;of&ndash;binary&ndash;tree/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>69.34</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_807a9692" href="#TOC_HEAD_807a9692">LT011101.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_1715af9">LT0111 (name=Minimum Depth of Binary Tree, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0111.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0111</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_f5832303"><a href="https://leetcode.com/problems/minimum-depth-of-binary-tree/" target="_blank">Minimum Depth of Binary Tree &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0111.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0111</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a binary tree, find its minimum depth.
+		The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
+	</p>
+	<li><a name="HEAD_HIDDEN_6792c748"><a href="LT011001.cpp.html" target="_blank">LT011001.cpp</a> &nbsp;<a href="../tags/LT0111.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0111</a>&nbsp;<a href="../tags/Ref.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Ref</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_a982aadf" href="#TOC_HEAD_a982aadf">LT011101.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if( root == NULL)
+            return 0;
+        return _minDepth(root, -1);
+    }
+
+    int _minDepth(TreeNode* node, int maxSearchDeep){ // opt: maxSearchDeep, refer LT011001.cpp
+        if( maxSearchDeep == 0 )
+            return -1;
+
+        int leftHeight = 0, rightHeight = 0;
+        if( node-&gt;left != NULL )
+            leftHeight = _minDepth(node-&gt;left, maxSearchDeep-1);
+
+        if( maxSearchDeep &lt; 0 && leftHeight &gt; 0)
+            maxSearchDeep = leftHeight+2;
+
+        if( node-&gt;right != NULL )
+            rightHeight = _minDepth(node-&gt;right, maxSearchDeep-1);
+
+        if( leftHeight &lt;=0 )
+            return rightHeight + 1;
+
+        if( rightHeight &lt;= 0 )
+            return leftHeight + 1;
+
+        return std::min(leftHeight, rightHeight) + 1;
+    }
+};
+
+
+
+void test(TreeNode* root)
+{
+    cout &lt;&lt; "input: ";
+    outputTree(root);
+    int r = Solution().minDepth(root);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(makeTree("{3,9,20,null,null,15,7}"));
+}
+
+// Result
+//
+// 2022-11-23: Runtime 437ms 12.40% Memory 144.6MB 80.90%, https://leetcode.com/problems/minimum-depth-of-binary-tree/submissions/848475633/
+// 2023-02-22: Runtime 353ms 10.45% Memory 144.6MB 81.63%, https://leetcode.com/problems/minimum-depth-of-binary-tree/submissions/902625072/
+// 2023-03-08: Runtime 279ms 69.34% Memory 144.6MB 81.14%, https://leetcode.com/problems/minimum-depth-of-binary-tree/submissions/911345687/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [3,9,20,null,null,15,7]; output: 2;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

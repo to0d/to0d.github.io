@@ -1,0 +1,443 @@
+<html>
+	<head>
+		<meta charset="utf-8"></meta>
+		<title>Linux下SIGSTOP的特殊特征和实现&nbsp;tsecer&nbsp;博客园</title>
+	</head>
+	<body class="skin-cleargertrude has-navbar">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Mon Oct 02 14:27:10 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://www.cnblogs.com/tsecer/p/10485802.html" target="_blank">
+				<font color="red" size="3">Linux下SIGSTOP的特殊特征和实现&nbsp;&ndash;&nbsp;tsecer&nbsp;&ndash;&nbsp;博客园</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="post">
+			<h2>
+				<a id="cb_post_title_url" href class="postTitle2 vertical-middle">
+					<span role="heading" aria-level="2">Linux下SIGSTOP的特殊特征和实现</span>
+				</a>
+			</h2>
+			<div class="postText">
+				<div id="cnblogs_post_body" class="blogpost-body blogpost-body-html">
+					<p>
+						<span style="color: rgba(153, 51, 0, 1); font-size: x-large">
+							<strong>一、问题的引出</strong>
+						</span>
+					</p>
+					<p>在多线程用户态程序中，为了更加准确详细的从一个线程观察另一个线程的行为，可能有时候需要让目标线程暂时安静下来，从而便于观测和监控。关于这个行为，首先想到的当然就是向一个线程发送一个SIGSTOP信号(注意，不是向进程，就是通过内核的tkill系统调用，或者说pthread_kill)，从而让线程处于STOP状态，之后再通过SIGCONT让线程继续运行，这样是最为简单而环保的方法。但是事实测试的时候会发现这个信号即使是只发给内核的单个线程，也会造成整个线程组中所有线程被停止，这就是一个比较奇怪的现象了。</p>
+					<p>
+						<span style="color: rgba(153, 51, 0, 1); font-size: x-large">
+							<strong>二、内核对tkill的处理</strong>
+						</span>
+					</p>
+					<p>linux&ndash;2.6.37.1\kernel\signal.c</p>
+					<p>SYSCALL_DEFINE2(tkill,&nbsp;pid_t,&nbsp;pid,&nbsp;int,&nbsp;sig)
+						<br>{
+
+						<br>&nbsp;/*&nbsp;This&nbsp;is&nbsp;only&nbsp;valid&nbsp;for&nbsp;single&nbsp;tasks&nbsp;*/
+
+						<br>&nbsp;if&nbsp;(pid&nbsp;&lt;=&nbsp;0)
+
+						<br>&nbsp;&nbsp;return&nbsp;&ndash;EINVAL;
+
+					</p>
+					<p>&nbsp;return&nbsp;do_tkill(0,&nbsp;pid,&nbsp;sig);
+						<br>}
+
+					</p>
+					<p>&ndash;&ndash;&gt;&gt;&gt;do_tkill&ndash;&ndash;&ndash;&gt;&gt;&gt;do_send_sig_info(sig,&nbsp;info,&nbsp;p,&nbsp;false)&ndash;&ndash;&ndash;&ndash;&gt;&gt;&gt;send_signal&ndash;&ndash;&ndash;&gt;&gt;&gt;__send_signal</p>
+					<p>pending&nbsp;=&nbsp;group&nbsp;?&nbsp;&amp;t&ndash;&gt;signal&ndash;&gt;shared_pending&nbsp;:&nbsp;&amp;t&ndash;&gt;pending;</p>
+					<p>从代码上看，tkill发出的信号是发送给了线程私有的pending信号队列，所以直到这里看来，它依然是应该只有目标线程会接受这个信号。</p>
+					<p>
+						<span style="color: rgba(153, 51, 0, 1); font-size: x-large">
+							<strong>三、停止线程组代码实现</strong>
+						</span>
+					</p>
+					<p>do_signal&ndash;&ndash;&ndash;&gt;&gt;&gt;get_signal_to_deliver</p>
+					<p>&nbsp;&nbsp;signr&nbsp;=&nbsp;tracehook_get_signal(current,&nbsp;regs,&nbsp;info,&nbsp;return_ka);
+						<br>&nbsp;&nbsp;if&nbsp;(unlikely(signr&nbsp;&lt;&nbsp;0))
+
+						<br>&nbsp;&nbsp;&nbsp;goto&nbsp;relock;
+
+						<br>&nbsp;&nbsp;if&nbsp;(unlikely(signr&nbsp;!=&nbsp;0))
+
+						<br>&nbsp;&nbsp;&nbsp;ka&nbsp;=&nbsp;return_ka;
+
+						<br>&nbsp;&nbsp;else&nbsp;{
+
+						<br>&nbsp;&nbsp;&nbsp;if&nbsp;(
+
+						<span style="color: rgba(255, 0, 255, 1)">
+							<strong>unlikely(signal&ndash;&gt;group_stop_count&nbsp;&gt;&nbsp;0)&nbsp;&amp;&amp;
+								<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do_signal_stop
+
+							</strong>
+						</span>
+						(0))
+						<span style="color: rgba(255, 0, 0, 1)">
+							<strong>结合后面的说明，如果说线程正处在一个线程组停止状态并且还有未处于stop状态的线程，则执行do_signal_stop自行停止调度</strong>
+						</span>
+						。
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;goto&nbsp;relock;
+
+					</p>
+					<p>&nbsp;&nbsp;&nbsp;signr&nbsp;=&nbsp;dequeue_signal(current,&nbsp;&amp;current&ndash;&gt;blocked,
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;info);
+
+					</p>
+					<p>&nbsp;&nbsp;&nbsp;if&nbsp;(!signr)
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;break;&nbsp;/*&nbsp;will&nbsp;return&nbsp;0&nbsp;*/
+
+					</p>
+					<p>&nbsp;&nbsp;&nbsp;if&nbsp;(signr&nbsp;!=&nbsp;SIGKILL)&nbsp;{
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;signr&nbsp;=&nbsp;ptrace_signal(signr,&nbsp;info,
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;regs,&nbsp;cookie);
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!signr)
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue;
+
+						<br>&nbsp;&nbsp;&nbsp;}
+
+						<br>&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;
+
+					</p>
+					<p>内核定义的停止信号</p>
+					<p>#define&nbsp;SIG_KERNEL_STOP_MASK&nbsp;(\
+						<br>&nbsp;rt_sigmask(
+
+						<span style="color: rgba(255, 0, 255, 1)">
+							<strong>SIGSTOP</strong>
+						</span>
+						)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;rt_sigmask(SIGTSTP)&nbsp;&nbsp;&nbsp;|&nbsp;\
+						<br>&nbsp;rt_sigmask(SIGTTIN)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;rt_sigmask(SIGTTOU)&nbsp;&nbsp;&nbsp;)
+
+					</p>
+					<p>&nbsp;</p>
+					<p>if&nbsp;(sig_kernel_stop(signr))&nbsp;{所以SIGSTOP信号将会走入该流程。
+						<br>&nbsp;&nbsp;&nbsp;/*
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;The&nbsp;default&nbsp;action&nbsp;is&nbsp;to&nbsp;stop&nbsp;all&nbsp;threads&nbsp;in
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;the&nbsp;thread&nbsp;group.&nbsp;&nbsp;The&nbsp;job&nbsp;control&nbsp;signals
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;do&nbsp;nothing&nbsp;in&nbsp;an&nbsp;orphaned&nbsp;pgrp,&nbsp;but&nbsp;SIGSTOP
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;always&nbsp;works.&nbsp;&nbsp;Note&nbsp;that&nbsp;siglock&nbsp;needs&nbsp;to&nbsp;be
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;dropped&nbsp;during&nbsp;the&nbsp;call&nbsp;to&nbsp;is_orphaned_pgrp()
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;because&nbsp;of&nbsp;lock&nbsp;ordering&nbsp;with&nbsp;tasklist_lock.
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;This&nbsp;allows&nbsp;an&nbsp;intervening&nbsp;SIGCONT&nbsp;to&nbsp;be&nbsp;posted.
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;We&nbsp;need&nbsp;to&nbsp;check&nbsp;for&nbsp;that&nbsp;and&nbsp;bail&nbsp;out&nbsp;if&nbsp;necessary.
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;*/
+
+						<br>&nbsp;&nbsp;&nbsp;if&nbsp;(signr&nbsp;!=&nbsp;SIGSTOP)&nbsp;{
+
+						<span style="color: rgba(255, 0, 0, 1)">这里也说明了很多TTY操作，如SIGTTIN等也会对线程组产生影响</span>
+						。
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;spin_unlock_irq(&amp;sighand&ndash;&gt;siglock);
+
+					</p>
+					<p>&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;signals&nbsp;can&nbsp;be&nbsp;posted&nbsp;during&nbsp;this&nbsp;window&nbsp;*/</p>
+					<p>&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(is_current_pgrp_orphaned())
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto&nbsp;relock;
+
+					</p>
+					<p>&nbsp;&nbsp;&nbsp;&nbsp;spin_lock_irq(&amp;sighand&ndash;&gt;siglock);
+						<br>&nbsp;&nbsp;&nbsp;}
+
+					</p>
+					<p>&nbsp;&nbsp;&nbsp;if&nbsp;(likely(
+						<strong>
+							<span style="color: rgba(255, 0, 255, 1)">do_signal_stop</span>
+						</strong>
+						(info&ndash;&gt;si_signo)))&nbsp;{
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;It&nbsp;released&nbsp;the&nbsp;siglock.&nbsp;&nbsp;*/
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;goto&nbsp;relock;
+
+						<br>&nbsp;&nbsp;&nbsp;}
+
+					</p>
+					<p>&nbsp;&nbsp;&nbsp;/*
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;We&nbsp;didn&#039;t&nbsp;actually&nbsp;stop,&nbsp;due&nbsp;to&nbsp;a&nbsp;race
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;with&nbsp;SIGCONT&nbsp;or&nbsp;something&nbsp;like&nbsp;that.
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;*/
+
+						<br>&nbsp;&nbsp;&nbsp;continue;
+
+						<br>&nbsp;&nbsp;}
+
+					</p>
+					<p>下面是do_signal_stop的代码，这个是对于这个特征的核心代码
+						<br>/*
+
+						<br>&nbsp;*&nbsp;This&nbsp;performs&nbsp;the&nbsp;stopping&nbsp;for&nbsp;SIGSTOP&nbsp;and&nbsp;other&nbsp;stop&nbsp;signals.
+
+						<br>&nbsp;*&nbsp;We&nbsp;have&nbsp;to&nbsp;stop&nbsp;all&nbsp;threads&nbsp;in&nbsp;the&nbsp;thread&nbsp;group.
+
+						<br>&nbsp;*&nbsp;Returns&nbsp;nonzero&nbsp;if&nbsp;we&#039;ve&nbsp;actually&nbsp;stopped&nbsp;and&nbsp;released&nbsp;the&nbsp;siglock.
+
+						<br>&nbsp;*&nbsp;Returns&nbsp;zero&nbsp;if&nbsp;we&nbsp;didn&#039;t&nbsp;stop&nbsp;and&nbsp;still&nbsp;hold&nbsp;the&nbsp;siglock.
+
+						<br>&nbsp;*/
+
+						<br>static&nbsp;int&nbsp;
+
+						<span style="color: rgba(255, 0, 255, 1); font-size: medium">
+							<strong>do_signal_stop</strong>
+						</span>
+						(int&nbsp;signr)
+						<br>{
+
+						<br>&nbsp;struct&nbsp;signal_struct&nbsp;*sig&nbsp;=&nbsp;current&ndash;&gt;signal;
+
+						<br>&nbsp;int&nbsp;notify;
+
+					</p>
+					<p>&nbsp;if&nbsp;(!sig&ndash;&gt;group_stop_count)&nbsp;{
+						<span style="color: rgba(255, 0, 0, 1)">如果说gropu_stop_Count为零，则说明线程组STOP还没有启动，所以在下面的指令中要把这个值设置为需要被STOP的线程的数目</span>
+						。
+						<br>&nbsp;&nbsp;struct&nbsp;task_struct&nbsp;*t;
+
+					</p>
+					<p>&nbsp;&nbsp;if&nbsp;(!likely(sig&ndash;&gt;flags&nbsp;&amp;&nbsp;SIGNAL_STOP_DEQUEUED)&nbsp;||
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unlikely(signal_group_exit(sig)))
+
+						<br>&nbsp;&nbsp;&nbsp;return&nbsp;0;
+
+						<br>&nbsp;&nbsp;/*
+
+						<br>&nbsp;&nbsp;&nbsp;*&nbsp;There&nbsp;is&nbsp;no&nbsp;group&nbsp;stop&nbsp;already&nbsp;in&nbsp;progress.
+
+						<br>&nbsp;&nbsp;&nbsp;*&nbsp;We&nbsp;must&nbsp;initiate&nbsp;one&nbsp;now.
+
+						<br>&nbsp;&nbsp;&nbsp;*/
+
+						<br>&nbsp;&nbsp;sig&ndash;&gt;group_exit_code&nbsp;=&nbsp;signr;
+
+					</p>
+					<p>&nbsp;&nbsp;sig&ndash;&gt;group_stop_count&nbsp;=&nbsp;1;
+						<br>&nbsp;&nbsp;for&nbsp;(t&nbsp;=&nbsp;next_thread(current);&nbsp;t&nbsp;!=&nbsp;current;&nbsp;t&nbsp;=&nbsp;next_thread(t))
+
+						<br>&nbsp;&nbsp;&nbsp;/*
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Setting&nbsp;state&nbsp;to&nbsp;TASK_STOPPED&nbsp;for&nbsp;a&nbsp;group
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;stop&nbsp;is&nbsp;always&nbsp;done&nbsp;with&nbsp;the&nbsp;siglock&nbsp;held,
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;so&nbsp;this&nbsp;check&nbsp;has&nbsp;no&nbsp;races.
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;*/
+
+						<br>&nbsp;&nbsp;&nbsp;if&nbsp;(!(t&ndash;&gt;flags&nbsp;&amp;&nbsp;PF_EXITING)&nbsp;&amp;&amp;
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;!task_is_stopped_or_traced(t))&nbsp;{
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;sig&ndash;&gt;group_stop_count++;
+
+						<span style="color: rgba(255, 0, 0, 1)">便利线程组中所有线程，对每一个尚未被处理的线程在group_stop_count中加一</span>
+						。
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;signal_wake_up(t,&nbsp;0);
+
+						<br>&nbsp;&nbsp;&nbsp;}
+
+						<br>&nbsp;}
+
+						<br>&nbsp;/*
+
+						<br>&nbsp;&nbsp;*&nbsp;If&nbsp;there&nbsp;are&nbsp;no&nbsp;other&nbsp;threads&nbsp;in&nbsp;the&nbsp;group,&nbsp;or&nbsp;if&nbsp;there&nbsp;is
+
+						<br>&nbsp;&nbsp;*&nbsp;a&nbsp;group&nbsp;stop&nbsp;in&nbsp;progress&nbsp;and&nbsp;we&nbsp;are&nbsp;the&nbsp;last&nbsp;to&nbsp;stop,&nbsp;report
+
+						<br>&nbsp;&nbsp;*&nbsp;to&nbsp;the&nbsp;parent.&nbsp;&nbsp;When&nbsp;ptraced,&nbsp;every&nbsp;thread&nbsp;reports&nbsp;itself.
+
+						<br>&nbsp;&nbsp;*/
+
+						<br>&nbsp;notify&nbsp;=&nbsp;sig&ndash;&gt;group_stop_count&nbsp;==&nbsp;1&nbsp;?&nbsp;CLD_STOPPED&nbsp;:&nbsp;0;
+
+						<br>&nbsp;notify&nbsp;=&nbsp;tracehook_notify_jctl(notify,&nbsp;CLD_STOPPED);
+
+						<br>&nbsp;/*
+
+						<br>&nbsp;&nbsp;*&nbsp;tracehook_notify_jctl()&nbsp;can&nbsp;drop&nbsp;and&nbsp;reacquire&nbsp;siglock,&nbsp;so
+
+						<br>&nbsp;&nbsp;*&nbsp;we&nbsp;keep&nbsp;&ndash;&gt;group_stop_count&nbsp;!=&nbsp;0&nbsp;before&nbsp;the&nbsp;call.&nbsp;If&nbsp;SIGCONT
+
+						<br>&nbsp;&nbsp;*&nbsp;or&nbsp;SIGKILL&nbsp;comes&nbsp;in&nbsp;between&nbsp;&ndash;&gt;group_stop_count&nbsp;==&nbsp;0.
+
+						<br>&nbsp;&nbsp;*/
+
+						<br>&nbsp;if&nbsp;(sig&ndash;&gt;group_stop_count)&nbsp;{
+
+						<br>&nbsp;&nbsp;if&nbsp;(!&ndash;&ndash;sig&ndash;&gt;group_stop_count)这个线程组全部完成了STOP。
+
+						<br>&nbsp;&nbsp;&nbsp;sig&ndash;&gt;flags&nbsp;=&nbsp;SIGNAL_STOP_STOPPED;
+
+						<br>&nbsp;&nbsp;current&ndash;&gt;exit_code&nbsp;=&nbsp;sig&ndash;&gt;group_exit_code;
+
+						<br>&nbsp;&nbsp;__set_current_state(TASK_STOPPED);
+
+						<span style="color: rgba(255, 0, 0, 1)">
+							<strong>所有执行这个函数的线程都被设置为了TASK_STOPPED状态，接下来执行schedule函数之后该线程将会被从运行队列中移除，次数受该函数开始if中设置的group_stop_count值决定。</strong>
+						</span>
+						。
+						<br>&nbsp;}
+
+						<br>&nbsp;spin_unlock_irq(&amp;current&ndash;&gt;sighand&ndash;&gt;siglock);
+
+					</p>
+					<p>&nbsp;if&nbsp;(notify)&nbsp;{
+						<br>&nbsp;&nbsp;read_lock(&amp;tasklist_lock);
+
+						<br>&nbsp;&nbsp;do_notify_parent_cldstop(current,&nbsp;notify);
+
+						<br>&nbsp;&nbsp;read_unlock(&amp;tasklist_lock);
+
+						<br>&nbsp;}
+
+					</p>
+					<p>&nbsp;/*&nbsp;Now&nbsp;we&nbsp;don&#039;t&nbsp;run&nbsp;again&nbsp;until&nbsp;woken&nbsp;by&nbsp;SIGCONT&nbsp;or&nbsp;SIGKILL&nbsp;*/
+						<br>&nbsp;do&nbsp;{
+
+						<span style="color: rgba(255, 0, 0, 1)">从这里该线程将会切换出去，让出调度权</span>
+						，
+					</p>
+					<p>&nbsp;&nbsp;schedule();
+						<br>&nbsp;}&nbsp;while&nbsp;(try_to_freeze());
+
+					</p>
+					<p>&nbsp;tracehook_finish_jctl();
+						<br>&nbsp;current&ndash;&gt;exit_code&nbsp;=&nbsp;0;
+
+					</p>
+					<p>&nbsp;return&nbsp;1;
+						<br>}
+
+					</p>
+					<p>
+						<span style="font-size: x-large">
+							<strong>
+								<span style="color: rgba(153, 51, 0, 1)">四、调试器如何做到对单个线程的SIGSTOP</span>
+							</strong>
+						</span>
+						<br>由于调试器和被调试任务之间有一种内核可以感知到的调试关系，也就是被调试任务的PT_PTRACED的标志位被置位，所以当一个线程收到信号并且要处理的时候，内核会首先给调试器一个机会
+
+						<br>get_signal_to_deliver&ndash;&ndash;&ndash;&ndash;&gt;&gt;ptrace_stop&ndash;&ndash;&ndash;&gt;&gt;do_notify_parent_cldstop
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;((current&ndash;&gt;ptrace&nbsp;&amp;&nbsp;PT_PTRACED)&nbsp;&amp;&amp;&nbsp;signr&nbsp;!=&nbsp;SIGKILL)&nbsp;{
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptrace_signal_deliver(regs,&nbsp;cookie);
+
+						<br>
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Let&nbsp;the&nbsp;debugger&nbsp;run.&nbsp;&nbsp;*/
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ptrace_stop(signr,&nbsp;signr,&nbsp;info);如果调试器在这个函数之后取消掉信号，也就是让exit_code清零，则下面的continue将会忽略这个信号。
+
+						<br>
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;We&#039;re&nbsp;back.&nbsp;&nbsp;Did&nbsp;the&nbsp;debugger&nbsp;cancel&nbsp;the&nbsp;sig?&nbsp;&nbsp;*/
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;signr&nbsp;=&nbsp;current&ndash;&gt;exit_code;
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(signr&nbsp;==&nbsp;0)
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue;
+
+						<br>所以在没有启动线程组暂停之前，调试器优先获得控制权，所以调试器可以判断出是自己发送的信号，在进行必要的操作之后，通过ptrace系统调用再取消这个信号，从而让线程组退出夭折。linux&ndash;2.6.21\arch\i386\kernel\ptrace.c
+
+						<br>long&nbsp;arch_ptrace(struct&nbsp;task_struct&nbsp;*child,&nbsp;long&nbsp;request,&nbsp;long&nbsp;addr,&nbsp;long&nbsp;data)
+
+						<br>
+
+						<br>case&nbsp;PTRACE_SYSEMU:&nbsp;/*&nbsp;continue&nbsp;and&nbsp;stop&nbsp;at&nbsp;next&nbsp;syscall,&nbsp;which&nbsp;will&nbsp;not&nbsp;be&nbsp;executed&nbsp;*/
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;PTRACE_SYSCALL:&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;continue&nbsp;and&nbsp;stop&nbsp;at&nbsp;next&nbsp;(return&nbsp;from)&nbsp;syscall&nbsp;*/
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;
+
+						<strong>
+							<span style="color: rgba(255, 0, 255, 1)">PTRACE_CONT</span>
+						</strong>
+						:&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;restart&nbsp;after&nbsp;signal.&nbsp;*/
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ret&nbsp;=&nbsp;&ndash;EIO;
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!valid_signal(data))
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(request&nbsp;==&nbsp;PTRACE_SYSEMU)&nbsp;{
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set_tsk_thread_flag(child,&nbsp;TIF_SYSCALL_EMU);
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clear_tsk_thread_flag(child,&nbsp;TIF_SYSCALL_TRACE);
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;if&nbsp;(request&nbsp;==&nbsp;PTRACE_SYSCALL)&nbsp;{
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set_tsk_thread_flag(child,&nbsp;TIF_SYSCALL_TRACE);
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clear_tsk_thread_flag(child,&nbsp;TIF_SYSCALL_EMU);
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clear_tsk_thread_flag(child,&nbsp;TIF_SYSCALL_EMU);
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clear_tsk_thread_flag(child,&nbsp;TIF_SYSCALL_TRACE);
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+						<span style="color: rgba(255, 0, 255, 1)">&nbsp;child&ndash;&gt;exit_code&nbsp;=&nbsp;data</span>
+						;调试器可以通过PTRACE_CONT清除这个信号。
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;make&nbsp;sure&nbsp;the&nbsp;single&nbsp;step&nbsp;bit&nbsp;is&nbsp;not&nbsp;set.&nbsp;*/
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clear_singlestep(child);
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wake_up_process(child);
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ret&nbsp;=&nbsp;0;
+
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+
+					</p>
+				</div>
+				<div class="clear"></div>
+				<div id="blog_post_info_block" role="contentinfo">
+					<div id="blog_post_info"></div>
+					<div class="clear"></div>
+					<div id="post_next_prev"></div>
+				</div>
+			</div>
+			<p class="postfoot">posted&nbsp;on
+				<span id="post-date" data-last-update-days="1670.7458870879746" data-date-created="BlogServer.Application.Dto.BlogPost.BlogPostDto" data-date-updated="2019-03-06 20:33">2019&ndash;03&ndash;06&nbsp;20:33</span>
+				&nbsp;
+				<a href="../">tsecer</a>
+				&nbsp;
+阅读(
+				<span id="post_view_count">2980</span>
+				)&nbsp;
+评论(
+				<span id="post_comment_count">0</span>
+				)&nbsp;
+				<a href="https://i.cnblogs.com/EditPosts.aspx?postid=10485802" rel="nofollow">编辑</a>
+				&nbsp;
+				<a href="javascript:void(0)" onclick="AddToWz(10485802);return false;">收藏</a>
+				&nbsp;
+				<a href="javascript:void(0)" onclick="reportManager.report({ currentUserId: '', targetType: 'blogPost', targetId: '10485802', targetLink: 'https://www.cnblogs.com/tsecer/p/10485802.html', title: 'Linux下SIGSTOP的特殊特征和实现' })">举报</a>
+			</p>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,155 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT041401.cpp (Third Maximum Number)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT041401.cpp (Third Maximum Number)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-30</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0414.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0414</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_849eb47a" href="#TOC_HEAD_849eb47a">Problem 0414 <strong>Third Maximum Number</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/third-maximum-number/" target="_blank">https://leetcode.com/problems/third&ndash;maximum&ndash;number/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ab1c258" href="#TOC_HEAD_ab1c258">LT041401.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_a98598d2">LT0414 (name=Third Maximum Number, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0414.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0414</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_b64ccea3"><a href="https://leetcode.com/problems/third-maximum-number/" target="_blank">Third Maximum Number &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0414.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0414</a></li>
+		<br />
+	</ul>
+	<p>
+		Given an integer array nums, return the third distinct maximum number in this array. If the third maximum does not exist, return the maximum number.
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input: nums = [3,2,1]
+Output: 1
+Explanation:
+The first distinct maximum is 3.
+The second distinct maximum is 2.
+The third distinct maximum is 1.	</code></pre>
+</ul>
+	<H3><a name="HEAD_502a9a5" href="#TOC_HEAD_502a9a5">LT041401.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+class Solution {
+public:
+    int thirdMax(vector&lt;int&gt;& nums) {
+        int vals[3], count = 0;
+        for(int num : nums)
+        {   for(int i = 0;i &lt; 3; ++i )
+            {   if( i &gt;= count )
+                {   vals[count++] = num;
+                    break;
+                }
+                if( vals[i] == num )    // ignore same number
+                    break;
+                if( vals[i] &lt; num )     // swap numbers
+                {   int t = vals[i];
+                    vals[i] = num;
+                    num = t;
+                }
+            }
+        }
+        return count == 3 ? vals[2] : vals[0];
+    }
+};
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    int r = Solution().thirdMax(nums);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({3,2,1});
+}
+
+// Result
+//
+// 2022-11-21: Runtime 4ms 82.61% Memory 6.1MB 96.27%, https://leetcode.com/problems/third-maximum-number/submissions/846975714/
+// 2023-07-30: Runtime 0ms 100% Memory 8.63MB 71.94%, https://leetcode.cn/problems/third-maximum-number/submissions/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [3,2,1]; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

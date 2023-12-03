@@ -1,0 +1,88 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC151227A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC151227A.cpp</h1>
+            <h3>chapter 08 - 打靶问题</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/45283a62.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>程序员面试宝典</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+/*
+射击运动员10枪打90环的打发有多少种？用一段程序实现，将每种打发打印出来。
+（每法成绩均为整数，且在0到10环之间，可为0环也可为10环） */
+
+static int hit_index   = 0;
+const int ignore_index = 92300;
+
+#define TRACE printf
+//#define TRACE
+
+int try_hit_10(int* hit_buf, int hit_pos, int hit_total, int hit_left)
+{
+    if( hit_left &lt; 0 ||  hit_left &gt; (hit_total - hit_pos) * 10 )
+        return 0;
+
+    if( hit_pos == hit_total - 1 || hit_left == 0)
+    {
+        if( hit_index++ &lt; ignore_index)
+            return 0;
+
+        hit_buf[ hit_pos++ ] =  hit_left;
+        while ( hit_pos++ &lt; 10 )
+            hit_buf[ hit_pos++ ] = 0;
+
+        TRACE("%03d: ",hit_index);
+        for(int i =0; i &lt; 10; ++i)	
+            TRACE(" %2d,",hit_buf[i]);
+
+        TRACE("\n");
+        return 1;
+    }
+
+    int hit = 0;
+
+    for(int i =0; i &lt;= 10; ++i)
+    {   hit_buf[hit_pos] = i;
+        hit += try_hit_10(hit_buf, hit_pos + 1, hit_total, hit_left - i);
+    }
+
+    return hit;
+}
+
+int try_hit(){
+    int a[10];
+    return try_hit_10(a, 0, 10, 90);
+}
+
+void test()
+{
+    int count = try_hit();
+    cout &lt;&lt; "output: " &lt;&lt; count &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test();
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

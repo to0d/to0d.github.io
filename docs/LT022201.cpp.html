@@ -1,0 +1,166 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT022201.cpp (Count Complete Tree Nodes)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT022201.cpp (Count Complete Tree Nodes)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-17</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0222.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0222</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_61527848" href="#TOC_HEAD_61527848">Problem 0222 <strong>Count Complete Tree Nodes</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/count-complete-tree-nodes/" target="_blank">https://leetcode.com/problems/count&ndash;complete&ndash;tree&ndash;nodes/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>90.70</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_b93f533" href="#TOC_HEAD_b93f533">LT022201.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_4b1de2fa">LT0222 (name=Count Complete Tree Nodes, ptag=Leetcode) &nbsp;<a href="../tags/LT0222.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0222</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_e98523ec"><a href="https://leetcode.com/problems/count-complete-tree-nodes/" target="_blank">Count Complete Tree Nodes &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0222.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0222</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_da8e8200" href="#TOC_HEAD_da8e8200">LT022201.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        return _countNodes(root, _getLeftDeep(root), _getRightDeep(root));
+    }
+
+    int _countNodes(TreeNode* root, int left_deep, int right_deep) {
+        if( left_deep == right_deep)
+            return pow(2, left_deep) - 1;
+        if(root-&gt;left == NULL)
+            return 1;
+        if(root-&gt;right == NULL)
+            return 2;
+
+        int left_count, right_count, left_right_deep = _getRightDeep(root-&gt;left);
+        if(left_deep == (left_right_deep+1))       // left is completed
+        {   left_count = pow(2, left_right_deep) - 1;
+            int right_left_deep = _getLeftDeep(root-&gt;right);
+            if( right_deep == (right_left_deep+1)) // right is completed
+                right_count = pow(2, right_left_deep) - 1;
+            else
+                right_count = _countNodes(root-&gt;right, right_left_deep, right_deep-1);
+        }
+        else    // right is completed
+        {   right_count = pow(2, (right_deep-1)) - 1;
+            left_count = _countNodes(root-&gt;left, left_deep-1, left_right_deep);
+        }
+
+        return left_count+right_count+1;
+    }
+
+    int _getLeftDeep(TreeNode* node) {
+        int deep = 0;
+        for(; node != NULL; node=node-&gt;left)
+            ++deep;
+        return deep;
+    }
+
+    int _getRightDeep(TreeNode* node) {
+        int deep = 0;
+        for(; node != NULL; node=node-&gt;right)
+            ++deep;
+        return deep;
+    }
+};
+
+
+
+void test(TreeNode* root)
+{
+    cout &lt;&lt; "input: ";
+    outputTree(root);
+    int r = Solution().countNodes(root);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test(makeTree("{1,2,3,4,5,6}"));
+}
+
+
+// Result
+//
+// 2022-12-05: Runtime 58ms 12.73% Memory 30.8MB 67.19%, https://leetcode.com/problems/count-complete-tree-nodes/submissions/855101919/
+// 2023-02-17: Runtime 30ms 90.70% Memory 30.9MB 22.68%, https://leetcode.com/problems/count-complete-tree-nodes/submissions/899798123/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [1,2,3,4,5,6]; output: 6;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

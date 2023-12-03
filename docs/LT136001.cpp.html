@@ -1,0 +1,157 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT136001.cpp (Number of Days Between Two Dates)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT136001.cpp (Number of Days Between Two Dates)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-25</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1360.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1360</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_2cc5b325" href="#TOC_HEAD_2cc5b325">Problem 1360 <strong>Number of Days Between Two Dates</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/number-of-days-between-two-dates/" target="_blank">https://leetcode.com/problems/number&ndash;of&ndash;days&ndash;between&ndash;two&ndash;dates/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_d0f1f54d" href="#TOC_HEAD_d0f1f54d">LT136001.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_a486b63d">LT1360 (name=Number of Days Between Two Dates, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1360.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1360</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_f8be7f44"><a href="https://leetcode.com/problems/number-of-days-between-two-dates/" target="_blank">Number of Days Between Two Dates &ndash; Leetcode</a> &nbsp;<a href="../tags/LT1360.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1360</a></li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_29caf85"><a href="LT118501.cpp.html" target="_blank">LT118501.cpp</a> &nbsp;<a href="../tags/LT1360.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1360</a>&nbsp;<a href="../tags/Ref.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Ref</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_98d49f1a" href="#TOC_HEAD_98d49f1a">LT136001.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int daysBetweenDates(string date1, string date2) {
+        return std::abs(dayOfYear(date2) - dayOfYear(date1));
+    }
+
+    int dayOfYear(string date) {
+        int year  = atoi(date.substr(0, 4).c_str());
+        int month = atoi(date.substr(5, 2).c_str());
+        int day   = atoi(date.substr(8, 2).c_str());
+
+        int dth = 0;
+        for(int y = 1971; y &lt; year; ++y)
+            dth += isLeapYear(y)? 366:365;
+
+        int* days = isLeapYear(year) ? days2 : days1;
+
+        for(int i = 1;i &lt; month; ++i)
+            dth += *(days+i-1);
+        dth += day;
+
+        return dth;
+    }
+
+    static int isLeapYear(int year){
+        return year%100 != 0 ? year%4 == 0 : year%400 == 0;
+    }
+
+    static int days1[12];
+    static int days2[12];
+};
+
+int Solution::days1[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+int Solution::days2[12] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+
+
+
+void test(string date1, string date2)
+{
+    cout &lt;&lt; "input: date1=" &lt;&lt; date1 &lt;&lt; ", date2=" &lt;&lt; date2;
+    int r = Solution().daysBetweenDates(date1, date2);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test("2020-01-15", "2019-12-31");
+}
+
+
+// Result
+//
+// 2022-12-13: Runtime 6ms 6.79% Memory 5.9MB 76.47%, https://leetcode.com/problems/number-of-days-between-two-dates/submissions/858933927/
+// 2023-02-25: Runtime 0ms 100% Memory 5.9MB 72.61%, https://leetcode.com/problems/number-of-days-between-two-dates/submissions/904211667/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: date1=2020-01-15, date2=2019-12-31; output: 15;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

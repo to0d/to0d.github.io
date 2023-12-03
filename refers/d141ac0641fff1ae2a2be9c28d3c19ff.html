@@ -1,0 +1,163 @@
+<html>
+	<head>
+		<meta charSet="utf-8"></meta>
+		<title data-rh="true">简单的零配置命令行&nbsp;http&nbsp;服务器&nbsp;http&nbsp;server入门&nbsp;知乎</title>
+	</head>
+	<body class="WhiteBg-body PostIndex-body">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Sun Aug 20 11:04:54 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://zhuanlan.zhihu.com/p/157834929?utm_id=0" target="_blank">
+				<font color="red" size="3">简单的零配置命令行&nbsp;http&nbsp;服务器&ndash;&ndash;http&ndash;server入门&nbsp;&ndash;&nbsp;知乎</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="RichText ztext Post-RichText css-1g0fqss" options="[object Object]">
+			<h3 data-first-child>
+				<b>简介</b>
+			</h3>
+			<p data-pid="q_tf4LJ-">http&ndash;server是一个简单的零配置命令行http服务器。&nbsp;它足够强大，足以用于生产用途，但它既简单又易于破解，可用于测试，本地开发和学习</p>
+			<h3>
+				<b>应用场景</b>
+			</h3>
+			<blockquote data-pid="Phhsslw7">1、局域网访问静态页面</blockquote>
+			<p data-pid="QXEl_DUs">访问本地计算机中的文件都是基于file协议，如果要开放我们的本地文件给局域网人员访问，是不能使用file协议。得用http协议或者ftp协议。而基于http协议的http&ndash;server就是一个不错的选择</p>
+			<blockquote data-pid="fzHrsxOM">2、处理页面跨域</blockquote>
+			<p data-pid="K33KO9nE">当页面含有跨域的请求，此时可以利用http&ndash;server，使用命令</p>
+			<div class="highlight">
+				<pre><code class="language-text">http-server -p 8080 -P https://abc.org
+//-p 本地运行端口  -P 将所有无法在本地解析的请求代理到给定的URL进行处理</code></pre>
+			</div>
+			<blockquote data-pid="oNY8mKH4">3、验证前端页面是否打包正常</blockquote>
+			<p data-pid="0erPqDQ9">现在的项目很多都前后端分离的架构，前端通常会打包dist文件丢到测试或者其他环境，我们可以利用http&ndash;server来跑下打包的dist目录内容，验证打包的内容是否正确</p>
+			<h3>
+				<b>安装</b>
+			</h3>
+			<blockquote data-pid="ppWv_n-Q">安装的前置条件</blockquote>
+			<p data-pid="orkVj52C">因为http&ndash;server依赖node.js,因此在安装之前，请确保安装的环境已经装有node.js。可以通过命令</p>
+			<div class="highlight">
+				<pre><code class="language-text">node -v</code></pre>
+			</div>
+			<p data-pid="CsTQPUjY">验证是否已经安装node.js
+				<br>
+
+			</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/8291069b8473561608105c0bbd9117bc.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<blockquote data-pid="wzdE0Dvo">通过npm进行安装</blockquote>
+			<div class="highlight">
+				<pre><code class="language-text">npm install http-server -g</code></pre>
+			</div>
+			<p data-pid="oc1BB1vL">
+				<b>注：</b>
+				如果在安装过程中，发现安装太慢，可以先配置淘宝镜像，再进行安装。配置镜像的命令如下
+			</p>
+			<div class="highlight">
+				<pre><code class="language-text">npm config set registry https://registry.npm.taobao.org</code></pre>
+			</div>
+			<p data-pid="vb6ciEj-">配置后可通过下面方式来验证是否成功</p>
+			<div class="highlight">
+				<pre><code class="language-text">npm config get registry</code></pre>
+			</div>
+			<h3>
+				<b>用法</b>
+			</h3>
+			<div class="highlight">
+				<pre><code class="language-text">http-server [path] [options]
+ path就是你当前运行该命令下对应的某个文件夹名称</code></pre>
+			</div>
+			<blockquote data-pid="YSYXRlny">可用选项</blockquote>
+			<ul>
+				<li data-pid="TCVtCp6f">&ndash;p或&ndash;&ndash;port要使用的端口（默认为8080）</li>
+				<li data-pid="jHskDfk_">&ndash;a&nbsp;要使用的地址（默认为0.0.0.0）</li>
+				<li data-pid="qQVw20BD">&ndash;d显示目录列表（默认为true）</li>
+				<li data-pid="jQqhsgEr">&ndash;i显示autoIndex（默认为true）</li>
+				<li data-pid="vvpMzr17">&ndash;g或者&ndash;&ndash;gzip当启用（默认为false）时，它将./public/some&ndash;file.js.gz代替./public/some&ndash;file.js当文件的gzip压缩版本存在且请求接受gzip编码时。</li>
+				<li data-pid="RTGaiWvg">&ndash;e或者&ndash;&ndash;ext如果没有提供默认文件扩展名（默认为html）</li>
+				<li data-pid="cDfGuxr6">&ndash;s或者&ndash;&ndash;silent从输出中抑制日志消息</li>
+				<li data-pid="oo5-t6Hb">&ndash;&ndash;cors通过Access&ndash;Control&ndash;Allow&ndash;Origin标头启用CORS</li>
+				<li data-pid="47t3n15C">&ndash;o&nbsp;启动服务器后打开浏览器窗口</li>
+				<li data-pid="vtE-VHph">&ndash;c设置缓存控制max&ndash;age标头的缓存时间（以秒为单位），例如&ndash;c1010秒（默认为3600）。要禁用缓存，请使用&ndash;c&ndash;1。</li>
+				<li data-pid="wScYzQcy">&ndash;U或&ndash;&ndash;utc在日志消息中使用UTC时间格式。</li>
+				<li data-pid="iy9Caglw">&ndash;P或者将&ndash;&ndash;proxy所有无法在本地解析的请求代理到给定的URL。例如：&ndash;P
+					<a href="https://link.zhihu.com/?target=http%3A//someurl.com/" class=" wrap external" target="_blank" rel="nofollow noreferrer">http://someurl.com</a>
+				</li>
+				<li data-pid="DAKKQRK1">&ndash;S或&ndash;&ndash;ssl启用https。</li>
+				<li data-pid="ypndl0R1">&ndash;C或&ndash;&ndash;certssl&nbsp;cert文件的路径（默认值:)&nbsp;cert.pem。</li>
+				<li data-pid="7g0x_tP6">&ndash;K或&ndash;&ndash;keyssl密钥文件的路径（默认值:)&nbsp;key.pem。</li>
+				<li data-pid="M560NDU_">&ndash;r或&ndash;&ndash;robots提供/robots.txt（其内容默认为User&ndash;agent:&nbsp;*\nDisallow:&nbsp;/）</li>
+				<li data-pid="kAW9CWKo">&ndash;h或&ndash;&ndash;help打印此列表并退出。</li>
+			</ul>
+			<h3>
+				<b>示例</b>
+			</h3>
+			<p data-pid="zrODwMLR">进入目标文件夹，输入hs或者http&ndash;server命令，不过推荐使用如下命令</p>
+			<div class="highlight">
+				<pre><code class="language-text">http-server -c-1</code></pre>
+			</div>
+			<p data-pid="KFilrAke">只输入http&ndash;server的话，更新了代码后，页面不会同步更新。</p>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/eca0f0ff3bd60515210e394546e08ac6.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/346f01b1a2ef2f2ef0c6cd8330e3e968.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/ed029746c07a40fb9a97b1d204d111eb.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<h3>
+				<b>总结</b>
+			</h3>
+			<p data-pid="7pceEU0r">http&ndash;server可以做静态资源服务器，也可以做调试、测试的前端服务器。甚至可以用于实现前后端分离。还没有使用过的朋友，可以尝鲜下</p>
+			<h3>
+				<b>官方文档</b>
+			</h3>
+			<blockquote data-pid="qwUfHo2U">
+				<u>
+					<a href="https://link.zhihu.com/?target=https%3A//github.com/http-party/http-server" class=" external" target="_blank" rel="nofollow noreferrer">
+						<span class="invisible">https://</span>
+						<span class="visible">github.com/http&ndash;party/h</span>
+						<span class="invisible">ttp&ndash;server</span>
+						<span class="ellipsis"></span>
+					</a>
+				</u>
+			</blockquote>
+		</div>
+	</body>
+</html>

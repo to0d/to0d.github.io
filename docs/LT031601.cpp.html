@@ -1,0 +1,470 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT031601.cpp (Remove Duplicate Letters)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT031601.cpp (Remove Duplicate Letters)</h1>
+        <h3>Runtime Error</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2016-06-03</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0316.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0316</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_db669a13" href="#TOC_HEAD_db669a13">Problem 0316 <strong>Remove Duplicate Letters</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/remove-duplicate-letters/" target="_blank">https://leetcode.com/problems/remove&ndash;duplicate&ndash;letters/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_45f82159" href="#TOC_HEAD_45f82159">LT031601.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_80947dab">LT0316 (name=Remove Duplicate Letters, ptag=Leetcode) &nbsp;<a href="../tags/LT0316.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0316</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_75ebd897"><a href="https://leetcode.com/problems/remove-duplicate-letters/" target="_blank">Remove Duplicate Letters &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0316.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0316</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a string which contains only lowercase letters, remove duplicate letters so that every letter appear once and only once. You must make sure your result is the smallest in lexicographical order among all possible results.
+	</p>
+	<p>
+		<strong>Example:</strong>
+	</p>
+	<p>
+		Given
+		<code>&quot;bcabc&quot;</code>
+		Return
+		<code>&quot;abc&quot;</code>
+		Given
+		<code>&quot;cbacdcbc&quot;</code>
+		Return
+		<code>&quot;acdb&quot;</code>
+	</p>
+</ul>
+	<H3><a name="HEAD_da8ab126" href="#TOC_HEAD_da8ab126">LT031601.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+// struct DupNode
+// {
+//     int childNodeIndex[26];
+//     int maxDepth;
+//     DupNode() : maxDepth(1) { memset(childNodeIndex, 0, sizeof(childNodeIndex)); }
+// };
+//
+// struct DupTree
+// {
+//     vector&lt;DupNode&gt; nodeArray;
+//     DupNode  rootNode;
+//     DupNode* nodePath[27];
+//
+// #define INDEX_LEAF 1
+// #define INDEX_NULL 0
+//
+//     DupTree()
+//     {
+//         nodeArray.push_back(DupNode()); // 0: null
+//         nodeArray.push_back(DupNode()); // 1: leaf node, not expand
+//     }
+//
+// public:
+//
+//     void addLetter(char c)
+//     {
+//         addLetter(rootNode, c - 'a', nodePath, 0);
+//     }
+//
+//     void addLetter(DupNode& node, int c, DupNode** nodePath, int level)
+//     {
+//         //cout &lt;&lt; "addletter, c= " &lt;&lt; c &lt;&lt; endl;
+//         nodePath[level] = &node;
+//
+//         for(int i = 0; i &lt; 26; ++i )
+//         {
+//             int& index = node.childNodeIndex[i];
+//             if( index == INDEX_NULL )
+//             {
+//                 if( i == c )
+//                 {
+//                     index = INDEX_LEAF;
+//                     updateMaxDepth(nodePath, level, 2);
+//                 }
+//             }
+//             else if( i != c )
+//             {
+//                 if( index == INDEX_LEAF )
+//                 {
+//                     nodeArray.push_back(DupNode());
+//                     index = nodeArray.size() - 1;
+//                 }
+//
+//                 addLetter(nodeArray[index], c, nodePath, level+1 );
+//             }
+//         }
+//     }
+//
+//     void updateMaxDepth( DupNode** nodePath, int level, int maxDepth )
+//     {
+//         //cout &lt;&lt; "updateMaxDepth, level = " &lt;&lt; level &lt;&lt; ", depth=" &lt;&lt; maxDepth &lt;&lt; endl;
+//
+//         DupNode& node = (*nodePath)[level];
+//         if( level &gt;=0 && node.maxDepth &lt; maxDepth )
+//         {
+//             node.maxDepth = maxDepth;
+//             updateMaxDepth(nodePath, level-1, maxDepth+1 );
+//         }
+//         //else
+//         //    cout &lt;&lt; "updateMaxDepth return" &lt;&lt; endl;
+//     }
+//
+//     string findMinString()
+//     {
+//         string res;
+//         DupNode* node = &rootNode;
+//         int length = rootNode.maxDepth - 1;
+//         while( length &gt; 0)
+//         {
+//             bool findMinChild = false;
+//
+//             for( int i = 0; !findMinChild && i &lt; 26; ++i)
+//             {
+//                 int childIndex = (*node).childNodeIndex[i];
+//                 if( childIndex == INDEX_NULL )
+//                     continue;
+//
+//                 int childLength = 1;
+//                 DupNode* childNode = NULL;
+//                 if( childIndex != INDEX_LEAF )
+//                 {
+//                     childNode = &(nodeArray[childIndex]);
+//                     childLength = (*childNode).maxDepth;
+//                 }
+//
+//                 if( childLength == length)
+//                 {
+//                     node = childNode;
+//                     findMinChild = true;
+//                     res.push_back('a'+i);
+//                 }
+//             }
+//
+//             if( !findMinChild)
+//                 break;
+//
+//             --length;
+//         }
+//
+//         return res;
+//     }
+//
+//     void printNode(DupNode& node)
+//     {
+//         //cout &lt;&lt; "MaxDepth=" &lt;&lt; node.maxDepth;
+//         for( int i = 0 ; i &lt; 26; ++i)
+//             cout &lt;&lt; ", " &lt;&lt; node.childNodeIndex[i];
+//         //cout &lt;&lt; endl;
+//     }
+//
+//     void print()
+//     {
+//         //cout &lt;&lt; "Root: ";
+//         printNode(rootNode);
+//         for( int i = 0; i &lt; nodeArray.size(); ++i)
+//         {
+//             //cout &lt;&lt; i &lt;&lt; " :";
+//             printNode(nodeArray[i]);
+//         }
+//     }
+// };
+//
+// class Solution {
+// public:
+//     string removeDuplicateLetters(string s) {
+//
+//         DupTree dupTree;
+//         char last = 0;
+//         for( char c : s)
+//         {
+//             if( c == last )
+//                 continue;
+//
+//             dupTree.addLetter(c);
+//             last = c;
+//         }
+//
+//         dupTree.print();
+//         return dupTree.findMinString();
+//     }
+// };
+//
+//
+struct DupNode
+{
+    int childNodeIndex[26];
+    int maxDepth;
+    DupNode() : maxDepth(1)
+    {
+        for( int i = 0; i &lt; 26; ++i)
+            childNodeIndex[i] = 0;
+    }
+
+    DupNode(const DupNode& o)
+    {
+        maxDepth = o.maxDepth;
+        for( int i = 0; i &lt; 26; ++i)
+            childNodeIndex[i] = o.childNodeIndex[i];
+    }
+};
+
+struct DupTree
+{
+    vector&lt;DupNode&gt; nodeArray;
+    DupNode  rootNode;
+    DupNode* nodePath[30];
+
+#define INDEX_LEAF 1
+#define INDEX_NULL 0
+
+    DupTree()
+    {
+        nodeArray.push_back(DupNode()); // 0: null
+        nodeArray.push_back(DupNode()); // 1: leaf node, not expand
+    }
+
+public:
+
+    void addLetter(char c)
+    {
+        addLetter(&rootNode, c - 'a', nodePath, 0);
+    }
+
+    void addLetter(DupNode* node, int c, DupNode** nodePath, int level)
+    {
+        //cout &lt;&lt; "addletter, c= " &lt;&lt; c &lt;&lt; ",level=" &lt;&lt; level &lt;&lt;  endl;
+
+        nodePath[level] = node;
+        printNode(*node);
+
+        for(int i = 0; i &lt; 26; ++i )
+        {
+            if( i == c )
+            {
+                if( node-&gt;childNodeIndex[i] == INDEX_NULL )
+                {
+                    node-&gt;childNodeIndex[i] = INDEX_LEAF;
+                    updateMaxDepth(nodePath, level, 2);
+                }
+                continue;
+            }
+
+            if( node-&gt;childNodeIndex[i] == INDEX_LEAF )
+            {
+                nodeArray.push_back(DupNode());
+                node-&gt;childNodeIndex[i] = nodeArray.size() - 1;
+            }
+
+            if( node-&gt;childNodeIndex[i] &gt; INDEX_LEAF
+            && node-&gt;childNodeIndex[i] &lt; (int)nodeArray.size() )
+            {
+                DupNode* node2 = &(nodeArray[node-&gt;childNodeIndex[i]]);
+                addLetter(node2, c, nodePath, level + 1 );
+            }
+        }
+    }
+
+    void updateMaxDepth( DupNode** nodePath, int level, int maxDepth )
+    {
+        if( level &lt; 0 )
+            return ;
+
+        DupNode* node = nodePath[level];
+    // cout &lt;&lt; "updateMaxDepth, level = " &lt;&lt; level &lt;&lt; ", depth=" &lt;&lt; maxDepth
+    //      &lt;&lt; "node.max " &lt;&lt; node-&gt;maxDepth &lt;&lt; endl;
+    //  printNode(*node);
+
+        if(node-&gt;maxDepth &lt; maxDepth )
+        {
+            node-&gt;maxDepth = maxDepth;
+            updateMaxDepth(nodePath, level-1, maxDepth+1 );
+        }
+        //else
+        //    cout &lt;&lt; "updateMaxDepth return" &lt;&lt; endl;
+    }
+
+    string findMinString()
+    {
+        string res;
+        DupNode* node = &rootNode;
+        int length = rootNode.maxDepth - 1;
+        while( length &gt; 0)
+        {
+            bool findMinChild = false;
+
+            for( int i = 0; !findMinChild && i &lt; 26; ++i)
+            {
+                int childIndex = (*node).childNodeIndex[i];
+                if( childIndex == INDEX_NULL )
+                    continue;
+
+                int childLength = 1;
+                DupNode* childNode = NULL;
+                if( childIndex != INDEX_LEAF )
+                {
+                    childNode = &(nodeArray[childIndex]);
+                    childLength = (*childNode).maxDepth;
+                }
+
+                if( childLength == length)
+                {
+                    node = childNode;
+                    findMinChild = true;
+                    res.push_back('a'+i);
+                }
+            }
+
+            if( !findMinChild)
+                break;
+
+            --length;
+        }
+
+        return res;
+    }
+
+    void printNode(DupNode& node)
+    {
+        //cout &lt;&lt; "MaxDepth=" &lt;&lt; node.maxDepth;
+        for( int i = 0 ; i &lt; 26; ++i)
+            cout &lt;&lt; ", " &lt;&lt; node.childNodeIndex[i];
+        //cout &lt;&lt; endl;
+    }
+
+    void print()
+    {
+        //cout &lt;&lt; "Root: ";
+        printNode(rootNode);
+        for( size_t i = 0; i &lt; nodeArray.size(); ++i)
+        {
+            cout &lt;&lt; i &lt;&lt; " :";
+            printNode(nodeArray[i]);
+        }
+    }
+};
+
+
+class Solution {
+public:
+    string removeDuplicateLetters(string s) {
+
+        DupTree dupTree;
+        char last = 0;
+
+        for( size_t i = 0; i &lt; s.size(); ++i)
+        {
+            char c = s[i];
+            if( c == last )
+                continue;
+
+            dupTree.addLetter(c);
+            last = c;
+        }
+
+        // dupTree.print();
+        return dupTree.findMinString();
+    }
+};
+
+
+// void test(vector&lt;int&gt;& nums1, vector&lt;int&gt;& nums2)
+// {
+//     cout &lt;&lt; "input: nums1=";
+//     outputVector(nums1);
+//     cout &lt;&lt; ", nums2=";
+//     outputVector(nums2);
+//     vector&lt;int&gt; r = Solution().intersect(nums1, nums2);
+//     cout &lt;&lt; "; output: ";
+//     outputVector(r);
+//     cout &lt;&lt; endl;
+// }
+
+
+int main(void)
+{
+    cout &lt;&lt; "output: error" &lt;&lt; endl;
+}
+
+// Result
+//
+// 2022/11/21
+//     Runtime Error</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>output: error</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

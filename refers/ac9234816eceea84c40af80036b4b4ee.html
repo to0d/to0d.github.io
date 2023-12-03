@@ -1,0 +1,215 @@
+<html>
+	<head>
+		<meta charSet="utf-8"></meta>
+		<title data-rh="true">函数调用过程中栈到底是怎么压入和弹出的&nbsp;阿管学习录&nbsp;知乎</title>
+	</head>
+	<body>
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Sat Nov 04 17:50:53 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://www.zhihu.com/question/22444939/answer/3132019695" target="_blank">
+				<font color="red" size="3">函数调用过程中栈到底是怎么压入和弹出的？&nbsp;&ndash;&nbsp;知乎</font>
+			</a>
+			<p></p>
+		</body>
+		<span class="RichText ztext CopyrightRichText-richText css-117anjg" options="[object Object]" itemProp="text">
+			<p data-first-child data-pid="buHmhmf9">了解编程的同学或多或少都接触过函数，函数提供了一种代码封装的方式，用一组指定参数和一个可选的返回值实现某种功能。函数的调用看似很简单，然而在这简单的背后计算机其实替我们做了很多事情.....今天就来了解一下这一简单背后的复杂过程。</p>
+			<p data-pid="TUeECMaK">为了讨论方便，我们假设&ldquo;函数P调用函数Q，Q执行完毕后返回到函数P&rdquo;这样一个场景。</p>
+			<p data-pid="5w19HBAE">当P调用Q后，P的执行过程被暂时挂起，并将程序计数器设置为Q代码的起始地址；当Q运行时，它只需要为局部变量分配存储空间；而当Q返回时，又释放它的局部变量存储空间，程序计数器又恢复到P的下一条指令地址继续执行。可以看出，相对于P,&nbsp;Q的局部存储空间是后分配，但是先释放的，这样一种
+				<b>后进先出</b>
+				的使用方式非常适合使用&ldquo;栈&rdquo;这样一种数据结构。
+			</p>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/188e66227a93577462f4101864c14f3d.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<p data-pid="6IdPw2d6">因此，函数调用过程中使用的临时内存空间称为栈(statck)，而函数调用过程在栈上分配的空间称为函数的栈帧（statck&nbsp;frame），注意栈的生长方向是从栈底到栈顶，
+				<b>内存地址是从高地址向低地址延伸</b>
+				。
+			</p>
+			<p data-pid="nqN-raJt">一个通用的栈帧结构如下图所示：</p>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/1dd976d87b5be43dac4eb92f769ad8c0.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<p data-pid="LcFEdEkZ">P调用Q的过程中涉及3类动作：</p>
+			<p data-pid="xEUMGxBS">
+				<b>（1）传递控制</b>
+			</p>
+			<p data-pid="iY58mmJT">从运行函数P到运行函数Q，然后返回继续运行函数P。这一过程主要靠修改程序计数器实现，具体通过汇编指令call和ret</p>
+			<table data-draft-node="block" data-draft-type="table" data-size="normal" data-row-style="normal">
+				<tbody>
+					<tr>
+						<td>指令</td>
+						<td>描述</td>
+					</tr>
+					<tr>
+						<td>call&nbsp;Q</td>
+						<td>调用，将P的下一条指令地址A压入栈中，并将程序计数器PC设置为Q的起始地址</td>
+					</tr>
+					<tr>
+						<td>ret</td>
+						<td>返回，将地址A从栈中弹出，并将PC设置为A</td>
+					</tr>
+				</tbody>
+			</table>
+			<p data-pid="isE-GTH-">
+				<b>（2）传递参数</b>
+			</p>
+			<p data-pid="7Xdedjz-">P向Q提供若干个参数，Q向P返回一个值。</p>
+			<p data-pid="c7JL9eRn">在x86&ndash;64中，P向Q提供的参数大部分是通过寄存器实现的，最多可以通过寄存器传递6个整型参数，这6个寄存器也是有特殊顺序的，第1个参数放在第1个寄存器中，第2个参数放在第2个寄存器中......具体顺序见下表：</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/261dd57deba483a2ffd0d1159c853975.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p data-pid="lcyhp4TD">如果参数大于6个，超出部分的参数7&tilde;n就要通过栈来传递，而参数7位于栈顶，这部分区域被称为&ldquo;
+				<b>参数构造区</b>
+				&rdquo;。通过栈传递参数时，所有的数据大小都向8的倍数对齐。
+			</p>
+			<p data-pid="ukRLc3BI">此外，
+				<b>Q的返回值默认放在寄存器%rax中。</b>
+				<br>
+
+			</p>
+			<p data-pid="BUT53hfW">
+				<b>（3）分配和释放内存</b>
+			</p>
+			<p data-pid="IaNPHg71">栈通常会为局部数据分配空间，函数返回时又释放这些空间。</p>
+			<p data-pid="wdhRUHRX">下面来看一个函数调用的例子,&nbsp;函数call_proc调用proc，传递的参数有8个。</p>
+			<div class="highlight">
+				<pre>
+<code class="language-c"><span class="kt">long</span> <span class="nf">call_proc</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="kt">long</span> <span class="n">x1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">x2</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="kt">short</span> <span class="n">x3</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="kt">char</span> <span class="n">x4</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+  <span class="n">proc</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">x3</span><span class="p">,</span> <span class="n">x4</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">x4</span><span class="p">);</span>
+  <span class="k">return</span> <span class="p">(</span><span class="n">x1</span><span class="o">+</span><span class="n">x2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x3</span><span class="o">-</span><span class="n">x4</span><span class="p">);</span>
+<span class="p">}</span></code>
+				</pre>
+			</div>
+			<p data-pid="FlWF6Rn6">将上述代码编译成汇编如下：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">call_proc:
+.LFB0:
+  .cfi_startproc
+  endbr64
+  pushq  %rbp
+  .cfi_def_cfa_offset 16
+  .cfi_offset 6, -16
+  movq  %rsp, %rbp         #当前栈顶记录在%rbp
+  .cfi_def_cfa_register 6
+  subq  $32, %rsp          #栈指针减32，相当于分配32字节栈帧
+  movq  %fs:40, %rax
+  movq  %rax, -8(%rbp)
+  xorl  %eax, %eax
+  movq  $1, -16(%rbp)      #给临时变量x1分配空间
+  movl  $2, -20(%rbp)      #给x2分配空间
+  movw  $3, -22(%rbp)      #给x3分配空间
+  movb  $4, -23(%rbp)      #给x4分配空间
+  movzbl  -23(%rbp), %eax  #第7个参数x4保运到%eax
+  movsbl  %al, %edi        #x4又保存到%edi
+  movzwl  -22(%rbp), %eax  #第5个参数x3保存到eax
+  movswl  %ax, %r10d       #第5个参数x3暂存到%r10d 
+  movl  -20(%rbp), %edx    #第3个参数x2保存到%edx
+  movq  -16(%rbp), %rax    #第1个参数x1暂存%rax
+  leaq  -22(%rbp), %r9     #第6个参数&amp;x3保存到%r9
+  leaq  -20(%rbp), %rcx    #第4个参数&amp;x2保存到%rcx
+  leaq  -16(%rbp), %rsi    #第2个参数&amp;x1保存傲%rsi
+  leaq  -23(%rbp), %r8     #第8个参数暂存到%r8
+  pushq  %r8               #%r8压栈
+  pushq  %rdi              #这里将第7个参数x4压栈，目前处于栈顶 
+  movl  %r10d, %r8d        #第5个参数x3爆粗到%r8d
+  movq  %rax, %rdi         #第1个参数保存到%rdi
+  call  proc@PLT
+  addq  $16, %rsp
+  movl  -20(%rbp), %eax
+  movslq  %eax, %rdx
+  movq  -16(%rbp), %rax
+  leaq  (%rdx,%rax), %rcx  #将x1+x2的值存在%rcx
+  movzwl  -22(%rbp), %eax
+  movswl  %ax, %edx
+  movzbl  -23(%rbp), %eax
+  movsbl  %al, %eax
+  subl  %eax, %edx         #将x3-x4的值存在%edx
+  movl  %edx, %eax         #计算（x1+x2）*（x3-x4)
+  cltq
+  imulq  %rcx, %rax
+  movq  -8(%rbp), %rsi
+  xorq  %fs:40, %rsi
+  je  .L3</code>
+				</pre>
+			</div>
+			<p data-pid="xoyXVcRy">从上面的汇编代码分析可以看出，在call_proc的栈帧中，首先分配了32字节的内存，用于存放临时变量x1,&nbsp;x2,&nbsp;x3,&nbsp;x4。</p>
+			<p data-pid="c1ItBerS">proc的8个参数中，x1,&nbsp;&amp;x1，x2,&nbsp;&amp;x2,&nbsp;x3,&nbsp;&amp;x3分别存放在对应的寄存器中，而x4和&amp;x4存放在栈中。本例的具体栈帧布局如下所示：</p>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/40ba01dadf898955e168844914f9e702.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<p data-pid="oKDh8LUz">通过上面的分析，不难发现函数之间传递参数时优先采用寄存器来传递，之所以这么做，是因为寄存器组是所有函数都共享的资源。细想一下，这样会产生一个问题，被调用者Q如果覆盖了调用者P使用的寄存器的值，那么P后续的执行岂不是会出错？</p>
+			<p data-pid="GTLnyKkt">为此，x86&ndash;64采用了一组统一的寄存器使用惯例：</p>
+			<p data-pid="FPPPt8Mr">①寄存器%rbx、%rbp和%r12&tilde;%r15被划分为
+				<b>被调用者保存寄存器</b>
+				。
+			</p>
+			<p data-pid="hZR_GDUH">当函数P调用函数Q时，Q必须要保存这些寄存器的值。对于Q来讲，要么根本不去修改它，要么就是把原始值压入栈中，改变寄存器的值，然后返回前从栈中弹出。</p>
+			<p data-pid="bPSgUrl2">②所有其他的寄存器，除栈指针%rsp外，都分类为
+				<b>调用者保存寄存器</b>
+				。
+			</p>
+			<p data-pid="peG12Aal">这类寄存器意味着被调用者Q可以随意修改，因此在调用之前保存好这个数据是调用者P的责任。
+				<br>
+
+			</p>
+			<p data-pid="c6W2qCa3">
+				<b>小结</b>
+			</p>
+			<p data-pid="4Cs531kY">（1）函数参数传递时，优先通过寄存器传递6个参数，超出部分通过栈来传递；</p>
+			<p data-pid="iOAIg_3U">（2）寄存器分为调用者保存寄存器和被调用者保存寄存器两种。</p>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<p data-pid="o-U70lui">文章来自：
+				<a href="https://link.zhihu.com/?target=https%3A//mp.weixin.qq.com/s/78vVdSiwmrSPLoXk5Btrrg" class=" wrap external" target="_blank" rel="nofollow noreferrer">《CSAPP》运行时栈</a>
+			</p>
+		</span>
+	</body>
+</html>

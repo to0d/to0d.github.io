@@ -1,0 +1,45 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC170310J.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC170310J.cpp</h1>
+            <h3>erase string iterator</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/std-string.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-string</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+int main()
+{
+    string s = "abcdefgabc";
+
+    cout &lt;&lt; "input: " &lt;&lt; s;
+
+    string::iterator it =s.begin();
+    while( it != s.end())
+    {   if(*it == 'a' || *it == 'b' )
+            it = s.erase(it);
+        else
+            ++it;
+    }
+
+    cout &lt;&lt; "; output: " &lt;&lt; s &lt;&lt; endl;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

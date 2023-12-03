@@ -1,0 +1,59 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC140725A.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC140725A.c</h1>
+            <h3>test C pointer</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Pointer.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Pointer</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include "stdio.h"
+
+int fun()
+{
+    return 4;
+}
+
+int main(void)
+{
+    int  x1 = 1;
+    int  x3[] = {3};
+    char x5[2][2][2] = {"2","3","4","5"};
+
+    const int x6 = 6;
+        int x7 = 7;
+    const int x8 = 8;
+
+    int  *p1    = &x1;          // 普通指针
+    int **p2    = &p1;          // 二级指针
+    int(*p3)[1] = &x3;          // 指向一维数组的指针
+    int (*p4)() = fun;          // 指向函数的指针
+    char (*p5)[2][2][2] = &x5;  // 指向多维数组的指针
+    char* p5_2 = **x5;          // 指向某数组首元素地址的指针
+
+    const int *p6 = &x6;        // 指向常量(const)的指针, 变量也不可变
+    int * const p7 = &x7;       // 常量指针, 指针不可变
+    const int * const p8 = &x8; // 指针不可变，变量也不可变
+
+    printf( "output: done. \n" );
+
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

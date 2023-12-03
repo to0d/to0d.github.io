@@ -1,0 +1,146 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT057201.cpp (Subtree of Another Tree)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT057201.cpp (Subtree of Another Tree)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-09</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0572.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0572</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_bb15e4a3" href="#TOC_HEAD_bb15e4a3">Problem 0572 <strong>Subtree of Another Tree</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/subtree-of-another-tree/" target="_blank">https://leetcode.com/problems/subtree&ndash;of&ndash;another&ndash;tree/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>99.85</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_fd954391" href="#TOC_HEAD_fd954391">LT057201.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_cc227855">LT0572 (name=Subtree of Another Tree, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0572.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0572</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_a873b518"><a href="https://leetcode.com/problems/subtree-of-another-tree/" target="_blank">Subtree of Another Tree &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0572.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0572</a></li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_73495629"><a href="LT010001.cpp.html" target="_blank">LT010001.cpp</a> &nbsp;<a href="../tags/LT0572.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0572</a>&nbsp;<a href="../tags/Ref.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Ref</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_9ec1af5e" href="#TOC_HEAD_9ec1af5e">LT057201.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool isSubtree(TreeNode* root, TreeNode* subRoot) {
+        if( root == NULL )
+            return false;
+        return isSameTree(root, subRoot)
+            || isSubtree(root-&gt;left, subRoot)
+            || isSubtree(root-&gt;right, subRoot);
+    }
+
+    bool isSameTree(TreeNode* p, TreeNode* q) { // refer LT010001.cpp
+        if( p == NULL )
+            return q == NULL;
+        if( q == NULL || p-&gt;val != q-&gt;val )
+            return false;
+        return isSameTree(p-&gt;left, q-&gt;left)
+            && isSameTree(p-&gt;right, q-&gt;right);
+    }
+};
+
+
+
+void test(TreeNode* root, TreeNode* subRoot)
+{
+    cout &lt;&lt; "input: root=";
+    outputTree(root);
+    cout &lt;&lt; ", subRoot=";
+    outputTree(subRoot);
+    int r = Solution().isSubtree(root, subRoot);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(makeTree("{3,4,5,1,2,null,null,null,null,0}"), makeTree("{4,1,2}"));
+}
+
+// Result
+//
+// 2022-11-23: Runtime 57ms 8.58% Memory 28.9MB 61.80%, https://leetcode.com/problems/subtree-of-another-tree/submissions/848450211/
+// 2023-02-24: Runtime 25ms 69.28% Memory 28.8MB 62.23%, https://leetcode.com/problems/subtree-of-another-tree/submissions/904174686/
+// 2023-03-09: Runtime 10ms 99.85% Memory 28.9MB 61.45%, https://leetcode.com/problems/subtree-of-another-tree/submissions/911564531/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: root=[3,4,5,1,2,null,null,null,null,0], subRoot=[4,1,2]; output: 0;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

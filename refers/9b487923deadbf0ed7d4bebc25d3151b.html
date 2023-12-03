@@ -1,0 +1,144 @@
+<html>
+	<head>
+		<meta charSet="utf-8"></meta>
+		<title data-rh="true">深入解析&nbsp;MLIR&nbsp;Toy&nbsp;Tutorial&nbsp;Chapter&nbsp;5&nbsp;Lowering&nbsp;知乎</title>
+	</head>
+	<body class="WhiteBg-body PostIndex-body">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Sun Oct 29 15:25:03 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://zhuanlan.zhihu.com/p/650104688" target="_blank">
+				<font color="red" size="3">深入解析&nbsp;MLIR&nbsp;Toy&nbsp;Tutorial（Chapter&nbsp;5）：Lowering&nbsp;&ndash;&nbsp;知乎</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="RichText ztext Post-RichText css-117anjg" options="[object Object]">
+			<h2 data-first-child>
+				<b>概述</b>
+			</h2>
+			<p data-pid="m8wy5liz">
+				<a href="https://link.zhihu.com/?target=https%3A//mlir.llvm.org/docs/Tutorials/Toy/" class=" wrap external" target="_blank" rel="nofollow noreferrer">MLIR&nbsp;Toy&nbsp;Tutorial</a>
+				的目标是通过构建一门编程语言编译器的完整过程（包括前端和后端技术），教授如何使用&nbsp;MLIR&nbsp;的各个组件来实现语言的解析、转换和代码生成等功能。
+			</p>
+			<p data-pid="xziPoRoU">MLIR&nbsp;可以让你定义不同层级的方言来实现对计算图做多层级的图优化。Chapter&nbsp;5&nbsp;介绍了如何通过局部&nbsp;lowering&nbsp;的方式将&nbsp;toy&nbsp;IR&nbsp;lowering&nbsp;成更低阶的&nbsp;Affine&nbsp;IR。</p>
+			<h2>
+				<b>Affine</b>
+			</h2>
+			<p data-pid="XEW_jAQ9">Affine&nbsp;是&nbsp;MLIR&nbsp;的一种方言，用于表示和操作多维数组的仿射变换。Affine&nbsp;方言具有丰富的循环优化机制，如循环变换、循环融合、循环分裂等。将高级方言&nbsp;lowering&nbsp;到&nbsp;Affine&nbsp;方言，可以让编译器在更低级别上应用这些优化，从而更好地优化循环嵌套结构。</p>
+			<p data-pid="RfNOt2bq">
+				<code>ToyToAffineLoweringPass</code>
+				通过部分转换的方式&nbsp;&ndash;&ndash;
+				<code>applyPartialConversion()</code>
+				来lowering&nbsp;指定的&nbsp;toy&nbsp;ops。部分转换也是通过&nbsp;rewrite&nbsp;pattern&nbsp;来做&nbsp;IR&nbsp;间的转换（Chapter&nbsp;3），Ch5&nbsp;定义了
+				<code>AddOpLowering</code>
+				，
+				<code>TransposeOpLowering</code>
+				和
+				<code>FuncOpLowering</code>
+				等来重写相应的&nbsp;op。
+			</p>
+			<p data-pid="nVEgpzoX">接下来以&nbsp;TransposeOpLowering()&nbsp;为例来介绍&nbsp;lowering&nbsp;的流程。</p>
+			<h2>
+				<b>TransposeOpLowering</b>
+			</h2>
+			<p data-pid="qIcxb18K">我们知道，C/C++等底层代码是通过循环遍历的方式来实现矩阵的转置：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">    for (int i = 0; i &lt; rows; i++) {
+        for (int j = 0; j &lt; cols; j++) {
+            transposed[j][i] = mat[i][j]; // 将原矩阵的行变成转置矩阵的列
+        }
+    }
+</code>
+				</pre>
+			</div>
+			<p data-pid="nA_5Om_5">TransposeOpLowering&nbsp;要做的也是类似的，它要将
+				<code>toy.transpose(%0&nbsp;:&nbsp;tensor&lt;2x3xf64&gt;)&nbsp;to&nbsp;tensor&lt;3x2xf64&gt;</code>
+				lowering&nbsp;成低阶代码：
+			</p>
+			<ul>
+				<li data-pid="6dYwDzM8">通过
+					<code>lowerOpToLoops()</code>
+					创建多维度的嵌套循环：
+				</li>
+			</ul>
+			<div class="highlight">
+				<pre>
+<code class="language-text">    affine.for %arg0 = 0 to 3 {
+      affine.for %arg1 = 0 to 2 {
+        ......
+      }
+    }
+</code>
+				</pre>
+			</div>
+			<ul>
+				<li data-pid="L_iWBJND">在循环体内构建&nbsp;AffineLoadOp&nbsp;和&nbsp;AffineStoreOp&nbsp;来实现
+					<code>transposed[j][i]&nbsp;=&nbsp;mat[i][j]</code>
+					：
+				</li>
+			</ul>
+			<div class="highlight">
+				<pre>
+<code class="language-text">    affine.for %arg0 = 0 to 3 {
+      affine.for %arg1 = 0 to 2 {
+        %0 = affine.load %alloc_5[%arg1, %arg0] : memref&lt;2x3xf64&gt;
+        affine.store %0, %alloc[%arg0, %arg1] : memref&lt;3x2xf64&gt;
+      }
+    }
+</code>
+				</pre>
+			</div>
+			<h2>
+				<b>Others</b>
+			</h2>
+			<p data-pid="krHvFv2u">TransposeOp&nbsp;lowering&nbsp;后的数据类型已经从
+				<code>tensor&lt;3x2xf64&gt;</code>
+				转换成
+				<code>memref&lt;3x2xf64&gt;</code>
+				，相应的
+				<code>ConstantOpLowering()</code>
+				也要将&nbsp;tensor&nbsp;(
+				<code>toy.constant&nbsp;dense&lt;[[1.000000e+00,&nbsp;2.000000e+00,&nbsp;3.000000e+00],&nbsp;[4.000000e+00,&nbsp;5.000000e+00,&nbsp;6.000000e+00]]&gt;&nbsp;:&nbsp;tensor&lt;2x3xf64&gt;</code>
+				)&nbsp;转换成&nbsp;memref：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">    %cst = arith.constant 6.000000e+00 : f64
+    %cst_0 = arith.constant 5.000000e+00 : f64
+    %cst_1 = arith.constant 4.000000e+00 : f64
+    %cst_2 = arith.constant 3.000000e+00 : f64
+    %cst_3 = arith.constant 2.000000e+00 : f64
+    %cst_4 = arith.constant 1.000000e+00 : f64
+    %alloc_5 = memref.alloc() : memref&lt;2x3xf64&gt;
+    affine.store %cst_4, %alloc_5[0, 0] : memref&lt;2x3xf64&gt;
+    affine.store %cst_3, %alloc_5[0, 1] : memref&lt;2x3xf64&gt;
+    affine.store %cst_2, %alloc_5[0, 2] : memref&lt;2x3xf64&gt;
+    affine.store %cst_1, %alloc_5[1, 0] : memref&lt;2x3xf64&gt;
+    affine.store %cst_0, %alloc_5[1, 1] : memref&lt;2x3xf64&gt;
+    affine.store %cst, %alloc_5[1, 2] : memref&lt;2x3xf64&gt;
+    ...
+    memref.dealloc %alloc_5 : memref&lt;2x3xf64&gt;
+</code>
+				</pre>
+			</div>
+			<p data-pid="xJFgVVrY">
+				<code>AddOpLowering()</code>
+				同样也是通过&nbsp;lowerOpToLoops()&nbsp;来遍历&nbsp;memref&nbsp;的各元素，并对元素做&nbsp;element&ndash;wise&nbsp;操作。
+			</p>
+			<h2>
+				<b>总结</b>
+			</h2>
+			<p data-pid="_58oaotE">Chapter&nbsp;5&nbsp;介绍了如何通过局部&nbsp;lowering&nbsp;将&nbsp;Toy&nbsp;IR&nbsp;转换为&nbsp;Affine&nbsp;IR。Affine&nbsp;是&nbsp;MLIR&nbsp;方言，用于多维数组的仿射变换，支持循环和访存优化。
+				<code>ToyToAffineLoweringPass</code>
+				通过&nbsp;rewrite&nbsp;pattern（如&nbsp;AddOpLowering、TransposeOpLowering）将指定&nbsp;Toy&nbsp;ops&nbsp;转换成低阶的&nbsp;Affine&nbsp;IR&nbsp;。
+			</p>
+			<h2>
+				<b>END</b>
+			</h2>
+		</div>
+	</body>
+</html>

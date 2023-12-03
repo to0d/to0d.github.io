@@ -1,0 +1,136 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT022301.cpp (Rectangle Area)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT022301.cpp (Rectangle Area)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-18</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0223.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0223</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_860ea4ba" href="#TOC_HEAD_860ea4ba">Problem 0223 <strong>Rectangle Area</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/rectangle-area/" target="_blank">https://leetcode.com/problems/rectangle&ndash;area/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>87.47</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_a078a7f4" href="#TOC_HEAD_a078a7f4">LT022301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_58ac1552">LT0223 (name=Rectangle Area, ptag=Leetcode) &nbsp;<a href="../tags/LT0223.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0223</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_ce9c15b0"><a href="https://leetcode.com/problems/rectangle-area/" target="_blank">Rectangle Area &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0223.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0223</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_f74bd41" href="#TOC_HEAD_f74bd41">LT022301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int computeArea(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2) {
+        int areaA = (ax2-ax1)*(ay2-ay1);
+        int areaB = (bx2-bx1)*(by2-by1);
+        int areaC = 0;
+        int l = std::max(ax1,bx1);
+        int r = std::min(ax2,bx2);
+        int t = std::min(ay2,by2);
+        int b = std::max(ay1,by1);
+
+        if( r &gt; l && t &gt; b )
+            areaC = (r-l)*(t-b);
+
+        return areaA+areaB-areaC;
+    }
+};
+
+
+void test(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2)
+{
+    printf("input: [%d %d %d %d %d %d %d %d]", ax1, ay1, ax2, ay2, bx1, by1, bx2, by2);
+    int r = Solution().computeArea(ax1, ay1, ax2, ay2, bx1, by1, bx2, by2);
+    printf("; output: %d;\n", r);
+}
+
+int main(void)
+{
+    test(-3, 0, 3, 4, 0, -1, 9, 2);
+}
+
+// Result
+//
+// 2022-11-01: Runtime 18ms 6.38% Memory 5.6MB 42.55%, https://leetcode.com/problems/rectangle-area/submissions/848495985/
+// 2023-02-18: Runtime 4ms 87.47% Memory 6MB 10.69%, https://leetcode.com/problems/rectangle-area/submissions/900111090/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [-3 0 3 4 0 -1 9 2]; output: 45;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

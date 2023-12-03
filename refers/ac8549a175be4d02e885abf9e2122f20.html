@@ -1,0 +1,229 @@
+<html>
+	<head>
+		<meta charSet="utf-8"></meta>
+		<title data-rh="true">浅谈RISC&nbsp;V的DEBUG系统及其仿真&nbsp;知乎</title>
+	</head>
+	<body class="WhiteBg-body PostIndex-body">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Sat Sep 16 20:57:33 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://zhuanlan.zhihu.com/p/125145986" target="_blank">
+				<font color="red" size="3">浅谈RISC&ndash;V的DEBUG系统及其仿真&nbsp;&ndash;&nbsp;知乎</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="RichText ztext Post-RichText css-1vgu1pu" options="[object Object]">
+			<blockquote data-first-child data-pid="6-Jpgwno">横看成岭侧成峰，远近高低各不同。&nbsp;不识庐山真面目，只缘身在此山中。&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&mdash;&mdash;&nbsp;苏轼《题西林壁》</blockquote>
+			<p data-pid="teNM7nxv">研究RISC&ndash;V系统的debug有很多角度、很多内容，涉及很多软硬件工具如GDB、OpenOCD、adapter，芯片里的JTAG、DM模块、处理器的支持以及RISC&ndash;V&nbsp;external&nbsp;debug协议等等。如果单陷入某个方面，则如盲人摸象，很难了解全局的运作原理，我们有必要跳到系统外面来，捋一捋整个流程到底是怎么运转起来的。值得一提的是，在没有芯片、没有开发板的情况下，我们可以通过仿真的方式（各种仿真工具包括verilator）来接入GDB。</p>
+			<h2>1.&nbsp;RISC&ndash;V&nbsp;Debug系统组件</h2>
+			<p data-pid="7H7M4gmf">在了解Verilated&nbsp;RISC&ndash;V系统如何debug之前，我们先来看一下真实芯片是如何debug的。假设我们使用PC上的Linux里的OpenOCD和GDB对一颗RISC&ndash;V&nbsp;SoC芯片进行debug，这颗RISC&ndash;V芯片在一块开发板上，开发板和PC之间使用某型号的下载器，这个下载器一端连接开发板上连出的JTAG端口，一端连接PC上的USB接口。我们来看看这其中的每个部件都负责什么工作。GDB、OpenOCD、下载器（adapter）和target端的连接关系可以参考下图。</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/85335ad4fec42d09549b2ea746ca8b8f.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<ul>
+				<li data-pid="CwkRFlXv">RISC&ndash;V&nbsp;SoC芯片：里面有RISC&ndash;V&nbsp;core，和SoC中的debug&nbsp;module相连，这个debug&nbsp;module对内控制RISC&ndash;V&nbsp;core、读取寄存器、访问memory，对外和JTAG控制器连接，JTAG控制器的接口连到芯片的PAD。</li>
+				<li data-pid="w3JtPIy6">Adapter：负责协议转换：把USB的JTAG控制信息按JTAG协议转换输出，满足协议定义的电气特性</li>
+				<li data-pid="wP5PtAW8">Linux系统：负责提供USB驱动，由OpenOCD所调用。</li>
+				<li data-pid="vJYDtffL">OpenOCD：负责把GDB的高级别命令转换成JTAG命令，并通过特定下载器的要求进行打包，准备调用OS提供的USB驱动由USB发送出去。GDB和OpenOCD之间使用TCP协议进行连接。</li>
+				<li data-pid="1kxnhBMm">GDB：这个GDB并非是Linux系统下调试host系统（可能是x86，可能是ARM或者其他）的GDB，而是交叉编译工具提供的调试非host系统的RISC&ndash;V设备的GDB。顺便提一句，telnet也可以用来连接OpenOCD，不过既然是简单介绍，就提GDB一个好了。</li>
+			</ul>
+			<p data-pid="wiU1fg3R">假设GDB准备把一段risc&ndash;v的代码Load到开发板上的risc&ndash;v&nbsp;soc上去执行。GDB通过TCP连到OpenOCD的GDB&nbsp;server。OpenOCD这边收到命令后进行解析，根据target类型、adapter型号、使用的协议等等翻译成符合target&nbsp;debug协议的命令，调用底层的驱动（USB之类）发送出去。USB&nbsp;adapter可能还要再转成JTAG格式传给板子上的设备。</p>
+			<p data-pid="AERIZ8KX">传到板子上的risc&ndash;v设备后，芯片里的几个伙计要忙活了。对于符合SIFIVE的debug&nbsp;spec的设备来讲，分成DTM、DMI和DM几个部分。这里先祭上事实上的RISC&ndash;V标准中的external&nbsp;debug连接关系图，这张图信息量很大。里面的每个部分负责什么工作？如何实现呢？这里的细节不细说了，又可以单独成文了，感兴趣的同学可以自行研读spec。</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/69dbf5c97691aca4c024db1a8a2b680d.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p data-pid="WrP-ctcC">最终，DM（Debug&nbsp;module）依靠前面各位朋友的帮助把抽象的GDB命令翻译成一个个的访存、执行或者读CPU寄存器的操作，拿到数据后原路返回。</p>
+			<h2>2.&nbsp;把GDB接入仿真</h2>
+			<p data-pid="xjUXgFI9">还是再来看一下这张block&nbsp;diagram。</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/85335ad4fec42d09549b2ea746ca8b8f.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p data-pid="UGqzAvFi">
+				<a href="test123" class="internal">test</a>
+				在仿真时risc&ndash;v&nbsp;platform里面的实际都是仿真器在解释RTL代码，PC部分也是和仿真器在一个系统里运行（比如服务器或者虚拟机里的Linux），我们留意到这张图里adapter本来是个硬件部分，我们只要把它做成个model便可以在仿真里把PC和RISC&ndash;V&nbsp;platform连接起来了。当然了这时候我们不用USB接口了，直接使用操作系统的TCP服务，至于OpenOCD的运行在TCP上的debug协议我们使用简单的
+				<a href="https://link.zhihu.com/?target=https%3A//repo.or.cz/openocd.git/blob/HEAD%3A/doc/manual/jtag/drivers/remote_bitbang.txt" class=" wrap external" target="_blank" rel="nofollow noreferrer">remote&nbsp;bitbang协议</a>
+				。顺便提一下，如果DTM部分RTL没有也是可以的，直接做在这个model里就可以，直接drive&nbsp;DMI，PULP平台就是这么做的。值得一提的是，用GDB调试Spike上跑的程序也是这个套路，即使Spike是个纯C的model，连RTL也不是。
+			</p>
+			<p data-pid="cWjO0IP_">至于仿真器是什么并不重要，只要支持DPI即可，毕竟这个model除了接口之外我们是准备用C写的。当然了，Ibex的PULP平台里有现成的实现，除了接口部分需要适配一下，其他的直接可以拿过来用了。感谢LowRISC的开发者。OpenTitan项目顺理成章也是使用PULP平台上的这套实现机制。它的RISC&ndash;V&nbsp;platform这部分的microarchitecture如图。</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/dae0f42190feb82d5d8f4e746dd3ba41.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p data-pid="hlpYjkFK">就拿OpenTitan作为例子，用verilator仿真的时候可以看到下面的打印信息：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">$build/lowrisc_systems_top_earlgrey_verilator_0.1/sim-verilator/Vtop_earlgrey_verilator   --meminit=rom,build-bin/sw/device/boot_rom/boot_rom_sim_verilator.elf   --meminit=flash,build-bin/sw/device/examples/hello_world/hello_world_sim_verilator.elf
+
+Simulation of OpenTitan Earl Grey =================================
+JTAG: Virtual JTAG interface dmi0 is listening on port 44853. Use OpenOCD and the following configuration to connect:   interface remote_bitbang   remote_bitbang_host localhost   remote_bitbang_port 44853</code>
+				</pre>
+			</div>
+			<p data-pid="jQoS1GC8">这是adapter+DTM&nbsp;model里的DPI调用TCP&nbsp;server在44853端口上开了个服务，等待host的到来。</p>
+			<p data-pid="oiviVM8t">这时候我们另起个中断运行OpenOCD，当然要选verilator适配的config。</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">$ /tools/openocd/bin/openocd -s util/openocd -f board/lowrisc-earlgrey-verilator.cfg 
+
+Info : Listening on port 6666 for tcl connections 
+Info : Listening on port 4444 for telnet connections 
+Info : Initializing remote_bitbang driver 
+Info : Connecting to localhost:44853 
+Info : remote_bitbang driver initialized 
+Info : This adapter doesn&#39;t support configurable speed 
+Info : JTAG tap: riscv.tap tap/device found: 0x04f5484d (mfg: 0x426 (Google Inc), part: 0x4f54, ver: 0x0) 
+Info : datacount=2 progbufsize=8 
+Info : Examined RISC-V core; found 1 harts 
+Info :  hart 0: XLEN=32, misa=0x40101104 
+Info : Listening on port 3333 for gdb connections</code>
+				</pre>
+			</div>
+			<p data-pid="gfShFyiR">我们可以看到OpenOCD顺利连上了44853端口，和仿真中的DMI接洽上了。它自己监听3333端口看看有否GDB连接的请求。要是我们在另一个终端打开GDB：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">$ riscv32-unknown-elf-gdb -ex &#34;target extended-remote :3333&#34; -ex &#34;info reg&#34;   build-bin/sw/device/examples/hello_world/hello_world_sim_verilator.elf</code>
+				</pre>
+			</div>
+			<p data-pid="SMTa-IuW">这时候OpenOCD这边会显示：</p>
+			<div class="highlight">
+				<pre><code class="language-text">Info : accepting &#39;gdb&#39; connection on tcp/3333</code></pre>
+			</div>
+			<p data-pid="tQxGkoK_">GDB那边的输出：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">Reading symbols from build-bin/sw/device/examples/hello_world/hello_world_sim_verilator.elf...done. Remote debugging using :3333</code>
+				</pre>
+			</div>
+			<p data-pid="oudEZX9l">我们来看一眼OpenOCD把DM启动起来的瞬间是啥样：</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/efe70b3751cb31282c34f0241bffbcfb.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p data-pid="FUo15wTZ">我们看到DMI上先向0x40（
+				<code>dmi_req_addr</code>
+				=0x10）写了0x0来reset，随即写了0x1把DM启动起来，接着还是往0x40写了0x7FFFFC1然后随即读这个地址看看它到底实现了哪些寄存器位。我们虽然从waveform看不出OpenOCD到底发了什么过来，但是我们可以知道它想让DM做什么事情。
+			</p>
+			<p data-pid="9j_Z5Tr7">OK，下面就是使用GDB&nbsp;debug的时间了，略去不表。比如我们想看看0x2000034a地址的值：</p>
+			<div class="highlight">
+				<pre><code class="language-text">(gdb) x 0x2000034a 0x2000034a &lt;ibex_mcycle_read+12&gt;:    0xb80027f3</code></pre>
+			</div>
+			<p data-pid="z2GF03ga">当然，跳过OpenOCD理论上也是可行的，我们可以直接解析GDB的命令，并转换成DMI上的请求。理论上这种方式还可以提高仿真速度，但使用OpenOCD更贴近实际硬件运行状况，并且OpenOCD已经帮我们做了很多命令解析的工作，大大减少了开发的负担。</p>
+			<h2>3.&nbsp;关键代码解析</h2>
+			<p data-pid="Ch_hnulA">毫无疑问，GDB或者说OpenOCD接入仿真最关键的部分是adapter和DTM的model，OpenOCD里面使用PULP的solution，使用DPI&nbsp;C程序来模拟jtag到DMI的数据传输。看一下模块间的连接：</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/6cc0032d655918260ea53c4b906578.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p data-pid="W7Op9ftd">
+				<code>dmidpi</code>
+				表面上只有和DM之间的DMI接口，实则还有和OpenOCD之间的TCP数据交换。这是因为
+				<code>dmidpi</code>
+				里面开了一个TCP&nbsp;server。在
+				<code>dmidpi.sv</code>
+				里面
+				<code>initial</code>
+				时便调用DPI建立TCP&nbsp;server，仿真结束时关掉：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">  initial begin
+    ctx = dmidpi_create(Name, ListenPort);
+  end
+
+  final begin
+    dmidpi_close(ctx);
+    ctx = 0;
+  end</code>
+				</pre>
+			</div>
+			<p data-pid="qlKGP1l0">那DPI里面是怎么实现的呢？我们看
+				<code>dmidpi.c</code>
+				：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">struct dmidpi_ctx {
+  struct tcp_server_ctx *sock;
+  struct jtag_ctx jtag;
+  struct dmi_sig_values sig;
+};
+
+void *dmidpi_create(const char *display_name, int listen_port) {
+  // Create context
+  struct dmidpi_ctx *ctx =
+      (struct dmidpi_ctx *)calloc(1, sizeof(struct dmidpi_ctx));
+  assert(ctx);
+
+  // Set up socket details
+  ctx-&gt;sock = tcp_server_create(display_name, listen_port);
+
+  printf(
+      &#34;\n&#34;
+      &#34;JTAG: Virtual JTAG interface %s is listening on port %d. Use\n&#34;
+      &#34;OpenOCD and the following configuration to connect:\n&#34;
+      &#34;  interface remote_bitbang\n&#34;
+      &#34;  remote_bitbang_host localhost\n&#34;
+      &#34;  remote_bitbang_port %d\n&#34;,
+      display_name, listen_port, listen_port);
+
+  return (void *)ctx;
+}</code>
+				</pre>
+			</div>
+			<p data-pid="6Ut6CH0L">TCP送来了remote&nbsp;bitbang协议的JTAG&nbsp;command，一系列的函数对其进行解析，并转换成DMI上的数据读写请求。在
+				<code>dmidpi.sv</code>
+				里面每个cycle对DMI&nbsp;interface上的信号值进行更新，包括从DM收过来以及送到DM去。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">  always_ff @(posedge clk_i, negedge rst_ni) begin
+    dmidpi_tick(ctx, dmi_req_valid, dmi_req_ready, dmi_req_addr, dmi_req_op,
+                dmi_req_data, dmi_rsp_valid, dmi_rsp_ready, dmi_rsp_data,
+                dmi_rsp_resp, dmi_rst_n);
+  end</code>
+				</pre>
+			</div>
+			<p data-pid="Rg64I3ZS">使用了
+				<code>dmidpi</code>
+				模块，就意味着我们放弃了真实的DTM，在verilator仿真顶层
+				<code>top_earlgrey_verilator</code>
+				里面
+				<code>dmidpi</code>
+				直接bind到
+				<code>rv_dm</code>
+				模块里面。
+			</p>
+			<div class="highlight">
+				<pre><code class="language-text">  bind rv_dm dmidpi u_dmidpi (
+    .clk_i,
+    .rst_ni,
+    //......</code></pre>
+			</div>
+			<h2>4.&nbsp;小结</h2>
+			<p data-pid="I9U7gFu1">Debug系统是SoC中非常重要的一个部分，也是开发中非常费时的一个部分。Debug系统能在仿真阶段来debug，本身也是很有意义也很挑战的工作。这篇小文里也只是粗略解析了系统大体的运作过程以及仿真阶段的处理。其实还有很多debug相关的知识点没有包括，比如：</p>
+			<ul>
+				<li data-pid="UUoSYBR6">hardware&nbsp;breakpoint和software&nbsp;breakpoint各是如何工作的？</li>
+				<li data-pid="LV64LScP">如何对Flash及ROM里的代码设置breakpoint？</li>
+				<li data-pid="8rArGhKx">JTAG标准是怎么样的？如何应用在debug系统里的？</li>
+				<li data-pid="Kh9gOXVz">EBREAK的exception&nbsp;handler都做了什么事情？</li>
+			</ul>
+		</div>
+	</body>
+</html>

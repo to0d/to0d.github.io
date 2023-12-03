@@ -1,0 +1,141 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT089601.cpp (Monotonic Array)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT089601.cpp (Monotonic Array)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-18</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0896.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0896</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_44dba769" href="#TOC_HEAD_44dba769">Problem 0896 <strong>Monotonic Array</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/monotonic-array/" target="_blank">https://leetcode.com/problems/monotonic&ndash;array/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>59.53</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_2c146cd6" href="#TOC_HEAD_2c146cd6">LT089601.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_a4466b1b">LT0896 (name=Monotonic Array, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0896.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0896</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_a25a4150"><a href="https://leetcode.com/problems/monotonic-array/" target="_blank">Monotonic Array &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0896.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0896</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_feea4323" href="#TOC_HEAD_feea4323">LT089601.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool isMonotonic(vector&lt;int&gt;& nums) {
+        int size = nums.size(), pos = 0;
+        while( (pos+1) &lt; size && nums[pos+1] == nums[pos])
+            ++pos;
+
+        if( (pos+1) &lt; size )
+        {  if(nums[pos+1] &gt; nums[pos])
+                while( (pos+1) &lt; size && nums[pos+1] &gt;= nums[pos] )
+                    ++pos;
+            else
+                while( (pos+1) &lt; size && nums[pos+1] &lt;= nums[pos] )
+                    ++pos;
+        }
+
+        return (pos+1) == size;
+    }
+};
+
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    bool r = Solution().isMonotonic(nums);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({1,2,2,3});
+}
+
+
+// Result
+//
+// 2022-12-03: Runtime 519ms 5.3% Memory 96.5MB 74.65%, https://leetcode.com/problems/monotonic-array/submissions/853691350/
+// 2023-02-18: Runtime 182ms 59.53% Memory 96.4MB 91.59%, https://leetcode.com/problems/monotonic-array/submissions/900122155/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [1,2,2,3]; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

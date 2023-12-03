@@ -1,0 +1,158 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT146001.cpp (Make Two Arrays Equal by Reversing Subarrays)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT146001.cpp (Make Two Arrays Equal by Reversing Subarrays)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-11</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1460.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1460</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_30458ffe" href="#TOC_HEAD_30458ffe">Problem 1460 <strong>Make Two Arrays Equal by Reversing Subarrays</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/make-two-arrays-equal-by-reversing-subarrays/" target="_blank">https://leetcode.com/problems/make&ndash;two&ndash;arrays&ndash;equal&ndash;by&ndash;reversing&ndash;subarrays/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>5.8</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_bf74fbce" href="#TOC_HEAD_bf74fbce">LT146001.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_b3816f56">LT1460 (name=Make Two Arrays Equal by Reversing Subarrays, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1460.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1460</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_8fd188f7"><a href="https://leetcode.com/problems/make-two-arrays-equal-by-reversing-subarrays/" target="_blank">Make Two Arrays Equal by Reversing Subarrays &ndash; Leetcode</a> &nbsp;<a href="../tags/LT1460.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1460</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_2d190e1b" href="#TOC_HEAD_2d190e1b">LT146001.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool canBeEqual(vector&lt;int&gt;& arr1, vector&lt;int&gt;& arr2) {
+        int max1, min1, sum1, max2, min2, sum2;
+        _scan(arr1, max1, min1, sum1);
+        _scan(arr2, max2, min2, sum2);
+        if( max1 != max2 || min1 != min2 || sum1 != sum2 )
+            return false;
+        int size = arr1.size();
+        for(int i = 0;i &lt; size; ++i)
+            if( _bubble(arr1, i) != _bubble(arr2, i))
+                return false;
+        return true;
+    }
+
+    void _scan(vector&lt;int&gt;& arr, int _max, int _min, int _sum) {
+        _max = INT_MIN, _min = INT_MAX, _sum = 0;
+        for(int v : arr )
+        {   _max = std::max(_max, v);
+            _min = std::min(_min, v);
+            _sum += v;
+        }
+    }
+
+    int _bubble(vector&lt;int&gt;& arr, int i) {
+        for(int j = arr.size() - 1; j &gt; i; --j)
+            if( arr[j] &lt; arr[j-1])
+            {   int v = arr[j-1];
+                arr[j-1] = arr[j];
+                arr[j] = v;
+            }
+        return arr[i];
+    }
+};
+
+
+
+void test(vector&lt;int&gt; target, vector&lt;int&gt; arr)
+{
+    cout &lt;&lt; "input: target=";
+    outputVector(target);
+    cout &lt;&lt; ", arr=";
+    outputVector(arr);
+    bool r = Solution().canBeEqual(target, arr);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test({1,2,3,4}, {2,4,1,3});
+}
+
+
+// Result
+//
+// 2022-12-15: Runtime 103ms 5.2% Memory 14.5MB 63.47%, https://leetcode.com/problems/make-two-arrays-equal-by-reversing-subarrays/submissions/860215688/
+// 2023-02-25: Runtime 95ms 5.6% Memory 14.5MB 31.86%, https://leetcode.com/problems/make-two-arrays-equal-by-reversing-subarrays/submissions/904215408/
+// 2023-03-11: Runtime 103ms 5.8% Memory 14.5MB 30.98%, https://leetcode.com/problems/make-two-arrays-equal-by-reversing-subarrays/submissions/912982441/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: target=[1,2,3,4], arr=[2,4,1,3]; output: 0;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

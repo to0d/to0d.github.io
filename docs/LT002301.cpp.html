@@ -1,0 +1,171 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT002301.cpp (Merge k Sorted Lists)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT002301.cpp (Merge k Sorted Lists)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-14</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0023.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0023</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/List-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>List-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_f0f88aed" href="#TOC_HEAD_f0f88aed">Problem 0023 <strong>Merge k Sorted Lists</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/merge-k-sorted-lists/" target="_blank">https://leetcode.com/problems/merge&ndash;k&ndash;sorted&ndash;lists/</a></li>
+	<li>Difficulty <strong>Hard</strong></li>
+	<li><strong>74.41</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_c3729af2" href="#TOC_HEAD_c3729af2">LT002301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_a86a6705">LT0023 (name=Merge k Sorted Lists, ptag=Leetcode) &nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0023.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0023</a>&nbsp;<a href="../tags/List-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>List-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_907b3282"><a href="https://leetcode.com/problems/merge-k-sorted-lists/" target="_blank">Merge k Sorted Lists &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0023.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0023</a></li>
+		<br />
+	</ul>
+	<p>
+		You are given an array of k linked&ndash;lists lists, each linked&ndash;list is sorted in ascending order.
+	</p>
+	<p>
+		Merge all the linked&ndash;lists into one sorted linked&ndash;list and return it.
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input: lists = [[1,4,5],[1,3,4],[2,6]]
+Output: [1,1,2,3,4,4,5,6]
+Explanation: The linked-lists are:
+[
+1-&gt;4-&gt;5,
+1-&gt;3-&gt;4,
+2-&gt;6
+]
+merging them into one sorted list:
+1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4-&gt;5-&gt;6	</code></pre>
+	<li><a name="HEAD_HIDDEN_5b3bf4a7"><a href="LT002101.cpp.html" target="_blank">LT002101.cpp</a> &nbsp;<a href="../tags/LT0023.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0023</a>&nbsp;<a href="../tags/Ref.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Ref</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_e6ebdf3f" href="#TOC_HEAD_e6ebdf3f">LT002301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    ListNode* mergeKLists(vector&lt;ListNode*&gt;& lists) {
+        while( lists.size() &gt;= 2 )
+            for(int i = 0, j = lists.size() - 1; i &lt; j; ++i, --j)
+            {   lists[i] = mergeTwoLists( lists[i], lists[j] );
+                lists.pop_back();
+            }
+
+        return lists.size() == 0 ? NULL : lists[0];
+    }
+
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) { // LT002101.cpp
+        ListNode tmp(0);
+        ListNode* l3 = &tmp;
+        while( l1 != NULL && l2 != NULL )
+        {   ListNode** pmin = (l1-&gt;val &lt; l2-&gt;val) ? &l1 : &l2;
+            l3-&gt;next = *pmin;
+            l3       = l3-&gt;next;
+            *pmin    =(*pmin)-&gt;next;
+        }
+        l3-&gt;next= (l1==NULL)? l2 : l1;
+        return tmp.next;
+    }
+};
+
+
+
+void test(vector&lt;ListNode*&gt; lists)
+{
+    cout &lt;&lt; "input: ";
+    outputList(lists);
+    ListNode* r = Solution().mergeKLists(lists);
+    cout &lt;&lt; "; output: ";
+    outputList(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({makeList(3,1,4,5), makeList(3,1,3,4), makeList(2,2,6)});
+}
+
+// Result
+//
+// 2022-11-07: Runtime 30ms 53.56% Memory 12.9MB 95.29%, https://leetcode.com/problems/merge-k-sorted-lists/submissions/838723307/
+// 2023-02-16: Runtime 16ms 97.81% Memory 13MB 95.29%, https://leetcode.com/problems/merge-k-sorted-lists/submissions/899177077/
+// 2023-03-08: Runtime 18ms 95.34% Memory 13MB 86.81%, https://leetcode.com/problems/merge-k-sorted-lists/submissions/910933318/
+// 2023-03-14: Runtime 24ms 74.41% Memory 13MB 86.57%, https://leetcode.com/problems/merge-k-sorted-lists/submissions/914464261/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [[1-&gt;4-&gt;5],[1-&gt;3-&gt;4],[2-&gt;6]]; output: [1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4-&gt;5-&gt;6];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

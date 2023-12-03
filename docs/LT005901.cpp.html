@@ -1,0 +1,169 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT005901.cpp (Spiral Matrix II)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT005901.cpp (Spiral Matrix II)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-27</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0059.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0059</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/SpiralMatrix-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>SpiralMatrix-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_d797d8b" href="#TOC_HEAD_d797d8b">Problem 0059 <strong>Spiral Matrix II</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/spiral-matrix-ii/" target="_blank">https://leetcode.com/problems/spiral&ndash;matrix&ndash;ii/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_57e3bb95" href="#TOC_HEAD_57e3bb95">LT005901.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_f7892023">LT0059 (name=Spiral Matrix II, ptag=Leetcode) &nbsp;<a href="../tags/LT0059.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0059</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/SpiralMatrix-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>SpiralMatrix-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_f7e9967d"><a href="https://leetcode.com/problems/spiral-matrix-ii/" target="_blank">Spiral Matrix II &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0059.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0059</a></li>
+		<br />
+	</ul>
+	<p>
+		Given an integer n, generate a square matrix filled with elements from 1 to n2 in spiral order.
+	</p>
+	<p>
+		For example,
+		Given n = 3,
+		You should return the following matrix:
+	</p>
+	<pre><code>[
+[ 1, 2, 3 ],
+[ 8, 9, 4 ],
+[ 7, 6, 5 ]
+]	</code></pre>
+</ul>
+	<H3><a name="HEAD_5bf4c962" href="#TOC_HEAD_5bf4c962">LT005901.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+int calculate(int m, int n, int x, int y) {
+    int s, val;
+    int x2 = n - x - 1;
+    int y2 = m - y - 1;
+    int dx = std::min(x2,x);
+    int dy = std::min(y2,y);
+    int z = min(dx,dy);
+    if( z &gt; 0 )
+        s = 2*(m+n)*z - 4*z*z;
+    else
+        s = 0;
+
+    // up layer
+    if( z == y || z == x2 )
+        val = s + x + y - 2*z ;
+    else
+        val = s - x - y + 2*(m+n-2)-6*z;
+
+    return val + 1;
+}
+
+class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; generateMatrix(int n) {
+        vector&lt;vector&lt;int&gt;&gt; matrix;
+        for(int i = 0; i &lt; n; ++i)
+        {   vector&lt;int&gt; row;
+            for(int j = 0; j &lt;n ; ++j)
+                row.push_back( calculate(n,n,j,i));
+            matrix.push_back(row);
+        }
+        return matrix;
+    }
+};
+
+
+void test(int n)
+{
+    cout &lt;&lt; "input: " &lt;&lt; n;
+    vector&lt;vector&lt;int&gt;&gt; r = Solution().generateMatrix(3);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(3);
+}
+
+// Result
+//
+// 2022-11-16: Runtime 11ms 5.88% Memory 6.5MB 36.76%, https://leetcode.com/problems/spiral-matrix-ii/submissions/844279862/
+// 2023-02-17: Runtime 3ms 71.79% Memory 6.5MB 38.46%, https://leetcode.com/problems/spiral-matrix-ii/submissions/899829078/
+// 2023-07-27: Runtime 0ms 100% Memory 6.16MB 90.52%, https://leetcode.cn/problems/spiral-matrix-ii/submissions/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 3; output: [[1,2,3],[8,9,4],[7,6,5]]</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

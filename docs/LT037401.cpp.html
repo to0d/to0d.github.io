@@ -1,0 +1,163 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT037401.cpp (Guess Number Higher or Lower)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT037401.cpp (Guess Number Higher or Lower)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-11-21</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0374.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0374</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_d5ca7326" href="#TOC_HEAD_d5ca7326">Problem 0374 <strong>Guess Number Higher or Lower</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/guess-number-higher-or-lower/" target="_blank">https://leetcode.com/problems/guess&ndash;number&ndash;higher&ndash;or&ndash;lower/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_4a589c11" href="#TOC_HEAD_4a589c11">LT037401.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_80337bfe">LT0374 (name=Guess Number Higher or Lower, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0374.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0374</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_edc2fdfd"><a href="https://leetcode.com/problems/guess-number-higher-or-lower/" target="_blank">Guess Number Higher or Lower &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0374.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0374</a></li>
+		<br />
+	</ul>
+	<p>
+		We are playing the Guess Game. The game is as follows:
+	</p>
+	<p>
+		I pick a number from <strong>1</strong> to <em>n</em> . You have to guess which number I picked.
+	</p>
+	<p>
+		Every time you guess wrong, I&#039;ll tell you whether the number is higher or lower.
+	</p>
+	<p>
+		You call a pre&ndash;defined API
+		<code>guess(int num)</code> which returns 3 possible results (
+		<code>&ndash;1</code> ,
+		<code>1</code> , or
+		<code>0</code> ):
+	</p>
+	<pre><code>-1 : My number is lower
+1 : My number is higher
+0 : Congrats! You got it!	</code></pre>
+	<p>
+		<strong>Example:</strong>
+	</p>
+	<pre><code>n = 10, I pick 6.
+
+Return 6.	</code></pre>
+</ul>
+	<H3><a name="HEAD_e00547de" href="#TOC_HEAD_e00547de">LT037401.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+// Forward declaration of guess API.
+// @param num, your guess
+// @return -1 if my number is lower, 1 if my number is higher, otherwise return 0
+int guess(int num){return 0;}
+
+class Solution {
+public:
+    int guessNumber(int n) {
+
+        int h = n;
+        int l = 1;
+        int g = 0;
+        int r = 0;
+        while( l &lt;= h && (r = guess(g = (l + ( h - l)/2))) != 0 )
+        {
+            // cout &lt;&lt; g &lt;&lt; ",l=" &lt;&lt; l &lt;&lt; ",h=" &lt;&lt; h &lt;&lt; ",r=" &lt;&lt; r &lt;&lt; endl;
+            if( r == -1)
+            {   h = g - 1;
+            } else
+            {   l = g + 1;
+            }
+        }
+        return g;
+    }
+};
+
+
+int main(void)
+{
+    cout &lt;&lt; "output: done;" &lt;&lt; endl;
+}
+
+// Result
+//
+// 2022-11-21: Runtime 0ms 100% Memory 6MB 55.90%, https://leetcode.com/problems/guess-number-higher-or-lower/submissions/847203109/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>output: done;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

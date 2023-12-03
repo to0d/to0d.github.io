@@ -1,0 +1,149 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT133101.cpp (Rank Transform of an Array)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT133101.cpp (Rank Transform of an Array)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-24</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1331.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1331</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_880cc6" href="#TOC_HEAD_880cc6">Problem 1331 <strong>Rank Transform of an Array</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/rank-transform-of-an-array/" target="_blank">https://leetcode.com/problems/rank&ndash;transform&ndash;of&ndash;an&ndash;array/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>83.10</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_4ec1b7f1" href="#TOC_HEAD_4ec1b7f1">LT133101.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_cc72e25e">LT1331 (name=Rank Transform of an Array, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1331.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1331</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_bd2f8a97"><a href="https://leetcode.com/problems/rank-transform-of-an-array/" target="_blank">Rank Transform of an Array &ndash; Leetcode</a> &nbsp;<a href="../tags/LT1331.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1331</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_961753be" href="#TOC_HEAD_961753be">LT133101.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    vector&lt;int&gt; arrayRankTransform(vector&lt;int&gt;& arr) {
+        int size = arr.size();
+        if( size == 0 )
+            return arr;
+
+        vector&lt;int&gt; copy;
+        std::copy(arr.begin(), arr.end(), std::back_inserter(copy));
+        std::sort(copy.begin(), copy.end());
+
+        unordered_map&lt;int,int&gt; _map;
+        for(int i = 0, rank = 0, last = arr[0]-1; i &lt; size; ++i )
+        {   int val = copy[i];
+            if( val != last)
+            {   _map[val] = ++rank;
+                last = copy[i];
+            }
+        }
+
+        for(int i = 0; i &lt; size; ++i )
+            arr[i] = _map.find(arr[i])-&gt;second;
+
+        return arr;
+    }
+};
+
+
+
+void test(vector&lt;int&gt; arr)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(arr);
+    vector&lt;int&gt; r = Solution().arrayRankTransform(arr);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test({40,10,20,30});
+}
+
+
+// Result
+//
+// 2022-12-12: Runtime 229ms 10.58% Memory 40.5MB 49.87%, https://leetcode.com/problems/rank-transform-of-an-array/submissions/858498611/
+// 2023-02-24: Runtime 103ms 83.10% Memory 40.5MB 49.94%, https://leetcode.com/problems/rank-transform-of-an-array/submissions/904207893/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [40,10,20,30]; output: [4,1,2,3];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

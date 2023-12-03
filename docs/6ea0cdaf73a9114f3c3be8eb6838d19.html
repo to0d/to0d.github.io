@@ -1,0 +1,44 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>binfmt_flat.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>binfmt_flat.c</h1>
+            <h3></h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> </li><li><strong>BLOCK TAGS: </strong> <a href="../tags/binary_handler.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>binary_handler</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<H3><a name="binfmt_flat_binary_handler" href="#TOC_binfmt_flat_binary_handler">register binary handler</a></H3><ul><a href="../tags/binary_handler.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>binary_handler</a>&nbsp;</ul>
+<pre><code>static struct linux_binfmt flat_format = {
+.module		= THIS_MODULE,
+.load_binary	= load_flat_binary,
+};
+
+static int __init init_flat_binfmt(void)
+{
+register_binfmt(&flat_format);
+return 0;
+}
+
+static int load_flat_binary(struct linux_binprm *bprm)
+{
+...
+set_binfmt(&flat_format);
+...
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

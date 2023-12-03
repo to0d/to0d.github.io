@@ -1,0 +1,158 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT135101.cpp (Count Negative Numbers in a Sorted Matrix)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT135101.cpp (Count Negative Numbers in a Sorted Matrix)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-24</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1351.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1351</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_26bb2219" href="#TOC_HEAD_26bb2219">Problem 1351 <strong>Count Negative Numbers in a Sorted Matrix</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/count-negative-numbers-in-a-sorted-matrix/" target="_blank">https://leetcode.com/problems/count&ndash;negative&ndash;numbers&ndash;in&ndash;a&ndash;sorted&ndash;matrix/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>87.14</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_5e2502af" href="#TOC_HEAD_5e2502af">LT135101.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_5ca0130b">LT1351 (name=Count Negative Numbers in a Sorted Matrix, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1351.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1351</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_befd5195"><a href="https://leetcode.com/problems/count-negative-numbers-in-a-sorted-matrix/" target="_blank">Count Negative Numbers in a Sorted Matrix &ndash; Leetcode</a> &nbsp;<a href="../tags/LT1351.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1351</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_65d9ad7c" href="#TOC_HEAD_65d9ad7c">LT135101.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int countNegatives(vector&lt;vector&lt;int&gt;&gt;& grid) {
+        int row = grid.size(), column = grid[0].size(), count = 0;
+        for(int i = 0, len = column; i &lt; row; ++i)
+        {   vector&lt;int&gt;& vec = grid[i];
+            if( vec[0] &lt; 0)
+            {   count += (row - i)*column;
+                break;
+            }
+            int pos = firstNegative(vec, len);
+            count += column - pos;
+            len = (pos &lt; column ? pos + 1 : pos);
+        }
+
+        return count;
+    }
+
+    int firstNegative(vector&lt;int&gt;& vec, int len){
+        int low = 0, high = len-1;
+        while( low &lt;= high )
+        {   int m = ( high + low ) / 2;
+            int v = vec[m];
+            if( v == 0 )
+            {   while(m &lt; len && vec[m] == 0 )
+                    ++m;
+                return m;
+            }
+            if( v &gt; 0 )
+                low = m + 1;
+            else
+                high = m - 1;
+        }
+        return low;
+    }
+};
+
+
+
+
+void test(vector&lt;vector&lt;int&gt;&gt; grid)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(grid);
+    int r = Solution().countNegatives(grid);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test({{4,3,2,-1},{3,2,1,-1},{1,1,-1,-2},{-1,-1,-2,-3}});
+}
+
+
+// Result
+//
+// 2022-12-13: Runtime 29ms 12.22% Memory 10.5MB 55.42%, https://leetcode.com/problems/count-negative-numbers-in-a-sorted-matrix/submissions/858930568/
+// 2023-02-24: Runtime 14ms 87.14% Memory 10.6MB 13.11%, https://leetcode.com/problems/count-negative-numbers-in-a-sorted-matrix/submissions/904209989/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [[4,3,2,-1],[3,2,1,-1],[1,1,-1,-2],[-1,-1,-2,-3]]; output: 8;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

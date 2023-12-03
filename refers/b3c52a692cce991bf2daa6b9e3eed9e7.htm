@@ -1,0 +1,397 @@
+<html>
+	<head>
+		<meta charset="utf-8"></meta>
+		<title>APUE编程：101&ndash;&ndash;&ndash;进程管理（exec、execv、execle、execve、execlp、execvp、fexecve函数）_exec和execve_董哥的黑板报的博客&ndash;CSDN博客</title>
+	</head>
+	<body class="nodata " style="" data-new-gr-c-s-check-loaded="8.906.0" data-gr-ext-installed="">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Sat Sep 02 09:43:19 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://blog.csdn.net/qq_41453285/article/details/89006116" target="_blank">
+				<font color="red" size="3">APUE编程：101&ndash;&ndash;&ndash;进程管理（exec、execv、execle、execve、execlp、execvp、fexecve函数）_exec和execve_董哥的黑板报的博客&ndash;CSDN博客</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="blog-content-box">
+			<div class="article-header-box">
+				<div class="article-header">
+					<div class="article-title-box">
+						<h1 class="title-article" id="articleContentId">APUE编程：101&ndash;&ndash;&ndash;进程管理（exec、execv、execle、execve、execlp、execvp、fexecve函数）</h1>
+					</div>
+				</div>
+			</div>
+
+                        <div id="content_views" class="htmledit_views">
+								<h1>
+									<a name="t0"></a>
+									<span style="color:#f33b45;">
+										<strong>一、什么是exec函数</strong>
+									</span>
+								</h1>
+								<ul>
+									<li>用fork函数创建子进程后，子进程如果想要执行另一个程序，往往要调用exec函数以执行另一个程序</li>
+									<li>
+										<strong>
+											<span style="color:#3399ea;">exec函数执行的特点：</span>
+										</strong>
+										<ul>
+											<li>exec
+												<span style="color:#86ca5e;">
+													<strong>把当前进程映像替换成新的程序文件</strong>
+												</span>
+												，该进程完全由新程序代换，而且新程序从其main函数开始执行
+											</li>
+											<li>因为调用exec并不创建新进程，
+												<span style="color:#86ca5e;">
+													<strong>所以前后的进程ID并未改变</strong>
+												</span>
+												。exec只是用另一个新程序替换了当前进程的正文、数据、堆和栈段
+											</li>
+											<li>如果exec函数执行成功，则原程序中的
+												<span style="color:#86ca5e;">
+													<strong>exec之后的代码都不会执行</strong>
+												</span>
+											</li>
+											<li>exec函数
+												<span style="color:#86ca5e;">
+													<strong>不会关闭原程序打开的文件描述符</strong>
+												</span>
+												，除非该文件描述符被设置了类似SOCK_CLOEXEC的属性（见socket函数的type参数：
+												<a href="https://blog.csdn.net/qq_41453285/article/details/89179532">https://blog.csdn.net/qq_41453285/article/details/89179532</a>
+												）
+											</li>
+										</ul>
+									</li>
+								</ul>
+								<h1>
+									<a name="t1"></a>
+									<span style="color:#f33b45;">
+										<strong>二、exec函数</strong>
+									</span>
+								</h1>
+								<ul>
+									<li>有7种不同的exec函数可供使用，它们常常被统称为exec函数，我们可以使用这些中的其中一个，这些exec函数使得UNIX进程控制原语更加完善。用fork可以创建新进程，用exec可以执行新的程序</li>
+									<li>exit函数和两个wait函数处理终止和等待终止。这些是我们需要的基本的进程控制原语。在后面各节中将使用这些原语构造另外一些如popen和system之类的函数</li>
+								</ul>
+								<pre class="has" data-index="0" name="code">
+<code class="language-cpp hljs"><ol class="hljs-ln" style="width:100%"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">execl</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *pathname, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *arg0, ... <span class="hljs-comment">/*(char *)0*/</span>)</span></span>;</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">execv</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *pathname, <span class="hljs-type">char</span> *<span class="hljs-type">const</span> argv[])</span></span>;</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="4"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">execle</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *pathname, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *arg0, ...<span class="hljs-comment">/*(char *)0, char *const envp[]*/</span>)</span></span>;</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="5"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">execve</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *pathname, <span class="hljs-type">char</span> *<span class="hljs-type">const</span> argv[], <span class="hljs-type">char</span> *<span class="hljs-type">const</span> envp[])</span></span>;</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="6"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="7"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">execlp</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *filename, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *arg0, ... <span class="hljs-comment">/* (char *)0 */</span> )</span></span>;</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="8"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">execvp</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *filename, <span class="hljs-type">char</span> *<span class="hljs-type">const</span> argv[])</span></span>;</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="9"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="10"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">fexecve</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">char</span> *<span class="hljs-type">const</span> argv[], <span class="hljs-type">char</span> *<span class="hljs-type">const</span> envp[])</span></span>;</div></div></li></ol></code><div class="hljs-button signin" data-title="登录后复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4334&quot;}" onclick="hljs.signin(event)"></div>
+								</pre>
+								<ul>
+									<li>
+										<span style="color:#3399ea;">
+											<strong>参数：</strong>
+										</span>
+										前四个函数取路径名作为参数，后两个函数则取文件名作为参数，最后一个函数取文件描述符作为参数
+										<ul>
+											<li>这几个函数分别使用pathname或filename或打开的文件描述符fd来打开一个新的进程</li>
+										</ul>
+									</li>
+									<li>
+										<span style="color:#3399ea;">
+											<strong>返回值：</strong>
+										</span>
+										出错返回&ndash;1并errno；成功不返回(一般情况下，exec函数是不返回的，除非出错)
+									</li>
+								</ul>
+								<blockquote>
+									<p>
+										<span style="color:#3399ea;">
+											<strong>当指定filename作为参数时：</strong>
+										</span>
+									</p>
+									<ul>
+										<li>如果filename中包含/，则就将filename作为一个路径名来打开一个程序</li>
+										<li>否则就从PATH环境变量的相关目录中搜寻
+											<strong>可执行文件（</strong>
+											有很多出于安全性方面的考虑，要求在搜索路径中决不要包括当前目录
+											<strong>）</strong>
+										</li>
+									</ul>
+								</blockquote>
+								<blockquote>
+									<p>
+										<span style="color:#3399ea;">
+											<strong>这7个exec函数的参数很难记忆。函数名中的字符会给我们一些帮助：</strong>
+										</span>
+									</p>
+									<ul>
+										<li>字母p表示该函数取filename作为参数，并且用PATH环境变量寻找可执行文件</li>
+										<li>字母l表示该函数取一个参数表，它与字母v互斥</li>
+										<li>v表示该函数取一个argv[]矢量</li>
+										<li>母e表示该函数取envp[]数组，而不使用当前环境</li>
+									</ul>
+									<p>
+										<img alt="" class="has" height="254" src="files/1619fc387d5e115518dd4c2f77b5c8c1.png" width="961"></img>
+									</p>
+								</blockquote>
+								<blockquote>
+									<ul>
+										<li>
+											<span style="color:#3399ea;">
+												<strong>在很多UNIX实现中，这7个函数中只有一个execve是内核的系统调用。另外6个只是库函数，它们最终都要调用系统调用。这7个函数之间的关系如图：</strong>
+											</span>
+										</li>
+									</ul>
+									<p>
+										<img alt="" class="has" height="323" src="files/4ec5d03f5c85a37b0b705cf94f20718f.png" width="659"></img>
+									</p>
+									<p>
+										<img alt="" class="has" height="178" src="files/9fa7e01862c65689911b56c203412ade.png" width="1141"></img>
+									</p>
+								</blockquote>
+								<h1>
+									<a name="t2"></a>
+									<span style="color:#f33b45;">
+										<strong>三、不同exec函数的区别</strong>
+									</span>
+								</h1>
+								<p>
+									<span style="color:#3399ea;">
+										<strong>区别总结：</strong>
+									</span>
+								</p>
+								<ul>
+									<li>①待执行的程序文件是由文件名还是由路径名决定</li>
+									<li>②新程序的参数是一一列出还是由一个指针数组来引用</li>
+									<li>③把调用进程的环境传递给新程序还是给新程序重新制定新的环境&nbsp;</li>
+								</ul>
+								<blockquote>
+									<p>
+										<span style="color:#3399ea;">
+											<strong>execlp、execvp：</strong>
+										</span>
+									</p>
+									<ul>
+										<li>如果execlp和execvp中的任意一个使用路径前缀中的一个找到了一个可执行文件，但是该文件不是由连接编辑程序产生的机器可执行代码文件，则就认为该文件是一个shell脚本，于是试着调用/bin/sh，并以该filename作为shell的输入</li>
+									</ul>
+								</blockquote>
+								<blockquote>
+									<p>
+										<span style="color:#3399ea;">
+											<strong>第二个区别：新进程的参数表是通过逐个参数传递还是通过一个指针数组传递</strong>
+										</span>
+										<span style="color:#3399ea;">
+											<strong>(l表示列表list)，v表示矢量(vector)</strong>
+										</span>
+									</p>
+									<ul>
+										<li>函数execl、execlp和execle要求将新程序的每个命令行参数都说明为一个单独的参数。这种参数表以空指针((char*)0))结尾</li>
+										<li>对于另外三个函数(execv,execvp和execve、fexecve)，则应先构造一个指向各参数的指针数组(数组的最后一个元素还是空指针(char*)0)，然后将该数组地址作为这三个函数的参数</li>
+									</ul>
+								</blockquote>
+								<blockquote>
+									<p>
+										<span style="color:#3399ea;">
+											<strong>在使用ISOC原型之前，对execl,execle和execlp三个函数表示命令行参数的一般方法是：</strong>
+										</span>
+									</p>
+									<pre class="has" data-index="1" name="code">
+<code class="language-cpp hljs"><span class="hljs-type">char</span> *arg0, <span class="hljs-type">char</span> *arg1, ..., <span class="hljs-type">char</span> *argn, (<span class="hljs-type">char</span> *)<span class="hljs-number">0</span></code><div class="hljs-button signin" data-title="登录后复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4334&quot;}" onclick="hljs.signin(event)"></div>
+									</pre>
+									<ul>
+										<li>这种语法显示地说明了最后一个命令行参数之后跟了一个空指针。如果用常数0来表示一个空指针，则必须将它强制转换为一个字符指针，否则它将被解释为整型参数。如果一个整型数的长度与char*的长度不同，exec函数实际参数就将出错</li>
+									</ul>
+								</blockquote>
+								<blockquote>
+									<p>
+										<span style="color:#3399ea;">
+											<strong>最后一个区别与向新程序传递环境表相关：</strong>
+										</span>
+									</p>
+									<ul>
+										<li>以&nbsp;e结尾的3个函数（execle和execve、fexecve）&nbsp;
+可以传递一个指向环境字符串指针数组的指针。其他四个函数则使用调用进程中的environ变量为新程序复制现存的环境。（回忆7&nbsp;.&nbsp;
+9节及表7&ndash;2中对环境字符串的讨论。其中曾提及如果系统支持setenv和putenv这样的函数，则可更改当前环境和后面生成的子进程的环境，但不能
+影响父进程的环境）</li>
+										<li>通常，一个进程允许将其环境传播给其子进程，&nbsp;
+但有时也有这种情况，进程想要为子进程指定一个确定的环境。例如，在初始化一个新登录的shell时，login程序创建一个只定义少数几个变量的特殊环
+境，而在我们登录时，&nbsp;可以通过shell启动文件，将其他变量加到环境中</li>
+									</ul>
+									<p>
+										<strong>在使用ISO&nbsp;C&nbsp;原型之前，&nbsp;execle的参数是：</strong>
+									</p>
+									<pre class="has" data-index="2" name="code">
+<code class="language-cpp hljs"><span class="hljs-type">char</span> *pathname, <span class="hljs-type">char</span> *arg0, ..., <span class="hljs-type">char</span> *argn, (<span class="hljs-type">char</span> *)<span class="hljs-number">0</span>, <span class="hljs-type">char</span> *envp[]</code><div class="hljs-button signin" data-title="登录后复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4334&quot;}" onclick="hljs.signin(event)"></div>
+									</pre>
+									<ul>
+										<li>从中可见，最后一个参数是指向环境字符串的各字符指针构成的数组的指针。而在ISO&nbsp;C原型中，所有命令行参数，包括空指针，envp指针都用省略号(&hellip;)表示</li>
+									</ul>
+								</blockquote>
+								<h1>
+									<a name="t3"></a>
+									<span style="color:#f33b45;">
+										<strong>四、参数表和环境表的限制</strong>
+									</span>
+								</h1>
+								<ul>
+									<li>
+										<strong>
+											<span style="color:#3399ea;">概念：</span>
+										</strong>
+										每个系统对参数表和环境表的总长度都有一个限制
+									</li>
+									<li>
+										<span style="color:#3399ea;">
+											<strong>案例</strong>
+											：
+										</span>
+										在表2&ndash;7中，这种限制是ARG_MAX。&nbsp;在POSIX.1系统中，此值至少是4096字节。当使用shell的文件名扩充功能产生一个文件名表时，&nbsp;可能会受到此值的限制。
+									</li>
+								</ul>
+								<blockquote>
+									<ul>
+										<li>
+											<span style="color:#3399ea;">
+												<strong>例如，命令：</strong>
+											</span>
+										</li>
+									</ul>
+									<pre class="has" data-index="3" name="code">
+<code class="hljs language-cobol">grep getrlimit <span class="hljs-operator">/</span>usr<span class="hljs-operator">/</span>share<span class="hljs-operator">/</span>man<span class="hljs-operator">/</span><span class="hljs-operator">*</span><span class="hljs-operator">/</span><span class="hljs-operator">*</span></code><div class="hljs-button signin" data-title="登录后复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4334&quot;}" onclick="hljs.signin(event)"></div>
+									</pre>
+									<ul>
+										<li>在某些系统上可能产生下列形式的shell错误：Argument&nbsp;list&nbsp;too&nbsp;long</li>
+										<li>备注：由于历史原因，System&nbsp;V中此限制是5120字节。早期BSD系统的此限制是20480字节</li>
+									</ul>
+								</blockquote>
+								<ul>
+									<li>
+										<span style="color:#3399ea;">
+											<strong>xargs命令：</strong>
+										</span>
+										<ul>
+											<li>为了摆脱对参数表长度的限制。我们可以使用xargs命令，将长参数表断分为几部分。为了寻找在我们所用系统手册页中的getrlimit，我们可以使用：
+												<strong>find&nbsp;/usr/share/man&nbsp;&ndash;type&nbsp;f&nbsp;&ndash;print&nbsp;|&nbsp;xargs&nbsp;grep&nbsp;getrlimit</strong>
+											</li>
+											<li>如果所用的系统手册是压缩过的，则可使用：
+												<strong>find&nbsp;/usr/share/man&nbsp;&ndash;type&nbsp;f&nbsp;&ndash;print&nbsp;|&nbsp;xargs&nbsp;bzgrep&nbsp;getrlimit</strong>
+											</li>
+											<li>对于find命令，我们使用&ndash;type&nbsp;f，以限制输出列表质只包含普通文件。这样的原因是：
+												<ul>
+													<li>grep命令不能在目录中进行模式搜索，我们也想避免不必要的出错消息</li>
+												</ul>
+											</li>
+										</ul>
+									</li>
+								</ul>
+								<h1>
+									<a name="t4"></a>
+									<span style="color:#f33b45;">
+										<strong>五、新程序的特点</strong>
+									</span>
+								</h1>
+								<p>
+									<span style="color:#3399ea;">
+										<strong>在执行exec后，进程ID没有改变。但新程序从调用进程继承了的下列属性：</strong>
+									</span>
+								</p>
+								<ul>
+									<li>进程ID和父进程ID</li>
+									<li>实际用户ID和实际组ID</li>
+									<li>附属组ID</li>
+									<li>进程组ID</li>
+									<li>对话ID</li>
+									<li>控制终端</li>
+									<li>闹钟尚余留的时间</li>
+									<li>当前工作目录</li>
+									<li>根目录</li>
+									<li>文件模式创建屏蔽字</li>
+									<li>文件锁</li>
+									<li>进程信号屏蔽</li>
+									<li>未处理信号</li>
+									<li>资源限制</li>
+									<li>nice值（遵循XSI的系统）</li>
+									<li>tms_utime、tms_stime、tms_cutime以及tms_ustime值</li>
+								</ul>
+								<h1>
+									<a name="t5"></a>
+									<span style="color:#f33b45;">
+										<strong>六、</strong>
+										执行时关闭（close&ndash;on&ndash;exec）
+									</span>
+								</h1>
+								<ul>
+									<li>对打开文件的处理与每个描述符的执行时关闭（close&ndash;on&ndash;exec）标志值有关</li>
+									<li>进程中每个打开描述符都有一个执行时关闭标志。若设置了此标志，则在执行exec时关闭该描述符，否则该描述符仍打开。除非特地用fcntl设置了该标志，否则系统的默认操作是在exec后仍保持这种描述符打开</li>
+									<li>POSIX.1明确要求在exec时关闭打开目录流（见opendir函数）。这通常是由opendir函数实现的，它调用fcntl函数为对应于打开目录流的描述符设置exec关闭标志</li>
+								</ul>
+								<h1>
+									<a name="t6"></a>
+									<span style="color:#f33b45;">
+										<strong>七、用户ID与实际组ID</strong>
+									</span>
+								</h1>
+								<ul>
+									<li>注意，在exec前后实际用户ID和实际组ID保持不变</li>
+									<li>而有效ID是否改变则取决于所执行程序的文件的设置用户ID位和设置组ID位是否设置</li>
+									<li>如果新程序的设置用户ID位已设置，则有效用户ID变成程序文件所有者的ID，否则有效用户ID不变。对组ID的处理方式与此相同</li>
+								</ul>
+								<h1>
+									<a name="t7"></a>
+									<span style="color:#f33b45;">
+										<strong>八、演示案例1</strong>
+									</span>
+								</h1>
+								<pre class="has set-code-hide" data-index="4" name="code">
+<code class="language-cpp hljs"><ol class="hljs-ln" style="width:970px"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/wait.h&gt;</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-type">char</span> *env_init[] ={<span class="hljs-string">"USER=unknown"</span>, <span class="hljs-string">"PATH=/tmp"</span>, <span class="hljs-literal">NULL</span> };</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="4"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="5"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">{</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="6"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-type">pid_t</span> pid;</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="7"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="8"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-keyword">if</span> ((pid = fork()) &lt; <span class="hljs-number">0</span>) {</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="9"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">perror</span>(<span class="hljs-string">"fork error"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="10"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    } </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="11"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pid == <span class="hljs-number">0</span>) { </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="12"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">execle</span>(<span class="hljs-string">"/home/sar/bin/echoall"</span>, <span class="hljs-string">"echoall"</span>, <span class="hljs-string">"myarg1"</span>,<span class="hljs-string">"MY ARG2"</span>, (<span class="hljs-type">char</span> *)<span class="hljs-number">0</span>,             env_init) &lt; <span class="hljs-number">0</span>)</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="13"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">perror</span>(<span class="hljs-string">"execle error"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="14"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    }</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="15"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="16"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">waitpid</span>(pid, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>) &lt; <span class="hljs-number">0</span>)</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="17"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">perror</span>(<span class="hljs-string">"wait error"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="18"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="19"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-keyword">if</span> ((pid = fork()) &lt; <span class="hljs-number">0</span>) {</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="20"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">perror</span>(<span class="hljs-string">"fork error"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="21"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    } </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="22"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pid == <span class="hljs-number">0</span>) { </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="23"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">execlp</span>(<span class="hljs-string">"echoall"</span>, <span class="hljs-string">"echoall"</span>, <span class="hljs-string">"only 1 arg"</span>, (<span class="hljs-type">char</span> *)<span class="hljs-number">0</span>) &lt; <span class="hljs-number">0</span>)</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="24"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">perror</span>(<span class="hljs-string">"execlp error"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="25"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    }</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="26"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="27"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">}</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="28"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-comment">//图8-16</span></div></div></li></ol></code><div class="hide-preCode-box"><span class="hide-preCode-bt" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.7365&quot;}"><img class="look-more-preCode contentImg-no-view" src="APUE编程：101---进程管理（exec、execv、execle、execve、execlp、execvp、fexecve函数）_exec和execve_董哥的黑板报的博客-CSDN博客_files/newCodeMoreWhite.png" alt="" title=""></span></div><div class="hljs-button signin" data-title="登录后复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4334&quot;}" onclick="hljs.signin(event)"></div>
+								</pre>
+								<p>
+									<img alt="" class="has" height="266" src="files/a2ca43821736c1a635f33dccce9e4368.png" width="1106"></img>
+								</p>
+								<p>
+									<img alt="" class="has" height="78" src="files/de4701264fbdbfa0d5fb3a1d321d0cba.png" width="1102"></img>
+								</p>
+								<pre class="has" data-index="5" name="code">
+<code class="language-cpp hljs"><ol class="hljs-ln" style="width:100%"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">{</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-type">int</span> i;</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="4"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-type">char</span> **ptr;</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="5"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-keyword">extern</span> <span class="hljs-type">char</span> **environ;</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="6"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="7"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-number">1f</span><span class="hljs-keyword">or</span> (i = <span class="hljs-number">0</span>; i &lt; argc; i++)</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="8"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"argv[%d]: %s\n"</span>, i, argv[i]);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="9"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="10"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-keyword">for</span> (ptr = environ; *ptr != <span class="hljs-number">0</span>; ptr++)</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="11"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s\n"</span>, *ptr);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="12"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="13"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">}</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="14"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-comment">//图8-17</span></div></div></li></ol></code><div class="hljs-button signin" data-title="登录后复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4334&quot;}" onclick="hljs.signin(event)"></div>
+								</pre>
+								<p>
+									<span style="color:#3399ea;">
+										<strong>运行结果</strong>
+									</span>
+								</p>
+								<p>
+									<img alt="" class="has" height="292" src="files/28d88587c49bf8f78b172da28e2f422d.png" width="556">
+										<img alt="" class="has" height="80" src="files/ac163fa2b0592ccff0ea5a0fd6868949.png" width="1102"></img>
+									</img>
+								</p>
+								<h1>
+									<a name="t8"></a>
+									<span style="color:#f33b45;">
+										<strong>九、演示案例2</strong>
+									</span>
+								</h1>
+								<ul>
+									<li>
+										<strong>exec程序使用execl函数打开一个newcode进程</strong>
+									</li>
+									<li>
+										<strong>父进程调用execl前cat读取text.txt文件的内容，然后子进程调用execl函数打开newcode进程向text.txt文件中写入一个字符串。之后子进程退出，父进程再读取一个text.txt文件的内容</strong>
+									</li>
+								</ul>
+								<pre class="has set-code-hide" data-index="6" name="code">
+<code class="language-cpp hljs"><ol class="hljs-ln" style="width:100%"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-comment">//exec程序</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="4"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="5"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="6"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/stat.h&gt;</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="7"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;fcntl.h&gt;</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="8"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/wait.h&gt;</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="9"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="10"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">{</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="11"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-type">int</span> fd,status;</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="12"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-type">pid_t</span> pid;</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="13"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-keyword">if</span>((fd=<span class="hljs-built_in">open</span>(<span class="hljs-string">"text.txt"</span>,O_RDWR|O_APPEND|O_CREAT,<span class="hljs-number">0644</span>))==<span class="hljs-number">-1</span>){</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="14"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">perror</span>(<span class="hljs-string">"open"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="15"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="16"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    }</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="17"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="18"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"before execl cat text.txt：\n"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="19"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-built_in">system</span>(<span class="hljs-string">"cat text.txt"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="20"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-built_in">fflush</span>(stdout);<span class="hljs-comment">//刷新标准输出</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="21"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="22"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-keyword">if</span>((pid=fork())==<span class="hljs-number">-1</span>){</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="23"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">perror</span>(<span class="hljs-string">"fork"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="24"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">exit</span>(<span class="hljs-number">2</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="25"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    }</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="26"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(pid==<span class="hljs-number">0</span>){</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="27"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-type">char</span> buf[<span class="hljs-number">10</span>];</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="28"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">sprintf</span>(buf,<span class="hljs-string">"%d"</span>,fd);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="29"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-comment">//参数2,3为传递给newcode程序的参数</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="30"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-keyword">if</span>(<span class="hljs-built_in">execl</span>(<span class="hljs-string">"./newcode"</span>,<span class="hljs-string">"newcode"</span>,buf,(<span class="hljs-type">char</span>*)<span class="hljs-number">0</span>)==<span class="hljs-number">-1</span>){</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="31"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">            <span class="hljs-built_in">perror</span>(<span class="hljs-string">"execl"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="32"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">            <span class="hljs-built_in">exit</span>(<span class="hljs-number">3</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="33"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        }</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="34"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    }</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="35"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-keyword">else</span>{</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="36"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">wait</span>(&amp;status);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="37"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"after execl cat text.txt：\n"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="38"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">system</span>(<span class="hljs-string">"cat text.txt"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="39"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-comment">//因为text.txt中有换行符，所以不需要fflush()</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="40"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    }</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="41"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="42"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="43"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">}</div></div></li></ol></code><div class="hide-preCode-box"><span class="hide-preCode-bt" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.7365&quot;}"><img class="look-more-preCode contentImg-no-view" src="APUE编程：101---进程管理（exec、execv、execle、execve、execlp、execvp、fexecve函数）_exec和execve_董哥的黑板报的博客-CSDN博客_files/newCodeMoreWhite.png" alt="" title=""></span></div><div class="hljs-button signin" data-title="登录后复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4334&quot;}" onclick="hljs.signin(event)"></div>
+								</pre>
+								<pre class="has set-code-hide" data-index="7" name="code">
+<code class="language-cpp hljs"><ol class="hljs-ln" style="width:100%"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-comment">//newcode程序</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="4"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="5"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="6"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc,<span class="hljs-type">char</span> *argv[])</span></span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="7"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">{</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="8"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-type">int</span> fd=<span class="hljs-built_in">atoi</span>(argv[<span class="hljs-number">1</span>]);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="9"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-type">char</span> buff[]=<span class="hljs-string">"newcode write\n"</span>;</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="10"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-type">int</span> n=<span class="hljs-built_in">strlen</span>(buff);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="11"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-keyword">if</span>(<span class="hljs-built_in">write</span>(fd,buff,<span class="hljs-built_in">strlen</span>(buff))!=n){</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="12"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">perror</span>(<span class="hljs-string">"write"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="13"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="14"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    }</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="15"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-built_in">close</span>(fd);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="16"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="17"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">}</div></div></li></ol></code><div class="hide-preCode-box"><span class="hide-preCode-bt" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.7365&quot;}"><img class="look-more-preCode contentImg-no-view" src="APUE编程：101---进程管理（exec、execv、execle、execve、execlp、execvp、fexecve函数）_exec和execve_董哥的黑板报的博客-CSDN博客_files/newCodeMoreWhite.png" alt="" title=""></span></div><div class="hljs-button signin" data-title="登录后复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4334&quot;}" onclick="hljs.signin(event)"></div>
+								</pre>
+								<p>
+									<img alt="" class="has" height="134" src="files/8ff4bd589ca30ea75e41f0a0ecfcd3a2.png" width="462"></img>
+								</p>
+								<h3>
+									<a name="t9"></a>
+									<span style="color:#3399ea;">提示：</span>
+								</h3>
+								<ul>
+									<li>如果想要使用execv函数，可以更改exec程序的下面这部分代码</li>
+								</ul>
+								<p>
+									<img alt="" class="has" height="344" src="files/c37f95d36f52af61ac01a922abd1652e.png" width="772"></img>
+								</p>
+							</div>
+							 
+		</div>
+	</body>
+</html>

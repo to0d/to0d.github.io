@@ -1,0 +1,161 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT134601.cpp (Check If N and Its Double Exist)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT134601.cpp (Check If N and Its Double Exist)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-12-13</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1346.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1346</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_8d001c4b" href="#TOC_HEAD_8d001c4b">Problem 1346 <strong>Check If N and Its Double Exist</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/check-if-n-and-its-double-exist/" target="_blank">https://leetcode.com/problems/check&ndash;if&ndash;n&ndash;and&ndash;its&ndash;double&ndash;exist/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>76.22</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_3eeadb15" href="#TOC_HEAD_3eeadb15">LT134601.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_22679afd">LT1346 (name=Check If N and Its Double Exist, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1346.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1346</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_9d8d88e3"><a href="https://leetcode.com/problems/check-if-n-and-its-double-exist/" target="_blank">Check If N and Its Double Exist &ndash; Leetcode</a> &nbsp;<a href="../tags/LT1346.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1346</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_677a8e2" href="#TOC_HEAD_677a8e2">LT134601.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+public:
+    bool checkIfExist(vector&lt;int&gt;& arr) {
+        std::sort(arr.begin(), arr.end());
+        int pos1 = 0, pos2 = 1, size = arr.size();
+        //for(int v : arr ) cout &lt;&lt; " " &lt;&lt; v; cout &lt;&lt; endl;
+        while( pos1 &lt; size && pos2 &lt; size )
+        {   int v1 = arr[pos1];
+            int v2 = arr[pos2];
+            if( v1 &lt; 0 )
+            {   if( v2 &gt; 0 )
+                    ++pos1;
+                else
+                {   int vv = 2*v2;
+                    if( v1 == vv )
+                        return true;
+                    if( v1 &gt; vv )
+                        ++pos2;
+                    else
+                        ++pos1;
+                }
+            }
+            else
+            {
+                int vv = 2*v1;
+
+                if( v2 == vv )
+                    return true;
+                if( v2 &gt; vv )
+                    ++pos1;
+                else
+                    ++pos2;
+            }
+            if( pos1 &gt;= pos2 )
+                pos2 = pos1 + 1;
+        }
+        return false;
+    }
+};
+
+
+
+void test(vector&lt;int&gt; arr)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(arr);
+    bool r = Solution().checkIfExist(arr);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test({10,2,5,3});
+}
+
+
+// Result
+//
+// 2022-12-13: Runtime 7ms 76.22% Memory 10.1MB 42.38%, https://leetcode.com/problems/check-if-n-and-its-double-exist/submissions/858707616/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [10,2,5,3]; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

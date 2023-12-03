@@ -1,0 +1,177 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT018901.cpp (Rotate Array)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT018901.cpp (Rotate Array)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-28</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0189.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0189</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/RotateArray-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>RotateArray-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_a6aa2d91" href="#TOC_HEAD_a6aa2d91">Problem 0189 <strong>Rotate Array</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/rotate-array/" target="_blank">https://leetcode.com/problems/rotate&ndash;array/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>73.32</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_5d7bb233" href="#TOC_HEAD_5d7bb233">LT018901.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_3fff4629">LT0189 (name=Rotate Array, ptag=Leetcode) &nbsp;<a href="../tags/LT0189.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0189</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/RotateArray-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>RotateArray-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_3239816a"><a href="https://leetcode.com/problems/rotate-array/" target="_blank">Rotate Array &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0189.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0189</a></li>
+		<br />
+	</ul>
+	<p>
+		Rotate an array of <em>n</em> elements to the right by <em>k</em> steps.
+	</p>
+	<p>
+		For example, with <em>n</em> = 7 and <em>k</em> = 3, the array <code>[1,2,3,4,5,6,7]</code> is rotated to <code>[5,6,7,1,2,3,4]</code> .
+	</p>
+	<p>
+		<strong>Note:</strong>
+	</p>
+	<p>
+		Try to come up as many solutions as you can, there are at least 3 different ways to solve this problem.
+	</p>
+	<p>
+		<strong>Hint:</strong>
+	</p>
+	<p>
+		Could you do it in&ndash;place with O(1) extra space?
+	</p>
+	<p>
+		Related problem:
+		<a href="https://leetcode.com/problems/reverse-words-in-a-string-ii" target="_blank">Reverse Words in a String II</a>
+	</p>
+</ul>
+	<H3><a name="HEAD_27dcbf00" href="#TOC_HEAD_27dcbf00">LT018901.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    void rotate(vector&lt;int&gt;& nums, int k) {
+        int size = nums.size();
+        if( size &lt;= 1 || ( k %= size ) == 0)
+            return;
+
+        int pos = 0, n = size, kk = k;
+        while(n &gt; 1 && kk &gt; 0 && kk &lt; n)
+        {   if( kk &lt;= n /2 )
+            {   for( int i = 0; i &lt; kk; ++i)
+                    swap( nums, i + pos, i + pos + n - kk);
+                pos += kk;
+                n   -= kk;
+            }
+            else
+            {   for( int i = 0; i &lt; n - kk; ++i)
+                    swap( nums, i + pos, i + pos + kk);
+                int m = n;
+                n    = kk;
+                kk   = 2*kk - m;
+            }
+        }
+    }
+
+    inline void swap(vector&lt;int&gt;& nums, int i, int j){
+        int x   = nums[i];
+        nums[i] = nums[j];
+        nums[j] = x;
+    }
+};
+
+
+void test(vector&lt;int&gt; nums, int k)
+{
+    cout &lt;&lt; "input: k=" &lt;&lt; k &lt;&lt;", nums=";
+    outputVector(nums);
+    Solution().rotate(nums, k);
+    cout &lt;&lt; "; output: ";
+    outputVector(nums);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test({1,2,3,4,5,6,7}, 3);
+}
+
+// Result
+//
+// 2022-11-19: Runtime 100ms 5.4% Memory 25MB 85.19%, https://leetcode.com/problems/rotate-array/submissions/846349061/
+// 2023-02-19: Runtime 34ms 60.42% Memory 25MB 85.24%, https://leetcode.com/problems/rotate-array/submissions/900671353/
+// 2023-07-28: Runtime 24ms 73.32% Memory 23.72MB 83.48%, https://leetcode.cn/problems/rotate-array/submissions/451129641/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: k=3, nums=[1,2,3,4,5,6,7]; output: [5,6,7,1,2,3,4];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

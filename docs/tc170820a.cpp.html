@@ -1,0 +1,74 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC170820A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC170820A.cpp</h1>
+            <h3>螺旋矩阵</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/SpiralMatrix-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>SpiralMatrix-OJ</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+using namespace std;
+
+int calculate(int m, int n, int x, int y)
+{
+#define min(x,y) (x)&lt;(y)?(x):(y)
+
+    int z, s, val;
+
+    int x2 = n - x - 1;
+    int y2 = m - y - 1;
+    int dx = min(x2,x);
+    int dy = min(y2,y);
+
+    z = min(dx,dy);
+
+    if( z &gt; 0 )
+        s = 2*(m+n)*z - 4*z*z;
+    else
+        s = 0;
+
+    // up layer
+    if( z == y || z == x2 )
+        val = s + x + y - 2*z ;
+    else
+        val = s - x - y + 2*(m+n-2)-6*z;
+
+    return val;
+}
+
+void printSpiralMatrix(int m, int n, int s)
+{
+    int x, y;
+    for(y = 0; y &lt; m; ++y)
+    {   for(x = 0; x &lt; n; ++x)
+            printf("%3d ", calculate(m,n,x,y)+s);
+        printf("\n");
+    }
+}
+
+int main( void )
+{
+    printSpiralMatrix(11,7,1);
+    cout &lt;&lt; "output: done" &lt;&lt; endl;
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

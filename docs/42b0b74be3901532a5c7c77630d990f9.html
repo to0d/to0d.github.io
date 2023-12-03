@@ -1,0 +1,46 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Triple.h</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>Triple.h</h1>
+            <h3></h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/LLVM-triple.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-triple</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/ILE.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ILE</a>&nbsp;<a href="../tags/LLVM-IBMi.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-IBMi</a>&nbsp;<a href="../tags/LLVM-WCode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-WCode</a>&nbsp;<a href="../tags/LLVM-ppc128.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-ppc128</a>&nbsp;<a href="../tags/LLVM-triple.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-triple</a>&nbsp;<a href="../tags/PRIL003.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PRIL003</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<H3><a name="HEAD_d4e09b8" href="#TOC_HEAD_d4e09b8">PR2: add target triple</a></H3><ul><a href="../tags/PRIL003.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PRIL003</a>&nbsp;</ul>
+<pre><code>enum ArchType {
+    ppc128,         // PPC128: powerpc (IBMi 128-bit)
+
+enum OSType {
+    IBMi,       // IBM i OS
+
+enum ObjectFormatType {
+    WCode,
+
+/// Tests whether the OS is IBMi.
+bool isOSIBMi() const {
+    return getOS() == Triple::IBMi;
+}</code></pre>
+<ul>
+	<li><a name="HEAD_HIDDEN_932d4444">LLVM&ndash;ppc128 (ptag=LLVM&ndash;ArchType)          &nbsp;<a href="../tags/ILE.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ILE</a>&nbsp;<a href="../tags/LLVM-ppc128.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-ppc128</a>&nbsp;<a href="../tags/LLVM-triple.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-triple</a>&nbsp;<a href="../tags/LLVM-ArchType.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-ArchType</a></li>
+	<li><a name="HEAD_HIDDEN_992c5655">LLVM&ndash;IBMi   (ptag=LLVM&ndash;OSType)            &nbsp;<a href="../tags/ILE.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ILE</a>&nbsp;<a href="../tags/LLVM-IBMi.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-IBMi</a>&nbsp;<a href="../tags/LLVM-triple.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-triple</a>&nbsp;<a href="../tags/LLVM-OSType.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-OSType</a></li>
+	<li><a name="HEAD_HIDDEN_668bb9bc">LLVM&ndash;WCode  (ptag=LLVM&ndash;ObjectFormatType)  &nbsp;<a href="../tags/ILE.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ILE</a>&nbsp;<a href="../tags/LLVM-WCode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-WCode</a>&nbsp;<a href="../tags/LLVM-triple.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-triple</a>&nbsp;<a href="../tags/LLVM-ObjectFormatType.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-ObjectFormatType</a></li>
+	<br />
+</ul>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,218 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Add support MSP430 in LLDB</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Add support MSP430 in LLDB</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-04-18</time>
+            <i><a href="../tags/Chip-Debug.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Chip-Debug</a>&nbsp;<a href="../tags/LLDB-target.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB-target</a>&nbsp;<a href="../tags/MSP430.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>MSP430</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_9c46734f" href="#TOC_HEAD_9c46734f">1. git pr (2023/04/18)</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_611fe64b">git show 81beb15d7e54b16f4beba0bafd982d56c6b95222 &nbsp;<a href="../tags/MSP430.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>MSP430</a></li>
+	<br />
+</ul>
+<p>
+	Add MSP430 to the list of available targets, implement MSP430 ABI, add support for debugging targets with 16&ndash;bit address size.
+</p>
+<p>
+	The update is intended for use with MSPDebug, a GDB server implementation for MSP430.
+</p>
+	<H3><a name="HEAD_b279b943" href="#TOC_HEAD_b279b943">2. code change</a></H3>
+<ul>
+	<li><strong>update</strong> : lldb/include/lldb/Utility/ArchSpec.h</li>
+	<br />
+	<pre><code>enum Core {
+
+eCore_msp430,	</code></pre>
+	<li><strong>update</strong> : lldb/source/Expression/IRMemoryMap.cpp</li>
+	<br />
+	<pre><code>lldb::addr_t IRMemoryMap::FindSpace(size_t size) {
+
+...
+
+if (process_is_alive) {
+uint64_t end_of_memory;
+switch (process_sp-&gt;GetAddressByteSize()) {
+case 2:
+end_of_memory = 0xffffull;
+break;
+case 4:
+end_of_memory = 0xffffffffull;
+break;
+case 8:
+end_of_memory = 0xffffffffffffffffull;
+break;
+default:
+lldbassert(false && "Invalid address size.");
+return LLDB_INVALID_ADDRESS;
+}	</code></pre>
+	<li><strong>update</strong> : lldb/source/Expression/LLVMUserExpression.cpp</li>
+	<br />
+	<pre><code>bool LLVMUserExpression::PrepareToExecuteJITExpression(
+
+auto arch = target-&gt;GetArchitecture().GetTriple().getArch();
+const size_t stack_frame_size =
+    arch == llvm::Triple::msp430 ? 512 : 512 * 1024;	</code></pre>
+	<li><strong>update</strong> : lldb/source/Host/common/NativeProcessProtocol.cpp</li>
+	<br />
+	<pre><code>llvm::Expected&lt;llvm::ArrayRef&lt;uint8_t&gt;&gt;
+NativeProcessProtocol::GetSoftwareBreakpointTrapOpcode(size_t size_hint) {
+
+static const uint8_t g_msp430_opcode[] = {0x43, 0x43};
+
+case llvm::Triple::msp430:
+return llvm::ArrayRef(g_msp430_opcode);	</code></pre>
+	<li><strong>new</strong> : lldb/source/Plugins/ABI/MSP430/ABISysV_msp430.cpp</li>
+	<li><strong>new</strong> : lldb/source/Plugins/ABI/MSP430/ABISysV_msp430.h</li>
+	<br />
+	<li><strong>update</strong> : lldb/source/Plugins/ABI/MSP430/CMakeLists.txt</li>
+	<br />
+	<li><strong>update</strong> : lldb/source/Plugins/ObjectFile/Breakpad/BreakpadRecords.cpp</li>
+	<br />
+	<pre><code>template &lt;&gt;
+llvm::Triple::ArchType stringTo&lt;llvm::Triple::ArchType&gt;(llvm::StringRef Str) {
+using llvm::Triple
+return llvm::StringSwitch&lt;Triple::ArchType&gt;(Str)
+.Case("msp430", Triple::msp430)	</code></pre>
+	<li><strong>update</strong> : lldb/source/Plugins/Platform/Linux/PlatformLinux.cpp</li>
+	<br />
+	<pre><code>PlatformLinux::PlatformLinux(bool is_host)
+: PlatformPOSIX(is_host) // This is the local host platform
+{
+...
+
+llvm::Triple::msp430,	</code></pre>
+	<li><a name="MSP430-SUPPORT-1"><strong>update</strong> : lldb/source/Plugins/Process/gdb&ndash;remote/GDBRemoteRegisterFallback.cpp </li>
+	<br />
+	<pre><code>#define R16(name) REG(name, 2)
+
+static std::vector&lt;DynamicRegisterInfo::Register&gt; GetRegisters_msp430() {
+ConstString empty_alt_name;
+ConstString reg_set{"general purpose registers"};
+
+std::vector&lt;DynamicRegisterInfo::Register&gt; registers{
+R16(pc),  R16(sp),  R16(r2),  R16(r3), R16(fp),  R16(r5),
+R16(r6),  R16(r7),  R16(r8),  R16(r9), R16(r10), R16(r11),
+R16(r12), R16(r13), R16(r14), R16(r15)};
+
+return registers;
+}
+
+
+std::vector&lt;DynamicRegisterInfo::Register&gt;
+GetFallbackRegisters(const ArchSpec &arch_to_use) {
+...
+case llvm::Triple::msp430:
+return GetRegisters_msp430();	</code></pre>
+	<li><strong>update</strong> : lldb/source/Plugins/SymbolFile/DWARF/DWARFUnit.cpp</li>
+	<br />
+	<pre><code>llvm::Expected&lt;DWARFUnitHeader&gt;
+DWARFUnitHeader::extract(const DWARFDataExtractor &data,
+
+header.m_addr_size == 2	</code></pre>
+	<li><strong>update</strong> : lldb/source/Target/Platform.cpp</li>
+	<br />
+	<pre><code>size_t Platform::GetSoftwareBreakpointTrapOpcode(Target &target,
+                                            BreakpointSite *bp_site) {
+case llvm::Triple::msp430: {
+static const uint8_t g_msp430_opcode[] = {0x43, 0x43};
+trap_opcode = g_msp430_opcode;
+trap_opcode_size = sizeof(g_msp430_opcode);
+} break;	</code></pre>
+	<li><strong>update</strong> : lldb/source/Utility/ArchSpec.cpp</li>
+	<br />
+	<pre><code>static const CoreDefinition g_core_definitions[] = {
+// MSP430
+{eByteOrderLittle, 2, 2, 4, llvm::Triple::msp430, ArchSpec::eCore_msp430,
+"msp430"},
+
+static const ArchDefinitionEntry g_elf_arch_entries[] = {
+
+{ArchSpec::eCore_msp430, llvm::ELF::EM_MSP430, LLDB_INVALID_CPUTYPE,
+0xFFFFFFFFu, 0xFFFFFFFFu}, // MSP430
+
+
+bool ArchSpec::SetArchitecture(ArchitectureType arch_type, uint32_t cpu,
+                        uint32_t sub, uint32_t os) {
+
+    case llvm::ELF::ELFOSABI_STANDALONE:
+        m_triple.setOS(llvm::Triple::OSType::UnknownOS);
+        break;	</code></pre>
+	<li><strong>new</strong> : lldb/test/API/functionalities/gdb_remote_client/TestMSP430MSPDebug.py</li>
+	<li><strong>new</strong> : lldb/test/API/functionalities/gdb_remote_client/msp430.yaml</li>
+	<li><strong>new</strong> : lldb/unittests/Utility/ArchSpecTest.cpp</li>
+	<br />
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

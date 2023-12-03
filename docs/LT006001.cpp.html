@@ -1,0 +1,177 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT006001.cpp (Permutation Sequence)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT006001.cpp (Permutation Sequence)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-17</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0060.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0060</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_c9bcf6a0" href="#TOC_HEAD_c9bcf6a0">Problem 0060 <strong>Permutation Sequence</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/permutation-sequence/" target="_blank">https://leetcode.com/problems/permutation&ndash;sequence/</a></li>
+	<li>Difficulty <strong>Hard</strong></li>
+	<li><strong>53.79</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_238b182b" href="#TOC_HEAD_238b182b">LT006001.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_5899d1f8">LT0060 (name=Permutation Sequence, ptag=Leetcode) &nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0060.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0060</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_25177550"><a href="https://leetcode.com/problems/permutation-sequence/" target="_blank">Permutation Sequence &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0060.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0060</a></li>
+		<br />
+	</ul>
+	<p>
+		The set
+		<code>[1,2,3,...,</code><em>n</em> ]
+		contains a total of <em>n</em>! unique permutations.
+	</p>
+	<p>
+		By listing and labeling all of the permutations in order,
+	</p>
+	<p>
+		We get the following sequence (ie, for
+		<em>n</em> = 3):
+	</p>
+	<ol>
+		<li><code>&quot;123&quot;</code></li>
+		<li><code>&quot;132&quot;</code></li>
+		<li><code>&quot;213&quot;</code></li>
+		<li><code>&quot;231&quot;</code></li>
+		<br />
+		<li><code>&quot;312&quot;</code></li>
+		<br />
+		<li><code>&quot;321&quot;</code></li>
+		<br />
+	</ol>
+	<p>
+		Given
+		<em>n</em> and
+		<em>k</em> , return the
+		&lt;sup&gt;th&lt;/sup&gt;
+		<em>k</em> permutation sequence.
+	</p>
+	<p>
+		<strong>Note:</strong>
+		Given
+		<em>n</em> will be between 1 and 9 inclusive.
+	</p>
+</ul>
+	<H3><a name="HEAD_e7bde0f8" href="#TOC_HEAD_e7bde0f8">LT006001.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    string getPermutation(int n, int k) {
+        static const int factor[] = {1,1,2,6,24,120,720,720*7,720*7*8}; //n!
+
+        if( n == 1 )
+            return "1";
+
+        string numbers = "123456789", res;
+        k--;
+        for(int i = n - 1;  i &gt;= 0; --i)
+        {   int m = factor[i] ;
+            int ii = k/m;
+            k %=m;
+            res.push_back(numbers.at(ii));
+            numbers.erase(numbers.begin() + ii);
+        }
+
+        return res;
+    }
+};
+
+
+
+void test(int n, int k)
+{
+    cout &lt;&lt; "input: n=" &lt;&lt; n &lt;&lt; ", k=" &lt;&lt; k;
+    string r = Solution().getPermutation(n, k);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(3, 3);
+}
+
+
+// Result
+//
+// 2022-11-23: Runtime 5ms 29.14% Memory 5.9MB 83.97%, https://leetcode.com/problems/permutation-sequence/submissions/848334577/
+// 2023-02-17: Runtime 4ms 53.79% Memory 5.9MB 84.35%, https://leetcode.com/problems/permutation-sequence/submissions/899830530/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: n=3, k=3; output: 213;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT012501.cpp (Valid Palindrome)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT012501.cpp (Valid Palindrome)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-11</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0125.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0125</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/290cb493.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Palindrome-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_7cd06e58" href="#TOC_HEAD_7cd06e58">Problem 0125 <strong>Valid Palindrome</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/valid-palindrome/" target="_blank">https://leetcode.com/problems/valid&ndash;palindrome/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_dbbf06f5" href="#TOC_HEAD_dbbf06f5">LT012501.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_305ed630">LT0125 (name=Valid Palindrome, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0125.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0125</a>&nbsp;<a href="../tags/290cb493.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Palindrome-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_40d6350"><a href="https://leetcode.com/problems/valid-palindrome/" target="_blank">Valid Palindrome &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0125.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0125</a></li>
+		<br />
+	</ul>
+	<p>
+		A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non&ndash;alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+	</p>
+	<p>
+		Given a string s, return true if it is a palindrome, or false otherwise.
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input: s = "A man, a plan, a canal: Panama"
+Output: true
+Explanation: "amanaplanacanalpanama" is a palindrome.	</code></pre>
+	<p>
+		Example 2:
+	</p>
+	<pre><code>Input: s = "race a car"
+Output: false
+Explanation: "raceacar" is not a palindrome.	</code></pre>
+	<p>
+		Example 3:
+	</p>
+	<pre><code>Input: s = " "
+Output: true
+Explanation: s is an empty string "" after removing non-alphanumeric characters.
+Since an empty string reads the same forward and backward, it is a palindrome.	</code></pre>
+	<p>
+		Constraints:
+	</p>
+	<pre><code>1 &lt;= s.length &lt;= 2 * 105
+s consists only of printable ASCII characters.	</code></pre>
+</ul>
+	<H3><a name="HEAD_e4fcc4c2" href="#TOC_HEAD_e4fcc4c2">LT012501.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool isPalindrome(string s) {
+        return isPalindrome(s.c_str(), 0, s.size() - 1);
+    }
+
+    bool isPalindrome(const char* s, int low, int high) {
+        while( low &lt; high )
+        {   if( !isalnum(s[low]) )
+                ++low;
+            else if( !isalnum(s[high]) )
+                --high;
+            else
+            {   if( tolower(s[low]) != tolower(s[high]))
+                return false;
+                ++low;
+                --high;
+            }
+        }
+        return true;
+    }
+};
+
+
+
+void test(string s)
+{
+    cout &lt;&lt; "input: " &lt;&lt; s;
+    bool r = Solution().isPalindrome(s);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("A man, a plan, a canal: Panama");
+}
+
+// Result
+//
+// 2022-11-21: Runtime 20ms 10.80% Memory 7.4MB 60.22%, https://leetcode.com/problems/valid-palindrome/submissions/847469030/
+// 2023-02-22: Runtime 10ms 32.15% Memory 7.5MB 60.61%, https://leetcode.com/problems/valid-palindrome/submissions/902640371/
+// 2023-03-11: Runtime 0ms 100% Memory 7.3MB 84.87%, https://leetcode.com/problems/valid-palindrome/submissions/912992181/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: A man, a plan, a canal: Panama; output: 1</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

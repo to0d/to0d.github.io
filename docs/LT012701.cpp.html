@@ -1,0 +1,179 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT012701.cpp (Word Ladder)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT012701.cpp (Word Ladder)</h1>
+        <h3>图的宽度搜索</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-31</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/DFS.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DFS</a>&nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0127.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0127</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_5d0beedf" href="#TOC_HEAD_5d0beedf">Problem 0127 <strong>Word Ladder</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/word-ladder/" target="_blank">https://leetcode.com/problems/word&ndash;ladder/</a></li>
+	<li>Difficulty <strong>Hard</strong></li>
+	<li><strong>23.97</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_5886c77" href="#TOC_HEAD_5886c77">LT012701.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_cb3caa11">LT0127 (name=Word Ladder, ptag=Leetcode) &nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0127.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0127</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_c61c196c"><a href="https://leetcode.com/problems/word-ladder/" target="_blank">Word Ladder &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0127.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0127</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_4ec93b44" href="#TOC_HEAD_4ec93b44">LT012701.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution
+{
+public:
+    int ladderLength(string beginWord, string endWord, vector&lt;string&gt;& wordList) {
+        linkedList.clear();
+        linkedList.push_back(beginWord);
+        depth = 2; comparePosBegin = 0; comparePosEnd = 1;
+
+        vector&lt;string&gt; words;
+        for(auto it = wordList.begin(); it != wordList.end(); ++it)
+            if(endWord != *it)
+                words.push_back(*it);
+
+        if( words.size() == wordList.size()) // endWord is not in wordList
+            return false;
+
+        while(comparePosBegin &lt; comparePosEnd )
+        {   if( tryLink(endWord))
+                return depth;
+
+            auto it = words.begin();
+            while(it != words.end())
+                if( tryLink(*it))
+                it= words.erase(it);
+            else
+                it++;
+
+            depth++;
+            comparePosBegin = comparePosEnd;
+            comparePosEnd   = (int) linkedList.size();
+        }
+
+        return 0;
+    }
+
+private:
+
+    bool tryLink(const string& word ) {
+        for( int i = comparePosBegin; i &lt; comparePosEnd; ++i)
+            if( isLink( linkedList[i], word ) )
+            {   linkedList.push_back(word);
+                return true;
+            }
+        return false;
+    }
+
+    bool isLink(const string& from, const string& to ){
+        int len = from.size(), count = 0;
+        for(int i = 0 ;i &lt; len; ++ i)
+        if( from.at(i) != to.at(i) )
+            if( ++count &gt; 1)
+                return false;;
+        return count == 1;
+    }
+
+    int depth;
+    int comparePosBegin;
+    int comparePosEnd;
+    vector&lt;string&gt; linkedList;
+};
+
+void test(string beginWord, string endWord, vector&lt;string&gt; wordList)
+{
+    cout &lt;&lt; "input: begin=" &lt;&lt; beginWord &lt;&lt; ", end=" &lt;&lt; endWord &lt;&lt; ", list=";
+    outputVector(wordList);
+    int r = Solution().ladderLength(beginWord, endWord, wordList);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("hit", "cog", {"hot","dot","dog","lot","log","cog"});
+}
+
+
+// Result
+//
+// 2023-07-31: Runtime 440ms 23.97% Memory 15.30MB 36.57%, https://leetcode.cn/problems/word-ladder/submissions/451922055/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: begin=hit, end=cog, list=[hot,dot,dog,lot,log,cog]; output: 5;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

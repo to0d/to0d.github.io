@@ -1,0 +1,158 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT054701.cpp (Number of Provinces)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT054701.cpp (Number of Provinces)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-01-15</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0547.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0547</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_6274f45a" href="#TOC_HEAD_6274f45a">Problem 0547 <strong>Number of Provinces</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/number-of-provinces/" target="_blank">https://leetcode.com/problems/number&ndash;of&ndash;provinces/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>72.8</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_cef7d139" href="#TOC_HEAD_cef7d139">LT054701.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_3a5a9e4c">LT0547 (name=Number of Provinces, ptag=Leetcode) &nbsp;<a href="../tags/LT0547.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0547</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_6a15e907"><a href="https://leetcode.com/problems/number-of-provinces/" target="_blank">Number of Provinces &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0547.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0547</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_6f9d5106" href="#TOC_HEAD_6f9d5106">LT054701.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+public:
+    int findCircleNum(vector&lt;vector&lt;int&gt;&gt;& isConnected) {
+        int size = isConnected.size();
+        vector&lt;int&gt; provinces;
+        for(int i = 0; i &lt; size; ++i)
+            provinces.push_back(i);
+
+        for(int i = 0; i &lt; size; ++i)
+        {   int idx1 = provinces[i];
+            for(int j = i+1; j &lt; size; ++j)
+            {   if( isConnected[i][j] == 0 )
+                    continue;
+                int idx2 = provinces[j];
+                if( idx1 == idx2)
+                    continue;
+                for(int k = 0; k &lt; size; ++k)
+                {   if( provinces[k] == idx2 )
+                        provinces[k] = idx1;
+                }
+            }
+        }
+
+        // for(int p : provinces ) cout &lt;&lt; " " &lt;&lt; p ; cout &lt;&lt; endl;
+        std::sort(provinces.begin(), provinces.end());
+        int count = 0, last = -1;
+        for(int p : provinces )
+        {   if( last != p )
+            {   last = p;
+                ++count;
+            }
+        }
+
+        return count;
+    }
+};
+
+
+void test(vector&lt;vector&lt;int&gt;&gt; isConnected)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(isConnected);
+    int r = Solution().findCircleNum(isConnected);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test({{1,1,0},{1,1,0},{0,0,1}});
+}
+
+// Result
+//
+// 2023-01-15: Runtime 25ms 72.8% Memory 13.8MB 76.60%, https://leetcode.com/problems/number-of-provinces/submissions/878483950/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [[1,1,0],[1,1,0],[0,0,1]]; output: 2;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

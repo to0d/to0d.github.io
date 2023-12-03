@@ -1,0 +1,175 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT014901.cpp (Max Points on a Line)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT014901.cpp (Max Points on a Line)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-01-04</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0149.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0149</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/StraightLine-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>StraightLine-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_b60e44cc" href="#TOC_HEAD_b60e44cc">Problem 0149 <strong>Max Points on a Line</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/max-points-on-a-line/" target="_blank">https://leetcode.com/problems/max&ndash;points&ndash;on&ndash;a&ndash;line/</a></li>
+	<li>Difficulty <strong>Hard</strong></li>
+	<li><strong>5.31</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_3eb51cb7" href="#TOC_HEAD_3eb51cb7">LT014901.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_8f944924">LT0149 (name=Max Points on a Line, ptag=Leetcode) &nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0149.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0149</a>&nbsp;<a href="../tags/StraightLine-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>StraightLine-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_846a5be3"><a href="https://leetcode.com/problems/max-points-on-a-line/" target="_blank">Max Points on a Line &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0149.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0149</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_88580b84" href="#TOC_HEAD_88580b84">LT014901.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+public:
+    int maxPoints(vector&lt;vector&lt;int&gt;&gt;& points) {
+        int size = points.size();
+        if( size &lt;= 2)
+            return size;
+        unordered_map&lt;int,vector&lt;unordered_set&lt;int&gt;&gt;&gt; _lineMap;
+        int _max = 2;
+        for(int i = 0;i &lt; size-2; ++i)
+        {   int x0 = points[i][0], y0 = points[i][1];
+            for(int j = i+1; j &lt; size-1; ++j)
+            {   bool found = false;
+                auto it = _lineMap.find(i);
+                if( it != _lineMap.end())
+                {   for( auto _set : it-&gt;second )
+                    {   if( _set.count(j) != 0 )
+                        {   found = true;
+                            break;
+                        }
+                    }
+                }
+                if( found )
+                    continue;
+
+                int dx1 = points[j][0] - x0, dy1 = points[j][1] - y0;
+                int _max2 = 2;
+                unordered_set&lt;int&gt; _set;
+                _set.insert(i);
+                _set.insert(j);
+                for(int k = j+1; k &lt; size; ++k)
+                {   if((points[k][0] - x0)*dy1 == dx1*(points[k][1] - y0))
+                    {   ++_max2;
+                        _set.insert(k);
+                        //cout &lt;&lt; i &lt;&lt; " " &lt;&lt; j &lt;&lt; " " &lt;&lt; k &lt;&lt; endl;
+                    }
+                }
+                if( _max2 &gt; 2 )
+                {   for(int idx : _set )
+                    {   auto it = _lineMap.find(idx);
+                        if( it != _lineMap.end())
+                            it-&gt;second.push_back(_set);
+                        else
+                        {   vector&lt;unordered_set&lt;int&gt;&gt; vec = {_set};
+                            _lineMap[idx] = vec;
+                        }
+                    }
+                }
+                _max = std::max(_max, _max2);
+            }
+        }
+        return _max;
+    }
+};
+
+
+void test(vector&lt;vector&lt;int&gt;&gt; points)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(points);
+    int r = Solution().maxPoints(points);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({{1,1},{2,2},{3,3}});
+}
+
+
+// Result
+//
+// 2023-01-04: Runtime 627ms 5.31% Memory 86.2MB 5.21%, https://leetcode.com/problems/max-points-on-a-line/submissions/870850402/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [[1,1],[2,2],[3,3]]; output: 3;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

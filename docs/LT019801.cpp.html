@@ -1,0 +1,169 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT019801.cpp (House Robber)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT019801.cpp (House Robber)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-09-27</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/DP-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DP-OJ</a>&nbsp;<a href="../tags/LT0198.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0198</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_c54b9649" href="#TOC_HEAD_c54b9649">Problem 0198 <strong>House Robber</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/house-robber/" target="_blank">https://leetcode.com/problems/house&ndash;robber/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_d048a4d1" href="#TOC_HEAD_d048a4d1">LT019801.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_13802be1">LT0198 (name=House Robber, ptag=Leetcode) &nbsp;<a href="../tags/DP-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DP-OJ</a>&nbsp;<a href="../tags/LT0198.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0198</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_ee9c9f0"><a href="https://leetcode.com/problems/house-robber/" target="_blank">House Robber &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0198.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0198</a></li>
+		<br />
+	</ul>
+</ul>
+<p>
+	You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security system connected and
+</p>
+<p>
+	<strong>it will automatically contact the police if two adjacent houses were broken into on the same night</strong> .
+</p>
+<p>
+	Given a list of non&ndash;negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight <strong>without alerting the police</strong> .
+</p>
+<p>
+	<strong>Example 1:</strong>
+</p>
+<pre><code>Input: nums = [1,2,3,1]
+Output: 4
+Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
+Total amount you can rob = 1 + 3 = 4.</code></pre>
+<p>
+	<strong>Example 2:</strong>
+</p>
+<pre><code>Input: nums = [2,7,9,3,1]
+Output: 12
+Explanation: Rob house 1 (money = 2), rob house 3 (money = 9) and rob house 5 (money = 1).
+Total amount you can rob = 2 + 9 + 1 = 12.</code></pre>
+<p>
+	<strong>Constraints:</strong>
+</p>
+<ul>
+	<li>1 &lt;= nums.length &lt;= 100</li>
+	<li>0 &lt;= nums[i] &lt;= 400</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_5ad7b09e" href="#TOC_HEAD_5ad7b09e">LT019801.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    // fun(i) = max( N(i) + f(n-2), f(n-1) )
+    //        = 0    when i &lt;= 0
+    //        = N(0) when i == 1
+    int rob(vector&lt;int&gt;& nums) {
+        int a = 0, b = 0, n = nums.size();
+        for(int i = 0;i &lt; n; ++i){
+            int c = max(a + nums[i], b);
+            a = b;
+            b = c;
+        }
+        return b;
+    }
+};
+
+
+void test(vector&lt;int&gt; nums)
+{
+    int output = Solution().rob(nums);
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    cout &lt;&lt; "; output: " &lt;&lt; output &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test({2,7,9,3,1});
+}
+
+// Result
+//
+// 2022-11-14: Runtime 4ms 28.15% Memory 7.7MB 53.77%, https://leetcode.com/problems/house-robber/submissions/842995826/
+// 2023-02-20: Runtime 0ms 100% Memory 7.7MB 61.20%, https://leetcode.com/problems/house-robber/submissions/901595719/
+// 2023-03-12: Runtime 0ms 100% Memory 7.7MB 86.64%, https://leetcode.com/problems/house-robber/submissions/913495302/
+// 2023-09-27: Runtime 0ms 100% Memory 7.9MB 23.30%, https://leetcode.cn/problems/house-robber/submissions/469942553/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [2,7,9,3,1]; output: 12</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

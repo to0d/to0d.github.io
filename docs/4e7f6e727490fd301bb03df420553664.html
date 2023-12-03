@@ -1,0 +1,33 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>X86TargetTransformInfo.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>X86TargetTransformInfo.cpp</h1>
+            <h3></h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> </li><li><strong>BLOCK TAGS: </strong> <a href="../tags/14d8ef8.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>向量化</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<H2><a name="HEAD_1efa25f7" href="#TOC_HEAD_1efa25f7">enableInterleavedAccessVectorization</a></H2><ul><a href="../tags/14d8ef8.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>向量化</a>&nbsp;</ul>
+<pre><code>    bool X86TTIImpl::enableInterleavedAccessVectorization() {
+    // TODO: We expect this to be beneficial regardless of arch,
+    // but there are currently some unexplained performance artifacts on Atom.
+    // As a temporary solution, disable on Atom.
+    return !(ST-&gt;isAtom());
+    }</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

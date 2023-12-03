@@ -1,0 +1,180 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT007301.cpp (Set Matrix Zeroes)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT007301.cpp (Set Matrix Zeroes)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-18</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0073.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0073</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_cc07ff74" href="#TOC_HEAD_cc07ff74">Problem 0073 <strong>Set Matrix Zeroes</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/set-matrix-zeroes/" target="_blank">https://leetcode.com/problems/set&ndash;matrix&ndash;zeroes/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>96.99</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_e9ead5cd" href="#TOC_HEAD_e9ead5cd">LT007301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_477bbd26">LT0073 (name=Set Matrix Zeroes, ptag=Leetcode) &nbsp;<a href="../tags/LT0073.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0073</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_65ea799b"><a href="https://leetcode.com/problems/set-matrix-zeroes/" target="_blank">Set Matrix Zeroes &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0073.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0073</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a <em>m</em> x <em>n</em> matrix, if an element is 0, set its entire row and column to 0. Do it in place.
+	</p>
+	<p>
+		<strong>Follow up:</strong>
+	</p>
+	<p>
+		Did you use extra space?
+	</p>
+	<p>
+		A straight forward solution using O(
+		<em>m</em> <em>n</em> ) space is probably a bad idea.
+	</p>
+	<p>
+		A simple improvement uses O(
+		<em>m</em> +
+		<em>n</em> ) space, but still not the best solution.
+	</p>
+	<p>
+		Could you devise a constant space solution?
+	</p>
+</ul>
+	<H3><a name="HEAD_ee51bf9a" href="#TOC_HEAD_ee51bf9a">LT007301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    void setZeroes(vector&lt;vector&lt;int&gt;&gt;& matrix){
+        int i0 = 0, j0 = 0, m=matrix.size(), n=matrix[0].size();
+        if( 0 == m || 0 == n )
+            return;
+
+        for( int i = 0; i0 == 0 && i &lt; m; ++i)
+            if( 0 == matrix[i][0])
+                i0 = 1;
+
+        for( int j = 0; j0 ==0 && j &lt; n; ++j )
+            if( 0 == matrix[0][j])
+                j0 = 1;
+
+        for( int i = 1; i &lt; m; ++i)
+            for( int j = 1; j &lt; n; ++j )
+                if( 0 == matrix[i][j])
+                {   matrix[0][j] = 0;
+                    matrix[i][0] = 0;
+                }
+
+        for( int i = 1; i &lt; m; ++i)
+            for( int j = 1; j &lt; n; ++j )
+                if( 0 != matrix[i][j] && (0 == matrix[i][0] || 0 == matrix[0][j] ))
+                    matrix[i][j] = 0;
+
+        if( i0 == 1 )
+            for( int i = 0; i &lt; m; ++i)
+                matrix[i][0] = 0;
+
+        if( j0 == 1 )
+            for( int j = 0; j &lt; n; ++j )
+                matrix[0][j] = 0;
+    }
+};
+
+
+
+void test(vector&lt;vector&lt;int&gt;&gt; matrix)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(matrix);
+    Solution().setZeroes(matrix);
+    cout &lt;&lt; "; output: ";
+    outputVector(matrix);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({{0,1,2,0},{3,4,5,2},{1,3,1,5}});
+}
+
+// Result
+//
+// 2022-11-23: Runtime 31ms 12.17% Memory 13.2MB 72.52%, https://leetcode.com/problems/set-matrix-zeroes/submissions/848337637/
+// 2023-02-18: Runtime 8ms 96.99% Memory 13.3MB 73.70%, https://leetcode.com/problems/set-matrix-zeroes/submissions/900093756/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [[0,1,2,0],[3,4,5,2],[1,3,1,5]]; output: [[0,0,0,0],[0,4,5,0],[0,3,1,0]];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

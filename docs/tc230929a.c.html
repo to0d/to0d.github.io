@@ -1,0 +1,212 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC230929A.c</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>TC230929A.c</h1>
+        <h3>使用objdump与汇编进行分析程序的问题</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-09-29</time>
+            <i><a href="../tags/objdump.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>objdump</a>&nbsp;<a href="../tags/sigaction.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>sigaction</a>&nbsp;<a href="../tags/signal.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>signal</a>&nbsp;<a href="../tags/x86-Assembler.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>x86-Assembler</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H2><a name="HEAD_4c7e307" href="#TOC_HEAD_4c7e307">Steps</a></H2>
+<ol>
+	<li>Code</li>
+	<br />
+	<pre><code>int main(int argc, char *argv[])
+{
+sig_register();
+int a = 10, b = -2, c = 100;
+char* pstr = 0x00;
+int d = 100;
+*pstr = 0x00;
+
+return 0;
+}	</code></pre>
+	<li>Run</li>
+	<br />
+	<pre><code>&gt; ./a.out
+
+[now] received signal=11, thread_id=100
+./a.out(+0x131c) [0x7fb1c701c31c]
+./a.out(+0x1438) [0x7fb1c701c438]
+/lib/x86_64-linux-gnu/libc.so.6(+0x43090) [0x7fb1c6e13090]
++&lt;-./a.out(+0x15c5) [0x7fb1c701c5c5]
+|  /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7fb1c6df4083]
+|  ./a.out(+0x11ce) [0x7fb1c701c1ce]
+|
+|  &gt; objdump -d a.out
+|
+|  0000000000001580 &lt;main&gt;:                                            // main frame
+|   1580:       f3 0f 1e fa             endbr64
+|   1584:       55                      push   %rbp                    // 保存 rbp 寄存
+|   1585:       48 89 e5                mov    %rsp,%rbp
+|   1588:       48 83 ec 30             sub    $0x30,%rsp
+|   158c:       89 7d dc                mov    %edi,-0x24(%rbp)
+|   158f:       48 89 75 d0             mov    %rsi,-0x30(%rbp)
+|   1593:       b8 00 00 00 00          mov    $0x0,%eax
+|   1598:       e8 be fe ff ff          callq  145b &lt;sig_register&gt;
+|   159d:       c7 45 e8 0a 00 00 00    movl   $0xa,-0x18(%rbp)        // 变量 a
+|   15a4:       c7 45 ec fe ff ff ff    movl   $0xfffffffe,-0x14(%rbp) // 变量 b
+|   15ab:       c7 45 f0 64 00 00 00    movl   $0x64,-0x10(%rbp)       // 变量 c
+|   15b2:       48 c7 45 f8 00 00 00    movq   $0x0,-0x8(%rbp)         // 变量 pstr &lt;== addr 0
+|   15b9:       00
+|   15ba:       c7 45 f4 64 00 00 00    movl   $0x64,-0xc(%rbp)
+|   15c1:       48 8b 45 f8             mov    -0x8(%rbp),%rax         // 变量 pstr ==&gt; %rax
++-&gt; 15c5:       c6 00 00                movb   $0x0,(%rax)             // write to addr 0 (%rax)
+15c8:       b8 00 00 00 00          mov    $0x0,%eax
+15cd:       c9                      leaveq
+15ce:       c3                      retq
+15cf:       90                      nop	</code></pre>
+	<li>signal=11 &ndash; <a><b>SIGSEGV</b></a></li>
+	<li><a href="../tags/Register-RBP.html" target="_blank">rbp</a> (当前执行函数的基本地址)</li>
+	<br />
+</ol>
+	<H2><a name="HEAD_675ec80" href="#TOC_HEAD_675ec80">refer</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_7ce68834"><a href="../refers/4895fbc892ae61dc49590e0ab5cc8f71.html" target="_blank">2021&ndash;10&ndash;03 性能优化 使用objdump分析core堆栈 知乎.html</a></li>
+	<li><a name="HEAD_HIDDEN_df6145"><a href="../refers/7de38d643db00dfdb44f24a69ee9a7fe.htm" target="_blank">2022&ndash;11&ndash;09 分析一个简单的汇编代码 rbp是什么寄存器 CSDN.htm</a></li>
+	<li><a name="HEAD_HIDDEN_e53afacc">signal.h&nbsp;<a href="https://github.com/to0d/linux/blob/master/arch/x86/include/uapi/asm/signal.h" title="https://github.com/to0d/linux/blob/master/arch/x86/include/uapi/asm/signal.h" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<br />
+</ul>
+	<hr/>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;signal.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;execinfo.h&gt;
+
+static void print_stack_fs(int sig, FILE* output)
+{
+    fprintf(output, "--------------------------------------\n");
+
+    char pTime[256];
+
+    //getSafeNow(pTime, 256);
+    fprintf(output, "[%s] received signal=%d, thread_id=%d\n", "now", sig, getpid());
+
+    void *array[128]; // 128 stacks at most
+    size_t size = backtrace(array, sizeof(array) / sizeof(array[0]));
+    if (size &gt; 0 && size &lt; 128) {
+        char** stackLog = backtrace_symbols(array, size);
+        if(stackLog) {
+            for (size_t i = 0; i &lt; size; i++){
+                fprintf(output,"%s\n", stackLog[i]);
+            }
+            fflush(output);
+            free(stackLog);
+        }
+    }
+}
+
+static void sig_handler(int signo)
+{
+    if (signo == SIGSEGV || signo == SIGBUS  || signo == SIGABRT || signo == SIGFPE) {
+        print_stack_fs(signo, stderr);
+        exit(-1);
+    }
+    else if (signo == SIGTERM || signo == SIGINT) {
+        exit(-1);
+    }
+}
+
+static void sig_register()
+{
+    struct sigaction sigac;
+    sigemptyset(&sigac.sa_mask);
+    sigac.sa_handler = sig_handler;
+    sigac.sa_flags = 0;
+
+    sigaction(SIGTERM, &sigac, 0);
+    sigaction(SIGINT , &sigac, 0);
+    sigaction(SIGQUIT, &sigac, 0);
+    sigaction(SIGPIPE, &sigac, 0);
+    sigaction(SIGBUS , &sigac, 0);
+    sigaction(SIGABRT, &sigac, 0);
+    sigaction(SIGFPE , &sigac, 0);
+    sigaction(SIGSEGV, &sigac, 0);
+}
+
+
+int main(int argc, char *argv[])
+{
+    sig_register();
+    int a = 10, b = -2, c = 100;
+    char* pstr = 0x00;
+    int d = 100;
+    *pstr = 0x00;
+
+    return 0;
+}</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

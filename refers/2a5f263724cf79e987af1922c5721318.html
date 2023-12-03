@@ -1,0 +1,278 @@
+<html>
+	<head>
+		<meta charSet="utf-8"></meta>
+		<title data-rh="true">库打桩机制&nbsp;知乎</title>
+	</head>
+	<body class="WhiteBg-body PostIndex-body">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Fri Sep 29 17:34:51 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://zhuanlan.zhihu.com/p/655324228" target="_blank">
+				<font color="red" size="3">库打桩机制&nbsp;&ndash;&nbsp;知乎</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="RichText ztext Post-RichText css-117anjg" options="[object Object]">
+			<h2 data-first-child id="h_655324228_0" data-into-catalog-status="">前言</h2>
+			<p data-pid="N2sfJz_e">有时为了调试方便，我们需要对共享库的某个函数调用进行跟踪，例如函数的调用次数，输入和输出值等，此时你可以在应用程序的每个函数调用处添加打印代码，但如果调用次数很多，这未免太过麻烦。有时你或许想直接替换共享库中某个函数，采用自己的方法实现。有时应用程序开发完成，但用到的共享库还未准备就绪，该如何在不修改应用程序的前提下测试应用程序功能。针对上面的几种情况，linux链接器提供了一种称为
+				<b>库打桩</b>
+				（library&nbsp;interpositioning）的技术。
+				<br>
+
+			</p>
+
+			<p data-pid="97pbvV4Q">库打桩的基本思想：给定一个需要打桩的目标函数，创建一个
+				<b>包装函数</b>
+				，它的原型与目标函数完全一样。使用某种特殊的打桩机制，你就可以欺骗系统调用包装函数而不是目标函数。包装函数通常会执行它自己的逻辑，然后调用目标函数，再将目标函数的返回值传递给调用者。
+			</p>
+			<p data-pid="B1V1i_eB">（这样看来，中文翻译&ldquo;打桩&rdquo;的其实不够准确，&ldquo;偷梁换柱&rdquo;比较合适）</p>
+			<p data-pid="5ngWu-v-">打桩分为编译时、链接时或运行时三种。我们以下面的int.c程序为例，监测malloc和free这两个目标函数，malloc和free是C标准库libc.so中的函数。</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">//==========int.c=========
+#include &lt;stdio.h&gt;
+#include &lt;malloc.h&gt;
+int main()
+{
+  int *p = malloc(32);
+  free(p);
+  return 0;
+}</code>
+				</pre>
+			</div>
+			<h2 id="h_655324228_1" data-into-catalog-status="">
+				<b>编译时打桩</b>
+			</h2>
+			<p data-pid="dKJDknE_">编译时打桩的主要思路是利用
+				<b>预处理器</b>
+				，将目标函数用包装函数替换掉，从而可以打印追踪记录。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">//======malloc.h=====
+#define malloc(size) mymalloc(size)
+#define free(ptr) myfree(ptr)
+
+void *mymalloc(size_t size);
+void myfree(void *ptr);
+
+//======mymalloc.c=======
+#ifdef COMPILETIME
+#include &lt;stdio.h&gt;
+#include &lt;malloc.h&gt;
+void *mymalloc(size_t size)
+{
+  void *ptr = malloc(size);
+  printf(&#34;malloc(%d)=%p\n&#34;,(int)size, ptr);
+  return ptr;
+}
+void myfree(void *ptr)
+{
+  free(ptr);
+  printf(&#34;free(%p)\n&#34;,ptr);
+}
+#endif</code>
+				</pre>
+			</div>
+			<p data-pid="_4oD0ZJ3">编译并运行：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text"># gcc -DCOMPILETIME -c mymalloc.c
+# gcc -I. -o intc int.c mymalloc.o
+# ./intc
+malloc(32)=0x563bf2c932a0
+free(0x563bf2c932a0)</code>
+				</pre>
+			</div>
+			<p data-pid="B10H7QEY">编译选项中，&ndash;I.&nbsp;参数指定了当前路径为头文件路径，gcc会
+				<b>优先搜索当前路径</b>
+				，因此主程序int.c中对malloc的调用最终变成了对mymalloc的对用。
+			</p>
+			<h2 id="h_655324228_2" data-into-catalog-status="">
+				<b>链接时打桩</b>
+			</h2>
+			<p data-pid="BkkRs3lO">linux静态链接器支持用&ndash;&ndash;wrap&nbsp;f标志进行链接时打桩。这个标志告诉链接器，对于符号f的引用解析成__wrap_f(前缀两个下划线)，还要把对符号__real_f的引用解析成f。也就是说链接时打桩是利用了链接器的功能特性。</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">//======mymalloc.c=======
+#ifdef LINKTIME
+#include &lt;stdio.h&gt;
+void *__real_malloc(size_t size);
+void __real_free(void *ptr);
+void *__wrap_malloc(size_t size)
+{
+  void *ptr = __real_malloc(size); 
+  printf(&#34;malloc(%d)=%p\n&#34;,(int)size, ptr);
+  return ptr;
+}
+void __wrap_free(void *ptr)
+{
+  __real_free(ptr);
+  printf(&#34;free(%p)\n&#34;,ptr);
+}
+#endif</code>
+				</pre>
+			</div>
+			<p data-pid="h5x-KvLW">编译并运行</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text"># gcc -DLINKTIME -c mymalloc.c
+# gcc -c int.c
+# gcc -Wl,--wrap,malloc -Wl,--wrap,free -o intl int.o mymalloc.o
+# ./intl
+malloc(32)=0x563fd20de2a0
+free(0x563fd20de2a0)</code>
+				</pre>
+			</div>
+			<p data-pid="zmLKQ5eu">上述编译选项中，
+				<b>&ndash;Wl,option&nbsp;标志把option传递给链接器</b>
+				。option中的每个逗号都替换成一个空格。因此，&ndash;Wl,&ndash;&ndash;wrap,malloc就是将&ndash;&ndash;wrap&nbsp;malloc传递给链接器，&ndash;Wl,&ndash;&ndash;wrap,free就是将&ndash;&ndash;wrap&nbsp;free传递给链接器。
+			</p>
+			<p data-pid="uIjBl06C">于是链接器将int.o中对malloc和free的引用都解析成了__wrap_malloc和__wrap_free，正好与mymalloc.o中的自定函数的符号一样。而mymalloc.o中对于符号__real_malloc和__real_free的引用解析为malloc和free。</p>
+			<h2 id="h_655324228_3" data-into-catalog-status="">
+				<b>运行时打桩</b>
+			</h2>
+			<p data-pid="_0RdepjN">通过上面的示例，我们知道编译时打桩需要能够访问应用
+				<b>程序源码</b>
+				，并指定头文件，再进行编译；链接时打桩需要能够访问应用程序的
+				<b>可重定位目标文件</b>
+				，在链接时对符号进行替换。运行时打桩只需要知道应用程序的
+				<b>可执行目标文件</b>
+				即可。
+			</p>
+			<p data-pid="AB98rPt9">运行时打桩基于动态链接器的LD_PRELOAD环境变量，当LD_PRELOAD被定义为一个共享库库路径名列表时（空格或分号隔开），程序加载和执行时，
+				<b>动态链接器（LD&ndash;LINUX.SO）会先搜过LD_PRELOAD库</b>
+				，然后再去搜索其它的库。
+			</p>
+			<p data-pid="FpUcPiRw">下面是运行时打桩的例子：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">//======mymalloc.c=======
+#ifdef RUNTIME
+#define _GNU_SOURCE
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;dlfcn.h&gt;
+
+void *malloc(size_t size)
+{
+  void *(*mallocp)(size_t size);
+  char *error;
+  //获取libc中malloc的地址
+  mallocp = dlsym(RTLD_NEXT,&#34;malloc&#34;);
+  if((error = dlerror()) != NULL)
+  {
+    fputs(error,stderr);
+    exit(1);
+  }
+  char *ptr = mallocp(size);
+  printf(&#34;malloc(%d) = %p\n&#34;, (int)size,ptr);
+  return ptr;
+}
+
+void free(void *ptr)
+{
+  void (*freep)(void *) = NULL;
+  char *error;
+  if(!ptr)
+    return;
+  //获取libc中free的地址
+  freep = dlsym(RTLD_NEXT, &#34;free&#34;);
+  if((error = dlerror())!=NULL)
+  {
+    fputs(error,stderr);
+    exit(1);
+  }
+  freep(ptr);
+  printf(&#34;free(%p)\n&#34;,ptr);
+}
+#endif</code>
+				</pre>
+			</div>
+			<p data-pid="YMVdZfWD">（RTLD_NEXT表示在当前库以后按默认的顺序搜索共享库中符号symbol第一次出现的地址）</p>
+			<p data-pid="aF69OP33">编译并运行</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text"># gcc -DRUNTIME -shared -fpic -o mymalloc.so mymalloc.c -ldl
+# gcc -o intr int.c
+# LD_PRELOAD=&#34;./mymalloc.so&#34; ./intr
+Segmentation fault (core dumped)</code>
+				</pre>
+			</div>
+			<p data-pid="XvDz9_5T">很遗憾这里出现了coredump。</p>
+			<p data-pid="j1KQ6uHF">添加&ndash;g参数，重新编译</p>
+			<div class="highlight">
+				<pre><code class="language-text">#gcc -DRUNTIME -shared -fpic -g  -o mymalloc.so mymalloc.c -ldl
+#gcc -g -o intr int.c</code></pre>
+			</div>
+			<p data-pid="fxqsZqC8">利用gdb调试，仍然很难定位，后利用生成的coredump文件，定位如下：</p>
+			<div class="highlight">
+				<pre><code class="language-text"># gdb ./intr /home/core.intr-1304254-1692716869</code></pre>
+			</div>
+			<figure data-size="normal">
+				<div>
+					<img src="files/3945d81ea849808710b466db50c3f713.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p data-pid="KFc4Fh1d">发现malloc()函数中调用prinf()函数，而printf()函数中又调用malloc()函数，构成了无限嵌套。</p>
+			<p data-pid="rmBlB0Xu">为了避免无限嵌套，mymalloc.c中增加部分代码：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">void *malloc(size_t size)
+{
+  static int flag = 1;  //flag 1：打印，0：不打印
+  void *(*mallocp)(size_t size);
+ ...
+  char *ptr = mallocp(size);
+  if(flag == 1)
+  {
+    flag = 0;
+    printf(&#34;malloc(%d) = %p\n&#34;, (int)size,ptr);
+  }
+  flag = 1;
+  return ptr;
+}</code>
+				</pre>
+			</div>
+			<p data-pid="4g8aj-kH">编译执行</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text"># gcc -DRUNTIME -shared -fpic -g  -o mymalloc.so mymalloc.c -ldl
+# LD_PRELOAD=&#34;./mymalloc.so&#34; ./intr
+malloc(32) = 0x557d94ff02a0
+free(0x557d94ff02a0)</code>
+				</pre>
+			</div>
+			<p data-pid="FnxZxANe">上面我们对libc.so中的malloc和free进行了打桩，其实我们可以对任何调用这两个函数的可执行程序执行打桩，例如对系统命令&nbsp;ls</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text"># LD_PRELOAD=&#34;./mymalloc.so&#34; /usr/bin/ls
+malloc(472) = 0x559354da32d0
+malloc(120) = 0x559354da38c0
+malloc(1024) = 0x559354da3940
+free(0x559354da38c0)
+free(0x559354da3940)
+free(0x559354da32d0)
+malloc(5) = 0x559354da3d50
+......
+malloc(1368) = 0x559354dab170
+int.c  intc  intl  int.o  intr  malloc.h  mymalloc.c  mymalloc.o  mymalloc.so
+free(0x559354daaeb0)
+free(0x559354daae80)</code>
+				</pre>
+			</div>
+			<h2 id="h_655324228_4" data-into-catalog-status="">
+				<b>小结</b>
+				<br>
+
+			</h2>
+			<p data-pid="QxPRjozm">（1）库打桩可以帮助我们对函数调用的情况进行追踪；</p>
+			<p data-pid="KGZWBvQA">（2）库打桩分为编译时，链接时和运行时3种情况。</p>
+
+		</div>
+	</body>
+</html>

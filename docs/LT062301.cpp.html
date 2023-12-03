@@ -1,0 +1,153 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT062301.cpp (Add One Row to Tree)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT062301.cpp (Add One Row to Tree)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-25</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0623.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0623</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_a2e9580c" href="#TOC_HEAD_a2e9580c">Problem 0623 <strong>Add One Row to Tree</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/add-one-row-to-tree/" target="_blank">https://leetcode.com/problems/add&ndash;one&ndash;row&ndash;to&ndash;tree/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>51.31</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_5a84c1f8" href="#TOC_HEAD_5a84c1f8">LT062301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_b9d76afe">LT0623 (name=Add One Row to Tree, ptag=Leetcode) &nbsp;<a href="../tags/LT0623.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0623</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_853facfb"><a href="https://leetcode.com/problems/add-one-row-to-tree/" target="_blank">Add One Row to Tree &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0623.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0623</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_60867945" href="#TOC_HEAD_60867945">LT062301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    TreeNode* addOneRow(TreeNode* root, int val, int depth) {
+        return _addOneRow(root, 1, true, val, depth);
+    }
+
+    TreeNode* _addOneRow(TreeNode* node, int curDepth, bool fromLeft, int val, int depth) {
+        if( curDepth == depth )
+        {   TreeNode* newNode = new TreeNode(val);
+            if( fromLeft )
+                newNode-&gt;left = node;
+            else
+                newNode-&gt;right = node;
+            return newNode;
+        }
+
+        if( node-&gt;left != NULL )
+            node-&gt;left = _addOneRow(node-&gt;left, curDepth+1, true, val, depth);
+        else if ((curDepth+1) == depth)
+            node-&gt;left = new TreeNode(val);
+
+        if( node-&gt;right != NULL )
+            node-&gt;right = _addOneRow(node-&gt;right, curDepth+1, false, val, depth);
+        else if ((curDepth+1) == depth)
+            node-&gt;right = new TreeNode(val);
+
+        return node;
+    }
+};
+
+
+
+void test(TreeNode* root, int val, int depth)
+{
+    cout &lt;&lt; "input: val=" &lt;&lt; val &lt;&lt; ", depth=" &lt;&lt; depth &lt;&lt; ", tree=";
+    outputTree(root);
+    TreeNode* r = Solution().addOneRow(root, val, depth);
+    cout &lt;&lt; "; output: ";
+    outputTree(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(makeTree("{4,2,6,3,1,5}"), 1, 2);
+}
+
+// Result
+//
+// 2023-01-08: Runtime 29ms 22.93% Memory 24.9MB 86.73%, https://leetcode.com/problems/add-one-row-to-tree/submissions/874100599/
+// 2023-02-25: Runtime 23ms 51.31% Memory 24.9MB 68.66%, https://leetcode.com/problems/add-one-row-to-tree/submissions/904435125/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: val=1, depth=2, tree=[4,2,6,3,1,5]; output: [4,1,1,2,null,null,6,3,1,5];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

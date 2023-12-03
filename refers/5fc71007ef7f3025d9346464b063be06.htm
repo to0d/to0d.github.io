@@ -1,0 +1,225 @@
+<html>
+	<head>
+		<meta charset="utf-8"></meta>
+		<title>waitpid函数详解+应用示例_DeRoy的博客&ndash;CSDN博客</title>
+	</head>
+	<body class="nodata " style="" data-new-gr-c-s-check-loaded="8.906.0" data-gr-ext-installed="">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Sat Sep 02 10:37:56 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://blog.csdn.net/qq_44519484/article/details/117452027" target="_blank">
+				<font color="red" size="3">waitpid函数详解+应用示例_DeRoy的博客&ndash;CSDN博客</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="blog-content-box">
+			<div class="article-header-box">
+				<div class="article-header">
+					<div class="article-title-box">
+						<h1 class="title-article" id="articleContentId">waitpid函数详解+应用示例</h1>
+					</div>
+				</div>
+			</div>
+
+	 <div id="content_views" class="markdown_views prism-tomorrow-night">
+	 
+
+								<p></p>
+								<h2>
+									<a name="t1"></a>
+									<a id="waitpid_8"></a>
+									waitpid函数的使用
+								</h2>
+								<blockquote>
+									<p>当用fork启动一个新的子进程的时候，子进程就有了新的生命周期，并将在其自己的地址空间内独立运行。但有的时候，我们希望知道某一个自己创建的子进程何时结束，从而方便父进程做一些处理动作。</p>
+								</blockquote>
+								<h3>
+									<a name="t2"></a>
+									<a id="waitpid_12"></a>
+									waitpid()函数定义
+								</h3>
+								<p>先来看看waitpid函数的定义：</p>
+								<pre data-index="0" class="prettyprint">
+<code class="prism language-c has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;sys/types.h&gt;</span> </span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;sys/wait.h&gt;</span></span>
+<span class="token class-name">pid_t</span> <span class="token function">waitpid</span><span class="token punctuation">(</span><span class="token class-name">pid_t</span> pid<span class="token punctuation">,</span><span class="token keyword">int</span> <span class="token operator">*</span>status<span class="token punctuation">,</span><span class="token keyword">int</span> options<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<div class="hljs-button signin" data-title="登录后复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4334&quot;}"></div></code><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li></ul>
+								</pre>
+								<p>如果在调用waitpid()函数时，当指定等待的子进程已经停止运行或结束了，则waitpid()会立即返回；</p>
+								<p>但是如果子进程还没有停止运行或结束，则调用waitpid()函数的父进程则会被阻塞，暂停运行。</p>
+								<h3>
+									<a name="t3"></a>
+									<a id="_26"></a>
+									参数详解
+								</h3>
+								<p>
+									<strong>pid_t&nbsp;pid</strong>
+								</p>
+								<blockquote>
+									<p>参数pid为欲等待的子进程识别码，其具体含义如下：</p>
+								</blockquote>
+								<div class="table-box">
+									<table>
+										<thead>
+											<tr>
+												<th>参数值</th>
+												<th>说明</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>pid&lt;&ndash;1</td>
+												<td>等待进程组号为pid绝对值的任何子进程。</td>
+											</tr>
+											<tr>
+												<td>pid=&ndash;1</td>
+												<td>等待任何子进程，此时的waitpid()函数就退化成了普通的wait()函数。</td>
+											</tr>
+											<tr>
+												<td>pid=0</td>
+												<td>等待进程组号与目前进程相同的任何子进程，也就是说任何和调用waitpid()函数的进程在同一个进程组的进程。</td>
+											</tr>
+											<tr>
+												<td>pid&gt;0</td>
+												<td>等待进程号为pid的子进程。</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<p>
+									<strong>int&nbsp;*status</strong>
+								</p>
+								<blockquote>
+									<p>这个参数将保存子进程的状态信息，有了这个信息父进程就可以了解子进程为什么会退出，是正常退出还是出了什么错误。</p>
+								</blockquote>
+								<div class="table-box">
+									<table>
+										<thead>
+											<tr>
+												<th>宏</th>
+												<th>说明</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>
+													<strong>WIFEXITED(status)</strong>
+												</td>
+												<td>如果子进程正常结束，它就返回真；否则返回假。</td>
+											</tr>
+											<tr>
+												<td>WEXITSTATUS(status)</td>
+												<td>如果WIFEXITED(status)为真，则可以用该宏取得子进程exit()返回的结束代码。</td>
+											</tr>
+											<tr>
+												<td>
+													<strong>WIFSIGNALED(status)</strong>
+												</td>
+												<td>如果子进程因为一个未捕获的信号而终止，它就返回真；否则返回假。</td>
+											</tr>
+											<tr>
+												<td>
+													<strong>WTERMSIG(status)</strong>
+												</td>
+												<td>如果WIFSIGNALED(status)为真，则可以用该宏获得导致子进程终止的信号代码。</td>
+											</tr>
+											<tr>
+												<td>WIFSTOPPED(status)</td>
+												<td>如果当前子进程被暂停了，则返回真；否则返回假。</td>
+											</tr>
+											<tr>
+												<td>WSTOPSIG(status)</td>
+												<td>如果WIFSTOPPED(status)为真，则可以使用该宏获得导致子进程暂停的信号代码。</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<p>示例</p>
+								<pre data-index="1" class="prettyprint">
+<code class="prism language-c has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>childpid <span class="token operator">=</span> <span class="token function">waitpid</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>status<span class="token punctuation">,</span> WNOHANG<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token punctuation">{        </span>
+	<span class="token comment">//如果是正常退出，不需要重启子进程   如果是被SIGKILL信号结束的，也不重启子进程</span>
+	<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">WIFEXITED</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span><span class="token function">WIFSIGNALED</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token function">WTERMSIG</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span> <span class="token operator">==</span> SIGKILL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+		restart <span class="token operator">=</span> false<span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+<div class="hljs-button signin" data-title="登录后复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4334&quot;}"></div></code><ul class="pre-numbering" style=""><li style="color: rgb(153, 153, 153);">1</li><li style="color: rgb(153, 153, 153);">2</li><li style="color: rgb(153, 153, 153);">3</li><li style="color: rgb(153, 153, 153);">4</li><li style="color: rgb(153, 153, 153);">5</li><li style="color: rgb(153, 153, 153);">6</li></ul>
+								</pre>
+								<p>
+									<strong>int&nbsp;options</strong>
+								</p>
+								<blockquote>
+									<p>参数options提供了一些另外的选项来控制waitpid()函数的行为。如果不想使用这些选项，则可以把这个参数设为0。</p>
+								</blockquote>
+								<p>主要使用的有以下两个选项：</p>
+								<div class="table-box">
+									<table>
+										<thead>
+											<tr>
+												<th>参数</th>
+												<th>说明</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>WNOHANG</td>
+												<td>如果pid指定的子进程没有结束，则waitpid()函数立即返回0，而不是阻塞在这个函数上等待；如果结束了，则返回该子进程的进程号。</td>
+											</tr>
+											<tr>
+												<td>WUNTRACED</td>
+												<td>如果子进程进入暂停状态，则马上返回。</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<h3>
+									<a name="t4"></a>
+									<a id="_74"></a>
+									使用示例
+								</h3>
+								<pre data-index="2" class="prettyprint">
+<code class="prism language-c has-numbering" onclick="mdcp.signin(event)" style="position: unset;"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;sys/types.h&gt;</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;sys/wait.h&gt;</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h&gt;</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h&gt;</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h&gt;</span></span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{        </span>
+    <span class="token class-name">pid_t</span> pid<span class="token punctuation">,</span> childpid<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> status <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    pid <span class="token operator">=</span> <span class="token function">fork</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>pid <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Error occured on forking.\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>pid <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>    <span class="token comment">//子进程</span>
+    <span class="token punctuation">{        </span>
+        <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//换成30s，然后kill -9 子进程pid</span>
+        <span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>   
+    <span class="token keyword">else</span>                    <span class="token comment">//父进程</span>
+    <span class="token punctuation">{        </span>
+        <span class="token comment">//返回后继续执行父进程的代码段</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"pid:%d\n"</span><span class="token punctuation">,</span>pid<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//打印子进程id</span>
+
+    <span class="token keyword">do</span>
+    <span class="token punctuation">{        </span>
+        childpid <span class="token operator">=</span> <span class="token function">waitpid</span><span class="token punctuation">(</span>pid<span class="token punctuation">,</span> <span class="token operator">&amp;</span>status<span class="token punctuation">,</span> WNOHANG<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>childpid <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+        <span class="token punctuation">{        </span>
+            <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"No child exited,ret = %d\n"</span><span class="token punctuation">,</span> childpid<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span>childpid <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">WIFEXITED</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"正常退出:%d\n"</span><span class="token punctuation">,</span>childpid<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">WIFSIGNALED</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token function">WTERMSIG</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span> <span class="token operator">==</span> SIGKILL<span class="token punctuation">)</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"被SIGKILL信号结束\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<div class="hljs-button signin" data-title="登录后复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4334&quot;}"></div></code>
+								</pre>
+							</div>
+							 
+	</body>
+</html>

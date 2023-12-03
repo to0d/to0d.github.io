@@ -1,0 +1,295 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>DBG: gdb architecture</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">DBG: gdb architecture</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-02</time>
+            <i><a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;<a href="../tags/gdb.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H1><a name="HEAD_3bd7bd73" href="#TOC_HEAD_3bd7bd73">1. Architecture</a></H1>
+<p>
+	<img src="files/4e6478e14a5bc1d86f0ac53cdd2ff4de.png" />
+</p>
+<p>
+	<img src="files/2a876873e4cc730f20534f84bc04f4c0.jpg" />
+</p>
+	<H2><a name="HEAD_41ed4513" href="#TOC_HEAD_41ed4513">1.1. bfd (符号端)</a></H2><ul><a href="../tags/BFD.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>BFD</a>&nbsp;</ul>
+<p>
+	<img src="files/51cee0ec3702faf09da799e7bcbef547.jpg" />
+</p>
+<ol>
+	<li><a name="HEAD_HIDDEN_f8e19459">struct <strong>objfile</strong> &ndash; <a href="bc9047358b401401f2459dde351b5e6c.html" target="_blank">objfiles.h</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/objfiles.h" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/objfiles.h" target="_blank"><font color="red"><i>link</i></font></a> &nbsp;<a href="../tags/objfile.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>objfile</a></li>
+	<br />
+	<li><a name="HEAD_HIDDEN_47d3130c">struct <strong>sym_fns</strong> &ndash; symfile.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.h" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.h" target="_blank"><font color="red"><i>link</i></font></a> &nbsp;<a href="../tags/sym_fns.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>sym_fns</a></li>
+	<br />
+	<ul>
+		<li>函数指针</li>
+		<ul>
+			<li>sym_new_init</li>
+			<li>sym_init</li>
+			<li>sym_read</li>
+			<li>sym_finish</li>
+			<li>sym_offsets</li>
+			<li>sym_segments</li>
+			<li>sym_read_linetable</li>
+			<li>sym_relocate</li>
+			<br />
+		</ul>
+		<li><a name="HEAD_HIDDEN_ab215223">variable <strong>sym_fns</strong> <font color="red">elf_sym_fns</font> &ndash; <a href="fd399851a8b2891c585549c2f377a5f3.html" target="_blank">elfread.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/elfread.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/elfread.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+		<ul>
+			<li>一个 <strong>sym_fns</strong> 实现</li>
+			<li>set <strong>sym_fns</strong></li>
+			<ul>
+				<li>_initialize_elfread</li>
+				<br />
+				<pre><code>add_symtab_fns (bfd_target_elf_flavour, &elf_sym_fns);				</code></pre>
+			</ul>
+		</ul>
+	</ul>
+	<li><a name="HEAD_HIDDEN_aaf0f2fc">struct <strong>bfd</strong> &ndash; <a href="9d770e3dccd365868d4baaae91c3c245.html" target="_blank">bfd&ndash;in2.h</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/bfd-in2.h" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/bfd-in2.h" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<br />
+	<li><a name="HEAD_HIDDEN_a20e5056">struct <strong>bfd_target</strong> &ndash; <a href="9d770e3dccd365868d4baaae91c3c245.html" target="_blank">bfd&ndash;in2.h</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/bfd-in2.h" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/bfd-in2.h" target="_blank"><font color="red"><i>link</i></font></a> &nbsp;<a href="../tags/bfd_target.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>bfd_target</a></li>
+	<br />
+	<ul>
+		<li>variable <strong>bfd_target</strong> <font color="red">x86_64_elf64_vec</font></li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_79bdf9a3">elfxx&ndash;target.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/elfxx-target.h" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/elfxx-target.h" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<br />
+			<pre><code>variable bfd_target TARGET_LITTLE_SYM
+{
+...
+}			</code></pre>
+			<li><a name="HEAD_HIDDEN_5a4cb344">elf64&ndash;x86&ndash;64.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/elf64-x86-64.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/elf64-x86-64.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<br />
+			<pre><code>elf64-x86-64.c:
+
+#define TARGET_LITTLE_SYM		    x86_64_elf64_vec			</code></pre>
+		</ul>
+		<li>function mapping</li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_716ebdfc">bfd_target: bfd_getx64 &ndash; <a href="9d770e3dccd365868d4baaae91c3c245.html" target="_blank">bfd&ndash;in2.h</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/bfd-in2.h" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/bfd-in2.h" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<li><a name="HEAD_HIDDEN_44989ae3">x86_64_elf64_vec: bfd_getl64 &ndash; elfxx&ndash;target.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/elfxx-target.h" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/elfxx-target.h" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<li><a name="HEAD_HIDDEN_32191e9b">bfd_getl64() &ndash; libbfd.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/libbfd.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/libbfd.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<br />
+		</ul>
+	</ul>
+</ol>
+	<H3><a name="GDB-ARCH-NOTE-1" href="#TOC_GDB-ARCH-NOTE-1">1.1.1. set <strong>bfd vector (xvec)</strong></a></H3><ul></ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_36bdabf6">bfd_find_target &ndash; targets.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/targets.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/targets.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<ul>
+		<li>find_target</li>
+		<ul>
+			<li>_bfd_target_vector</li>
+			<br />
+			<pre><code>static const bfd_target * const _bfd_target_vector[] =
+{
+...
+
+&x86_64_elf64_vec,
+...
+}			</code></pre>
+		</ul>
+	</ul>
+</ul>
+	<H2><a name="HEAD_c5ccb4ac" href="#TOC_HEAD_c5ccb4ac">1.2. Target (目标端)</a></H2><ul><a href="../tags/gdb-target.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-target</a>&nbsp;</ul>
+<p>
+	<img src="files/9e629d68d6d91598360cafc4e210b50f.jpg" />
+</p>
+<ol>
+	<li><a name="HEAD_HIDDEN_8e9f0ab5">class <strong>inferior</strong> &ndash; inferior.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/inferior.h" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/inferior.h" target="_blank"><font color="red"><i>link</i></font></a> &nbsp;<a href="../tags/inferior.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>inferior</a></li>
+	<br />
+	<li><a name="HEAD_HIDDEN_c456e1c1">stuct <strong>target_ops</strong> &ndash; target.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/target.h" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/target.h" target="_blank"><font color="red"><i>link</i></font></a> &nbsp;<a href="../tags/target_ops.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>target_ops</a></li>
+	<br />
+	<ul>
+		<li>180+ virtual functions</li>
+		<ul>
+			<li>wait()</li>
+			<li>stop()</li>
+			<li>insert_breakpoint()</li>
+			<br />
+		</ul>
+		<li>class <strong>linux_nat_target</strong></li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_65d44d54">&ndash; <a href="1cd96890a50d7cee9f804ea20d629496.html" target="_blank">linux&ndash;nat.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/linux-nat.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/linux-nat.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<li>一个 <strong>target_ops</strong> 实现</li>
+			<br />
+		</ul>
+	</ul>
+	<li><a name="HEAD_HIDDEN_786dd7b7">struct <strong>gdbarch</strong> &ndash; gdbarch.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/gdbarch.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/gdbarch.c" target="_blank"><font color="red"><i>link</i></font></a> &nbsp;<a href="../tags/gdbarch.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdbarch</a></li>
+	<ul>
+		<li>some properties like</li>
+		<ul>
+			<li>byte_order</li>
+			<li><a name="HEAD_HIDDEN_5bce5b59">bfd_arch_info &ndash; <a href="9d770e3dccd365868d4baaae91c3c245.html" target="_blank">bfd&ndash;in2.h</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/bfd-in2.h" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/bfd-in2.h" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<li>target_desc</li>
+		</ul>
+		<li>100+ function pointers</li>
+		<li>gdbarch_tdep_up (target specific vector)</li>
+		<br />
+	</ul>
+	<li>struct <strong>gdbarch_tdep_base</strong> &ndash; empty struct</li>
+	<br />
+	<li><a name="HEAD_HIDDEN_ed739421">struct <strong>i386_gdbarch_tdep</strong> &ndash; i386&ndash;tdep.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/i386-tdep.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/i386-tdep.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<br />
+</ol>
+	<H3><a name="HEAD_b124009e" href="#TOC_HEAD_b124009e">1.2.1. Register gdbarch</a></H3><ul><a href="../tags/gdbarch.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdbarch</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_f871da8a"><strong>_initialize_i386_tdep</strong> &ndash; i386&ndash;tdep.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/i386-tdep.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/i386-tdep.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_952ce8ed">gdbarch_register &ndash; <a href="91327d8ff57ad822ffa40b4422c887e2.html" target="_blank">arch&ndash;utils.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/arch-utils.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/arch-utils.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+		<li>add some commands</li>
+		<ul>
+			<li>add_setshow_enum_cmd</li>
+			<li>add_setshow_prefix_cmd</li>
+			<li>add_cmd</li>
+		</ul>
+		<li>gdbarch_register_osabi</li>
+		<li>i386_init_reggroups</li>
+		<li>register_remote_support_xml</li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_5365568b" href="#TOC_HEAD_5365568b">1.2.2. Remote target</a></H3><ul><a href="../tags/Remote-Debug.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Remote-Debug</a>&nbsp;</ul>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_1ae0cdcb" href="#HEAD_1ae0cdcb">1.2.2.1. <strong>更新 gdbarch</strong> in remote debug </a></li>
+</menu>
+
+</div>
+<p>
+	<img src="files/d080d799ada8a36ceef751ca1a9c0269.jpg" />
+</p>
+<ul>
+	<li><a name="HEAD_HIDDEN_80bda471">struct <strong>remote_target</strong> &ndash; remote.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/remote.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/remote.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<br />
+</ul>
+	<H4><a name="HEAD_1ae0cdcb" href="#TOC_HEAD_1ae0cdcb">1.2.2.1. <strong>更新 gdbarch</strong> in remote debug</a></H4><ul><a href="../tags/gdbarch.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdbarch</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_25b95546">remote_target::open &ndash; remote.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/remote.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/remote.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<ul>
+		<li>open_1</li>
+		<ul>
+			<li>start_remote</li>
+			<ul>
+				<li>remote_target::start_remote_1</li>
+				<ul>
+					<li><a name="HEAD_HIDDEN_5c333499">::start_remote &ndash; <a href="374489b6133c93986c3e512859252233.html" target="_blank">infrun.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/infrun.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/infrun.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+					<ul>
+						<li>wait_for_inferior</li>
+						<ul>
+							<li>handle_inferior_event</li>
+							<ul>
+								<li>follow_exec</li>
+								<ul>
+									<li><a name="HEAD_HIDDEN_e15e7ead">add_inferior_with_spaces &ndash; inferior.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/inferior.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/inferior.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+									<ul>
+										<li><code>inf&ndash;&gt;gdbarch = gdbarch_find_by_info (info);</code></li>
+										<br />
+									</ul>
+								</ul>
+							</ul>
+						</ul>
+					</ul>
+				</ul>
+			</ul>
+		</ul>
+	</ul>
+</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    ﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_3bd7bd73" href="#HEAD_3bd7bd73">1. Architecture</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_41ed4513" href="#HEAD_41ed4513">1.1. bfd (符号端) </a></li>
+		<menu>
+			<li><a name="TOC_GDB-ARCH-NOTE-1" href="#GDB-ARCH-NOTE-1">1.1.1. set <strong>bfd vector (xvec)</strong> </a></li>
+		</menu>
+		<li><a name="TOC_HEAD_c5ccb4ac" href="#HEAD_c5ccb4ac">1.2. Target (目标端) </a></li>
+		<menu>
+			<li><a name="TOC_HEAD_b124009e" href="#HEAD_b124009e">1.2.1. Register gdbarch </a></li>
+			<li><a name="TOC_HEAD_5365568b" href="#HEAD_5365568b">1.2.2. Remote target </a></li>
+		</menu>
+	</menu>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

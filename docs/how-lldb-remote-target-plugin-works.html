@@ -1,0 +1,209 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>How remote target plugin works</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">How remote target plugin works</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-16</time>
+            <i><a href="../tags/LLDB-Plugin.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB-Plugin</a>&nbsp;<a href="../tags/Remote-Debug.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Remote-Debug</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">Read it later &ndash; 2023/10/16 </a></li>
+</ol>
+</div>
+        <div class="entry-content">
+	<H2><a name="HEAD_145da94a" href="#TOC_HEAD_145da94a">1. Example</a></H2>
+<pre><code>(lldb) settings set plugin.process.gdb-remote.target-definition-file &lt;filename&gt;
+example: x86_64_target_definition.py</code></pre>
+<ul>
+	<li><a name="HEAD_HIDDEN_41432a73">refer <a href="topic-how-to-add-new-chip-support-in-lldb.html" target="_blank">DBG: How to add new chip support in lldb</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_3d9520c5" href="#TOC_HEAD_3d9520c5">2. Register plugin property</a></H2>
+<ul>
+	<li>split property path</li>
+	<br />
+	<pre><code>plugin.process.gdb-remote.target-definition-file
+
+==&gt;
+plugin
+process
+gdb-remote
+target-definition-file	</code></pre>
+	<li>property <strong>target&ndash;definition&ndash;file</strong></li>
+	<br />
+	<ul>
+		<li>source: <code>lldb\source\Plugins\Process\gdb&ndash;remote\ProcessGDBRemoteProperties.td</code></li>
+		<br />
+		<pre><code>def TargetDefinitionFile: Property&lt;"target-definition-file", "FileSpec"&gt;,
+Global,
+DefaultStringValue&lt;""&gt;,
+Desc&lt;"The file that provides the description for remote target registers."&gt;;		</code></pre>
+		<li>generate: <code>build/tools/lldb/source/Plugins/Process/gdb&ndash;remote/ProcessGDBRemoteProperties.inc</code></li>
+		<br />
+		<pre><code>static constexpr PropertyDefinition g_processgdbremote_properties[] = {
+{"packet-timeout", OptionValue::eTypeUInt64, true, 5, nullptr, {}, "Specify the default packet timeout in seconds."},
+{"target-definition-file", OptionValue::eTypeFileSpec, true, 0, "", {}, "The file that provides the description for remote target registers."},
+{"use-g-packet-for-reading", OptionValue::eTypeBoolean, true, 0, nullptr, {}, "Specify if the server should use 'g' packets to read registers."},
+{"use-libraries-svr4", OptionValue::eTypeBoolean, true, 1, nullptr, {}, "If true, the libraries-svr4 feature will be used to get a hold of the process's loaded modules. This setting is only effective if lldb was build with xml support."},
+};		</code></pre>
+		<li><a name="HEAD_HIDDEN_e8798371">The <strong>g_processgdbremote_properties</strong> is Initialized in ProcessGDBRemote.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Plugins/Process/gdb-remote/ProcessGDBRemote.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Plugins/Process/gdb-remote/ProcessGDBRemote.cpp" target="_blank"><font color="red"><i>link</i></font></a></li>
+		<br />
+		<pre><code>PluginProperties() : Properties() {
+m_collection_sp = std::make_shared&lt;OptionValueProperties&gt;(GetSettingName());
+m_collection_sp-&gt;Initialize(g_processgdbremote_properties);
+}		</code></pre>
+		<li>Here <strong>GetSettingName()</strong> is <strong>&quot;gdb&ndash;remote&quot;</strong></li>
+		<br />
+		<li>So, the <strong>plugin.process.gdb&ndash;remote.target&ndash;definition&ndash;file</strong> path is linked:</li>
+		<br />
+		<ul>
+			<li><a name="HEAD_HIDDEN_521014b6">ProcessGDBRemote::DebuggerInitialize() &ndash; ProcessGDBRemote.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Plugins/Process/gdb-remote/ProcessGDBRemote.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Plugins/Process/gdb-remote/ProcessGDBRemote.cpp" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<ul>
+				<li><a name="HEAD_HIDDEN_e36b2708">PluginManager::GetSettingForProcessPlugin(..., <font color="red">&quot;gdb&ndash;remote&quot;</font> ) &ndash; PluginManager.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Core/PluginManager.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Core/PluginManager.cpp" target="_blank"><font color="red"><i>link</i></font></a></li>
+				<ul>
+					<li>GetSettingForPlugin(..., <font color="red">&quot;gdb&ndash;remote&quot;</font> , <font color="red">&quot;process&quot;</font> )</li>
+					<ul>
+						<li>GetDebuggerPropertyForPlugins</li>
+						<ul>
+							<li>GetSubProperty (..., <font color="red">&quot;plugin&quot;</font> )</li>
+							<li>GetSubProperty (..., <font color="red">&quot;process&quot;</font> )</li>
+						</ul>
+						<li>GetSubProperty (..., <font color="red">&quot;gdb&ndash;remote&quot;</font> )</li>
+						<br />
+					</ul>
+				</ul>
+			</ul>
+			<li><a name="HEAD_HIDDEN_d7216103">for more about <strong>GetSubProperty</strong> , see OptionValueProperties.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Interpreter/OptionValueProperties.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Interpreter/OptionValueProperties.cpp" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<br />
+		</ul>
+	</ul>
+</ul>
+	<H2><a name="HEAD_3f6b0fa2" href="#TOC_HEAD_3f6b0fa2">3. How <strong>settings set</strong> command works</a></H2><ul><a href="../tags/lldb-settings-set.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>lldb-settings-set</a>&nbsp;</ul>
+<ul>
+	<li><strong>settings set</strong> xxxxxx</li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_7be314dc">class CommandObjectSettingsSet &ndash; CommandObjectSettings.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Commands/CommandObjectSettings.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Commands/CommandObjectSettings.cpp" target="_blank"><font color="red"><i>link</i></font></a></li>
+		<ul>
+			<li><code>DoExecute()</code></li>
+			<ul>
+				<li><code>Debugger::SetPropertyValue()</code></li>
+				<ul>
+					<li><a name="HEAD_HIDDEN_4f0235a8"><code>Properties::SetPropertyValue()</code> &ndash; UserSettingsController.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Core/UserSettingsController.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Core/UserSettingsController.cpp" target="_blank"><font color="red"><i>link</i></font></a></li>
+					<ul>
+						<li><a name="HEAD_HIDDEN_a40a417">Read it later &ndash; 2023/10/16  <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></li>
+						<br />
+					</ul>
+				</ul>
+			</ul>
+		</ul>
+	</ul>
+</ul>
+	<H2><a name="HEAD_9dbf9f50" href="#TOC_HEAD_9dbf9f50">4. The file &quot;xxx.py&quot; be used</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_d5c69a89"><code>ProcessGDBRemote::DidLaunchOrAttach()</code> &ndash; ProcessGDBRemote.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Plugins/Process/gdb-remote/ProcessGDBRemote.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Plugins/Process/gdb-remote/ProcessGDBRemote.cpp" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<ul>
+		<li><code>ProcessGDBRemote::BuildDynamicRegisterInfo()</code></li>
+		<ul>
+			<li><code>GetGlobalPluginProperties().GetTargetDefinitionFile()</code> &ndash; <strong>Get the path</strong></li>
+			<li><code>ProcessGDBRemote::ParsePythonTargetDefinition()</code> &ndash; <strong>Prase file</strong></li>
+			<ul>
+				<li><code>ScriptInterpreterPythonImpl::LoadPluginModule()</code> &ndash; <strong>Run python and interpreter data</strong></li>
+				<li><code>ScriptInterpreterPythonImpl::GetDynamicSettings()</code></li>
+				<ul>
+					<li>load <strong>gdb&ndash;server&ndash;target&ndash;definition</strong> , see <code>x86_64_target_definition.py</code></li>
+					<br />
+					<pre><code>def get_dynamic_setting(target, setting_name):
+if setting_name == "gdb-server-target-definition":
+    return get_target_definition()					</code></pre>
+				</ul>
+				<li><code>GetTarget().SetArchitecture()</code></li>
+				<li><code>DynamicRegisterInfo::SetRegisterInfo(const StructuredData::Dictionary &amp;dict,</code></li>
+				<br />
+			</ul>
+		</ul>
+	</ul>
+</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    <b><a href="#HEAD_todo"><font color="red">TODO: 1</font></a></b><br>﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_145da94a" href="#HEAD_145da94a">1. Example</a></b><br>
+	<b><a name="TOC_HEAD_3d9520c5" href="#HEAD_3d9520c5">2. Register plugin property</a></b><br>
+	<b><a name="TOC_HEAD_3f6b0fa2" href="#HEAD_3f6b0fa2">3. How <strong>settings set</strong> command works </a></b><br>
+	<b><a name="TOC_HEAD_9dbf9f50" href="#HEAD_9dbf9f50">4. The file &quot;xxx.py&quot; be used</a></b><br>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

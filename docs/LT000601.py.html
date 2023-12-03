@@ -1,0 +1,171 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT000601.py (ZigZag Conversion)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT000601.py (ZigZag Conversion)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-09</time>
+            <i><a href="../tags/LT0006.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0006</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Python-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Python-Code</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_7e76275" href="#TOC_HEAD_7e76275">Problem 0006 <strong>ZigZag Conversion</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/zigzag-conversion/" target="_blank">https://leetcode.com/problems/zigzag&ndash;conversion/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>60.51</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_5c54af7b" href="#TOC_HEAD_5c54af7b">LT000601.py.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_e5742567">LT0006 (name=ZigZag Conversion, ptag=Leetcode) &nbsp;<a href="../tags/LT0006.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0006</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<br />
+	<ul>
+		<li><a name="HEAD_HIDDEN_3b62e1e0"><a href="https://leetcode.com/problems/zigzag-conversion/" target="_blank">ZigZag Conversion &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0006.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0006</a></li>
+		<br />
+	</ul>
+	<blockquote>
+		<p>
+		The string <font color="red">&quot;PAYPALISHIRING&quot;</font> is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
+		</p>
+		<p>
+		</p>
+	</blockquote>
+	<pre><code>    P   A   H   N
+    A P L S I I G
+    Y   I   R	</code></pre>
+	<blockquote>
+		<p>
+		And then read line by line: <font color="red">&quot;PAHNAPLSIIGYIR&quot;</font>
+		</p>
+		<p>
+		Write the code that will take a string and make this conversion given a number of rows:
+		</p>
+		<p>
+		</p>
+	</blockquote>
+	<pre><code>    string convert(string text, int nRows);	</code></pre>
+	<blockquote>
+		<p>
+		<font color="red">convert(&quot;PAYPALISHIRING&quot;, 3)</font> should return <font color="red">&quot;PAHNAPLSIIGYIR&quot;.</font>
+		</p>
+		<p>
+		</p>
+	</blockquote>
+</ul>
+	<H3><a name="HEAD_ed17a048" href="#TOC_HEAD_ed17a048">LT000601.py</a></H3>
+<pre><code>#!/usr/bin/python
+
+class Solution(object):
+    def convert(self, s, n):
+        """
+        :type s: str
+        :type n: int
+        :rtype: str
+        """
+        if n &lt;= 1:
+            return s
+
+        tmp = []
+
+        for i in range(n):
+            tmp.append('')
+
+        pos, size, m = 0, len(s), int(2*n - 2)
+
+        while pos &lt; size:
+            for i in range(n):
+                if (pos+i) &lt; size:
+                    tmp[i] += s[pos+i]
+                if i != 0 and i != (n-1) and (pos+m-i) &lt; size:
+                    tmp[i] += s[pos+m-i]
+            pos += m
+
+        out = ''
+        for i in range(n):
+            out += tmp[i]
+
+        return out
+
+
+s = "PAYPALISHIRING"
+n = 3
+print "input:", s, n,
+r = Solution().convert(s, n)
+print "; output:", r
+
+# Result
+#
+# 2023-02-09: Runtime 49ms 60.51% Memory 13.7MB 37.66%, https://leetcode.com/problems/zigzag-conversion/submissions/894135244/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: PAYPALISHIRING 3 ; output: PAHNAPLSIIGYIR</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT019001.cpp (Reverse Bits)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT019001.cpp (Reverse Bits)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-28</time>
+            <i><a href="../tags/Bit-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Bit-OJ</a>&nbsp;<a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0190.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0190</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_abdb30ab" href="#TOC_HEAD_abdb30ab">Problem 0190 <strong>Reverse Bits</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/reverse-bits/" target="_blank">https://leetcode.com/problems/reverse&ndash;bits/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_29230ec9" href="#TOC_HEAD_29230ec9">LT019001.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_d7412ec3">LT0190 (name=Reverse Bits, ptag=Leetcode) &nbsp;<a href="../tags/Bit-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Bit-OJ</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0190.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0190</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_8bbb6ff0"><a href="https://leetcode.com/problems/reverse-bits/" target="_blank">Reverse Bits &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0190.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0190</a></li>
+		<br />
+	</ul>
+	<p>
+		Reverse bits of a given 32 bits unsigned integer.
+	</p>
+	<p>
+		For example, given input 43261596 (represented in binary as <strong>00000010100101000001111010011100</strong> ), return 964176192 (represented in binary as <strong>00111001011110000010100101000000</strong>
+		).
+	</p>
+	<p>
+		<strong>Follow up</strong> :
+	</p>
+	<p>
+		If this function is called many times, how would you optimize it?
+	</p>
+	<p>
+		Related problem:
+		<a href="https://leetcode.com/problems/reverse-integer/" target="_blank">Reverse Integer</a>
+	</p>
+</ul>
+	<H3><a name="HEAD_b3a5d696" href="#TOC_HEAD_b3a5d696">LT019001.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    uint32_t reverseBits(uint32_t n) {
+        uint32_t val = 0;
+        for(int i = 0; i &lt; 32;++i, n &gt;&gt;= 1)
+        val =  (val &lt;&lt; 1) | (n&1);
+        return val;
+    }
+};
+
+
+void test(uint32_t n)
+{
+    cout &lt;&lt; "input: " &lt;&lt; n;
+    uint32_t r = Solution().reverseBits(n);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(43261596);
+}
+
+// Result
+//
+// 2022-11-19: Runtime 3ms 60.80% Memory 6.1MB 36.73%, https://leetcode.com/problems/reverse-bits/submissions/846357313/
+// 2023-07-28: Runtime 0ms 100% Memory 5.62MB 82.88%, https://leetcode.cn/problems/reverse-bits/submissions/451110875/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 43261596; output: 964176192;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Setup iBlog server on PI</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Setup iBlog server on PI</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-08-20</time>
+            <i><a href="../tags/RaspberryPi.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>RaspberryPi</a>&nbsp;<a href="../tags/iBlog.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>iBlog</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_90bfa983" href="#TOC_HEAD_90bfa983">Install <strong>http&ndash;server</strong></a></H3><ul><a href="../tags/http-server.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>http-server</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_c7b1ef4">refer <a href="../refers/1d384236368687109b327cee1ab0f7e9.htm" target="_blank">2019&ndash;08&ndash;04 ubuntu上安装http&ndash;server 一夜空中最亮的星一的博客 CSDN.htm</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ddd351ba" href="#TOC_HEAD_ddd351ba">Test http&ndash;server</a></H3>
+<pre><code>$ http-server
+Starting up http-server, serving ./
+
+http-server version: 14.1.1
+
+http-server settings:
+CORS: disabled
+Cache: 3600 seconds
+Connection Timeout: 120 seconds
+Directory Listings: visible
+AutoIndex: visible
+Serve GZIP Files: false
+Serve Brotli Files: false
+Default File Extension: none
+
+Available on:
+http://127.0.0.1:8080
+http://192.168.3.20:8080
+Hit CTRL-C to stop the server</code></pre>
+	<H3><a name="HEAD_e4820071" href="#TOC_HEAD_e4820071">Fix issue &ndash; <code>throw new ERR_HTTP_HEADERS_SENT(&#039;set&#039;);</code></a></H3><ul><a href="../tags/Nodejs.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Nodejs</a>&nbsp;</ul>
+<p>
+	solution &ndash; update nodejs
+</p>
+<pre><code>&gt; curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+&gt; sudo apt-get install -y nodejs
+&gt; node -v
+v14.21.3</code></pre>
+<ul>
+	<li><a name="HEAD_HIDDEN_71d5f08b">refer <a href="../refers/691a811c91cb5cad339e7bb869f671e7.html" target="_blank">2021&ndash;02&ndash;25 Node.js 开发环境安装之 Linux 知乎.html</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_7ca63d5d" href="#TOC_HEAD_7ca63d5d">Clone blog &ndash; <code>git clone git@github.com:to0d/to0d.github.io.git</code></a></H3>
+	<H3><a name="HEAD_558d4e1" href="#TOC_HEAD_558d4e1">Start server</a></H3>
+<pre><code>nohup http-server /home/todd/data/to0d.github.io -p 8087 -c-1 1&gt;iblog.txt 2&gt;&1 &</code></pre>
+<ul>
+	<li><a name="HEAD_HIDDEN_b148bd54">refer <a href="../refers/d141ac0641fff1ae2a2be9c28d3c19ff.html" target="_blank">2020&ndash;07&ndash;08 简单的零配置命令行 http 服务器 http server入门 知乎.html</a></li>
+	<br />
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

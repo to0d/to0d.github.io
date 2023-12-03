@@ -1,0 +1,134 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT074601.cpp (Min Cost Climbing Stairs)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT074601.cpp (Min Cost Climbing Stairs)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-12</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/DP-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DP-OJ</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0746.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0746</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_c0b370ce" href="#TOC_HEAD_c0b370ce">Problem 0746 <strong>Min Cost Climbing Stairs</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/min-cost-climbing-stairs/" target="_blank">https://leetcode.com/problems/min&ndash;cost&ndash;climbing&ndash;stairs/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>71.53</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_17192b7a" href="#TOC_HEAD_17192b7a">LT074601.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_4e7c59a6">LT0746 (name=Min Cost Climbing Stairs, ptag=Leetcode) &nbsp;<a href="../tags/DP-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DP-OJ</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0746.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0746</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_3566f1d0"><a href="https://leetcode.com/problems/min-cost-climbing-stairs/" target="_blank">Min Cost Climbing Stairs &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0746.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0746</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_633ff3c7" href="#TOC_HEAD_633ff3c7">LT074601.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    // f(n) = min(f(n-2),f(n-1))+v(n)
+    int minCostClimbingStairs(vector&lt;int&gt;& cost) {
+        int size = cost.size(), f1 = cost[0], f2 = cost[1];
+        for(int i = 2 ; i &lt; size; ++i)
+        {   int fx = std::min(f1, f2)+cost[i];
+            f1 = f2;
+            f2 = fx;
+        }
+        return std::min(f1, f2);
+    }
+};
+
+
+
+void test(vector&lt;int&gt; cost)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(cost);
+    int r = Solution().minCostClimbingStairs(cost);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test({10,15,20});
+}
+
+
+// Result
+//
+// 2022-12-22: Runtime 7ms 70.99% Memory 13.7MB 83.80%, https://leetcode.com/problems/min-cost-climbing-stairs/submissions/863767907/
+// 2023-03-12: Runtime 5ms 71.53% Memory 13.6MB 83.92%, https://leetcode.com/problems/min-cost-climbing-stairs/submissions/913493842/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [10,15,20]; output: 15;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>GDB Homepage</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>GDB Homepage</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-05-03</time>
+            <i><a href="../tags/gdb.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb</a>&nbsp;<a href="../tags/gdb-doc.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-doc</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+<ul>
+	<li><a name="HEAD_HIDDEN_36d0971f"><a href="https://www.sourceware.org/gdb/" target="_blank">GDB Homepage</a> &nbsp;<a href="../tags/Homepage.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Homepage</a>&nbsp;<a href="../tags/gdb.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ed6b5b51" href="#TOC_HEAD_ed6b5b51">What Languages does GDB Support?</a></H3>
+<ul>
+	<li><a name="GDB-HOME-SUPPORT-LANG-1">GDB supports the following languages </li>
+	<ul>
+		<li>Ada</li>
+		<li>Assembly</li>
+		<li>C</li>
+		<li>C++</li>
+		<li>D</li>
+		<li>Fortran</li>
+		<li>Go</li>
+		<li>Objective&ndash;C</li>
+		<li>OpenCL</li>
+		<li>Modula&ndash;2</li>
+		<li>Pascal</li>
+		<li>Rust</li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_24fef3" href="#TOC_HEAD_24fef3">News</a></H3>
+<ul>
+	<li><a name="GDB-HOME-VERSION-1">May 27th, 2023: GDB 13.2 Released! &nbsp;<a href="../tags/gdb-version.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-version</a></li>
+	<br />
+	<ul>
+		<li>This is a minor corrective release over GDB 13.1, fixing the following issues:</li>
+		<br />
+	</ul>
+	<li>Feb 19th, 2023: GDB 13.1 Released!</li>
+	<br />
+	<ul>
+		<li>Support for the following new targets has been added in both GDB and GDBserver:</li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_e6719084">GNU/Linux/LoongArch (gdbserver) loongarch &ndash; linux &nbsp;<a href="../tags/LoongArch.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LoongArch</a></li>
+			<li>GNU/Linux/CSKY (gdbserver) csky &ndash; linux</li>
+		</ul>
+		<li>The Windows native target now supports target async.</li>
+		<br />
+		<li>FreeBSD:</li>
+		<ul>
+			<li>Arm and AArch64: Support for Thread Local Storage (TLS) variables</li>
+			<li>Hardware watchpoint support on AArch64 FreeBSD</li>
+			<br />
+		</ul>
+		<li>Floating&ndash;point support has now been added on LoongArch GNU/Linux.</li>
+		<br />
+		<li>New commands:</li>
+		<ul>
+			<li>set print nibbles [on|off]</li>
+			<br />
+		</ul>
+		<blockquote>
+			<p>
+			show print nibbles
+			</p>
+			<p>
+			This controls whether the &#039;print/t&#039; command will display binary values in groups of four bits, known as &quot;nibbles&quot;. The default is &#039;off&#039;.
+			</p>
+			<p>
+			</p>
+		</blockquote>
+		<ul>
+			<li>Various styling&ndash;related commands. See the gdb/NEWS file for more details.</li>
+			<li>Various maintenance commands. These are normally aimed at GDB experts or developers. See the gdb/NEWS file for more details.</li>
+			<br />
+		</ul>
+		<li>Python API improvements:</li>
+		<br />
+		<ul>
+			<li>New Python API for instruction disassembly.</li>
+			<br />
+		</ul>
+		<blockquote>
+			<p>
+			The new attribute &#039;locations&#039; of gdb.Breakpoint returns a list of gdb.BreakpointLocation objects specifying the locations where the breakpoint is inserted into the debuggee.
+			</p>
+			<p>
+			</p>
+		</blockquote>
+		<ul>
+			<li>New Python type gdb.BreakpointLocation.</li>
+			<li>New function gdb.format_address(ADDRESS, PROGSPACE, ARCHITECTURE) that formats ADDRESS as &#039;address &#039;</li>
+			<li>New function gdb.current_language that returns the name of the current language. Unlike gdb.parameter(&#039;language&#039;), this will never return &#039;auto&#039;.</li>
+			<li>New function gdb.print_options that returns a dictionary of the prevailing print options, in the form accepted by gdb.Value.format_string.</li>
+			<li>New method gdb.Frame.language that returns the name of the frame&#039;s language.</li>
+			<li>gdb.Value.format_string now uses the format provided by &#039;print&#039;, if it is called during a &#039;print&#039; or other similar operation.</li>
+			<li>gdb.Value.format_string now accepts the &#039;summary&#039; keyword. This can be used to request a shorter representation of a value, the way that &#039;set print frame&ndash;arguments scalars&#039; does.</li>
+			<li>The gdb.register_window_type method now restricts the set of acceptable window names. The first character of a window&#039;s name must start with a character in the set [a&ndash;zA&ndash;Z], every subsequent character of a window&#039;s name must be in the set [&ndash;_.a&ndash;zA&ndash;Z0&ndash;9].</li>
+			<br />
+		</ul>
+		<li>GDB/MI changes:</li>
+		<ul>
+			<li><a name="GDB-HOME-MI-1">MI version 1 is deprecated, and will be removed in GDB 14. &nbsp;<a href="../tags/MI-version.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>MI-version</a>&nbsp;<a href="../tags/MIv1.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>MIv1</a></li>
+			<li>The async record stating the stopped reason &#039;breakpoint&ndash;hit&#039; now contains an optional field locno.</li>
+			<br />
+		</ul>
+		<li>Miscellaneous improvements:</li>
+		<ul>
+			<li>gdb now supports zstd compressed debug sections (ELFCOMPRESS_ZSTD) for ELF.</li>
+			<li>New convenience variable $_inferior_thread_count contains the number of live threads in the current inferior.</li>
+			<li>New convenience variables $_hit_bpnum and $_hit_locno, set to the breakpoint number and the breakpoint location number of the breakpoint last hit.</li>
+			<li>The &quot;info breakpoints&quot; now displays enabled breakpoint locations of disabled breakpoints as in the &quot;y&ndash;&quot; state.</li>
+			<li>The format of &#039;disassemble /r&#039; and &#039;record instruction&ndash;history /r&#039; has changed to match the layout of GNU objdump when disassembling.</li>
+			<br />
+		</ul>
+		<blockquote>
+			<p>
+			A new format &quot;/b&quot; has been introduce to provide the old behavior of &quot;/r&quot;.
+			</p>
+			<p>
+			</p>
+		</blockquote>
+		<ul>
+			<li>The TUI no longer styles the source and assembly code highlighted by the current position indicator by default. You can however re&ndash;enable styling using the new &quot;set style tui&ndash;current&ndash;position&quot; command.</li>
+			<li>It is now possible to use the &quot;document&quot; command to document user&ndash;defined commands.</li>
+			<li>Support for memory tag data for AArch64 MTE.</li>
+			<br />
+		</ul>
+		<li>Support Removal notices:</li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_cf7716c5"><strong>DBX</strong> mode has been removed. &nbsp;<a href="../tags/AIX.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>AIX</a>&nbsp;<a href="../tags/dbx.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>dbx</a></li>
+			<li>Support for building against Python version 2 has been removed. It is now only possible to build GDB against Python 3.</li>
+			<li>Support for the following commands has been removed:</li>
+			<br />
+		</ul>
+		<blockquote>
+			<p>
+			set debug aix&ndash;solib on|off<br/>
+			show debug aix&ndash;solib<br/>
+			set debug solib&ndash;frv on|off<br/>
+			show debug solib&ndash;frv<br/>
+			</p>
+			<p>
+			Use the &quot;set/show debug solib&quot; commands instead.
+			</p>
+			<p>
+			</p>
+		</blockquote>
+	</ul>
+	<li><a name="HEAD_HIDDEN_df7a4fb2">Nov 28, 2006: Reversible Debugging &nbsp;<a href="../tags/gdb-reverse-debug.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-reverse-debug</a></li>
+	<br />
+	<p>
+		The GDB maintainers are looking for contributors interested in reversible debugging .
+	</p>
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

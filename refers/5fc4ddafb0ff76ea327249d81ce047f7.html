@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<meta charSet="utf-8"></meta>
+		<title data-rh="true">利用CMake和MLIR框架设计一个Alone项目&nbsp;知乎</title>
+	</head>
+	<body class="WhiteBg-body PostIndex-body">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Wed Oct 18 21:14:54 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://zhuanlan.zhihu.com/p/557795818" target="_blank">
+				<font color="red" size="3">利用CMake和MLIR框架设计一个Alone项目&nbsp;&ndash;&nbsp;知乎</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="RichText ztext Post-RichText css-117anjg" options="[object Object]">
+			<p data-first-child data-pid="P1yO8e6u">前提是要构建好llvm&ndash;project工程，构建过程按照
+				<a href="https://link.zhihu.com/?target=https%3A//mlir.llvm.org/getting_started/" class=" external" target="_blank" rel="nofollow noreferrer">
+					<span class="invisible">https://</span>
+					<span class="visible">mlir.llvm.org/getting_s</span>
+					<span class="invisible">tarted/</span>
+					<span class="ellipsis"></span>
+				</a>
+				这里的方法操作即可，这里列一下完整过程：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">$ git clone https://github.com/llvm/llvm-project.git
+$ mkdir llvm-project/build
+$ cd llvm-project/build
+$ cmake -G &#34;Unix Makefiles&#34; ../llvm \
+     -DLLVM_ENABLE_PROJECTS=mlir \
+     -DLLVM_BUILD_EXAMPLES=ON \
+     -DLLVM_TARGETS_TO_BUILD=&#34;host&#34; \
+     -DCMAKE_BUILD_TYPE=Release \
+     -DLLVM_ENABLE_ASSERTIONS=ON 
+$ cmake --build . --target check-mlir</code>
+				</pre>
+			</div>
+			<p data-pid="VIOzWAHf">本项目基于官方文档的Ch7将其独立出来，工具是VSCode，文件具体位置在llvm&ndash;project/mlir/examples/toy/Ch7</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/30d77d309fb4d9e96a817a7261aeb4b8.jpg"></img>
+				</div>
+				<img></img>
+				<figcaption>官方给出的Ch7</figcaption>
+			</figure>
+			<p data-pid="Nte1vF8k">首先创建一个Alone项目，然后将llvm&ndash;project/mlir/examples/standalone&nbsp;中写好的的CMakeLists.txt文件复制进来，这里已经帮我们定义好了llvm和mlir支持，记得把subdirectory改成Alone里的文件夹</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/8bbd02f988b8c1da3c4e25b87fcb33c4.jpg"></img>
+				</div>
+				<img></img>
+				<figcaption>CMakeLists.txt</figcaption>
+			</figure>
+			<p data-pid="1saYv4o7">再把Ch7文件夹复制进来改名。将Ch7的CmakeLists.txt文件的add_toy_chapter改成add_llvm_executable，下面是集成的cpp，这里的定义会最终变成Dialect</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/f2ca4ac53486cbb1fb59645750ad3391.jpg"></img>
+				</div>
+				<img></img>
+				<figcaption>Ch7的CmakeLists.txt文件</figcaption>
+			</figure>
+			<p data-pid="ZZGiXGlB">创建build文件夹，由于我的llvm和mlir配置目录不对，在终端运行cmake&nbsp;..&nbsp;&ndash;G&nbsp;Ninja&nbsp;&ndash;DLLVM_DIR=&tilde;/llvm&ndash;project/build/lib/cmake/llvm/&nbsp;&ndash;DMLIR_DIR=&tilde;/llvm&ndash;project/build/lib/cmake/mlir/</p>
+			<p data-pid="P4uEJ5dz">直接指定目录</p>
+			<p data-pid="zcQbV7oU">最后cmake&nbsp;&ndash;&ndash;build&nbsp;.收工。</p>
+		</div>
+	</body>
+</html>

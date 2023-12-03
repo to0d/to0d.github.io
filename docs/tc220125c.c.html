@@ -1,0 +1,87 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC220125C.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC220125C.c</h1>
+            <h3>Test IPv6|todo(1)</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/AF_INET6.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>AF_INET6</a>&nbsp;<a href="../tags/IPv6.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>IPv6</a>&nbsp;<a href="../tags/Socket.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Socket</a>&nbsp;<a href="../tags/TC220125C.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>TC220125C</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">why <strong>bind err: 99</strong> &ndash; 2022/01/25 </a></li>
+</ol>
+</div>
+            <hr/>
+        </div>
+    
+    <ul>
+	<li><a name="HEAD_HIDDEN_82578213">why <strong>bind err: 99</strong> &ndash; 2022/01/25  <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></li>
+	<br />
+</ul>
+	<hr/>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;netinet/in.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+
+void main()
+{
+int fd;
+struct sockaddr_in6 sockaddr;
+
+int fd_got;
+struct sockaddr_in6 sockaddr_got;
+int sockaddr_got_len = sizeof(struct sockaddr_in6);
+
+fd = socket(AF_INET6, SOCK_STREAM, 0);
+if (fd == -1)
+{
+    perror("socket() failed");
+    printf("socket err: %d\n", errno);
+    return;
+}
+
+sockaddr.sin6_family = AF_INET6;
+//sockaddr.sin6_addr = in6addr_any;
+sockaddr.sin6_port = htons(9001);
+memcpy(&sockaddr.sin6_addr, &in6addr_any, sizeof(in6addr_any));
+
+if(bind(fd, (struct sockaddr *) &sockaddr, sizeof(struct sockaddr_in6)) &lt; 0)
+{
+    printf("bind err: %d\n", errno);
+    perror("socket() failed");
+    return;
+}
+
+if (listen(fd, 50) == -1)
+{
+    printf("listen err: %d\n", errno);
+    return;
+}
+
+fd_got = accept(fd, (struct sockaddr *) &sockaddr_got, &sockaddr_got_len);
+if (fd_got == -1)
+{
+    return;
+}
+printf("socket: accepted, fd=%d\n", fd_got);
+
+close(fd_got);
+close(fd);
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

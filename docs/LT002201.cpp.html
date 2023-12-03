@@ -1,0 +1,163 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT002201.cpp (Generate Parentheses)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT002201.cpp (Generate Parentheses)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-09-23</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0022.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0022</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_4030066e" href="#TOC_HEAD_4030066e">Problem 0022 <strong>Generate Parentheses</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/generate-parentheses/" target="_blank">https://leetcode.com/problems/generate&ndash;parentheses/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_2e8de831" href="#TOC_HEAD_2e8de831">LT002201.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_d330b446">LT0022 (name=Generate Parentheses, ptag=Leetcode) &nbsp;<a href="../tags/LT0022.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0022</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_6840430a"><a href="https://leetcode.com/problems/generate-parentheses/" target="_blank">Generate Parentheses &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0022.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0022</a></li>
+		<br />
+	</ul>
+	<p>
+		Given n pairs of parentheses, write a function to generate all combinations of well&ndash;formed parentheses.
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input: n = 3
+Output: ["((()))","(()())","(())()","()(())","()()()"]	</code></pre>
+	<p>
+		Example 2:
+	</p>
+	<pre><code>Input: n = 1
+Output: ["()"]	</code></pre>
+	<p>
+		Constraints:
+	</p>
+	<pre><code>1 &lt;= n &lt;= 8	</code></pre>
+</ul>
+	<H3><a name="HEAD_b205a3fe" href="#TOC_HEAD_b205a3fe">LT002201.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    vector&lt;string&gt; generateParenthesis(int n) {
+        static char buf[16];
+        vector&lt;string&gt; rst;
+        _generateParenthesis(rst, buf, 0, n, n);
+        return rst;
+    }
+
+    void _generateParenthesis(vector&lt;string&gt;& rst, char* buf, int len, int left, int right) {
+        if( left == 0 && right == 0 ){
+            rst.push_back(string(buf, len));
+            return;
+        }
+        if( left &gt; 0 ){
+            buf[len] = '(';
+            _generateParenthesis(rst, buf, len+1, left-1, right);
+        }
+        if( left &lt; right ){
+            buf[len] = ')';
+            _generateParenthesis(rst, buf, len+1, left, right-1);
+        }
+    }
+};
+
+
+void test(int n)
+{
+    cout &lt;&lt; "input: " &lt;&lt; n;
+    vector&lt;string&gt; r = Solution().generateParenthesis(n);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(3);
+}
+
+// Result
+//
+// 2022-11-05: Runtime 4ms 66.14% Memory 11.4MB 87.16%, https://leetcode.com/problems/generate-parentheses/submissions/837410154/
+// 2023-02-16: Runtime 0ms 100% Memory 11.6MB 78.22%, https://leetcode.com/problems/generate-parentheses/submissions/899167716/
+// 2023-09-23: Runtime 0ms 100% Memory 11.12MB 56.60%, https://leetcode.cn/problems/generate-parentheses/submissions/468974184/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 3; output: [((())),(()()),(())(),()(()),()()()]</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

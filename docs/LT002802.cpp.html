@@ -1,0 +1,164 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT002802.cpp (Implement strStr)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT002802.cpp (Implement strStr)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-25</time>
+            <i><a href="../tags/C-strstr.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>C-strstr</a>&nbsp;<a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/KMP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>KMP</a>&nbsp;<a href="../tags/LT0028.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0028</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Substring-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Substring-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_f4485876" href="#TOC_HEAD_f4485876">Problem 0028 <strong>Implement strStr</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/implement-strstr/" target="_blank">https://leetcode.com/problems/implement&ndash;strstr/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_ef791f05" href="#TOC_HEAD_ef791f05">LT002802.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+int* makeNext(const char* p){
+    int len = strlen(p);
+    int *next = new int[len];
+    memset(next, 0, sizeof(int)*len);
+    next[0] = -1;
+
+    int k = -1, j = 0;
+    while( j &lt; (len-1) )
+    {   if( k == -1 || p[j] == p[k] )
+            next[++j] = ++k;
+        else
+            k = next[k];
+    }
+
+    return next;
+}
+
+//KMP algorithm
+int strStr_kmp(const char* s, const char* t) {
+    int len_t = strlen(t);
+    if(len_t == 0)
+        return 0;
+
+    int len_s = strlen(s);
+    if(len_s == 0)
+        return -1;
+
+    int *next = makeNext(t);
+    int i = 0, j = 0;
+
+    while( i &lt; len_s && j != len_t)
+    {   if( j == -1 || s[i] == t[j] )
+        {   ++i;
+            ++j;
+        }
+        else
+            j = next[j];
+    }
+
+    delete[] next;
+    return j == len_t ? i - len_t : -1;
+}
+
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        return strStr_kmp(haystack.c_str(), needle.c_str());
+    }
+};
+
+
+void test(string haystack, string needle)
+{
+    cout &lt;&lt; "input: haystack=" &lt;&lt; haystack &lt;&lt; ", needle=" &lt;&lt; needle;
+    int r = Solution().strStr(haystack, needle);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test("sadbutsad", "sad");
+}
+
+
+// Result
+//
+// 2022-11-15: Runtime 0ms 100% Memory 5.8MB 21.47%, https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/submissions/843943471/
+// 2023-02-16: Runtime 0ms 100% Memory 5.6MB 68.91%, https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/submissions/899195330/
+// 2023-07-25: Runtime 0ms 100% Memory 5.93MB 74.93%, https://leetcode.cn/problems/find-the-index-of-the-first-occurrence-in-a-string/submissions/450038504/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: haystack=sadbutsad, needle=sad; output: 0</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

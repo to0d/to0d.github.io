@@ -1,0 +1,129 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Install Git on Linux</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Install Git on Linux</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time></time>
+            <i><a href="../tags/Git.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Git</a>&nbsp;<a href="../tags/Install.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Install</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+<ol>
+	<li>yum install git</li>
+	<br />
+	<pre><code>git --version    #1.7.1-3.el6_4.1	
+git config --global usr.name "liuyan"
+git config --global usr.email "liuyan3000@hotmail.com"	</code></pre>
+	<li>在LINUX上创建GIT服务器</li>
+	<br />
+	<ul>
+		<li>生成 SSH 公钥:</li>
+		<br />
+		<pre><code>ssh-keygen -t rsa ==&gt; id_dsa.pub		</code></pre>
+		<li>adduser git</li>
+		<br />
+		<pre><code>passwd git
+su git
+cd ~
+mkdir .ssh		</code></pre>
+		<li>把开发者的 SSH 公钥添加到这个用户的 authorized_keys 文件中, 免密码</li>
+		<br />
+		<pre><code>cat ~/.ssh/id_rsa.pub &gt;&gt; ~git/.ssh/authorized_keys
+chown -R git /git/work
+
+vi /etc/ssh/sshd_config
+RSAAuthentication yes            #开启RSA认证功能
+PubkeyAuthentication yes      #开启公匙认证
+StrictModes no
+
+service sshd restart
+
+su git
+cd /git
+mkdir work.git
+cd work.git
+git --bare init		</code></pre>
+	</ul>
+	<li>禁用shell登录</li>
+	<br />
+	<pre><code>vi /etc/passwd ==&gt; git-shell
+git:x:1001:1001:,,,:/home/git:/usr/bin/git-shell	</code></pre>
+	<li>add windows ssh&ndash;key to server</li>
+	<br />
+	<pre><code>&gt; Git-bash
+&gt; ssh-keygen -t rsa -C "liuyan3000@hotmail"	</code></pre>
+	<li>git url format</li>
+	<br />
+	<pre><code>git@9.123.135.91:/git/work.git	</code></pre>
+</ol>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

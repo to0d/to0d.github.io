@@ -1,0 +1,207 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT033201.cpp (Reconstruct Itinerary)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT033201.cpp (Reconstruct Itinerary)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-17</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0332.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0332</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_49b529b2" href="#TOC_HEAD_49b529b2">Problem 0332 <strong>Reconstruct Itinerary</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/reconstruct-itinerary/" target="_blank">https://leetcode.com/problems/reconstruct&ndash;itinerary/</a></li>
+	<li>Difficulty <strong>Hard</strong></li>
+	<li><strong>26.96</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_1c8a113" href="#TOC_HEAD_1c8a113">LT033201.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_4def3964">LT0332 (name=Reconstruct Itinerary, ptag=Leetcode) &nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0332.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0332</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_76d051f8"><a href="https://leetcode.com/problems/reconstruct-itinerary/" target="_blank">Reconstruct Itinerary &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0332.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0332</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_d6b41de0" href="#TOC_HEAD_d6b41de0">LT033201.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+
+    vector&lt;string&gt; findItinerary(vector&lt;vector&lt;string&gt;&gt;& tickets) {
+
+        airports.clear();
+        airportNextPorts.clear();
+        airportTicketIndexs.clear();
+        airportIndexMap.clear();
+
+        {
+            unordered_set&lt;string&gt; airportNames;
+            for(auto pt : tickets )
+            {   airportNames.insert(pt[0]);
+                airportNames.insert(pt[1]);
+            }
+
+            for(auto n : airportNames)
+                airports.push_back(n);
+
+            std::sort(airports.begin(), airports.end());
+
+            int index = 0;
+            for( auto& n : airports)
+                airportIndexMap[n] = index++;
+        }
+
+        airportNextPorts.resize(airports.size());
+        airportTicketIndexs.resize(airports.size());
+
+        for(auto& pt : tickets)
+            airportNextPorts[airportIndexMap[pt[0]]].push_back(airportIndexMap[pt[1]]);
+
+        ticketCount = 0;
+        int portIndex = 0;
+        for(auto& nextPorts : airportNextPorts)
+        {
+            auto& ticketIndexs = airportTicketIndexs[portIndex++];
+            sort(nextPorts.begin(), nextPorts.end());
+            for( int i = nextPorts.size(); i &gt; 0; --i)
+                ticketIndexs.push_back( ticketCount++ );
+        }
+
+        unordered_set&lt;int&gt; usedTickets;
+        vector&lt;int&gt; visitedAirport;
+
+        findItinerary(airportIndexMap["JFK"], visitedAirport, usedTickets);
+
+        vector&lt;string&gt; res;
+        for( int index : visitedAirport)
+            res.push_back( airports[index] );
+
+        return res;
+    }
+
+    bool findItinerary(int fromAirport, vector&lt;int&gt;& visitedAirport, unordered_set&lt;int&gt;& usedTickets){
+        visitedAirport.push_back(fromAirport);
+
+        if( usedTickets.size() == ticketCount )
+            return true;
+
+        auto& nextPorts = airportNextPorts[fromAirport];
+        auto& ticketIndexs = airportTicketIndexs[fromAirport];
+        int nextCount = nextPorts.size();
+
+        for( int i = 0; i &lt; nextCount ; ++i )
+        {   int nextTicketIndex = ticketIndexs[i], nextPort = nextPorts[i];
+            if( usedTickets.count(nextTicketIndex) == 0 )
+            {   usedTickets.insert(nextTicketIndex);
+                if( findItinerary (nextPort, visitedAirport, usedTickets))
+                    return true;
+                usedTickets.erase(nextTicketIndex);
+            }
+        }
+
+        visitedAirport.pop_back();
+        return false;
+    }
+
+    vector&lt;string&gt; airports;
+    vector&lt;vector&lt;int&gt;&gt; airportNextPorts;
+    vector&lt;vector&lt;int&gt;&gt; airportTicketIndexs;
+    unordered_map&lt;string,int&gt; airportIndexMap;
+    int ticketCount;
+};
+
+
+void test(vector&lt;vector&lt;string&gt;&gt; tickets)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(tickets);
+    vector&lt;string&gt; r = Solution().findItinerary(tickets);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test({{"MUC","LHR"},{"JFK","MUC"},{"SFO","SJC"},{"LHR","SFO"}});
+}
+
+
+// Result
+//
+// 2022-12-05: Runtime 65ms 13.57% Memory 16MB 19.49%, https://leetcode.com/problems/reconstruct-itinerary/submissions/855079403/
+// 2023-02-17: Runtime 39ms 26.96% Memory 16MB 17.59%, https://leetcode.com/problems/reconstruct-itinerary/submissions/899794302/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [[MUC,LHR],[JFK,MUC],[SFO,SJC],[LHR,SFO]]; output: [JFK,MUC,LHR,SFO,SJC];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

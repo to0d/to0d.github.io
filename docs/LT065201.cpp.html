@@ -1,0 +1,208 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT065201.cpp (Find Duplicate Subtrees)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT065201.cpp (Find Duplicate Subtrees)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-25</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0652.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0652</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_e9a07d75" href="#TOC_HEAD_e9a07d75">Problem 0652 <strong>Find Duplicate Subtrees</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/find-duplicate-subtrees/" target="_blank">https://leetcode.com/problems/find&ndash;duplicate&ndash;subtrees/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>20.84</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_dcb4ff54" href="#TOC_HEAD_dcb4ff54">LT065201.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_356ca027">LT0652 (name=Find Duplicate Subtrees, ptag=Leetcode) &nbsp;<a href="../tags/LT0652.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0652</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_a635c66d"><a href="https://leetcode.com/problems/find-duplicate-subtrees/" target="_blank">Find Duplicate Subtrees &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0652.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0652</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_6343c4a1" href="#TOC_HEAD_6343c4a1">LT065201.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+struct TNode
+{   TreeNode* node;
+    int deep;
+};
+
+bool compare_tnode(const TNode& a, const TNode& b)
+{   return a.node-&gt;val &lt; b.node-&gt;val;
+}
+
+class Solution {
+public:
+    vector&lt;TreeNode*&gt; findDuplicateSubtrees(TreeNode* root) {
+        vector&lt;TreeNode*&gt; rst;
+        vector&lt;TNode&gt; nodes;
+        _find(root, nodes);
+        std::sort(nodes.begin(), nodes.end(), compare_tnode);
+
+        int size = nodes.size();
+        unordered_set&lt;TreeNode*&gt; used;
+        for(int i = 0;i &lt; size-1; ++i)
+        {   TNode& a = nodes[i];
+            if( used.count(a.node) != 0 )
+                continue;
+
+            int find = 0;
+            for(int j = i+1; j &lt; size; ++j)
+            {   TNode& b = nodes[j];
+                if( b.node-&gt;val != a.node-&gt;val)
+                    break;
+                if( used.count(b.node) != 0 || b.deep != a.deep)
+                    continue;
+                if( _isEqual(a.node, b.node) )
+                {   find++;
+                    used.insert(b.node);
+                }
+            }
+
+            if( find &gt; 0 )
+            {   rst.push_back(a.node);
+                used.insert(a.node);
+            }
+        }
+
+        return rst;
+    }
+
+    bool _isEqual(TreeNode* a, TreeNode* b){
+        if( a == NULL )
+            return b == NULL;
+        if( b == NULL )
+            return false;
+        if( a-&gt;val != b-&gt;val )
+            return false;
+        return _isEqual(a-&gt;left, b-&gt;left) && _isEqual(a-&gt;right, b-&gt;right);
+    }
+
+    int _find(TreeNode* node, vector&lt;TNode&gt;& nodes) {
+        if( node-&gt;left == NULL && node-&gt;right == NULL)
+        {   TNode tn;
+            tn.node = node;
+            tn.deep = 1;
+            nodes.push_back(tn);
+            return 1;
+        }
+
+        int leftDeep = 0, rightDeep = 0;
+        if( node-&gt;left != NULL )
+            leftDeep = _find(node-&gt;left, nodes);
+        if( node-&gt;right != NULL )
+            rightDeep = _find(node-&gt;right, nodes);
+
+        int deep = std::max(leftDeep, rightDeep) + 1;
+        TNode tn;
+        tn.node = node;
+        tn.deep = deep;
+        nodes.push_back(tn);
+        return deep;
+    }
+};
+
+
+
+void test(TreeNode* root)
+{
+    cout &lt;&lt; "input: ";
+    outputTree(root);
+    vector&lt;TreeNode*&gt; r = Solution().findDuplicateSubtrees(root);
+    cout &lt;&lt; "; output: [";
+    int i = 0;
+    for( TreeNode* n : r )
+    {	if( i != 0)
+            std::cout &lt;&lt; ", ";
+        outputTree(n);
+    }
+    cout &lt;&lt; "];" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(makeTree("{1,2,3,4,null,2,4,null,null,4}"));
+}
+
+// Result
+//
+// 2023-01-08: Runtime 54ms 19.14% Memory 21.7MB 99.64%, https://leetcode.com/problems/find-duplicate-subtrees/submissions/874118100/
+// 2023-02-25: Runtime 50ms 20.84% Memory 21.6MB 99.66%, https://leetcode.com/problems/find-duplicate-subtrees/submissions/904434723/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [1,2,3,4,null,2,4,null,null,4]; output: [[2,4][4]];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161102C.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161102C.cpp</h1>
+            <h3>test c++ scope</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> </li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;stdio.h&gt;
+using namespace std;
+
+extern int ext_x2;
+extern int ext_fun3();
+
+//����
+//�ֲ�����  ==&gt; ջ
+//static    ==&gt; ��̬������
+//register  ==&gt;CPU
+//extern    ȫ�ַ���
+
+int main(void)
+{
+    register int b = 0;
+
+    printf("%-30s: %-10s= %d\n","register int b = 0", "++b", ++b);
+    printf("%-30s: %-10s= %d\n","extern int ext_x2", "++ext_x2", ++ext_x2);
+    printf("%-30s: %-10s= %d\n","extern int ext_fun3()", "ext_fun3()", ext_fun3());
+
+    std::cout &lt;&lt; "output: done!" &lt;&lt; endl;
+
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

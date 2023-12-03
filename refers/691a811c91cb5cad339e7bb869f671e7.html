@@ -1,0 +1,307 @@
+<html>
+	<head>
+		<meta charSet="utf-8"></meta>
+		<title data-rh="true">Node.js&nbsp;开发环境安装之&nbsp;Linux&nbsp;知乎</title>
+	</head>
+	<body class="WhiteBg-body PostIndex-body">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Sun Aug 20 10:47:31 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://zhuanlan.zhihu.com/p/144885938" target="_blank">
+				<font color="red" size="3">Node.js&nbsp;开发环境安装之&nbsp;Linux&nbsp;&ndash;&nbsp;知乎</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="RichText ztext Post-RichText css-1g0fqss" options="[object Object]">
+			<p data-first-child data-pid="6ttjLvnU">非常详细的介绍,&nbsp;请戳下面的视频</p>
+			<a target="_blank" href="https://link.zhihu.com/?target=https%3A//www.bilibili.com/video/BV1yp4y197o7" data-draft-node="block" data-draft-type="link-card" data-image="https://pic3.zhimg.com/v2-622b0f9abdda1edb61c224c3abbd0c52_180x120.jpg" data-image-width="1728" data-image-height="1080" data-text="Node.js 开发环境安装之 Linux_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili" class="LinkCard new">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<p data-pid="eEiLXP2Y">更好的阅读体验,&nbsp;来自语雀</p>
+			<a target="_blank" href="https://link.zhihu.com/?target=https%3A//www.yuque.com/yulinyige/node-north/linux" data-draft-node="block" data-draft-type="link-card" data-image="https://pic3.zhimg.com/v2-435e8e124fdafc15a0ef4c79dc84c72e_180x120.jpg" data-image-width="1052" data-image-height="664" data-text="Node.js 开发环境安装之 Linux · 语雀" class="LinkCard new">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<p data-pid="hhDgrLVP">Linux&nbsp;下安装&nbsp;Node.js,&nbsp;相对于windows和&nbsp;mac，有了更多的选择，可以使用</p>
+			<ol>
+				<li data-pid="m3nLEqpX">apt&nbsp;等包管理工具</li>
+				<li data-pid="xqOLCOyI">下载官方编译好的安装包</li>
+				<li data-pid="fSLJrMi2">nvm&nbsp;管理工具</li>
+				<li data-pid="ZBVMQrWI">下载源码编译安装</li>
+			</ol>
+			<p data-pid="yHMtnlKj">接下来将逐一介绍.</p>
+			<blockquote data-pid="WLm01wTs">Linux&nbsp;系统选用&nbsp;ubuntu&nbsp;最新的桌面版&nbsp;&ndash;&nbsp;20.04，其他的Linux发行版本也是大同小异的。</blockquote>
+			<h2>APT</h2>
+			<p data-pid="WzB7sXPm">这是&nbsp;Ubuntu&nbsp;自带的包管理工具,&nbsp;和&nbsp;homebrew&nbsp;类似,&nbsp;从安装源下载并安装.&nbsp;但是安装的版本由本地系统的安装源决定的,&nbsp;所以,&nbsp;为了安装我们想要的版本,&nbsp;先更新安装源.
+				<br>Step&nbsp;1:&nbsp;打开&nbsp;github&nbsp;上的
+
+				<a href="https://link.zhihu.com/?target=https%3A//github.com/nodesource/distributions" class=" wrap external" target="_blank" rel="nofollow noreferrer">nodesource</a>
+				项目,&nbsp;它维护&nbsp;node.js&nbsp;的安装源,&nbsp;通过它,&nbsp;可以指定安装的版本.
+			</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/1d2be8e9508e34d96813fed87cdd77f6.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p data-pid="W6kRPAxl">
+				<br>ctrl+alt+T&nbsp;打开一个终端,&nbsp;输入命令更新源:
+
+			</p>
+			<div class="highlight">
+				<pre><code class="language-bash">curl -sL https://deb.nodesource.com/setup_14.x <span class="p">|</span> sudo -E bash -</code></pre>
+			</div>
+			<p data-pid="PjIX_Aqh">其中,&nbsp;setup_14.x&nbsp;代表版本,&nbsp;可以根据需要选择自己想要的版本.
+				<br>Step&nbsp;2:&nbsp;执行安装
+
+			</p>
+			<div class="highlight">
+				<pre><code class="language-bash">sudo apt-get install -y nodejs</code></pre>
+			</div>
+			<p data-pid="-c2P4CdL">Step&nbsp;3:&nbsp;验证</p>
+			<div class="highlight">
+				<pre><code class="language-bash">node -v</code></pre>
+			</div>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/4261238c829464b870e9f3ad5ea1a563.png"></img>
+				</div>
+				<img></img>
+			</figure>
+			<h2>官方安装包</h2>
+			<blockquote data-pid="zvVlfjo9">这种方法坑比较多的,&nbsp;网上很多方法都是使用建立软链接的方式关联,&nbsp;其实这是存在问题的.&nbsp;原因请观看视频.</blockquote>
+			<p data-pid="Lw-o_8FC">
+				<br>Step&nbsp;1:&nbsp;先从
+
+				<a href="https://link.zhihu.com/?target=https%3A//nodejs.org/en/download/current/" class=" wrap external" target="_blank" rel="nofollow noreferrer">官方网站</a>
+				下载安装包
+				<br>
+
+			</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/1fbc1e167866aff451a622421c589434.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p data-pid="qwOdj3Bv">
+				<br>Step&nbsp;2:&nbsp;打开终端,&nbsp;使用命令解压
+
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-bash"><span class="nb">cd</span> /home/yulinyige      // 其中 yulinyige 请替换成您的用户名
+mkdir node                // 先创建一个目录
+tar -vxf /home/yulinyige/Downloads/node-v14.1.0-linux-x64.tar.xz -C /home/yulinyige/node        // 前面是刚才下载的文件路径, -C 后是目标路径</code>
+				</pre>
+			</div>
+			<p data-pid="yQDuxthw">Step&nbsp;3:&nbsp;导出环境变量,&nbsp;通过在&nbsp;.bashrc&nbsp;文件加入&nbsp;node&nbsp;的&nbsp;bin&nbsp;目录.&nbsp;.bashrc&nbsp;文件一般在用户目录下,&nbsp;使用&nbsp;vim&nbsp;打开编辑</p>
+			<div class="highlight">
+				<pre><code class="language-bash">sudo vim /home/yulinyige/.bashrc    // 用 vim 打开 .bashrc 文件</code></pre>
+			</div>
+			<p data-pid="vemzbUTD">按下&nbsp;i&nbsp;键进入编辑模式,&nbsp;移动光标到文件的最底部,&nbsp;输入:</p>
+			<div class="highlight">
+				<pre>
+<code class="language-bash"><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/home/yulinyige/node/node-v14.1.0-linux-x64/bin</code>
+				</pre>
+			</div>
+			<p data-pid="F1uOdNUN">按&nbsp;esc&nbsp;键退出编辑模式,&nbsp;直接输入&nbsp;:wq&nbsp;进行保存
+				<br>
+
+			</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/78a6ac83828d9a1882223e6f000c38ba.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p data-pid="-5zplHvp">
+				<br>Step&nbsp;4:&nbsp;刷新&nbsp;.bashrc&nbsp;文件
+
+			</p>
+			<div class="highlight">
+				<pre><code class="language-bash"><span class="nb">source</span> /home/yulinyige/.bashrc</code></pre>
+			</div>
+			<p data-pid="VJmpHHOn">此时,&nbsp;再输入&nbsp;node&nbsp;&ndash;v&nbsp;理论上和第一步的输出是一样的.</p>
+			<h2>nvm</h2>
+			<p data-pid="WCYRAr-X">在实际开发的过程中,&nbsp;经常碰到的问题是,&nbsp;要使用不同的&nbsp;node&nbsp;版本开发测试.&nbsp;当要切换版本时,&nbsp;不可能先把原来的删掉,&nbsp;再安装另一个版本.&nbsp;所以,&nbsp;nvm&nbsp;应运而生.
+				<br>nvm&nbsp;即&nbsp;Node&nbsp;版本管理工具&nbsp;(&nbsp;Node&nbsp;Versoin&nbsp;Manager&nbsp;),&nbsp;它可以帮助下载安装&nbsp;Node,&nbsp;切换&nbsp;Node&nbsp;版本,&nbsp;非常方便.
+
+				<br>
+
+			</p>
+			<blockquote data-pid="f6tRBjCH">项目托管在&nbsp;github&nbsp;上,&nbsp;安装和使用方法官方文档写得非常详细.
+				<a href="https://link.zhihu.com/?target=https%3A//github.com/nvm-sh/nvm" class=" external" target="_blank" rel="nofollow noreferrer">
+					<span class="invisible">https://</span>
+					<span class="visible">github.com/nvm&ndash;sh/nvm</span>
+					<span class="invisible"></span>
+				</a>
+				它其实是一个&nbsp;Shell&nbsp;脚本.&nbsp;支持&nbsp;Linux&nbsp;和&nbsp;mac&nbsp;系统.
+				<br>
+
+			</blockquote>
+			<p data-pid="h3Z5lQrp">
+				<br>Step&nbsp;1:&nbsp;安装&nbsp;nvm
+
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-bash">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh <span class="p">|</span> bash</code>
+				</pre>
+			</div>
+			<blockquote data-pid="oRo246i1">执行这条命令可能会出现错误,&nbsp;因为这个脚本的地址不能直接访问,&nbsp;所以我下载了一个,&nbsp;可以使用下面的命令代替:&nbsp;curl&nbsp;&ndash;o&ndash;
+				<a href="https://link.zhihu.com/?target=http%3A//gardencdn.plantisan.com/install.sh" class=" external" target="_blank" rel="nofollow noreferrer">
+					<span class="invisible">http://</span>
+					<span class="visible">gardencdn.plantisan.com</span>
+					<span class="invisible">/install.sh</span>
+					<span class="ellipsis"></span>
+				</a>
+				|&nbsp;bash
+				<br>
+
+			</blockquote>
+			<p data-pid="7J6ilL9w">Step&nbsp;2:&nbsp;验证.&nbsp;如果输出了版本号,&nbsp;说明已经安装好了.</p>
+			<div class="highlight">
+				<pre><code class="language-bash">nvm --version</code></pre>
+			</div>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/97191c4cf4cf57cf0eb2c6ed545ffbc8.png"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p data-pid="Z2Q5_BjY">
+				<br>Step&nbsp;3:&nbsp;使用方法
+
+				<br>列出本地安装的&nbsp;Node.js&nbsp;版本
+
+			</p>
+			<div class="highlight">
+				<pre><code class="language-bash">nvm ls</code></pre>
+			</div>
+			<p data-pid="dChP5QBc">列出远程服务器上可下载安装的版本</p>
+			<div class="highlight">
+				<pre><code class="language-bash">nvm ls-remote
+或
+nvm ls-remote <span class="p">|</span> grep LTS      // 筛选 LTS</code></pre>
+			</div>
+			<p data-pid="DqSrr0xy">安装&nbsp;Node.js</p>
+			<div class="highlight">
+				<pre><code class="language-bash">nvm install v12.16.3                // v12.16.3 是版本号</code></pre>
+			</div>
+			<p data-pid="DmOFZ3RQ">切换本地&nbsp;Node.js&nbsp;版本</p>
+			<div class="highlight">
+				<pre><code class="language-bash">nvm use v12.16.3     // 版本号可替换</code></pre>
+			</div>
+			<blockquote data-pid="ywDGCG0a">nvm&nbsp;的安装原理,&nbsp;可观看视频了解.
+				<br>
+
+			</blockquote>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<h2>源码编译安装</h2>
+			<p data-pid="zvhCZFfo">Node.js&nbsp;源码编译安装的方式看起来简单,&nbsp;其实它背后的过程最复杂,&nbsp;出现问题也是最难解决的.
+				<br>因为&nbsp;Node.js&nbsp;源码是典型&nbsp;C/C++&nbsp;代码,&nbsp;并且使用&nbsp;make&nbsp;构建,&nbsp;所以按照三步曲&nbsp;(&nbsp;configure&nbsp;/&nbsp;make&nbsp;/&nbsp;make&nbsp;install&nbsp;)&nbsp;走一遍就可以.&nbsp;但是编译前需要安装依赖工具.
+
+				<br>Step&nbsp;1:&nbsp;下载源码
+
+				<a href="https://link.zhihu.com/?target=https%3A//nodejs.org/en/download/" class=" external" target="_blank" rel="nofollow noreferrer">
+					<span class="invisible">https://</span>
+					<span class="visible">nodejs.org/en/download/</span>
+					<span class="invisible"></span>
+				</a>
+				<br>
+
+			</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/c06f78393d9e5d04850b8b9fb510c500.jpg"></img>
+				</div>
+				<img></img>
+			</figure>
+			<p data-pid="uFRVgUid">
+				<br>Step&nbsp;2:&nbsp;解压
+
+			</p>
+			<div class="highlight">
+				<pre><code class="language-bash">tar -vxf node-v14.1.0.tar.gz -C /home/yulinyige/node</code></pre>
+			</div>
+			<p data-pid="efbqwV5n">Step&nbsp;3:&nbsp;安装依赖工具</p>
+			<div class="highlight">
+				<pre>
+<code class="language-bash">sudo apt-get install g++ curl libssl-dev apache2-utils git-core build-essential python3-distutils</code>
+				</pre>
+			</div>
+			<p data-pid="pZkVG-EH">Step&nbsp;4:&nbsp;configure</p>
+			<div class="highlight">
+				<pre>
+<code class="language-bash"><span class="nb">cd</span> /home/yulinyige/node/node-v14.1.0    // 先切换到解压后的目录
+./configure                               // 执行 configure</code>
+				</pre>
+			</div>
+			<p data-pid="Lk93lBBu">Step&nbsp;5:&nbsp;make</p>
+			<div class="highlight">
+				<pre><code class="language-bash">make</code></pre>
+			</div>
+			<blockquote data-pid="LFZQyFov">make&nbsp;过程是相当漫长的,&nbsp;只要不出现错误,&nbsp;请耐心等待.
+				<br>
+
+			</blockquote>
+			<p data-pid="l3PUB2rU">Step&nbsp;6:&nbsp;make&nbsp;install</p>
+			<div class="highlight">
+				<pre><code class="language-bash">make install</code></pre>
+			</div>
+			<p data-pid="7QKpbGu3">全部执行完毕后,&nbsp;再输入&nbsp;node&nbsp;&ndash;v&nbsp;进行验证即可.</p>
+			<h2>总结</h2>
+			<p data-pid="VGP8j7iP">这么多方法,&nbsp;应该用哪一种呢?
+				<br>开发环境&nbsp;&ndash;&gt;&nbsp;nvm
+
+				<br>生产环境&nbsp;&ndash;&gt;&nbsp;官方安装包
+
+				<br>学习&nbsp;Node.js&nbsp;源码&nbsp;&ndash;&gt;&nbsp;源码编译
+
+			</p>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<p data-pid="xGve6XVi">非常详细的介绍,&nbsp;请戳下面的视频</p>
+			<a target="_blank" href="https://link.zhihu.com/?target=https%3A//www.bilibili.com/video/BV1yp4y197o7" data-draft-node="block" data-draft-type="link-card" data-image="https://pic3.zhimg.com/v2-622b0f9abdda1edb61c224c3abbd0c52_180x120.jpg" data-image-width="1728" data-image-height="1080" data-text="Node.js 开发环境安装之 Linux_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili" class="LinkCard new">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<p data-pid="CXPaHeap">更好的阅读体验,&nbsp;来自语雀</p>
+			<a target="_blank" href="https://link.zhihu.com/?target=https%3A//www.yuque.com/yulinyige/node-north/linux" data-draft-node="block" data-draft-type="link-card" data-image="https://pic3.zhimg.com/v2-435e8e124fdafc15a0ef4c79dc84c72e_180x120.jpg" data-image-width="1052" data-image-height="664" data-text="Node.js 开发环境安装之 Linux · 语雀" class="LinkCard new">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<p></p>
+		</div>
+	</body>
+</html>

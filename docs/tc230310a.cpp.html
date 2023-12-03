@@ -1,0 +1,60 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC230310A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC230310A.cpp</h1>
+            <h3>C11 override</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Cxxv11.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxxv11</a>&nbsp;<a href="../tags/Cxxv11-override.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxxv11-override</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+using namespace std;
+
+struct Base {
+virtual int doSomething() const {
+    return 0;
+}
+};
+
+struct Derivied1 : Base {
+virtual int doSomething() {
+return 1;
+}
+};
+
+struct Derivied2 : Base {
+//virtual int doSomething() override { // compiler error ==&gt; marked ‘override’, but does not override
+virtual int doSomething() const override {
+    return 2;
+}
+};
+
+int func(Base& base) {
+    return base.doSomething();
+}
+
+int main(void)
+{
+    Derivied1 d1;
+    Derivied2 d2;
+    std::cout &lt;&lt; "output: d1=" &lt;&lt; func(d1) &lt;&lt; ", d2=" &lt;&lt; func(d2) &lt;&lt; endl;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

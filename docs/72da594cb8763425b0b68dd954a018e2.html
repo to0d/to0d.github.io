@@ -1,0 +1,125 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>ptrace.c</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">ptrace.c</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-06-05</time>
+            <i><a href="../tags/ptrace.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ptrace</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H2><a name="HANDLE_PTRACE_REQUEST_1" href="#TOC_HANDLE_PTRACE_REQUEST_1">1. handle ptrace requests in <strong>ptrace</strong> systm call</a></H2><ul></ul>
+<pre><code>SYSCALL_DEFINE4(ptrace, long, request, long, pid, unsigned long, addr,
+        unsigned long, data)
+{</code></pre>
+<ul>
+	<li><a name="HEAD_HIDDEN_e69328cb"><code>if (request == PTRACE_TRACEME)</code> &ndash; <code>ptrace_traceme()</code> &nbsp;<a href="../tags/PTRACE_TRACEME.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PTRACE_TRACEME</a></li>
+	<br />
+	<li><code>if (request == PTRACE_ATTACH || request == PTRACE_SEIZE)</code> &ndash; <code>ptrace_attach()</code></li>
+	<br />
+	<li><code>arch_ptrace()</code> 其他 request 在不同系统内部自己实现</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_d9f4e345" href="#TOC_HEAD_d9f4e345">1.1. handle <code>PTRACE_TRACEME</code></a></H3><ul><a href="../tags/PTRACE_TRACEME.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PTRACE_TRACEME</a>&nbsp;</ul>
+<ol>
+	<li>call <code>ptrace_traceme()</code></li>
+	<br />
+	<ol>
+		<li><code>write_lock_irq(&amp;tasklist_lock)</code></li>
+		<br />
+		<li><a name="HEAD_HIDDEN_65ad53cd">Check if tracing is allowed &ndash; <code>security_ptrace_traceme(current&ndash;&gt;parent)</code> &nbsp;<a href="../tags/security_ptrace_traceme.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>security_ptrace_traceme</a></li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_3be79fee">current &ndash; <code>(current_thread_info()&ndash;&gt;task)</code> &ndash; struct task_struct &nbsp;<a href="../tags/task_struct.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>task_struct</a></li>
+			<br />
+		</ul>
+		<li>sets <strong>trace</strong> bit &ndash; <code>current&ndash;&gt;ptrace = PT_PTRACED</code></li>
+		<br />
+		<li><code>ptrace_link(current, current&ndash;&gt;real_parent);</code></li>
+		<br />
+		<li><code>write_unlock_irq(&amp;tasklist_lock)</code></li>
+		<br />
+	</ol>
+</ol>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    ﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HANDLE_PTRACE_REQUEST_1" href="#HANDLE_PTRACE_REQUEST_1">1. handle ptrace requests in <strong>ptrace</strong> systm call </a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_d9f4e345" href="#HEAD_d9f4e345">1.1. handle <code>PTRACE_TRACEME</code> </a></li>
+	</menu>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT016501.cpp (Compare Version Numbers)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT016501.cpp (Compare Version Numbers)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-11-19</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0165.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0165</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_e98fbd88" href="#TOC_HEAD_e98fbd88">Problem 0165 <strong>Compare Version Numbers</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/compare-version-numbers/" target="_blank">https://leetcode.com/problems/compare&ndash;version&ndash;numbers/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_fa859c71" href="#TOC_HEAD_fa859c71">LT016501.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_dbf0ec7a">LT0165 (name=Compare Version Numbers, ptag=Leetcode) &nbsp;<a href="../tags/LT0165.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0165</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_55fcf335"><a href="https://leetcode.com/problems/compare-version-numbers/" target="_blank">Compare Version Numbers &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0165.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0165</a></li>
+		<br />
+	</ul>
+	<p>
+		Compare two version numbers
+		<em>version1</em> and
+		<em>version2</em> .
+	</p>
+	<p>
+		If
+		<em>version1</em> &gt;
+		<em>version2</em> return 1, if
+		<em>version1</em> &lt;
+		<em>version2</em> return &ndash;1, otherwise return 0.
+	</p>
+	<p>
+		You may assume that the version strings are non&ndash;empty and contain only digits and the
+		<code>.</code> character.
+	</p>
+	<p>
+		The
+		<code>.</code> character does not represent a decimal point and is used to separate number sequences.
+	</p>
+	<p>
+		For instance,
+		<code>2.5</code> is not &quot;two and a half&quot; or &quot;half way to version three&quot;, it is the fifth second&ndash;level revision of the second first&ndash;level revision.
+	</p>
+	<p>
+		Here is an example of version numbers ordering:
+	</p>
+	<pre><code>0.1 &lt; 1.1 &lt; 1.2 &lt; 13.37	</code></pre>
+</ul>
+	<H3><a name="HEAD_8481783e" href="#TOC_HEAD_8481783e">LT016501.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+
+public:
+
+    int compareVersion(string version1, string version2) {
+
+        int v1 = 0;
+        int v2 = 0;
+        size_t pos1 = 0;
+        size_t pos2 = 0;
+
+        while( (pos1 &lt; version1.size() || pos2 &lt; version2.size()) && v1 == v2)
+        {   v1 = nextNumber(version1, pos1);
+            v2 = nextNumber(version2, pos2);
+        }
+
+        return v1 &gt; v2 ? 1 : ( v1 &lt; v2 ? -1 : 0 );
+    }
+
+    int nextNumber(string& v, size_t& pos)
+    {
+        int num = 0;
+        char c  = 0;
+
+        while( pos &lt; v.size() && (c = v.at(pos)) != '.')
+        {   ++pos;
+            num = num * 10 + (c - '0');
+        }
+
+        if( c == '.' )
+            ++pos;
+
+        return num;
+    }
+};
+
+
+
+void test(string version1, string version2)
+{
+    cout &lt;&lt; "input: version1=" &lt;&lt; version1 &lt;&lt; ", version2=" &lt;&lt; version2;
+    int r = Solution().compareVersion(version1, version2);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test("1.01", "1.001");
+}
+
+// Result
+//
+// 2022-11-19: Runtime 0ms 100% Memory 6.2MB 76.44%, https://leetcode.com/problems/compare-version-numbers/submissions/846352707/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: version1=1.01, version2=1.001; output: 0;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

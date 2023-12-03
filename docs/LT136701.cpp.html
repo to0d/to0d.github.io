@@ -1,0 +1,175 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT136701.cpp (Linked List in Binary Tree)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT136701.cpp (Linked List in Binary Tree)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-08</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT1367.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1367</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/List-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>List-OJ</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_f34ea699" href="#TOC_HEAD_f34ea699">Problem 1367 <strong>Linked List in Binary Tree</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/linked-list-in-binary-tree/" target="_blank">https://leetcode.com/problems/linked&ndash;list&ndash;in&ndash;binary&ndash;tree/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>85.47</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_e332d894" href="#TOC_HEAD_e332d894">LT136701.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_5a71c871">LT1367 (name=Linked List in Binary Tree, ptag=Leetcode) &nbsp;<a href="../tags/LT1367.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1367</a>&nbsp;<a href="../tags/List-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>List-OJ</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_ff1cf63d"><a href="https://leetcode.com/problems/linked-list-in-binary-tree/" target="_blank">Linked List in Binary Tree &ndash; Leetcode</a> &nbsp;<a href="../tags/LT1367.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1367</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_b203de1" href="#TOC_HEAD_b203de1">LT136701.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+ListNode* travelList(ListNode *head, int& len) { // refer LT006101.cpp
+    len = 0;
+    ListNode *tail = head;
+    if( tail == NULL )
+        return NULL;
+    for(++len; tail-&gt;next != NULL; tail = tail-&gt;next)
+        ++len;
+    return tail;
+}
+
+class Solution {
+public:
+    bool isSubPath(ListNode* head, TreeNode* root) {
+        vector&lt;TreeNode*&gt; nodes;
+        vector&lt;int&gt; depths;
+        _findTarget(root, nodes, depths, head-&gt;val);
+        int size = nodes.size(), listSize = 0;
+        travelList(head, listSize);
+        for(int i = 0;i &lt; size; ++i)
+            if( depths[i] &gt;= listSize && _isSubPath(head, nodes[i]) )
+                return true;
+        return false;
+    }
+
+    bool _isSubPath(ListNode* head, TreeNode* node) {
+        if( head == NULL )
+            return true;
+        if( node == NULL || node-&gt;val != head-&gt;val)
+            return false;
+        return _isSubPath(head-&gt;next, node-&gt;left) || _isSubPath(head-&gt;next, node-&gt;right);
+    }
+
+    int _findTarget(TreeNode* node, vector&lt;TreeNode*&gt;& nodes, vector&lt;int&gt;& deeps, int target) {
+        if( node == NULL )
+            return 0;
+
+        int deepIdx = -1;
+        if( node-&gt;val == target )
+        {   deepIdx = deeps.size();
+            nodes.push_back(node);
+            deeps.push_back(0);
+        }
+
+        int ld = _findTarget(node-&gt;left, nodes, deeps, target);
+        int rd = _findTarget(node-&gt;right, nodes, deeps, target);
+        int deep = std::max(ld, rd) + 1;
+        if( deepIdx != -1 )
+            deeps[deepIdx] = deep;
+        return deep;
+    }
+};
+
+
+
+void test(ListNode* head, TreeNode* root)
+{
+    cout &lt;&lt; "input: list=";
+    outputList(head);
+    cout &lt;&lt; ", tree=";
+    outputTree(root);
+    bool r = Solution().isSubPath(head, root);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(makeList(3,4,2,8), makeTree("{1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3}"));
+}
+
+// Result
+//
+// 2023-01-14: Runtime 31ms 88.87% Memory 33MB 6.10%, https://leetcode.com/problems/linked-list-in-binary-tree/submissions/877779071/
+// 2023-03-08: Runtime 32ms 85.47% Memory 33MB 7.38%, https://leetcode.com/problems/linked-list-in-binary-tree/submissions/910931133/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: list=[4-&gt;2-&gt;8], tree=[1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

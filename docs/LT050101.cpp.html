@@ -1,0 +1,162 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT050101.cpp (Find Mode in Binary Search Tree)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT050101.cpp (Find Mode in Binary Search Tree)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-09</time>
+            <i><a href="../tags/BST.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>BST</a>&nbsp;<a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/Inorder.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Inorder</a>&nbsp;<a href="../tags/LT0501.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0501</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_7dae89a3" href="#TOC_HEAD_7dae89a3">Problem 0501 <strong>Find Mode in Binary Search Tree</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/find-mode-in-binary-search-tree/" target="_blank">https://leetcode.com/problems/find&ndash;mode&ndash;in&ndash;binary&ndash;search&ndash;tree/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>98.84</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_32d50b37" href="#TOC_HEAD_32d50b37">LT050101.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_8dbbed55">LT0501 (name=Find Mode in Binary Search Tree, ptag=Leetcode) &nbsp;<a href="../tags/BST.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>BST</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/Inorder.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Inorder</a>&nbsp;<a href="../tags/LT0501.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0501</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_35bb76c4"><a href="https://leetcode.com/problems/find-mode-in-binary-search-tree/" target="_blank">Find Mode in Binary Search Tree &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0501.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0501</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_92b33a04" href="#TOC_HEAD_92b33a04">LT050101.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    vector&lt;int&gt; findMode(TreeNode* root) {
+        m_maxCount = 0, m_lastCount = 0, m_lastVal = 0;
+        m_res.clear();
+        _inorderTraversal(root);
+        return m_res;
+    }
+
+    void _inorderTraversal(TreeNode* node) {
+        if(node == NULL)
+            return;
+
+        _inorderTraversal(node-&gt;left);
+
+        if( node-&gt;val == m_lastVal )
+            ++m_lastCount;
+        else
+        {   m_lastVal   = node-&gt;val;
+            m_lastCount = 1;
+        }
+
+        if( m_lastCount &gt; m_maxCount )
+        {   m_res.clear();
+            m_res.push_back(m_lastVal);
+            m_maxCount = m_lastCount;
+        }
+        else if( m_lastCount == m_maxCount )
+            m_res.push_back(m_lastVal);
+
+        _inorderTraversal(node-&gt;right);
+    }
+
+    int m_maxCount;
+    int m_lastCount;
+    int m_lastVal;
+    vector&lt;int&gt; m_res;
+};
+
+
+
+void test(TreeNode* root)
+{
+    cout &lt;&lt; "input: ";
+    outputTree(root);
+    vector&lt;int&gt; r = Solution().findMode(root);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(makeTree("{1,null,2,2}"));
+}
+
+
+// Result
+//
+// 2023-01-09: Runtime 19ms 86.6% Memory 24MB 84.88%, https://leetcode.com/problems/find-mode-in-binary-search-tree/submissions/874802106/
+// 2023-03-09: Runtime 11ms 98.84% Memory 24MB 86.82%, https://leetcode.com/problems/find-mode-in-binary-search-tree/submissions/911548868/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [1,null,2,2]; output: [2];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

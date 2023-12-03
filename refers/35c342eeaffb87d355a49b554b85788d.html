@@ -1,0 +1,39 @@
+<html>
+	<head>
+		<meta charSet="utf-8"></meta>
+		<title>在WSL中&nbsp;git&nbsp;status显示所有文件已修改的问题&nbsp;简书</title>
+	</head>
+	<body class="">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2016. All rights reserved - to0d@outlook.com, at Sat Jun 20 22:27:21 CST 2020</font>
+			</b>
+			<br>
+
+			<a href="https://www.jianshu.com/p/3b8ba804c47b" target="_blank">
+				<font color="red" size="3">在WSL中，git&nbsp;status显示所有文件已修改的问题&nbsp;&ndash;&nbsp;简书</font>
+			</a>
+			<p></p>
+		</body>
+		<article class="_2rhmJa">
+			<blockquote>
+				<p>请移步到我的Blog，获得更好的阅读体验！本文的链接请点
+					<a href="https://links.jianshu.com/go?to=https%3A%2F%2Feick.blog%2Farticle%2F%25E5%259C%25A8WSL%25E4%25B8%25AD%25EF%25BC%258Cgit%2520status%25E6%2598%25BE%25E7%25A4%25BA%25E6%2589%2580%25E6%259C%2589%25E6%2596%2587%25E4%25BB%25B6%25E5%25B7%25B2%25E4%25BF%25AE%25E6%2594%25B9%25E7%259A%2584%25E9%2597%25AE%25E9%25A2%2598" target="_blank">这里</a>
+				</p>
+			</blockquote>
+			<p>在Windows10中，使用WSL(Windows&nbsp;Subsystem&nbsp;for&nbsp;Linux)来开发项目，这就会出现在WSL中，git&nbsp;status显示所有文件都已修改的问题。通过Google找到问题所在，大概有两个原因：</p>
+			<ul>
+				<li>由于windows下的权限和Linux的权限不一致，导致的git检测文件状态变更，需要我们关闭WSL中git的文件权限检测：</li>
+			</ul>
+			<pre><code class="bash"># 全局设置
+git config --global core.filemode false
+</code></pre>
+			<ul>
+				<li>Windows中使用的文本换行方式是CRLF，Linux中使用的文本换行方式是LF，然后WSL是Linux环境，默认使用LF换行方式，所以git会自动将代码当中与WSL系统不同的换行方式转化成WSL换行方式，从而状态发生变动。需要我们禁止WSL自动转换文本换行模式：</li>
+			</ul>
+			<pre><code class="bash"># 全局设置
+git config --global core.autocrlf true
+</code></pre>
+		</article>
+	</body>
+</html>

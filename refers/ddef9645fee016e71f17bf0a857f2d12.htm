@@ -1,0 +1,319 @@
+<html>
+	<head>
+		<meta charset="utf-8"></meta>
+		<title>(26条消息)&nbsp;Java中使用JSSE实现SSL/TLS安全协议_爵士陈的博客&ndash;CSDN博客_jsse</title>
+	</head>
+	<body class="nodata " style="" data-new-gr-c-s-check-loaded="8.892.0" data-gr-ext-installed="">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2016. All rights reserved - to0d@outlook.com, at Tue Dec 28 11:38:21 CST 2021</font>
+			</b>
+			<br>
+
+			<a href="https://blog.csdn.net/u011179993/article/details/49274423" target="_blank">
+				<font color="red" size="3">(26条消息)&nbsp;Java中使用JSSE实现SSL/TLS安全协议_爵士陈的博客&ndash;CSDN博客_jsse</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="blog-content-box">
+			<div class="article-header-box">
+				<div class="article-header">
+					<div class="article-title-box">
+						<h1 class="title-article" id="articleContentId">Java中使用JSSE实现SSL/TLS安全协议</h1>
+					</div>
+	 
+				</div>
+			</div>
+ 
+			<article class="baidu_pl">
+				<div id="article_content" class="article_content clearfix">
+					<link rel="stylesheet" href="(26%E6%9D%A1%E6%B6%88%E6%81%AF)%20Java%E4%B8%AD%E4%BD%BF%E7%94%A8JSSE%E5%AE%9E%E7%8E%B0SSL_TLS%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE_%E7%88%B5%E5%A3%AB%E9%99%88%E7%9A%84%E5%8D%9A%E5%AE%A2-CSDN%E5%8D%9A%E5%AE%A2_jsse_files/ck_htmledit_views-1a85854398.css">
+						<div id="content_views" class="htmledit_views">
+							<span style="font-size:24px">一、简介</span>
+							<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14.3999996185303px; line-height:28px">SSL/TLS协议是安全的通信模式，而对于这些底层协议，如果要每个开发者都自己去实现显然会带来不必要的麻烦，正是为了解决这个问题Java为广大开发者提供了Java安全套接字扩展&mdash;&mdash;
+								<u>JSSE，它包含了实现Internet安全通信的一系列包的集合</u>
+								，
+是SSL和TLS的纯Java实现，同时它是一个开放的标准，每个公司都可以自己实现JSSE，通过它可以透明地提供数据加密、服务器认证、信息完整性等
+功能，就像使用普通的套接字一样使用安全套接字，大大减轻了开发者的负担，使开发者可以很轻松将SSL协议整合到程序中，并且JSSE能将安全隐患降到了
+最低点。
+							</p>
+							<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14.3999996185303px; line-height:28px">在用JSSE实现SSL通信过程中主要会遇到以下类和接口，由于过程中涉及到加解密、密钥生成等运算的框架和实现，所以也会间接用到JCE包的一些类。如图3&ndash;1&ndash;7&ndash;2为JSSE接口的主要类图：</p>
+							<p style="border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; color:rgb(51,51,51); font-family:宋体; font-size:14.3999996185303px; line-height:28px">
+								<img src="files/fd31a93237dbfbb3a57a5cf84215d7f4.jpg" alt=""></img>
+							</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">
+								<span style="color:#333333">①
+&nbsp;
+通信核心类&mdash;&mdash;SSLSocket和SSLServerSocket。它们对应的就是Socket与ServerSocket，只是表示实现了SSL协议
+的Socket，ServerSocket，同时它们也是Socket与ServerSocket的子类。SSLSocket负责的事情包括【设置加密套
+件、管理SSL会话、处理握手结束时间、设置客户端模式或服务器模式】。</span>
+								<br>
+
+								<span style="color:#333333">②
+&nbsp;
+客户端与服务器端Socket工厂&mdash;&mdash;SSLSocketFactory和SSLServerSocketFactory。在设计模式中工厂模式是专门用
+于生产出需要的实例，这里也是把SSLSocket、SSLServerSocket对象创建的工作交给这两个工厂类。</span>
+								<br>
+
+								<span style="color:#333333">③
+&nbsp;
+SSL会话&mdash;&mdash;SSLSession。安全通信握手过程需要一个会话，为了提高通信的效率，SSL协议允许多个SSLSocket共享同一个SSL会话，
+在同一个会话中，只有第一个打开的SSLSocket需要进行SSL握手，负责生成密钥及交换密钥，其余SSLSocket都共享密钥信息。</span>
+								<br>
+
+								<span style="color:#333333">④
+&nbsp;
+SSL上下文&mdash;&mdash;SSLContext。它是对整个SSL/TLS协议的封装，表示了安全套接字协议的实现。主要负责设置安全通信过程中的各种信息，例如
+跟证书相关的信息。并且负责构建SSLSocketFactory、SSLServerSocketFactory和SSLEngine等工厂类。</span>
+								<br>
+
+								<span style="color:#333333">⑤&nbsp;SSL非阻塞引擎&mdash;&mdash;SSLEngine。假如你要进行NIO通信，那么将使用这个类，它让通过过程支持非阻塞的安全通信。</span>
+								<br>
+
+								<span style="color:#333333">⑥&nbsp;密钥管理器&mdash;&mdash;KeyManager。此接口负责选择用于</span>
+								<strong>
+									<span style="color:#333333">证实</span>
+									<span style="color:#ff0000">自己</span>
+									<span style="color:#333333">身份的安全证书</span>
+								</strong>
+								<span style="color:#333333">，发给通信另一方。KeyManager对象由KeyManagerFactory工厂类生成。</span>
+								<br>
+
+								<span style="color:#333333">⑦&nbsp;信任管理器&mdash;&mdash;TrustManager。此接口负责判断</span>
+								<span style="color:rgb(51,51,51)">决定是否信任
+									<span style="color:#ff0000">对方</span>
+									的安全证书
+								</span>
+								<span style="color:#333333">，TrustManager对象由TrustManagerFactory工厂类生成。</span>
+								<br>
+
+								<span style="color:#333333">⑧&nbsp;密钥证书存储设施&mdash;&mdash;KeyStore。这个对象用于存放安全证书，安全证书一般以文件形式存放，KeyStore负责将证书加载到内存。</span>
+								<br>
+
+								<span style="color:#333333">通过上面这些类就可以完成SSL协议的安全通信了，在利用SSL/TLS进行安全通信时，客户端跟服务器端都必须要支持SSL/TLS协议，不然将无法进行通信。而且客户端和服务器端都可能要设置用于证实自己身份的安全证书，并且还要设置信任对方的哪些安全证书。</span>
+								<br>
+
+								<br>
+
+								<span style="color:#333333">关
+于身份认证方面有个名词叫客户端模式，一般情况客户端要对服务器端的身份进行验证，但是无需向服务器证实自己的身份，这样不用向对方证实自己身份的通信端
+我们就说它处于客户模式，否则成它处于服务器模式。SSLSocket的setUseClientMode(Boolean&nbsp;
+mode)方法可以设置客户端模式或服务器模式。</span>
+								<br>
+
+								<br>
+
+							</p>
+							<h1>
+								<a name="t0"></a>
+								<span style="color:#333333">二
+									<span style="font-size:24px">、</span>
+									证书简介
+								</span>
+							</h1>
+							<span style="font-size:14px">
+								<span style="color:#333333">看一个用JSSE简单实现SSL通信的例子。</span>
+								<br>
+
+								<span style="color:#333333">①&nbsp;解决证书问题。</span>
+								<br>
+
+								<span style="color:#333333">一
+般而言作为服务器端必须要有证书以证明这个服务器的身份，并且证书应该描述此服务器所有者的一些基本信息，例如公司名称、联系人名等。证书由所有人以密码
+形式签名，基本不可伪造，证书获取的途径有两个：一是从权威机构购买证书，权威机构担保它发出的证书的真实性，而且这个权威机构被大家所信任，进而你可以
+相信这个证书的有效性；另外一个是自己用JDK提供的工具keytool创建一个自我签名的证书，这种情况下一般是我只想要保证数据的安全性与完整性，避
+免数据在传送的过程中被窃听或篡改，此时身份的认证已不重要，重点已经在端与端传输的秘密性上，证书的作用只体现在加解密签名。</span>
+								<br>
+
+								<span style="color:#333333">另
+外，关于证书的一些概念在这里陈述，一个证书是一个实体的数字签名，这个实体可以是一个人、一个组织、一个程序、一个公司、一个银行，同时证书还包含这个
+实体的公共钥匙，此公共钥匙是这个实体的数字关联，让所有想同这个实体发生信任关系的其他实体用来检验签名。而这个实体的数字签名是实体信息用实体的私钥
+加密后的数据，这条数据可以用这个实体的公共钥匙解密，进而鉴别实体的身份。这里用到的核心算法是非对称加密算法。</span>
+							</span>
+							<p></p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">
+								<span style="color:#333333">SSL
+协议通信涉及密钥储存的文件格式比较多，很容易搞混，例如xxx.cer、xxx.pfx、xxx.jks、xxx.keystore、
+xxx.truststore等格式文件。如图3&ndash;1&ndash;7&ndash;3，搞清楚他们有助于理解后面的程序，.cer格式文件俗称证书，但这个证书中没有私钥，只包
+含了公钥；.pfx格式文件也称为证书，它一般供浏览器使用，而且它不仅包含了公钥，还包含了私钥，当然这个私钥是加密的，不输入密码是解不了密
+的；.jks格式文件表示java密钥存储器（javakey&nbsp;
+store），它可以同时容纳N个公钥跟私钥，是一个密钥库；.keystore格式文件其实跟.jks基本是一样的，只是不同公司叫法不太一样，默认生
+成的证书存储库格式；.truststore格式文件表示信任证书存储库，它仅仅包含了</span>
+								<span style="background-color:rgb(255,0,0)">
+									<span style="color:#ffffff">通信对方的公钥</span>
+								</span>
+								<span style="color:#333333">，
+当然你可以直接把通信对方的jks作为信任库（就算如此你也只能知道通信对方的公钥，要知道密钥都是加密的，你无从获取，只要算法不被破解）。有些时候我
+们需要把pfx或cert转化为jks以便于用java进行ssl通信，例如一个银行只提供了pfx证书，而我们想用java进行ssl通信时就要将
+pfx转化为jks格式。</span>
+								<br>
+
+							</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">
+								<span style="color:#333333">
+									<img src="files/53d03009575d76d722b856c5e9fac558.jpg" alt="" width="600" border="1">
+										<br>
+
+									</img>
+								</span>
+							</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">
+								<br>
+
+							</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px"></p>
+							<h1>
+								<a name="t1"></a>
+								三、生成证书，
+							</h1>
+							<span style="font-size:14px">按照理论上，我们一共需要准备四个文件，两个keystore文件和两个
+truststore文件，通信双方分别拥有一个keystore和一个truststore，keystore用于存放自己的密钥和公钥，
+truststore用于存放所有需要信任方的公钥。这里为了方便直接使用jks即keystore替代truststore（免去证书导来导去），因为
+对方的keystore包含了自己需要的信任公钥。
+								<br>下面使用jdk自带的工具分别生成服务器端证书，通过如下命令并输入姓名、组织单位名称、组织名称、城市、省份、国家信息即可生成证书密码为myserver的证书，此证书存放在密码也为123456的
+
+								<span style="font-family:宋体; line-height:28px; text-indent:28.8px">myserver</span>
+								.jks证书存储库中。如果你继续创建证书将继续往
+								<span style="font-family:宋体; line-height:28px; text-indent:28.8px">myserver</span>
+								.jks证书存储库中添加证书。
+							</span>
+							<br>
+
+							<p></p>
+							<h2 style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">
+								<a name="t2"></a>
+								<span style="font-size:14.3999996185303px; text-indent:2em">keytool用法：</span>
+							</h2>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">1.生成</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">&nbsp;keytool&nbsp;&ndash;genkey&nbsp;&ndash;alias&nbsp;yushan(别名)&nbsp;&ndash;keypass&nbsp;yushan(别名密码)&nbsp;&ndash;keyalg&nbsp;
+RSA(算法)&nbsp;&ndash;keysize&nbsp;1024(密钥长度)&nbsp;&ndash;validity&nbsp;365(有效期，天单位)&nbsp;&ndash;keystore&nbsp;
+e:\yushan.keystore(指定生成证书的位置和证书名称)&nbsp;&ndash;storepass&nbsp;
+123456(获取keystore信息的密码)；回车输入相关信息即可；
+								<br>
+
+							</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">2.导出（证书库导出到crt证书文件）</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">keytool&nbsp;&ndash;export&nbsp;&ndash;alias&nbsp;yushan&nbsp;&ndash;keystore&nbsp;e:\yushan.keystore&nbsp;&ndash;file&nbsp;e:\yushan.crt(指定导出的证书位置及证书名称)&nbsp;&ndash;storepass&nbsp;123456</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">3.导入（从证书文件导入到keystore或jks文件）</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">准备一个导入的证书：
+								<br>keytool&nbsp;&ndash;genkey&nbsp;&ndash;alias&nbsp;shuany&nbsp;&ndash;keypass&nbsp;shuany&nbsp;&ndash;keyalg&nbsp;RSA&nbsp;&ndash;keysize&nbsp;1024
+&nbsp;&ndash;validity&nbsp;365&nbsp;&ndash;keystore&nbsp;&nbsp;e:\shuany.keystore&nbsp;&ndash;storepass&nbsp;123456&nbsp;
+&ndash;dname&nbsp;&quot;CN=shuany,&nbsp;OU=xx,&nbsp;O=xx,&nbsp;L=xx,&nbsp;ST=xx,&nbsp;C=xx&quot;;
+
+								<br>keytool&nbsp;&ndash;export&nbsp;&ndash;alias&nbsp;shuany&nbsp;&ndash;keystore&nbsp;e:\shuany.keystore&nbsp;&ndash;file&nbsp;e:\shuany.crt&nbsp;&ndash;storepass&nbsp;123456
+
+								<br>&nbsp;现在将shuany.crt&nbsp;加入到yushan.keystore中：keytool&nbsp;&ndash;import&nbsp;&ndash;alias&nbsp;
+shuany(指定导入证书的别名，如果不指定默认为mykey,别名唯一，否则导入出错)&nbsp;&ndash;file&nbsp;e:\shuany.crt&nbsp;
+&ndash;keystore&nbsp;e:\yushan.keystore&nbsp;&ndash;storepass&nbsp;123456&nbsp;keytool&nbsp;&ndash;list&nbsp;&nbsp;&ndash;v&nbsp;
+&ndash;keystore&nbsp;e:\keytool\yushan.keystore&nbsp;&ndash;storepass&nbsp;123456
+
+								<br>
+
+							</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">
+								<br>
+
+							</p>
+							<h2 style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">
+								<a name="t3"></a>
+								制作我的证书：
+							</h2>
+							<div>
+								<span style="white-space:pre"></span>
+								服务器端：
+							</div>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">
+								<img src="files/7a24157a826b593ecc4283050877eba.jpg" alt="" width="600">
+									<br>
+
+								</img>
+							</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">客户端：</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">
+								<img src="files/6fadd70009927deb1c79942dd270cd06.jpg" alt="" width="800">
+									<br>
+
+								</img>
+							</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">
+								<br>
+
+							</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">生成文件：</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">
+								<img src="files/83b53d50f81a199b573affaa51b18674.jpg" alt="" width="300">
+									<br>
+
+								</img>
+							</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">
+								<br>
+
+							</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">
+								<br>
+
+							</p>
+							<h1 style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; line-height:28px">
+								<a name="t4"></a>
+								<span style="font-size:24px">四、实现SSL</span>
+							</h1>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px">服务端简单实现：</p>
+							<p style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; font-size:14.3999996185303px; line-height:28px"></p>
+							<pre>
+<code class="language-java hljs"><ol class="hljs-ln" style="width:100%"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception {</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-comment">//密钥管理器</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="4"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-type">KeyStore</span> <span class="hljs-variable">serverKeyStore</span> <span class="hljs-operator">=</span> KeyStore.getInstance(<span class="hljs-string">"JKS"</span>);<span class="hljs-comment">//证书库格式</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="5"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        serverKeyStore.load(<span class="hljs-keyword">new</span> <span class="hljs-title class_">FileInputStream</span>(<span class="hljs-string">"e:\\myserver.jks"</span>), <span class="hljs-string">"123456"</span>.toCharArray());<span class="hljs-comment">//加载密钥库</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="6"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="7"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-type">KeyManagerFactory</span> <span class="hljs-variable">kmf</span> <span class="hljs-operator">=</span> KeyManagerFactory.getInstance(<span class="hljs-string">"SunX509"</span>);<span class="hljs-comment">//证书格式</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="8"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        kmf.init(serverKeyStore, <span class="hljs-string">"123456"</span>.toCharArray());<span class="hljs-comment">//加载密钥储存器</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="9"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="10"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-comment">//信任管理器</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="11"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-type">KeyStore</span> <span class="hljs-variable">clientKeyStore</span> <span class="hljs-operator">=</span> KeyStore.getInstance(<span class="hljs-string">"JKS"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="12"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        clientKeyStore.load(<span class="hljs-keyword">new</span> <span class="hljs-title class_">FileInputStream</span>(<span class="hljs-string">"e:\\myclient.jks"</span>), <span class="hljs-string">"123456"</span>.toCharArray());</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="13"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="14"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-type">TrustManagerFactory</span> <span class="hljs-variable">tmf</span> <span class="hljs-operator">=</span> TrustManagerFactory.getInstance(<span class="hljs-string">"SunX509"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="15"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        tmf.init(clientKeyStore);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="16"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="17"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-comment">//SSL上下文设置</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="18"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-type">SSLContext</span> <span class="hljs-variable">sslContext</span> <span class="hljs-operator">=</span> SSLContext.getInstance(<span class="hljs-string">"SSL"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="19"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), <span class="hljs-literal">null</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="20"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="21"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-comment">//SSLServerSocket</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="22"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-type">SSLServerSocketFactory</span> <span class="hljs-variable">serverFactory</span> <span class="hljs-operator">=</span> sslContext.getServerSocketFactory();</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="23"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-type">SSLServerSocket</span> <span class="hljs-variable">svrSocket</span> <span class="hljs-operator">=</span> (SSLServerSocket) serverFactory.createServerSocket(<span class="hljs-number">34567</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="24"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-comment">//svrSocket.setNeedClientAuth(true);//客户端模式，服务端需要验证客户端身份</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="25"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="26"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        String[] supported = svrSocket.getEnabledCipherSuites();<span class="hljs-comment">//加密套件</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="27"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        svrSocket.setEnabledCipherSuites(supported);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="28"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="29"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-comment">//接收消息</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="30"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        System.out.println(<span class="hljs-string">"端口已打开，准备接受信息"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="31"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="32"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-type">SSLSocket</span> <span class="hljs-variable">cntSocket</span> <span class="hljs-operator">=</span> (SSLSocket) svrSocket.accept();<span class="hljs-comment">//开始接收</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="33"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        InputStream in=cntSocket.getInputStream();<span class="hljs-comment">//输入流</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="34"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-type">int</span> a=in.read(<span class="hljs-keyword">new</span> <span class="hljs-title class_">byte</span>[<span class="hljs-number">102</span>]);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="35"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-comment">//循环检查是否有消息到达</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="36"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        System.out.println(<span class="hljs-string">"来自于客户端:"</span> + a);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="37"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="38"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="39"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    }</div></div></li></ol></code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div>
+							</pre>
+							<p></p>
+							<span style="font-size:18px">基本顺序是先得到一个SSLContext实例，再对SSLContext实例进行初始化，
+								<strong>密钥管理器及信任管理器</strong>
+								作为参数传入，证书管理器及信任管理器按照指定的密钥存储器路径和密码进行加载。接着设置支持的加密套件，最后让SSLServerSocket开始监听客户端发送过来的消息。
+							</span>
+							<p></p>
+							<h2 style="text-align:left; border-width:0px; padding-top:0px; padding-bottom:0px; margin-top:0px; margin-bottom:8px; list-style:none; text-indent:2em; font-family:宋体; line-height:28px">
+								<a name="t5"></a>
+								<span style="font-size:18px">客户端实现：</span>
+							</h2>
+							<div>
+								<span style="font-size:18px"></span>
+								<pre>
+<code class="language-java hljs"><ol class="hljs-ln" style="width:100%"><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception {</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-comment">//密钥管理器</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="4"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-type">KeyStore</span> <span class="hljs-variable">clientKeyStore</span> <span class="hljs-operator">=</span> KeyStore.getInstance(<span class="hljs-string">"JKS"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="5"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        clientKeyStore.load(<span class="hljs-keyword">new</span> <span class="hljs-title class_">FileInputStream</span>(<span class="hljs-string">"e:\\myclient.jks"</span>), <span class="hljs-string">"123456"</span>.toCharArray());</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="6"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="7"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-type">KeyManagerFactory</span> <span class="hljs-variable">kmf</span> <span class="hljs-operator">=</span> KeyManagerFactory.getInstance(<span class="hljs-string">"SunX509"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="8"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        kmf.init(clientKeyStore, <span class="hljs-string">"123456"</span>.toCharArray());</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="9"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="10"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="11"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-comment">//信任管理器</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="12"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-type">KeyStore</span> <span class="hljs-variable">serverKeyStore</span> <span class="hljs-operator">=</span> KeyStore.getInstance(<span class="hljs-string">"JKS"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="13"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        serverKeyStore.load(<span class="hljs-keyword">new</span> <span class="hljs-title class_">FileInputStream</span>(<span class="hljs-string">"e:\\myserver.jks"</span>), <span class="hljs-string">"123456"</span>.toCharArray());</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="14"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="15"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="16"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-type">TrustManagerFactory</span> <span class="hljs-variable">tmf</span> <span class="hljs-operator">=</span> TrustManagerFactory.getInstance(<span class="hljs-string">"SunX509"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="17"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        tmf.init(serverKeyStore);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="18"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="19"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-comment">//SSL上下文</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="20"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-type">SSLContext</span> <span class="hljs-variable">sslContext</span> <span class="hljs-operator">=</span> SSLContext.getInstance(<span class="hljs-string">"SSL"</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="21"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), <span class="hljs-literal">null</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="22"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="23"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="24"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-type">SSLSocketFactory</span> <span class="hljs-variable">sslcntFactory</span> <span class="hljs-operator">=</span>(SSLSocketFactory) sslContext.getSocketFactory();</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="25"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        SSLSocket sslSocket= (SSLSocket) sslcntFactory.createSocket(<span class="hljs-string">"127.0.0.1"</span>, <span class="hljs-number">34567</span>);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="26"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="27"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        String[] supported = sslSocket.getSupportedCipherSuites();</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="28"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        sslSocket.setEnabledCipherSuites(supported);</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="29"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="30"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        <span class="hljs-comment">//发送</span></div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="31"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        OutputStream out=sslSocket.getOutputStream();</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="32"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">        out.write(<span class="hljs-string">"hello"</span>.getBytes());</div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="33"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line"> </div></div></li><li><div class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="34"></div></div><div class="hljs-ln-code"><div class="hljs-ln-line">    }</div></div></li></ol></code><div class="hljs-button {2}" data-title="复制" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.4259&quot;}" onclick="hljs.copyCode(event)"></div>
+								</pre>
+								<br>
+
+							</div>
+							客户端的前面操作基本跟服务器端的一样，先创建一个SSLContext实例，再用密钥管理器及信任管理器对SSLContext进行初始化，当然这里密钥存储的路径是指向客户端的client.jks。接着设置加密套件，最后使用SSLSocket进行通信。
+							<br>
+
+							<br>
+
+							<br>注意服务器端有行代码svrSocket.setNeedClientAuth(true);它是非常重要的一个设置方法，用于设置是否验证客户端的身
+份。假如我们把它注释掉或设置为false，此时客户端将不再需要自己的密钥管理器，即服务器不需要通过client.jks对客户端的身份进行验证，把
+密钥管理器直接设置为null也可以跟服务器端进行通信。
+
+							<br>
+
+							<br>
+
+							<br>
+
+							<p>最后谈谈信任管理器，它的职责是觉得是否信任远端的证书，那么它凭借什么去判断呢？如果不显式设置信任存储器的文件路径，将遵循如下规则：</p>
+							<p>①如果系统属性javax.net.ssl.truststore指定了truststore文件，那么信任管理器将去jre路径下的lib/security目录寻找这个文件作为信任存储器；</p>
+							<p>②如果没设置①中的系统属性，则去寻找一个%java_home%/lib/security/jssecacerts文件作为信任存储器；</p>
+							<p>③如果jssecacerts不存在而cacerts存在，则cacerts作为信任存储器。</p>
+							<br>
+
+							<br>至此，一个利用JSSE实现SSL协议通信的例子已完成。
+
+							<br>
+
+							<p></p>
+						</div>
+						<div>
+							<div></div>
+						</div>
+					</link>
+				</div>
+			</article>
+		</div>
+	</body>
+</html>

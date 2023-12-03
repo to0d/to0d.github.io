@@ -1,0 +1,187 @@
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8"></meta>
+		<meta charset="utf-8"></meta>
+		<title>MinGW安装和使用基础教程&nbsp;&ndash;&nbsp;DoubleLi&nbsp;&ndash;&nbsp;博客园</title>
+	</head>
+	<body class="skin-cogitation has-navbar has-bannerbar" data-new-gr-c-s-check-loaded="8.906.0" data-gr-ext-installed="">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Tue Aug 01 14:45:17 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://www.cnblogs.com/lidabo/p/6848305.html" target="_blank">
+				<font color="red" size="3">MinGW安装和使用基础教程&nbsp;&ndash;&nbsp;DoubleLi&nbsp;&ndash;&nbsp;博客园</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="post">
+			<div class="postTitle">
+				<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/lidabo/p/6848305.html">
+					<span role="heading" aria-level="2">MinGW安装和使用基础教程</span>
+				</a>
+				<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button>
+			</div>
+			<div class="postText">
+				<div id="cnblogs_post_body" class="blogpost-body blogpost-body-html">
+					<p>MinGW全称Minimalist&nbsp;GNU&nbsp;For&nbsp;Windows，是个精简的Windows平台C/C++、ADA及Fortran编译器，相比Cygwin而言，体积要小很多，
+						<a href="http://www.zhixing123.cn/computer/" rel="noopener">
+							<span style="text-decoration: underline">使用</span>
+						</a>
+						较为方便。MinGW提供了一套完整的开源编译工具集，以适合Windows平台应用开发，且不依赖任何第三方C运行时库。
+					</p>
+					<p>MinGW包括：</p>
+					<ul>
+						<li>一套集成编译器，包括C、C++、ADA语言和Fortran语言编译器</li>
+						<li>用于生成Windows二进制文件的GNU工具的（编译器、链接器和档案管理器）</li>
+						<li>用于Windows平台安装和部署MinGW和MSYS的命令行安装器（mingw&ndash;get）</li>
+						<li>用于命令行安装器的GUI打包器（mingw&ndash;get&ndash;inst）</li>
+					</ul>
+					<p>注:本文测试环境为Windows&nbsp;7&nbsp;SP1+MinGW&nbsp;20120426。</p>
+					<h2>一、MinGW安装
+						<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button>
+					</h2>
+					<p>MinGW官方网址：http://www.mingw.org/</p>
+					<p>下载地址：http://sourceforge.net/projects/mingw/files/Installer/mingw&ndash;get&ndash;inst/</p>
+					<p>下载后只是个安装器，需要在线下载真正的安装内容，所以速度不会快。具体步骤如下：</p>
+					<h3>1、选择安装版本（Repository&nbsp;Catalogues）
+						<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button>
+					</h3>
+					<p>有两个选择，一个是当前打包版本，另一个是下载最新版本。只要你的安装器是从官方下载的，选择前者即可，结果一般就是最新版本。</p>
+					<h3>2、设置安装目录
+						<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button>
+					</h3>
+					<p>默认安装到C:\MinGW</p>
+					<h3>3、选择安装组件
+						<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button>
+					</h3>
+					<p>这个根据大家需要选择安装组件（C编译器、C++编译器、Fortran编译器、ObjC编译器、Ada编译器等），一般选择C/C++编译器即可，看各位用途确定，组件列表中还有MSYS小系统等可供选择。</p>
+					<h3>4、等待下载并安装完成
+						<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button>
+					</h3>
+					<h3>5、设置MinGW环境变量
+						<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button>
+					</h3>
+					<p>依次鼠标点击桌面&ldquo;我的电脑&rdquo;&ndash;&gt;选择左侧的&ldquo;高级系统设置&rdquo;，选择&ldquo;高级&rdquo;&ndash;&gt;&ldquo;环境变量&rdquo;，然后再Path里增加;C:\MinGW\bin声明。点击确定。</p>
+					<p>小提示：设置完成后，Windows似乎不会自动更新环境变量，除非重启机子，那么我们可以通过在下面的命令行中，胡乱设置一下PATH（比如SET&nbsp;PATH=C:\），然后退出命令行，那么系统环境变量就会被强制刷新。</p>
+					<h3>6、查看GCC版本信息
+						<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button>
+					</h3>
+					<p>开始运行，输入CMD，回车并运行，输入gcc&nbsp;&ndash;v查看编译器版本。如下图：</p>
+					<p>
+						<img title="" src="MinGW安装和使用基础教程 - DoubleLi - 博客园_files/2144202263-0.jpg" alt=""></img>
+					</p>
+					<h2>二、MinGW使用
+						<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button>
+					</h2>
+					<h3>1、测试编译C++
+						<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button>
+					</h3>
+					<p>测试文件test.cpp，代码如下（下面为C代码，只是使用G++来编译而已）</p>
+					<pre class="mycode">#include &lt;stdio.h&gt;
+
+int main() {
+	printf("Hello World!");
+        return 0;
+}</pre>
+					<h3>2、编译test
+						<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button>
+					</h3>
+					<p>编译命令如下：</p>
+					<p>g++&nbsp;test.cpp&nbsp;&ndash;o&nbsp;test</p>
+					<p>输出结果为：test.exe</p>
+					<h3>3、执行
+						<button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button>
+					</h3>
+					<p>输入test回车，结果如下：</p>
+					<p>
+						<img title="" src="MinGW安装和使用基础教程 - DoubleLi - 博客园_files/2144205631-1.jpg" alt=""></img>
+					</p>
+				</div>
+				<div class="clear"></div>
+				<div id="blog_post_info_block" role="contentinfo">
+					<div id="BlogPostCategory">分类:
+						<a href="https://www.cnblogs.com/lidabo/category/605348.html" target="_blank">mingw</a>
+					</div>
+					<div id="blog_post_info">
+						<div id="green_channel">
+							<a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(6848305,cb_blogId,1);green_channel_success(this,'谢谢推荐！');">好文要顶</a>
+							<a id="green_channel_follow" onclick="follow('8e506bcc-b700-df11-ba8f-001cf0cd104b');" href="javascript:void(0);">关注我</a>
+							<a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+							<a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()">
+								<img src="MinGW安装和使用基础教程 - DoubleLi - 博客园_files/icon_weibo_24.png" alt=""></img>
+							</a>
+							<a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()">
+								<img src="MinGW安装和使用基础教程 - DoubleLi - 博客园_files/wechat.png" alt=""></img>
+							</a>
+						</div>
+						<div id="author_profile">
+							<div id="author_profile_info" class="author_profile_info">
+								<a href="https://home.cnblogs.com/u/lidabo/" target="_blank">
+									<img src="MinGW安装和使用基础教程 - DoubleLi - 博客园_files/sample_face.gif" class="author_avatar" alt=""></img>
+								</a>
+								<div id="author_profile_detail" class="author_profile_info">
+									<a href="https://home.cnblogs.com/u/lidabo/">DoubleLi</a>
+									<br>
+
+									<a href="https://home.cnblogs.com/u/lidabo/followers/">粉丝&nbsp;&ndash;
+										<span class="follower-count">2200</span>
+									</a>
+									<a href="https://home.cnblogs.com/u/lidabo/followees/">关注&nbsp;&ndash;
+										<span class="following-count">29</span>
+									</a>
+									<br>
+
+								</div>
+							</div>
+							<div class="clear"></div>
+							<div id="author_profile_honor"></div>
+							<div id="author_profile_follow" class="follow-tip">
+								<a href="javascript:void(0);" onclick="follow('8e506bcc-b700-df11-ba8f-001cf0cd104b');return false;">+加关注</a>
+							</div>
+						</div>
+						<div id="div_digg">
+							<div class="diggit" onclick="votePost(6848305,'Digg')">
+								<span class="diggnum" id="digg_count">1</span>
+							</div>
+							<div class="buryit" onclick="votePost(6848305,'Bury')">
+								<span class="burynum" id="bury_count">1</span>
+							</div>
+							<div class="clear"></div>
+							<div class="diggword" id="digg_tips"></div>
+						</div>
+					</div>
+					<div class="clear"></div>
+					<div id="post_next_prev">
+						<a href="https://www.cnblogs.com/lidabo/p/6846678.html" class="p_n_p_prefix">«</a>
+						上一篇：
+						<a href="https://www.cnblogs.com/lidabo/p/6846678.html" data-featured-image="" title="发布于 2017-05-12 17:55">基于UDP高性能传输协议UDT&nbsp;doc翻译(一)</a>
+						<br>
+
+						<a href="https://www.cnblogs.com/lidabo/p/6848840.html" class="p_n_p_prefix">»</a>
+						下一篇：
+						<a href="https://www.cnblogs.com/lidabo/p/6848840.html" data-featured-image="" title="发布于 2017-05-13 14:01">开源项目：windows下使用MinGW+msys编译ffmpeg</a>
+					</div>
+				</div>
+			</div>
+			<div class="postfoot">posted&nbsp;on
+				<span id="post-date" data-last-update-days="2271.046284189241" data-date-created="BlogServer.Application.Dto.BlogPost.BlogPostDto" data-date-updated="2017-05-13 10:38" aria-expanded="false">2017&ndash;05&ndash;13&nbsp;10:38</span>
+				&nbsp;
+				<a href="https://www.cnblogs.com/lidabo/">DoubleLi</a>
+				&nbsp;
+阅读(
+				<span id="post_view_count">20842</span>
+				)&nbsp;
+评论(
+				<span id="post_comment_count">0</span>
+				)&nbsp;
+				<a href="https://i.cnblogs.com/EditPosts.aspx?postid=6848305" rel="nofollow">编辑</a>
+				&nbsp;
+				<a href="javascript:void(0)" onclick="AddToWz(6848305);return false;">收藏</a>
+				&nbsp;
+				<a href="javascript:void(0)" onclick="reportManager.report({ currentUserId: '', targetType: 'blogPost', targetId: '6848305', targetLink: 'https://www.cnblogs.com/lidabo/p/6848305.html', title: 'MinGW安装和使用基础教程' })">举报</a>
+			</div>
+		</div>
+	</body>
+</html>

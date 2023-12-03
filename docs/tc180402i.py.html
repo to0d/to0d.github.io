@@ -1,0 +1,38 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC180402I.py</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC180402I.py</h1>
+            <h3>RegEx Example</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/L180315A.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>L180315A</a>&nbsp;<a href="../tags/RegEx.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>RegEx</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+import re
+
+it = re.finditer(r"\d+", "12a32bc43jf3")
+for match in it:
+    print (match.group())
+
+
+print('output: done.');</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

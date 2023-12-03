@@ -1,0 +1,41 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC150331A.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC150331A.c</h1>
+            <h3>process, sleep, usleep</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Process.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Process</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include "stdio.h"
+#include &lt;unistd.h&gt;
+int main( void )
+{
+    printf("Sleep 1 second\n");
+    sleep(1);
+
+    printf("Sleep 1000 microsecond,  1000 microseconds is equal to 1 millisecond.\n");
+    usleep(1000);
+
+    printf("output: done.\n");
+
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

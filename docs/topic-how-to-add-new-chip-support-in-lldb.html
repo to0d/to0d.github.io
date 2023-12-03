@@ -1,0 +1,141 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>DBG: How to add new chip support in lldb</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>DBG: How to add new chip support in lldb</h1>
+        <h3>芯片适配</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-15</time>
+            <i><a href="../tags/Chip-Debug.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Chip-Debug</a>&nbsp;<a href="../tags/LLDB-target.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB-target</a>&nbsp;<a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H2><a name="HEAD_39b0ea00" href="#TOC_HEAD_39b0ea00">1. Main Steps</a></H2>
+<ul>
+	<li>Add msp430 triple to LLDB</li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_855edd30">ArchSpec.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Utility/ArchSpec.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Utility/ArchSpec.cpp" target="_blank"><font color="red"><i>link</i></font></a></li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_8d94e5a8"><code>llvm::Triple::arm</code> &ndash; <a href="42b0b74be3901532a5c7c77630d990f9.html" target="_blank">Triple.h</a>&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/llvm/include/llvm/TargetParser/Triple.h" title="https://github.com/to0d/llvm-project/tree/main/llvm/include/llvm/TargetParser/Triple.h" target="_blank"><font color="red"><i>link</i></font></a> &nbsp;<a href="../tags/LLVM-triple.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-triple</a></li>
+			<li><code>ArchSpec::eCore_arm_generic</code> &ndash; <code>ArchSpec.h</code></li>
+			<li><code>llvm::ELF::EM_ARM</code> &ndash; <code>llvm\include\llvm\BinaryFormat\ELF.h</code></li>
+			<br />
+		</ul>
+	</ul>
+	<li>Fix DWARF parsing errors in LLDB</li>
+	<ul>
+		<li>DWARFxxx.cpp</li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_aefe773a">Describe msp430 registers in a python file &nbsp;<a href="../tags/LLDB-Plugin.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB-Plugin</a>&nbsp;<a href="../tags/lldb-settings-set.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>lldb-settings-set</a></li>
+	<br />
+	<pre><code>(lldb) settings set plugin.process.gdb-remote.target-definition-file &lt;filename&gt;
+example: x86_64_target_definition.py	</code></pre>
+	<ul>
+		<li><a name="HEAD_HIDDEN_9dd9abcb"><strong><font color="red">实际上 MSP430 用 GDBRemoteRegisterFallback.cpp 实现</font></strong> , see <a href="add-support-msp430-in-lldb.html#MSP430-SUPPORT-1" target="_blank">update GDBRemoteRegisterFallback.cpp</a></li>
+		<br />
+	</ul>
+	<li>Added msp430 breakpoint opcode to LLDB</li>
+	<br />
+	<ul>
+		<li><a name="HEAD_HIDDEN_f57253e8">GetSoftwareBreakpointTrapOpcode &ndash; Platform.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Target/Platform.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Target/Platform.cpp" target="_blank"><font color="red"><i>link</i></font></a></li>
+		<br />
+		<pre><code>size_t Platform::GetSoftwareBreakpointTrapOpcode(Target &target,
+                                            BreakpointSite *bp_site) {
+...
+case llvm::Triple::x86:
+case llvm::Triple::x86_64: {
+static const uint8_t g_i386_opcode[] = {0xCC};
+trap_opcode = g_i386_opcode;
+trap_opcode_size = sizeof(g_i386_opcode);
+} break;		</code></pre>
+	</ul>
+	<li>Implemented msp430 ABI</li>
+	<ul>
+		<li>example: ABISysV_x86_64.cpp</li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_2b24e152">LLDB leverages the disassembler from LLVM &nbsp;<a href="../tags/LLVM-Assembler.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-Assembler</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_4957c478">DisassemblerLLVMC.h&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Plugins/Disassembler/LLVMC/DisassemblerLLVMC.h" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Plugins/Disassembler/LLVMC/DisassemblerLLVMC.h" target="_blank"><font color="red"><i>link</i></font></a></li>
+		<br />
+		<pre><code>class DisassemblerLLVMC : public lldb_private::Disassembler {		</code></pre>
+	</ul>
+</ul>
+	<H2><a name="HEAD_4b2fc60" href="#TOC_HEAD_4b2fc60">2. Refer</a></H2>
+<ul>
+	<li><a href=""2023-09-16 Learn LLDB-tutorial.pdf"" target="_blank">&quot;2023&ndash;09&ndash;16 Learn LLDB&ndash;tutorial.pdf&quot;</a></li>
+	<li><a name="HEAD_HIDDEN_12fc77ba"><a href="add-support-msp430-in-lldb.html" target="_blank">Add support MSP430 in LLDB</a></li>
+	<li><a name="HEAD_HIDDEN_ef1fea1c"><a href="how-to-build-msp430-plugin-lib.html" target="_blank">How to build lldbPluginABIMSP430 library</a></li>
+	<li><a name="HEAD_HIDDEN_6fdb1784"><a href="how-lldb-remote-target-plugin-works.html" target="_blank">How remote target plugin works</a></li>
+	<br />
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

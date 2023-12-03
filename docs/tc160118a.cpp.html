@@ -1,0 +1,54 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC160118A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC160118A.cpp</h1>
+            <h3>c11 thread - mutex</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/std-thread.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-thread</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;mutex&gt;
+#include &lt;unistd.h&gt; //for sleep
+
+//static std::mutex  m;
+static std::recursive_mutex  m;
+static int count = 0;
+
+static void foo()
+{
+    m.lock();
+    std::cout &lt;&lt; count++ &lt;&lt; std::endl;
+    m.unlock();
+}
+
+int main(void)
+{
+    std::thread t1(foo);
+    std::thread t2(foo);
+    t1.join();
+    t2.join();
+    usleep(300);
+
+    std::cout &lt;&lt; "output: done!" &lt;&lt; std::endl;
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

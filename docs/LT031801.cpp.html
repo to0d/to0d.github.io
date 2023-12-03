@@ -1,0 +1,228 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT031801.cpp (Maximum Product of Word Lengths)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT031801.cpp (Maximum Product of Word Lengths)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-11-18</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0318.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0318</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_1effaa7a" href="#TOC_HEAD_1effaa7a">Problem 0318 <strong>Maximum Product of Word Lengths</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/maximum-product-of-word-lengths/" target="_blank">https://leetcode.com/problems/maximum&ndash;product&ndash;of&ndash;word&ndash;lengths/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>55.86</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_6fc186db" href="#TOC_HEAD_6fc186db">LT031801.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_dd06d7ec">LT0318 (name=Maximum Product of Word Lengths, ptag=Leetcode) &nbsp;<a href="../tags/LT0318.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0318</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_a715804d"><a href="https://leetcode.com/problems/maximum-product-of-word-lengths/" target="_blank">Maximum Product of Word Lengths &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0318.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0318</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a string array <code>words</code> , find the maximum value of <code>length(word[i]) * length(word[j])</code> where the two words do not share common letters. If no such two words exist, return 0.
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input: words = ["abcw","baz","foo","bar","xtfn","abcdef"]
+Output: 16
+Explanation: The two words can be "abcw", "xtfn".	</code></pre>
+	<p>
+		Example 2:
+	</p>
+	<pre><code>Input: words = ["a","ab","abc","d","cd","bcd","abcd"]
+Output: 4
+Explanation: The two words can be "ab", "cd".	</code></pre>
+	<p>
+		Example 3:
+	</p>
+	<pre><code>Input: words = ["a","aa","aaa","aaaa"]
+Output: 0
+Explanation: No such pair of words.	</code></pre>
+	<li><a name="HEAD_HIDDEN_7d77fd0c"><strong>Better solution learn from other solution</strong> &nbsp;<a href="../tags/LT0318.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0318</a></li>
+	<br />
+	<pre><code>class Solution {
+public:
+int maxProduct(vector&lt;string&gt;& words) {
+
+int len = words.size();
+if( len == 0 )
+    return 0;
+
+vector&lt;int&gt; masks;
+for( auto s : words)
+    masks.push_back( getMask(s));
+
+int res = -1;
+for( int i = 0; i &lt; len ; ++i )
+{
+    int la = words[i].size();
+    for( int j = i+1; j &lt; len ; ++j )
+    {
+        int lb = words[j].size();
+        if( la*lb &gt; res && (masks[i]& masks[j]) == 0)
+                res = la * lb;
+    }
+}
+return res &lt; 0 ? 0 : res;
+}
+
+int getMask(const string& str)
+{
+    int mask = 0;
+    for( char c : str)
+    {
+        mask |= (1 &lt;&lt; (c-'a'));
+        if (mask == 0x3FFFFFF)
+            break;
+    }
+    return mask;
+}
+};	</code></pre>
+</ul>
+	<H3><a name="HEAD_445727a8" href="#TOC_HEAD_445727a8">LT031801.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+public:
+    int maxProduct(vector&lt;string&gt;& words) {
+
+    int len = words.size();
+    if( len == 0 )
+        return 0;
+
+    int(*array)[26] = new int[len][26];
+
+    for( int i = 0; i &lt; len ; ++i )
+    {
+        int* pc = array[i];
+        for(int j = 0 ; j &lt; 26 ;++j )
+            pc[j] = 0;
+
+        for( char c : words.at(i))
+            pc[c-'a']++;
+    }
+
+    int res = -1;
+    for( int i = 0; i &lt; len ; ++i )
+    {
+        int la = words[i].size();
+
+        for( int j = i+1; j &lt; len ; ++j )
+        {
+            int lb = words[j].size();
+            if( la*lb &gt; res)
+            {
+                bool hasCommon = false;
+                for(int k=0; !hasCommon && k &lt; 26 ;++k )
+                    if( array[i][k] &gt; 0 && array[j][k] &gt; 0)
+                        hasCommon = true;
+
+                if( !hasCommon )
+                    res = la * lb;
+            }
+        }
+    }
+
+    delete array;
+    return res &lt; 0 ? 0 : res;
+    }
+};
+
+
+void test(vector&lt;string&gt; words)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(words);
+    cout &lt;&lt; "; output: ";
+    int r = Solution().maxProduct(words);
+    cout &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({"abcw","baz","foo","bar","xtfn","abcdef"});
+}
+
+// Result
+//
+// 2022-11-18: Runtime 103ms 55.86% Memory 25.4MB 23.88%, https://leetcode.com/problems/maximum-product-of-word-lengths/submissions/845863691/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [abcw,baz,foo,bar,xtfn,abcdef]; output: 16;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

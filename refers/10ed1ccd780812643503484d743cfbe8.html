@@ -1,0 +1,1603 @@
+<html>
+    <head>
+        <meta http-equiv="Cache-Control" content="no-siteapp"></meta>
+        <title>Test&nbsp;Linux性能评测工具之一&nbsp;gprof篇&nbsp;我本书生&nbsp;博客频道&nbsp;CSDN&nbsp;NET</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+        <meta name="description" content="1&#160;libev1.1&#160;Introduction主页http://software.schmorp.de/pkg/libev.html.&#160;&#160;文档http://software.schmorp.de/pkg/libev.html.&#160;&#160;libev所实现的功能就是一个强大的reactor,可能notify事件主要包括下面这些：ev_io &#160; &#160; &#160; &#160; "></meta>
+    </head>
+    <body>
+        <body>Original&nbsp;Link:&nbsp;
+            <b >
+                <font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2016. All rights reserved - to0d@outlook.com, at Thu Feb 02 10:51:20 CST 2017</font>
+            </b>
+            <br>
+
+            <a href="http://blog.csdn.net/stanjiang2010/article/details/5655143" target="_blank">
+                <font color="red" size="3">Linux性能评测工具之一：gprof篇&nbsp;&ndash;&nbsp;我本书生
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ndash;&nbsp;博客频道&nbsp;&ndash;&nbsp;CSDN.NET</font>
+            </a>
+            <p></p>
+        </body>
+        <div id="container">
+            <div id="body">
+                <div id="main">
+                    <div class="main">
+                        <div id="article_details" class="details">
+                            <div id="article_content" class="article_content">
+                                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这些天自己试着对项目作一些压力测试和性能优化，也对用过的测试工具作一些总结，并把相关的资料作一个汇总，以便以后信手拈来！</p>
+                                <p>&nbsp;</p>
+                                <div class="Section0" style="layout-grid: 15.6pt none;">
+                                    <h1 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <a name="_Toc253385542"></a>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">1&nbsp;</span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 黑体;">简介</span>
+                                        </span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                    </h1>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">改进应用程序的性能是一项非常耗时耗力的工作，但是究竟程序中是哪些函数消耗掉了大部分执行时间，这通常都不是非常明显的。GNU&nbsp;编译器工具包所提供了一种剖析工具&nbsp;GNU&nbsp;profiler（gprof）。gprof&nbsp;可以为&nbsp;Linux平台上的程序精确分析性能瓶颈。gprof精确地给出函数被调用的时间和次数，给出函数调用关系。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">gprof&nbsp;
+                                            <span style="font-family: 宋体;">用户手册</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">网站&nbsp;</span>
+                                        </span>
+                                        <span>
+                                            <a href="http://sourceware.org/binutils/docs-2.17/gprof/index.html">
+                                                <span class="16" style="font-size: 10pt; color: #0000ff; font-family: 'Times New Roman'; text-decoration: underline; mso-spacerun: 'yes';">http://sourceware.org/binutils/docs&ndash;2.17/gprof/index.html</span>
+                                            </a>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <h1 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <a name="_Toc253385543"></a>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">2&nbsp;</span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 黑体;">功能</span>
+                                        </span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                    </h1>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Gprof</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">&nbsp;
+                                            <span style="font-family: 宋体;">是</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">GNU&nbsp;gnu&nbsp;binutils
+                                            <span style="font-family: 宋体;">工具之一，默认情况下linux系统当中都带有这个工具。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">1.&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">可以显示&ldquo;flat&nbsp;profile&rdquo;，包括每个函数的调用次数，每个函数消耗的处理器时间，</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">2.&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">可以显示&ldquo;Call&nbsp;graph&rdquo;，包括函数的调用关系，每个函数调用花费了多少时间。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">3.&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">可以显示&ldquo;注释的源代码&rdquo;－－是程序源代码的一个复本，标记有程序中每行代码的执行次数。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <h1 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <a name="_Toc253385544"></a>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">3&nbsp;</span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 黑体;">原理</span>
+                                        </span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                    </h1>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">通过在编译和链接程序的时候（使用&nbsp;&ndash;pg&nbsp;编译和链接选项），gcc&nbsp;在你应用程序的每个函数中都加入了一个名为mcount&nbsp;(&nbsp;or&nbsp;&nbsp;&ldquo;_mcount&rdquo;&nbsp;&nbsp;,&nbsp;or&nbsp;&nbsp;&ldquo;__mcount&rdquo;&nbsp;,&nbsp;依赖于编译器或操作系统)的函数，也就是说你的应用程序里的每一个函数都会调用mcount,&nbsp;而mcount&nbsp;会在内存中保存一张函数调用图，并通过函数调用堆栈的形式查找子函数和父函数的地址。这张调用图也保存了所有与函数相关的调用时间，调用次数等等的所有信息。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <h1 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <a name="_Toc253385545"></a>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">4&nbsp;</span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 黑体;">使用流程</span>
+                                        </span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                    </h1>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">1.</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">在编译和链接时&nbsp;加上&ndash;pg选项。一般我们可以加在&nbsp;makefile&nbsp;中。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">2.</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">执行编译的二进制程序。执行参数和方式同以前。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">3.</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">在程序运行目录下&nbsp;生成&nbsp;gmon.out&nbsp;文件。如果原来有gmon.out&nbsp;文件，将会被重写。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">4.</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">结束进程。这时&nbsp;gmon.out&nbsp;会再次被刷新。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">5.</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">用&nbsp;gprof&nbsp;工具分析&nbsp;gmon.out&nbsp;文件。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <h1 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <a name="_Toc253385546"></a>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">5&nbsp;</span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 黑体;">参数说明</span>
+                                        </span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                    </h1>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;b&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">不再输出统计图表中每个字段的详细描述。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;p&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">只输出函数的调用图（</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Call&nbsp;graph</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">的那部分信息）。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;q&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">只输出函数的时间消耗列表。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;e&nbsp;Name&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">不再输出函数</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Name&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">及其子函数的调用图（除非它们有未被限制的其它父函数）。可以给定多个</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&ndash;e&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">标志。一个</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&ndash;e&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">标志只能指定一个函数。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;E&nbsp;Name&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">不再输出函数</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Name&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">及其子函数的调用图，此标志类似于</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&ndash;e&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">标志，但它在总时间和百分比时间的计算中排除了由函数</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Name&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">及其子函数所用的时间。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;f&nbsp;Name&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">输出函数</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Name&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">及其子函数的调用图。可以指定多个</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&ndash;f&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">标志。一个</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&ndash;f&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">标志只能指定一个函数。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;F&nbsp;Name&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">输出函数</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Name&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">及其子函数的调用图，它类似于</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&ndash;f&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">标志，但它在总时间和百分比时间计算中仅使用所打印的例程的时间。可以指定多个</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&ndash;F&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">标志。一个</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&ndash;F&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">标志只能指定一个函数。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;F&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">标志覆盖</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&ndash;E&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">标志。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 21pt; text-indent: -21pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Wingdings'; mso-spacerun: 'yes';">l&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;z&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">显示使用次数为零的例程（按照调用计数和累积时间计算）。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; color: #0000ff; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">一般用法：&nbsp;gprof&nbsp;</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; color: #0000ff; font-family: 'ˎ̥'; mso-spacerun: 'yes';">&ndash;</span>
+                                        <span style="font-size: 10.5pt; color: #0000ff; font-family: '宋体'; mso-spacerun: 'yes';">b&nbsp;
+                                            <span style="font-family: 宋体;">二进制程序&nbsp;gmon.out&nbsp;&gt;report.txt</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; color: #0000ff; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <h1 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <a name="_Toc253385547"></a>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">6&nbsp;</span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 黑体;">报告说明</span>
+                                        </span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                    </h1>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">G</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">prof&nbsp;
+                                            <span style="font-family: 宋体;">产生的信息解释：</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <table style="padding-right: 5.4pt; padding-left: 5.4pt; padding-bottom: 0pt; padding-top: 0pt; border-collapse: collapse; mso-table-layout-alt: fixed;" border="0">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding-right: 5.4pt; padding-left: 5.4pt; padding-bottom: 0pt; width: 60.85pt; padding-top: 0pt; border: #000000 0.5pt solid;" width="81" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">%time</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: #000000 0.5pt solid; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 60.85pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="81" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">Cumulative</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">seconds</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: #000000 0.5pt solid; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 60.85pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="81" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman';">S</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">elf&nbsp;</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman';">S</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">econds</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: #000000 0.5pt solid; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 60.85pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="81" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman';">C</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">alls</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: #000000 0.5pt solid; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 60.9pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="81" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman';">S</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">elf</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">TS/call</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: #000000 0.5pt solid; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 60.9pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="81" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman';">T</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">otal</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">TS/call</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: #000000 0.5pt solid; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 60.9pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="81" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">name</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: #000000 0.5pt solid; width: 60.85pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="81" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">该函数消耗时间占程序所有时间百分比</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 60.85pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="81" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">程序的累积执行时间</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">（只是包括gprof能够监控到的函数）</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 60.85pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="81" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">该函数本身执行时间</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';">
+                                                            <span style="font-family: 宋体;">（</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; color: #0000ff; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">所有被调用次数的合共时间</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';">
+                                                            <span style="font-family: 宋体;">）</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 60.85pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="81" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">函数被调用次数</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 60.9pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="81" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">函数平均执行时间</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">（不包括被调用时间）</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';">
+                                                            <span style="font-family: 宋体;">（</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; color: #0000ff; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">函数的单次执行时间</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';">
+                                                            <span style="font-family: 宋体;">）</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 60.9pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="81" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">函数平均执行时间</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">（包括被调用时间）</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';">
+                                                            <span style="font-family: 宋体;">（</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; color: #0000ff; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">函数的单次执行时间</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';">
+                                                            <span style="font-family: 宋体;">）</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 60.9pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="81" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">函数名</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">Call&nbsp;Graph&nbsp;
+                                            <span style="font-family: 宋体;">的字段含义：</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <table style="padding-right: 5.4pt; padding-left: 5.4pt; padding-bottom: 0pt; padding-top: 0pt; border-collapse: collapse; mso-table-layout-alt: fixed;" border="0">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding-right: 5.4pt; padding-left: 5.4pt; padding-bottom: 0pt; width: 71pt; padding-top: 0pt; border: #000000 0.5pt solid;" width="94" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman';">I</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">ndex</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: #000000 0.5pt solid; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 71pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="94" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">%time</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: #000000 0.5pt solid; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 71pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="94" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman';">S</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">elf</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: #000000 0.5pt solid; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 71pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="94" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman';">C</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">hildren</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: #000000 0.5pt solid; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 71.05pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="94" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman';">C</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">alled</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: #000000 0.5pt solid; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 71.05pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="94" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman';">N</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">ame</span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: #000000 0.5pt solid; width: 71pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="94" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">索引值</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 71pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="94" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">函数消耗时间占所有时间百分比</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 71pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="94" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">函数本身执行时间</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 71pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="94" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">执行子函数所用时间</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 71.05pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="94" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">被调用次数</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                                <td style="border-right: #000000 0.5pt solid; padding-right: 5.4pt; border-top: medium none; padding-left: 5.4pt; padding-bottom: 0pt; border-left: medium none; width: 71.05pt; padding-top: 0pt; border-bottom: #000000 0.5pt solid;" width="94" valign="top">
+                                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                                            <span style="font-family: 宋体;">函数名</span>
+                                                        </span>
+                                                        <span style="font-size: 10.5pt; font-family: '宋体';"></span>
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">注意：</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">程序的累积执行时间只是包括gprof能够监控到的函数。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; color: #0000ff; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">工作在内核态的函数和没有加&ndash;pg编译的第三方库函数是无法被gprof能够监控到的</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">，（如sleep（）等）</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">Gprof&nbsp;
+                                            <span style="font-family: 宋体;">的具体参数可以&nbsp;通过&nbsp;man&nbsp;gprof&nbsp;查询。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <h1 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <a name="_Toc253385548"></a>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">7&nbsp;</span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 黑体;">共享库的支持</span>
+                                        </span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                    </h1>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">对于代码剖析的支持是由编译器增加的，</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; color: #0000ff; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">因此如果希望从共享库中获得剖析信息，就需要使用&nbsp;&ndash;pg&nbsp;来编译这些库</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; color: #ff0000; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">提供已经启用代码剖析支持而编译的&nbsp;C&nbsp;库版本（libc_p.a）。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">如果需要分析系统函数（如libc库），可以用&nbsp;</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">lc_p
+                                            <span style="font-family: 宋体;">替换&ndash;lc。这样程序会链接libc_p.so或libc_p.a。这非常重要，因为只有这样才能监控到底层的c库函数的执行时间，（例如memcpy()，memset()，sprintf()等）。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">gcc&nbsp;example1.c&nbsp;&ndash;pg</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;lc_p&nbsp;&ndash;o&nbsp;example1</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">注意要用ldd&nbsp;./example&nbsp;|&nbsp;grep&nbsp;libc来查看程序链接的是libc.so还是libc_p.so</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <h1 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <a name="_Toc253385549"></a>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">8&nbsp;</span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 黑体;">用户时间与内核时间</span>
+                                        </span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                    </h1>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">gprof&nbsp;
+                                            <span style="font-family: 宋体;">的最大缺陷：它只能分析应用程序在运行过程中所消耗掉的用户时间，无法得到程序内核空间的运行时间。通常来说，应用程序在运行时既要花费一些时间来运行用户代码，也要花费一些时间来运行&nbsp;&ldquo;系统代码&rdquo;，例如内核系统调用sleep()。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">有一个方法可以查看应用程序的运行时间组成，在&nbsp;time&nbsp;命令下面执行程序。这个命令会显示一个应用程序的</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; color: #0000ff; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">实际运行时间、用户空间运行时间、内核空间运行时间</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">如&nbsp;</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">time&nbsp;./</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">program</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">输出：</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">real&nbsp;&nbsp;&nbsp;&nbsp;2m30.295s</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">user&nbsp;&nbsp;&nbsp;&nbsp;0m0.000s</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">sys&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0m0.004s</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <h1 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <a name="_Toc253385550"></a>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">9&nbsp;</span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 黑体;">注意事项</span>
+                                        </span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                    </h1>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 18pt; text-indent: -18pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">1.&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">g++
+                                            <span style="font-family: 宋体;">在编译和链接两个过程，都要使用&ndash;pg选项。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 18pt; text-indent: -18pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">2.&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">只能使用静态连接libc库，否则在初始化*.so之前就调用profile代码会引起&ldquo;</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">segmentation&nbsp;fault</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">&rdquo;
+                                            <span style="font-family: 宋体;">，解决办法是编译时加上</span>
+                                        </span>
+                                        <span class="15" style="font-size: 10pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;static&ndash;libgcc</span>
+                                        <span class="15" style="font-size: 10pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">或&ndash;static。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 18pt; text-indent: -18pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">3.&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">如果不用g++而使用ld直接链接程序，要加上链接文件</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">/lib/gcrt0.o</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">，如</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">ld&nbsp;&ndash;o&nbsp;myprog&nbsp;/lib/gcrt0.o&nbsp;myprog.o&nbsp;utils.o&nbsp;&ndash;lc_p</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">。也可能是</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">gcrt</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">1</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">.o</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 18pt; text-indent: -18pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">4.&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">要监控到第三方库函数的执行时间，第三方库也必须是添加&nbsp;</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&ndash;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">pg&nbsp;
+                                            <span style="font-family: 宋体;">选项编译的。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 18pt; text-indent: -18pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">5.&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">gprof
+                                            <span style="font-family: 宋体;">只能分析应用程序所消耗掉的用户时间.</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 18pt; text-indent: -18pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">6.&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">程序不能以demon方式运行。否则采集不到时间。（可采集到调用次数）</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 18pt; text-indent: -18pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">7.&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">首先使用&nbsp;time&nbsp;来运行程序从而判断&nbsp;gprof&nbsp;是否能产生有用信息是个好方法。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 18pt; text-indent: -18pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">8.&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">如果&nbsp;gprof&nbsp;不适合您的剖析需要，那么还有其他一些工具可以克服&nbsp;gprof&nbsp;部分缺陷，包括&nbsp;OProfile&nbsp;和&nbsp;Sysprof。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 18pt; text-indent: -18pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">9.&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">gprof</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">对于代码大部分是用户空间的</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">CPU</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">密集型的程序用处明显。对于大部分时间运行在内核空间或者由于外部因素（例如操作系统的&nbsp;I/O&nbsp;子系统过载）而运行得非常慢的程序难以进行优化。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 18pt; text-indent: -18pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">10.&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">gprof&nbsp;
+                                            <span style="font-family: 宋体;">不支持多线程应用，</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">多线程下只能采集主线程性能数据。原因是gprof采用ITIMER_PROF信号，在多线程内只有主线程才能响应该信号</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">。但是有一个简单的方法可以解决这一问题：</span>
+                                        </span>
+                                        <span>
+                                            <a href="http://sam.zoy.org/writings/programming/gprof.html">
+                                                <span class="16" style="font-size: 10pt; color: #0000ff; font-family: '宋体'; text-decoration: underline; mso-spacerun: 'yes';">http://sam.zoy.org/writings/programming/gprof.html</span>
+                                            </a>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 18pt; text-indent: -18pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">11.&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">gprof
+                                            <span style="font-family: 宋体;">只能在程序正常结束退出之后才能生成报告（gmon.out）。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 42pt; text-indent: -21pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">a)&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">原因：&nbsp;gprof通过在atexit()里注册了一个函数来产生结果信息，任何非正常退出都不会执行atexit()的动作，所以不会产生gmon.out文件。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 42pt; text-indent: -21pt;">
+                                        <span style="font-size: 10.5pt; font-family: '新宋体'; mso-spacerun: 'yes';">b)&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: '新宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 新宋体;">程序可从</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">main</span>
+                                        <span style="font-size: 10.5pt; font-family: '新宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 新宋体;">函数中正常退出，或者通过系统调用</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">exit()</span>
+                                        <span style="font-size: 10.5pt; font-family: '新宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 新宋体;">函数退出。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '新宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <h1 style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <a name="_Toc253385551"></a>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">10&nbsp;</span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 黑体;">多线程应用</span>
+                                        </span>
+                                        <span style="font-weight: bold; font-size: 14pt; font-family: '黑体'; mso-spacerun: 'yes';"></span>
+                                    </h1>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">gprof&nbsp;
+                                            <span style="font-family: 宋体;">不支持多线程应用，</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">多线程下只能采集主线程性能数据。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">原因是gprof采用ITIMER_PROF信号，在多线程内只有主线程才能响应该信号。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt; text-indent: 21pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">采用什么方法才能够分析所有线程呢？</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; color: #0000ff; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">关键是能够让各个线程都响应ITIMER_PROF信号。可以通过桩子函数来实现，重写pthread_create函数</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">。</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">////////////////////&nbsp;gprof&ndash;helper.c////////////////////////////</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">#define&nbsp;_GNU_SOURCE</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">#include&nbsp;&lt;sys/time.h&gt;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">#include&nbsp;&lt;stdio.h&gt;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">#include&nbsp;&lt;stdlib.h&gt;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">#include&nbsp;&lt;dlfcn.h&gt;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">#include&nbsp;&lt;pthread.h&gt;</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">static&nbsp;void&nbsp;*&nbsp;wrapper_routine(void&nbsp;*);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">/*&nbsp;Original&nbsp;pthread&nbsp;function&nbsp;*/</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">static&nbsp;int&nbsp;(*pthread_create_orig)(pthread_t&nbsp;*__restrict,</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__const&nbsp;pthread_attr_t&nbsp;*__restrict,</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;*(*)(void&nbsp;*),</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;*__restrict)&nbsp;=&nbsp;NULL;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">/*&nbsp;Library&nbsp;initialization&nbsp;function&nbsp;*/</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">void&nbsp;wooinit(void)&nbsp;__attribute__((constructor));</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">void&nbsp;wooinit(void)</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">{</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;pthread_create_orig&nbsp;=&nbsp;dlsym(RTLD_NEXT,&nbsp;&quot;pthread_create&quot;);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;fprintf(stderr,&nbsp;&quot;pthreads:&nbsp;using&nbsp;profiling&nbsp;hooks&nbsp;for&nbsp;gprof/n&quot;);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;if(pthread_create_orig&nbsp;==&nbsp;NULL)</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;{</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char&nbsp;*error&nbsp;=&nbsp;dlerror();</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(error&nbsp;==&nbsp;NULL)</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error&nbsp;=&nbsp;&quot;pthread_create&nbsp;is&nbsp;NULL&quot;;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(stderr,&nbsp;&quot;%s/n&quot;,&nbsp;error);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(EXIT_FAILURE);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;}</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">}</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">/*&nbsp;Our&nbsp;data&nbsp;structure&nbsp;passed&nbsp;to&nbsp;the&nbsp;wrapper&nbsp;*/</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">typedef&nbsp;struct&nbsp;wrapper_s</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">{</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;*&nbsp;(*start_routine)(void&nbsp;*);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;*&nbsp;arg;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;pthread_mutex_t&nbsp;lock;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;pthread_cond_t&nbsp;&nbsp;wait;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;struct&nbsp;itimerval&nbsp;itimer;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">}&nbsp;wrapper_t;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">/*&nbsp;The&nbsp;wrapper&nbsp;function&nbsp;in&nbsp;charge&nbsp;for&nbsp;setting&nbsp;the&nbsp;itimer&nbsp;value&nbsp;*/</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">static&nbsp;void&nbsp;*&nbsp;wrapper_routine(void&nbsp;*&nbsp;data)</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">{</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Put&nbsp;user&nbsp;data&nbsp;in&nbsp;thread&ndash;local&nbsp;variables&nbsp;*/</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;*&nbsp;(*start_routine)(void&nbsp;*)&nbsp;=&nbsp;((wrapper_t*)data)&ndash;&gt;;start_routine;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;*&nbsp;arg&nbsp;=&nbsp;((wrapper_t*)data)&ndash;&gt;;arg;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Set&nbsp;the&nbsp;profile&nbsp;timer&nbsp;value&nbsp;*/</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;setitimer(ITIMER_PROF,&nbsp;&amp;((wrapper_t*)data)&ndash;&gt;;itimer,&nbsp;NULL);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Tell&nbsp;the&nbsp;calling&nbsp;thread&nbsp;that&nbsp;we&nbsp;don&#039;t&nbsp;need&nbsp;its&nbsp;data&nbsp;anymore&nbsp;*/</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;pthread_mutex_lock(&amp;((wrapper_t*)data)&ndash;&gt;;lock);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;pthread_cond_signal(&amp;((wrapper_t*)data)&ndash;&gt;;wait);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;pthread_mutex_unlock(&amp;((wrapper_t*)data)&ndash;&gt;;lock);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Call&nbsp;the&nbsp;real&nbsp;function&nbsp;*/</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;start_routine(arg);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">}</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">/*&nbsp;Our&nbsp;wrapper&nbsp;function&nbsp;for&nbsp;the&nbsp;real&nbsp;pthread_create()&nbsp;*/</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">int&nbsp;pthread_create(pthread_t&nbsp;*__restrict&nbsp;thread,</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__const&nbsp;pthread_attr_t&nbsp;*__restrict&nbsp;attr,</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;*&nbsp;(*start_routine)(void&nbsp;*),</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;*__restrict&nbsp;arg)</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">{</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;wrapper_t&nbsp;wrapper_data;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;i_return;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Initialize&nbsp;the&nbsp;wrapper&nbsp;structure&nbsp;*/</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;wrapper_data.start_routine&nbsp;=&nbsp;start_routine;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;wrapper_data.arg&nbsp;=&nbsp;arg;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;getitimer(ITIMER_PROF,&nbsp;&amp;wrapper_data.itimer);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;pthread_cond_init(&amp;wrapper_data.wait,&nbsp;NULL);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;pthread_mutex_init(&amp;wrapper_data.lock,&nbsp;NULL);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;pthread_mutex_lock(&amp;wrapper_data.lock);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;The&nbsp;real&nbsp;pthread_create&nbsp;call&nbsp;*/</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;i_return&nbsp;=&nbsp;pthread_create_orig(thread,</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attr,</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;wrapper_routine,</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;wrapper_data);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;If&nbsp;the&nbsp;thread&nbsp;was&nbsp;successfully&nbsp;spawned,&nbsp;wait&nbsp;for&nbsp;the&nbsp;data</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;to&nbsp;be&nbsp;released&nbsp;*/</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;if(i_return&nbsp;==&nbsp;0)</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;{</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pthread_cond_wait(&amp;wrapper_data.wait,&nbsp;&amp;wrapper_data.lock);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;}</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;pthread_mutex_unlock(&amp;wrapper_data.lock);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;pthread_mutex_destroy(&amp;wrapper_data.lock);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;pthread_cond_destroy(&amp;wrapper_data.wait);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;i_return;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">}</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">///////////////////</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">然后编译成动态库&nbsp;gcc&nbsp;&ndash;shared&nbsp;&ndash;fPIC&nbsp;gprof&ndash;helper.c&nbsp;&ndash;o&nbsp;gprof&ndash;helper.so&nbsp;&ndash;lpthread&nbsp;&ndash;ldl&nbsp;</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">使用例子：</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">/////////////////////a.c/////////////////////////////</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">#include&nbsp;&lt;stdio.h&gt;;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">#include&nbsp;&lt;stdlib.h&gt;;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">#include&nbsp;&lt;unistd.h&gt;;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">#include&nbsp;&lt;pthread.h&gt;;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">#include&nbsp;&lt;string.h&gt;;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">void&nbsp;fun1();</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">void&nbsp;fun2();</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">void*&nbsp;fun(void&nbsp;*&nbsp;argv);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">int&nbsp;main()</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">{</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;i&nbsp;=0;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;id;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pthread_t&nbsp;&nbsp;&nbsp;&nbsp;thread[100];</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for(i&nbsp;=0&nbsp;;i&lt;&nbsp;100;&nbsp;i++)</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;id&nbsp;=&nbsp;pthread_create(&amp;thread[i],&nbsp;NULL,&nbsp;fun,&nbsp;NULL);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;thread&nbsp;=%d/n&quot;,i);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;dsfsd/n&quot;);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;0;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">}</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">void*&nbsp;&nbsp;fun(void&nbsp;*&nbsp;argv)</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">{</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fun1();</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fun2();</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;NULL;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">}</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">void&nbsp;fun1()</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">{</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;i&nbsp;=&nbsp;0;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while(i&lt;100)</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i++;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;fun1/n&quot;);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">}</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">void&nbsp;fun2()</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">{</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;i&nbsp;=&nbsp;0;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;b;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while(i&lt;50)</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i++;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;fun2/n&quot;);</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//b+=i;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">}</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">///////////////</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">gcc&nbsp;&ndash;pg&nbsp;a.c&nbsp;&nbsp;gprof&ndash;helper.so</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">运行程序:</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">./a.out</span>
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';">
+                                            <span style="font-family: 宋体;">分析gmon.out:</span>
+                                        </span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                    <p class="p0" style="margin-top: 0pt; margin-bottom: 0pt;">
+                                        <span style="font-size: 10.5pt; font-family: 'Times New Roman'; mso-spacerun: 'yes';">gprof&nbsp;&ndash;b&nbsp;a.out&nbsp;gmon.out</span>
+                                        <span style="font-size: 10.5pt; font-family: '宋体'; mso-spacerun: 'yes';"></span>
+                                    </p>
+                                </div>
+                                <p>&nbsp;</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

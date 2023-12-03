@@ -1,0 +1,167 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT023501.cpp (Lowest Common Ancestor of a Binary Search Tree)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT023501.cpp (Lowest Common Ancestor of a Binary Search Tree)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-20</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0235.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0235</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_fbca11b4" href="#TOC_HEAD_fbca11b4">Problem 0235 <strong>Lowest Common Ancestor of a Binary Search Tree</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/" target="_blank">https://leetcode.com/problems/lowest&ndash;common&ndash;ancestor&ndash;of&ndash;a&ndash;binary&ndash;search&ndash;tree/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>78.55</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_d1f3b2d5" href="#TOC_HEAD_d1f3b2d5">LT023501.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_d9f7614c">LT0235 (name=Lowest Common Ancestor of a Binary Search Tree, ptag=Leetcode) &nbsp;<a href="../tags/LT0235.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0235</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_47cdd070"><a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/" target="_blank">Lowest Common Ancestor of a Binary Search Tree &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0235.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0235</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_e12260a2" href="#TOC_HEAD_e12260a2">LT023501.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution
+{
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q){
+        if( root == NULL || p == NULL || q == NULL)
+            return NULL;
+        if( p == q)
+            return p;
+
+        stack&lt;TreeNode*&gt; pPath, qPath;
+        if( !findNodeInBST(pPath, p, root)|| !findNodeInBST(qPath, q, root))
+            return NULL;
+
+        // find common ancestor from root node
+        TreeNode* pLast = root;
+        while( !pPath.empty() && !qPath.empty() && pPath.top() == qPath.top() )
+        {   pLast = pPath.top();
+            pPath.pop();
+            qPath.pop();
+        }
+
+        return pLast;
+    }
+
+    bool findNodeInBST( stack&lt;TreeNode*&gt;& path, TreeNode* pTarget, TreeNode* pNode){
+        if( pNode == NULL )
+            return false;
+
+        if( pTarget == pNode
+        || pTarget-&gt;val &lt; pNode-&gt;val && findNodeInBST(path, pTarget, pNode-&gt;left)
+        || pTarget-&gt;val &gt; pNode-&gt;val && findNodeInBST(path, pTarget, pNode-&gt;right))
+        {   path.push(pNode);
+            return true;
+        }
+
+        return false;
+    }
+};
+
+
+
+void test(TreeNode* root, TreeNode* p, TreeNode* q)
+{
+    cout &lt;&lt; "input: root=";
+    outputTree(root);
+    cout &lt;&lt; ", p=" &lt;&lt; p-&gt;val &lt;&lt; ", q=" &lt;&lt; q-&gt;val;
+    TreeNode* r = Solution().lowestCommonAncestor(root, p, q);
+    cout &lt;&lt; "; output: " ;
+    if( r == NULL )
+        cout &lt;&lt; "null" ;
+    else
+        cout &lt;&lt; r-&gt;val ;
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    TreeNode* root = makeTree("{6,2,8,0,4,7,9,null,null,3,5}");
+    test(root, findNode(root, 2), findNode(root, 8));
+}
+
+// Result
+//
+// 2022-11-23: Runtime 36ms 44.6% Memory 23.4MB 27.57%, https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/submissions/848464723/
+// 2023-02-20: Runtime 30ms 78.55% Memory 23.2MB 95.22%, https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/submissions/901587008/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: root=[6,2,8,0,4,7,9,null,null,3,5], p=2, q=8; output: 6;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

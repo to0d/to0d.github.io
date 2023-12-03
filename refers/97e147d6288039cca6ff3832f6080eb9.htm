@@ -1,0 +1,122 @@
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8"></meta>
+		<meta charset="utf-8"></meta>
+		<title>Show&nbsp;File&nbsp;Transfer&nbsp;Progress&nbsp;With&nbsp;Rsync&nbsp;Command</title>
+	</head>
+	<body class="post-template tag-quick-tip" data-new-gr-c-s-check-loaded="8.904.0" data-gr-ext-installed="">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2016. All rights reserved - to0d@outlook.com, at Wed Jan 11 11:14:37 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://linuxhandbook.com/rsync-show-progress/" target="_blank">
+				<font color="red" size="3">Show&nbsp;File&nbsp;Transfer&nbsp;Progress&nbsp;With&nbsp;Rsync&nbsp;Command</font>
+			</a>
+			<p></p>
+		</body>
+		<main class="container wrapper main">
+			<span class="is-rel w-100 display-block">
+				<span class="border-top-1 is-abs w-100"></span>
+			</span>
+			<div class="m-0-auto">
+				<div class="hero p-t-lg border-top-1">
+					<div class="hero__content flex flex-col flex-cc m-b">
+ 
+						<h1 class="hero__title text-center">Show&nbsp;File&nbsp;Transfer&nbsp;Progress&nbsp;With&nbsp;Rsync</h1>
+	
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-lg-6">
+						<article class="post tag-quick-tip content-wrap post-access-public no-overflow">
+							<div class="content js-toc-content">
+								<p>When&nbsp;you&nbsp;are&nbsp;transferring&nbsp;a&nbsp;large&nbsp;number&nbsp;of&nbsp;files&nbsp;that&nbsp;take&nbsp;some&nbsp;time,&nbsp;the
+									<a href="https://linuxhandbook.com/rsync-command-examples/">rsync&nbsp;command</a>
+									shows&nbsp;a&nbsp;blank&nbsp;output.
+								</p>
+								<p>The&nbsp;cursor&nbsp;just&nbsp;blinks&nbsp;without&nbsp;any&nbsp;information.</p>
+								<p>This&nbsp;leaves&nbsp;you&nbsp;wondering&nbsp;whether&nbsp;the&nbsp;files&nbsp;are&nbsp;being&nbsp;transferred&nbsp;or&nbsp;its&nbsp;just&nbsp;trying&nbsp;to&nbsp;connect&nbsp;to&nbsp;the&nbsp;remote&nbsp;server.</p>
+								<p>The&nbsp;good&nbsp;thing&nbsp;is&nbsp;that&nbsp;rsync&nbsp;is&nbsp;a&nbsp;versatile&nbsp;tool&nbsp;and&nbsp;it&nbsp;allows&nbsp;to&nbsp;show&nbsp;the&nbsp;status&nbsp;of&nbsp;file&nbsp;transfers.</p>
+								<p>
+									<strong>Just&nbsp;add
+										<code>&ndash;&ndash;progress</code>
+										to&nbsp;your&nbsp;rsync&nbsp;command&nbsp;and&nbsp;it&nbsp;starts&nbsp;showing&nbsp;the&nbsp;files&nbsp;being&nbsp;transferred
+									</strong>
+									:
+								</p>
+								<pre><code>rsync -r --progress source destination</code></pre>
+								<p>There&nbsp;is&nbsp;no&nbsp;specific&nbsp;location&nbsp;for&nbsp;the
+									<code>&ndash;&ndash;progress</code>
+									option.&nbsp;You&nbsp;can&nbsp;even&nbsp;add&nbsp;it&nbsp;to&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;rsync&nbsp;command.
+								</p>
+								<figure class="kg-card kg-image-card">
+									<a data-no-swup="" data-fslightbox="" href="https://linuxhandbook.com/content/images/2022/06/rsync-show-transfer-progress.png" aria-label="Click for Lightbox">
+										<img src="files/362dd52d7ed474e93237087963c07d85.png" class="kg-image" alt="Show progress of file transfer with rsync" loading="lazy" srcset="files/362dd52d7ed474e93237087963c07d85.png 752w" sizes="(min-width: 720px) 720px" width="752" height="482"></img>
+									</a>
+								</figure>
+								<p>You&nbsp;also&nbsp;get&nbsp;to&nbsp;see&nbsp;a&nbsp;summary&nbsp;of&nbsp;files&nbsp;transferred&nbsp;along&nbsp;with&nbsp;the&nbsp;transfer&nbsp;speed&nbsp;and&nbsp;time.</p>
+								<div class="kg-card kg-callout-card kg-callout-card-grey">
+									<div class="kg-callout-emoji">💡</div>
+									<div class="kg-callout-text">You&nbsp;can&nbsp;also&nbsp;use
+										<code>&ndash;P</code>
+										option&nbsp;instead&nbsp;of
+										<code>&ndash;&ndash;progress</code>
+										.&nbsp;It&#039;s&nbsp;the&nbsp;shorter&nbsp;form&nbsp;for&nbsp;the&nbsp;same.
+									</div>
+								</div>
+								<h2 id="show-overall-progress-with-rsync">Show&nbsp;overall&nbsp;progress&nbsp;with&nbsp;rsync</h2>
+								<p>This
+&nbsp;is&nbsp;all&nbsp;good.&nbsp;But&nbsp;if&nbsp;you&nbsp;have&nbsp;hundreds&nbsp;of&nbsp;files&nbsp;to&nbsp;transfer,&nbsp;it&nbsp;gets&nbsp;
+messy.&nbsp;The&nbsp;entire&nbsp;screen&nbsp;is&nbsp;filled&nbsp;with&nbsp;the&nbsp;file&nbsp;transfer&nbsp;statistics.&nbsp;
+You&nbsp;may&nbsp;not&nbsp;always&nbsp;want&nbsp;that.</p>
+								<p>Good&nbsp;thing&nbsp;again!&nbsp;You&nbsp;can&nbsp;make&nbsp;rsync&nbsp;show&nbsp;the&nbsp;overall&nbsp;progress&nbsp;instead&nbsp;of&nbsp;showing&nbsp;it&nbsp;for&nbsp;each&nbsp;individual&nbsp;file.</p>
+								<p>Instead&nbsp;of
+									<code>&ndash;&ndash;progress</code>
+									option,&nbsp;use
+									<code>info=progress2</code>
+									option.
+								</p>
+								<pre><code>rsync -r --info=progress2 source destination</code></pre>
+								<p>Here,&nbsp;you&nbsp;control&nbsp;the&nbsp;information&nbsp;to&nbsp;be&nbsp;displayed&nbsp;with&nbsp;the
+									<code>info</code>
+									option.&nbsp;You&nbsp;tell&nbsp;it&nbsp;to&nbsp;show&nbsp;the&nbsp;information&nbsp;for&nbsp;the
+									<code>progress</code>
+									i.e.&nbsp;file&nbsp;transfer.
+								</p>
+								<p>Some
+&nbsp;flags,&nbsp;like&nbsp;progress,&nbsp;are&nbsp;followed&nbsp;by&nbsp;a&nbsp;number.&nbsp;0&nbsp;means&nbsp;to&nbsp;silence&nbsp;the&nbsp;
+output,&nbsp;1&nbsp;means&nbsp;to&nbsp;show&nbsp;it&nbsp;for&nbsp;each&nbsp;file&nbsp;and&nbsp;2&nbsp;means&nbsp;total&nbsp;transfer&nbsp;
+progress.</p>
+								<figure class="kg-card kg-image-card">
+									<a data-no-swup="" data-fslightbox="" href="https://linuxhandbook.com/content/images/2022/06/see-overall-file-transfer-rsync.png" aria-label="Click for Lightbox">
+										<img src="files/cd3b813060b86466086a83450c3d933b.png" class="kg-image" alt="Display overall file transfer progress with rsync" loading="lazy" srcset="files/cd3b813060b86466086a83450c3d933b.png 789w" sizes="(min-width: 720px) 720px" width="789" height="301"></img>
+									</a>
+								</figure>
+								<p>This
+&nbsp;way,&nbsp;you&nbsp;get&nbsp;to&nbsp;see&nbsp;the&nbsp;overall&nbsp;progress&nbsp;of&nbsp;the&nbsp;files&nbsp;being&nbsp;transferred
+&nbsp;with&nbsp;rsync.&nbsp;This&nbsp;is&nbsp;a&nbsp;much&nbsp;cleaner&nbsp;output.&nbsp;Your&nbsp;screen&nbsp;is&nbsp;not&nbsp;flooded&nbsp;
+and&nbsp;you&nbsp;can&nbsp;easily&nbsp;understand&nbsp;the&nbsp;output.</p>
+								<p>Once&nbsp;the&nbsp;rsync&nbsp;command&nbsp;finishes&nbsp;the&nbsp;file&nbsp;transfer,&nbsp;you&nbsp;also&nbsp;get&nbsp;to&nbsp;see&nbsp;the&nbsp;summary&nbsp;of&nbsp;average&nbsp;transfer&nbsp;speed&nbsp;and&nbsp;time&nbsp;spent.</p>
+								<figure class="kg-card kg-image-card">
+									<a data-no-swup="" data-fslightbox="" href="https://linuxhandbook.com/content/images/2022/06/overall-transfer-progress-with-rsync-command.png" aria-label="Click for Lightbox">
+										<img src="files/cf621463927d941a4bc4c12d32d6886c.png" class="kg-image" alt="Overall file transfer progress with rsync command" loading="lazy" srcset="files/cf621463927d941a4bc4c12d32d6886c.png 789w" sizes="(min-width: 720px) 720px" width="789" height="301"></img>
+									</a>
+								</figure>
+								<p>That&#039;s&nbsp;super&nbsp;cool,&nbsp;isn&#039;t&nbsp;it?&nbsp;You&nbsp;now&nbsp;know&nbsp;how&nbsp;to&nbsp;display&nbsp;the&nbsp;file&nbsp;transfer&nbsp;progress&nbsp;with&nbsp;rsync&nbsp;command.</p>
+								<p>This&nbsp;is&nbsp;just&nbsp;one&nbsp;of&nbsp;the&nbsp;many&nbsp;cool&nbsp;things&nbsp;this&nbsp;handy&nbsp;CLI&nbsp;tool&nbsp;can&nbsp;do.&nbsp;Read&nbsp;this&nbsp;for
+									<a href="https://linuxhandbook.com/rsync-command-examples/">more&nbsp;practical&nbsp;examples&nbsp;of&nbsp;the&nbsp;rsync&nbsp;command</a>
+									.
+								</p>
+							</div>
+						</article>
+					</div>
+
+				</div>
+			</div>
+
+		</main>
+
+	</body>
+</html>

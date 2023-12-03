@@ -1,0 +1,75 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC180402L.py</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC180402L.py</h1>
+            <h3>Thread Example</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/L180315A.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>L180315A</a>&nbsp;<a href="../tags/Python-Thread.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Python-Thread</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#!/usr/bin/python3
+# -*- coding: UTF-8 -*-
+
+import threading
+import time
+
+class myThread (threading.Thread):
+    def __init__(self, threadID, name, counter):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.name = name
+        self.counter = counter
+    def run(self):
+        print ("开启线程" + self.name)
+        # 获取锁，用于线程同步
+        threadLock.acquire()
+        print_time(self.name, self.counter, 3)
+        # 释放锁，开启下一个线程
+        threadLock.release()
+
+def print_time(threadName, delay, counter):
+    while counter:
+        time.sleep(delay)
+        print ("%s: %s" % (threadName, time.ctime(time.time())))
+        counter -= 1
+
+threadLock = threading.Lock()
+threads = []
+
+# 创建新线程
+thread1 = myThread(1, "Thread-1", 1)
+thread2 = myThread(2, "Thread-2", 2)
+
+# 开启新线程
+thread1.start()
+thread2.start()
+
+# 添加线程到线程列表
+threads.append(thread1)
+threads.append(thread2)
+
+# 等待所有线程完成
+for t in threads:
+    t.join()
+
+print ("退出主线程")
+
+print('output: done.');</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,101 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Linux Issue - Script Syntax error in Ubuntu</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Linux Issue - Script Syntax error in Ubuntu</h1>
+        <h3>( unexpected</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2020-06-20</time>
+            <i><a href="../tags/Linux-Issue.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Linux-Issue</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="Linux-Script-Issue-Syntax-dash-1" href="#TOC_Linux-Script-Issue-Syntax-dash-1">Syntax error: &quot;(&quot; unexpected &ndash; caused by <strong>dash</strong></a></H3><ul><a href="../tags/dash.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>dash</a>&nbsp;</ul>
+<ul>
+	<li>Script</li>
+	<br />
+	<pre><code>git_repo_list=(         &lt;=== Syntax error: "(" unexpected
+    /data/note
+    /data/df
+    );	</code></pre>
+	<li><a name="HEAD_HIDDEN_b551cce4">系统 &ndash; 查看当前正在使用的shell <font color="red">echo $SHELL</font>           &nbsp;<a href="../tags/Shell.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Shell</a>&nbsp;<a href="../tags/TSH.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>TSH</a></li>
+	<li><a name="HEAD_HIDDEN_16511c8">系统 &ndash; 查看系统中安装了哪些shell <font color="red">cat /etc/shells</font>     &nbsp;<a href="../tags/Shell.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Shell</a>&nbsp;<a href="../tags/TSH.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>TSH</a></li>
+	<br />
+	<li>原因 Ubuntu已将 /bin/sh 链接到了/bin/dash</li>
+	<br />
+	<pre><code>cd /bin
+ll sh
+sh -&gt; dash*	</code></pre>
+	<li><a name="HEAD_HIDDEN_53405857">解决方法见 <a href="../refers/bf54d0531ccd2004619616b522f4b4de.html" target="_blank">2018&ndash;08&ndash;26 Ubuntu 运行Shell 以及 修改Ubuntu默认Shell_DarrenXf的专栏&ndash;CSDN博客_ubuntu shell.html</a></li>
+	<br />
+	<pre><code>sudo dpkg-reconfigure dash	</code></pre>
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

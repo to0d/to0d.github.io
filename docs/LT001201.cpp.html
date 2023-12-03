@@ -1,0 +1,207 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT001201.cpp (Integer to Roman)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT001201.cpp (Integer to Roman)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-20</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0012.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0012</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_43b018f8" href="#TOC_HEAD_43b018f8">Problem 0012 <strong>Integer to Roman</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/integer-to-roman/description/" target="_blank">https://leetcode.com/problems/integer&ndash;to&ndash;roman/description/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>100.00</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_26dc42d2" href="#TOC_HEAD_26dc42d2">LT001201.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_1b084f50">LT0012 (name=Integer to Roman, ptag=Leetcode) &nbsp;<a href="../tags/LT0012.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0012</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_902bc9f0"><a href="https://leetcode.com/problems/integer-to-roman/description/" target="_blank">Integer to Roman &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0012.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0012</a></li>
+		<br />
+	</ul>
+	<p>
+		Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
+	</p>
+	<pre><code>Symbol       Value
+I             1
+V             5
+X             10
+L             50
+C             100
+D             500
+M             1000	</code></pre>
+	<p>
+		For example, two is written as II in Roman numeral, just two one&#039;s added together. Twelve is written as, XII, which is simply X + II. The number twenty seven is written as XXVII, which is XX + V + II.
+	</p>
+	<p>
+		Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as IX. There are six instances where subtraction is used:
+	</p>
+	<ul>
+		<li>I can be placed before V (5) and X (10) to make 4 and 9.</li>
+		<li>X can be placed before L (50) and C (100) to make 40 and 90.</li>
+		<li>C can be placed before D (500) and M (1000) to make 400 and 900.</li>
+		<br />
+	</ul>
+	<p>
+		Given an integer, convert it to a roman numeral. Input is guaranteed to be within the range from 1 to 3999.
+	</p>
+	<p>
+		<strong>Example 1:</strong>
+	</p>
+	<pre><code>Input: 3
+Output: "III"	</code></pre>
+	<p>
+		<strong>Example 2:</strong>
+	</p>
+	<pre><code>Input: 4
+Output: "IV"	</code></pre>
+	<p>
+		<strong>Example 3:</strong>
+	</p>
+	<pre><code>Input: 9
+Output: "IX"	</code></pre>
+	<p>
+		<strong>Example 4:</strong>
+	</p>
+	<pre><code>Input: 58
+Output: "LVIII"
+Explanation: C = 100, L = 50, XXX = 30 and III = 3.	</code></pre>
+	<p>
+		<strong>Example 5:</strong>
+	</p>
+	<pre><code>Input: 1994
+Output: "MCMXCIV"
+Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.	</code></pre>
+</ul>
+	<H3><a name="HEAD_4a24771f" href="#TOC_HEAD_4a24771f">LT001201.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    string intToRoman(int num) {
+        if( num &gt;= 4000 || num == 0)
+            return "";
+
+        static char RomanNum[4][2] = {
+            { 'I','V' },    // I: 1,   V: 5
+            { 'X','L' },    // X: 10,  L: 50
+            { 'C','D' },    // C: 100, D: 500
+            { 'M','-' }     // M: 1000
+        };
+
+        char buf[20] = {0}; int len = 0;
+
+        for(int lvl = 1000, deep = 3; num &gt; 0; num %= lvl, lvl /= 10, --deep)
+        {   char c1 = RomanNum[deep][0], c5 = RomanNum[deep][1];
+            int n = num / lvl;
+            switch( n )
+            {   case 3:  buf[len++] = c1;
+                case 2:  buf[len++] = c1;
+                case 1:  buf[len++] = c1;
+                case 0:  break;
+                case 4:  buf[len++] = c1;
+                case 5:  buf[len++] = c5; break;
+                case 6:  buf[len++] = c5; buf[len++] = c1; break;
+                case 7:  buf[len++] = c5; buf[len++] = c1; buf[len++] = c1; break;
+                case 8:  buf[len++] = c5; buf[len++] = c1; buf[len++] = c1; buf[len++] = c1; break;
+                case 9:  buf[len++] = c1; buf[len++] = RomanNum[deep+1][0]; break;
+            }
+        }
+
+        return string(buf, len);
+    }
+};
+
+
+void test(int num)
+{
+    cout &lt;&lt; "input: " &lt;&lt; num;
+    string r = Solution().intToRoman(num);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test(1994);
+}
+
+
+// Result
+//
+// 2023-02-15: Runtime 4ms 85.63% Memory 5.9MB 92.95%, https://leetcode.com/problems/integer-to-roman/submissions/898526547/
+// 2023-07-20: Runtime 0 ms 100.00% Memory 5.8 MB 77.58%, https://leetcode.cn/submissions/detail/448654963/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 1994; output: MCMXCIV;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT029001.cpp (Word Pattern)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT029001.cpp (Word Pattern)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-22</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0290.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0290</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_26833a40" href="#TOC_HEAD_26833a40">Problem 0290 <strong>Word Pattern</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/word-pattern/" target="_blank">https://leetcode.com/problems/word&ndash;pattern/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>37.50</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_17a6154a" href="#TOC_HEAD_17a6154a">LT029001.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_b38d2818">LT0290 (name=Word Pattern, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0290.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0290</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_c31b44ea"><a href="https://leetcode.com/problems/word-pattern/" target="_blank">Word Pattern &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0290.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0290</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a pattern and a string s, find if s follows the same pattern.
+	</p>
+	<p>
+		Here follow means a full match, such that there is a bijection between a letter in pattern and a non&ndash;empty word in s.
+	</p>
+	<p>
+		 
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input: pattern = "abba", s = "dog cat cat dog"
+Output: true	</code></pre>
+	<p>
+		Example 2:
+	</p>
+	<pre><code>Input: pattern = "abba", s = "dog cat cat fish"
+Output: false	</code></pre>
+	<p>
+		Example 3:
+	</p>
+	<pre><code>Input: pattern = "aaaa", s = "dog cat cat dog"
+Output: false	</code></pre>
+	<p>
+		 
+	</p>
+	<p>
+		Constraints:
+	</p>
+	<pre><code>1 &lt;= pattern.length &lt;= 300
+pattern contains only lower-case English letters.
+1 &lt;= s.length &lt;= 3000
+s contains only lowercase English letters and spaces ' '.
+s does not contain any leading or trailing spaces.
+All the words in s are separated by a single space.	</code></pre>
+</ul>
+	<H3><a name="HEAD_47ea4597" href="#TOC_HEAD_47ea4597">LT029001.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+
+    bool wordPattern(string pattern, string str){
+        unordered_map&lt;char,string&gt; psMap;
+        unordered_map&lt;string,char&gt; spMap;
+
+        m_posOfPattern = 0;
+        m_posOfString  = 0;
+        m_pattern = pattern;
+        m_str = str;
+
+        char c;
+        string* s;
+
+        while( (c = nextPattern()) != 0 )
+        {   if( (s = nextString()) == NULL )
+                return false;
+
+            auto psIter = psMap.find(c);
+            auto spIter = spMap.find(*s);
+            if( psIter == psMap.end() )
+            {   if( spIter == spMap.end() )
+                {   psMap.insert(std::make_pair(c,*s));
+                    spMap.insert(std::make_pair(*s,c));
+                }
+                else
+                    return false;
+            }
+            else if( spIter == spMap.end() )
+                return false;
+            else
+            {   if( psIter-&gt;second != *s || spIter-&gt;second != c)
+                    return false;
+            }
+        }
+
+        return c != 0 || nextString() == NULL;
+    }
+
+    char nextPattern(){
+        while( m_posOfPattern &lt; m_pattern.size() && m_pattern[m_posOfPattern] == ' ')
+            ++m_posOfPattern;
+
+        char c = m_posOfPattern &lt; m_pattern.size() ? m_pattern[m_posOfPattern] : 0 ;
+        ++m_posOfPattern;
+        return c;
+    }
+
+    string* nextString(){
+        while( m_posOfString &lt; m_str.size() && m_str[m_posOfString] == ' ')
+            ++m_posOfString;
+
+        if( m_posOfString &gt;= m_str.size() )
+            return NULL;
+
+        int pEnd = m_posOfString+1;
+        while( pEnd &lt; m_str.size() && m_str[pEnd] != ' ')
+            ++pEnd;
+
+        int len = pEnd - m_posOfString;
+        m_aString = string(m_str.c_str() + m_posOfString, len);
+        m_posOfString = pEnd + 1;
+        return &m_aString;
+    }
+
+    string m_pattern;
+    string m_str;
+    string m_aString;
+
+    int    m_posOfPattern;
+    int    m_posOfString;
+};
+
+
+
+void test(string pattern, string str)
+{
+    cout &lt;&lt; "input: pattern=" &lt;&lt; pattern &lt;&lt; ", s=" &lt;&lt; str;
+    bool r = Solution().wordPattern(pattern, str);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("abba", "dog cat cat dog");
+}
+
+// Result
+//
+// 2022-11-22: Runtime 4ms 37.42% Memory 6.4MB 62.3%, https://leetcode.com/problems/word-pattern/submissions/847761286/
+// 2023-02-22: Runtime 4ms 37.50% Memory 6.5MB 62.11%, https://leetcode.com/problems/word-pattern/submissions/902734707/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: pattern=abba, s=dog cat cat dog; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

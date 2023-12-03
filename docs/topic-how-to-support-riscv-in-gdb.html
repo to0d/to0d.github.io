@@ -1,0 +1,332 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>DBG: How to support riscv in gdb</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">DBG: How to support riscv in gdb</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-05</time>
+            <i><a href="../tags/Chip-Debug.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Chip-Debug</a>&nbsp;<a href="../tags/RISCV.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>RISCV</a>&nbsp;<a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;<a href="../tags/gdb.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">配置文件 &ndash; 如何使用? &ndash; 2023/10/06 </a></li>
+</ol>
+</div>
+        <div class="entry-content">
+	<H2><a name="HEAD_27afac5d" href="#TOC_HEAD_27afac5d">1. Update history</a></H2>
+<ul>
+	<li>GDB 11.1(2021/09): New &quot;org.gnu.gdb.riscv.vector&quot; feature for RISC&ndash;V targets</li>
+	<br />
+	<li>GDB 8.3 (2019/05): Support for new native configurations (also available as a target configuration):</li>
+	<ul>
+		<li>RISC&ndash;V GNU/Linux (riscv*&ndash;*&ndash;linux*)</li>
+		<li>RISC&ndash;V FreeBSD (riscv*&ndash;*&ndash;freebsd*)</li>
+		<br />
+	</ul>
+	<pre><code>- GDB 8.2 (2018/09): Support for the following target has been added:
+RiscV ELF (riscv*-*-elf)	</code></pre>
+	<ul>
+		<li><p>
+		Makefile.in (ALL_TARGET_OBS): Add riscv&ndash;tdep.o
+		(HFILES_NO_SRCDIR): Add riscv&ndash;tdep.h.
+		(ALLDEPFILES): Add riscv&ndash;tdep.c
+		<p></li>
+	</ul>
+</ul>
+	<H3><a name="HEAD_336b7db1" href="#TOC_HEAD_336b7db1">1.1. PR &ndash; Add support for RISC&ndash;V architecture (2016/11/02)</a></H3>
+<ul>
+	<li>git show e23eba971dd409b999dd83d8df0f842680c1c642</li>
+	<br />
+	<li>support riscv bfd (arch &amp; elf)</li>
+	<br />
+	<ul>
+		<li>new <strong>bfd_arch_riscv</strong> (enum bfd_architecture)</li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_dff62fc8">defined &ndash; <a href="9d770e3dccd365868d4baaae91c3c245.html" target="_blank">bfd&ndash;in2.h</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/bfd-in2.h" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/bfd-in2.h" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<br />
+		</ul>
+		<li>new <strong>bfd_riscv_arch</strong> (bfd_arch_info_type)</li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_7d2522">defined &ndash; cpu&ndash;riscv.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/cpu-riscv.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/cpu-riscv.c" target="_blank"><font color="red"><i>link</i></font></a> &ndash; new file</li>
+			<li><a name="HEAD_HIDDEN_33ba676f">added in bfd_archures_list &ndash; archures.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/archures.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/archures.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<br />
+		</ul>
+		<li>new <strong>RISCV_ELF_DATA</strong> (enum elf_target_id)</li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_3b4003a">defined &ndash; elf&ndash;bfd.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/elf-bfd.h" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/elf-bfd.h" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<br />
+		</ul>
+		<li>new <strong>riscv_elf64_vec</strong> (struct bfd_target, xvec) &ndash; bfd 函数指针集</li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_324eb5a0">added in _bfd_target_vector &ndash; targets.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/targets.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/targets.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<li>具体实现在</li>
+			<ul>
+				<li>bfd/elfnn&ndash;riscv.c</li>
+				<li>bfd/elfxx&ndash;riscv.c</li>
+				<li>bfd/elfxx&ndash;riscv.h</li>
+				<br />
+			</ul>
+		</ul>
+		<li>new <strong>BFD_RELOC_RISCV_XXX</strong> (enum bfd_reloc_code_real, for example BFD_RELOC_RISCV_HI20)</li>
+		<ul>
+			<li><a name="HEAD_HIDDEN_dff62fc8_0">defined &ndash; <a href="9d770e3dccd365868d4baaae91c3c245.html" target="_blank">bfd&ndash;in2.h</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/bfd-in2.h" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/bfd-in2.h" target="_blank"><font color="red"><i>link</i></font></a></li>
+			<li>add to bfd_reloc_code_real_names[] in bfd/libbfd.h &ndash; used for printing error messages</li>
+			<li>comments in bfd/reloc.c</li>
+			<br />
+		</ul>
+		<li>include/elf/riscv.h</li>
+		<br />
+		<li><a name="HEAD_HIDDEN_e29a83f9">配置文件 &ndash; 如何使用? &ndash; 2023/10/06  <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></li>
+		<ul>
+			<li>bfd/config.bfd</li>
+			<li>bfd/configure</li>
+			<li>bfd/configure.ac</li>
+			<li>bfd/Makefile.am</li>
+			<li>bfd/Makefile.in</li>
+			<br />
+		</ul>
+	</ul>
+	<li>support riscv instructions</li>
+	<ul>
+		<li>include/opcode/riscv.h</li>
+		<li>include/opcode/riscv&ndash;opc.h</li>
+		<li>opcodes/riscv&ndash;opc.c</li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_1b418570">support <strong>gas</strong> tool &nbsp;<a href="../tags/GAS.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>GAS</a></li>
+	<ul>
+		<li>new gas/xxx files</li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_72309680">support <strong>readelf</strong> tool &nbsp;<a href="../tags/readelf.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>readelf</a></li>
+	<ul>
+		<li>binutils/readelf.c</li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_2df4381e">support <strong>objdump</strong> tool &nbsp;<a href="../tags/readelf.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>readelf</a></li>
+	<ul>
+		<li>include/dis&ndash;asm.h</li>
+		<li>opcodes/disassemble.c</li>
+		<li>opcodes/riscv&ndash;dis.c</li>
+		<li>opcodes/configure</li>
+		<li>opcodes/configure.ac</li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_62a3c7ef">support <strong>ld</strong> tool &nbsp;<a href="../tags/ld.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ld</a></li>
+	<ul>
+		<li>ld/configure.tgt</li>
+		<li>ld/emulparams/elf32lriscv.sh</li>
+		<li>ld/emulparams/elf32lriscv&ndash;defs.sh</li>
+		<li>ld/emulparams/elf64lriscv.sh</li>
+		<li>ld/emulparams/elf64lriscv&ndash;defs.sh</li>
+		<li>ld/emultempl/riscvelf.em</li>
+		<li>ld/Makefile.am</li>
+		<li>ld/Makefile.in</li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_334aa358" href="#TOC_HEAD_334aa358">1.2. PR &ndash; Initial baremetal riscv support (2017/11/10)</a></H3>
+<ul>
+	<li>git show dbbb1059e62e9fed10b429c030f76f782cbc1fc4</li>
+	<br />
+</ul>
+<p>
+	This commit introduces basic support for baremetal RiscV as a GDB
+	target.  This target is currently only tested against the RiscV software
+	simulator, which is not included as part of this commit.  The target has
+	been tested against the following RiscV variants: rv32im, rv32imc,
+	rv32imf, rv32imfc, rv64im, rv64imc, rv64imfd, rv64imfdc.
+</p>
+<p>
+	Across these variants we pass on average 34858 tests, and fail 272
+	tests, which is &tilde;0.8%.
+</p>
+<p>
+	The RiscV has a feature of its ABI where structures with a single
+	floating point field, a single complex float field, or one float and
+	one integer field are treated differently for argument passing.  The
+	new test gdb.base/infcall&ndash;nested&ndash;structs.exp is added to cover this
+	feature.  As passing these structures should work on all targets then
+	I&#039;ve made the test as a generic one, even though, for most targets,
+	there&#039;s probably nothing special about any of these cases.
+</p>
+<p>
+	riscv64&ndash;elf
+</p>
+<ul>
+	<li>Makefile.in</li>
+	<br />
+	<p>
+		riscv&ndash;tdep.o \
+		riscv&ndash;tdep.h \
+		riscv&ndash;tdep.c \
+	</p>
+	<li>riscv&ndash;tdep.h (new)</li>
+	<br />
+	<li>riscv&ndash;tdep.c (new)</li>
+	<br />
+	<li>configure.tgt</li>
+	<br />
+	<pre><code>riscv*-*-*)
+# Target: RISC-V architecture
+gdb_target_obs="riscv-tdep.o"
+;;	</code></pre>
+</ul>
+<p>
+	./.git/logs/refs/remotes/pi/users/riscv
+	./.git/logs/refs/remotes/pi/users/riscv/binutils&ndash;integration&ndash;2.37
+	./.git/logs/refs/remotes/pi/users/riscv/binutils&ndash;integration&ndash;branch
+	./.git/refs/remotes/origin/users/riscv
+	./.git/refs/remotes/pi/users/riscv
+	./.git/refs/remotes/pi/users/riscv/binutils&ndash;integration&ndash;2.37
+	./.git/refs/remotes/pi/users/riscv/binutils&ndash;integration&ndash;branch
+	./bfd/cpu&ndash;riscv.c
+	./bfd/cpu&ndash;riscv.h
+	./bfd/elfnn&ndash;riscv.c
+	./bfd/elfxx&ndash;riscv.c
+	./bfd/elfxx&ndash;riscv.h
+	./gas/config/tc&ndash;riscv.c
+	./gas/config/tc&ndash;riscv.h
+	./gas/doc/c&ndash;riscv.texi
+	./gdb/arch/riscv.c
+	./gdb/arch/riscv.h
+	./gdb/features/riscv
+	./gdb/features/riscv/32bit&ndash;cpu.c
+	./gdb/features/riscv/32bit&ndash;cpu.xml
+	./gdb/features/riscv/32bit&ndash;fpu.c
+	./gdb/features/riscv/32bit&ndash;fpu.xml
+	./gdb/features/riscv/64bit&ndash;cpu.c
+	./gdb/features/riscv/64bit&ndash;cpu.xml
+	./gdb/features/riscv/64bit&ndash;fpu.c
+	./gdb/features/riscv/64bit&ndash;fpu.xml
+	./gdb/features/riscv/rv32e&ndash;xregs.c
+	./gdb/features/riscv/rv32e&ndash;xregs.xml
+	./gdb/nat/riscv&ndash;linux&ndash;tdesc.c
+	./gdb/nat/riscv&ndash;linux&ndash;tdesc.h
+	./gdb/riscv&ndash;fbsd&ndash;nat.c
+	./gdb/riscv&ndash;fbsd&ndash;tdep.c
+	./gdb/riscv&ndash;fbsd&ndash;tdep.h
+	./gdb/riscv&ndash;linux&ndash;nat.c
+	./gdb/riscv&ndash;linux&ndash;tdep.c
+	./gdb/riscv&ndash;none&ndash;tdep.c
+	./gdb/riscv&ndash;ravenscar&ndash;thread.c
+	./gdb/riscv&ndash;ravenscar&ndash;thread.h
+	./gdb/riscv&ndash;tdep.c
+	./gdb/riscv&ndash;tdep.h
+	./gdbserver/linux&ndash;riscv&ndash;low.cc
+	./include/elf/riscv.h
+	./include/opcode/riscv&ndash;opc.h
+	./include/opcode/riscv.h
+	./include/sim/sim&ndash;riscv.h
+	./ld/emulparams/elf32briscv.sh
+	./ld/emulparams/elf32briscv_ilp32.sh
+	./ld/emulparams/elf32briscv_ilp32f.sh
+	./ld/emulparams/elf32lriscv&ndash;defs.sh
+	./ld/emulparams/elf32lriscv.sh
+	./ld/emulparams/elf32lriscv_ilp32.sh
+	./ld/emulparams/elf32lriscv_ilp32f.sh
+	./ld/emulparams/elf64briscv.sh
+	./ld/emulparams/elf64briscv_lp64.sh
+	./ld/emulparams/elf64briscv_lp64f.sh
+	./ld/emulparams/elf64lriscv&ndash;defs.sh
+	./ld/emulparams/elf64lriscv.sh
+	./ld/emulparams/elf64lriscv_lp64.sh
+	./ld/emulparams/elf64lriscv_lp64f.sh
+	./ld/emultempl/riscvelf.em
+	./opcodes/riscv&ndash;dis.c
+	./opcodes/riscv&ndash;opc.c
+	./sim/riscv
+	./sim/riscv/acinclude.m4
+	./sim/riscv/ChangeLog&ndash;2021
+	./sim/riscv/interp.c
+	./sim/riscv/local.mk
+	./sim/riscv/machs.c
+	./sim/riscv/machs.h
+	./sim/riscv/model_list.def
+	./sim/riscv/riscv&ndash;sim.h
+	./sim/riscv/sim&ndash;main.c
+	./sim/riscv/sim&ndash;main.h
+</p>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    <b><a href="#HEAD_todo"><font color="red">TODO: 1</font></a></b><br>﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_27afac5d" href="#HEAD_27afac5d">1. Update history</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_336b7db1" href="#HEAD_336b7db1">1.1. PR &ndash; Add support for RISC&ndash;V architecture (2016/11/02)</a></li>
+		<li><a name="TOC_HEAD_334aa358" href="#HEAD_334aa358">1.2. PR &ndash; Initial baremetal riscv support (2017/11/10)</a></li>
+	</menu>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

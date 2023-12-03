@@ -1,0 +1,64 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC150602A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC150602A.cpp</h1>
+            <h3>Sequence Search</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/SequenceSearch.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>SequenceSearch</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/Search.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Search</a>&nbsp;<a href="../tags/SequenceSearch.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>SequenceSearch</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    <ul>
+	<li><a name="HEAD_HIDDEN_37b328dd">SequenceSearch (name=Sequence Search, ptag=Algo) &nbsp;<a href="../tags/Search.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Search</a>&nbsp;<a href="../tags/SequenceSearch.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>SequenceSearch</a>&nbsp;<a href="../tags/Algo.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Algo</a></li>
+	<br />
+</ul>
+	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+struct Record
+{   int time;
+    Record(): time(0) {}
+};
+
+int SeqSearch(vector&lt;int&gt;& nums, int target, Record& record) {
+    int size = nums.size();
+    for( int i = 0; i&lt; size; ++i )
+    {   ++(record.time);
+        if( nums[i] == target )
+            return i;
+    }
+
+    return -1;
+}
+
+
+void test(vector&lt;int&gt; nums, int target)
+{
+    cout &lt;&lt; "input: target=" &lt;&lt; target &lt;&lt; ", nums=";
+    outputVector(nums);
+    Record record;
+    int pos = SeqSearch(nums, target, record);
+    cout &lt;&lt; "; output: pos=" &lt;&lt; pos &lt;&lt; ", times=" &lt;&lt; record.time &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({1,3,5,7,9,11,13,15,23,25,27}, 25);
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

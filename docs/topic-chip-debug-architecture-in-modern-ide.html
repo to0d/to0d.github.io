@@ -1,0 +1,112 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>DBG: Chip debug architecture in modern IDE</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>DBG: Chip debug architecture in modern IDE</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-15</time>
+            <i><a href="../tags/Chip-Debug.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Chip-Debug</a>&nbsp;<a href="../tags/IDE.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>IDE</a>&nbsp;<a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H2><a name="HEAD_23735199" href="#TOC_HEAD_23735199">Overview</a></H2>
+<p>
+	<img src="files/4d1239e4d4bec60339bc8237b4c651b4.jpg" />
+</p>
+	<H3><a name="HEAD_7db4de0" href="#TOC_HEAD_7db4de0">Debug Plugin</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_8b81f4b">VSCode: VsCode&ndash;DebuggerExtension &nbsp;<a href="../tags/VsCode-DebuggerExtension.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>VsCode-DebuggerExtension</a></li>
+	<br />
+	<li><a name="HEAD_HIDDEN_2c451a9b">VsCode&ndash;DebuggerExtension (ptag=Framework) &nbsp;<a href="../tags/VsCode-DebuggerExtension.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>VsCode-DebuggerExtension</a>&nbsp;<a href="../tags/VsCode-Plugin.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>VsCode-Plugin</a>&nbsp;<a href="../tags/Framework.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Framework</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_53b964bb" href="#TOC_HEAD_53b964bb">Protocols</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_b1018a6b">DAP  Protocol &nbsp;<a href="../tags/DAP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DAP</a></li>
+	<li><a name="HEAD_HIDDEN_66486bbc">MI   Protocol &nbsp;<a href="../tags/MI.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>MI</a></li>
+	<li><a name="HEAD_HIDDEN_46a98627">RSP  Protocol &nbsp;<a href="../tags/RSP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>RSP</a></li>
+	<li><a name="HEAD_HIDDEN_580cb9e8">JTAG Protocol &nbsp;<a href="../tags/JTAG.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>JTAG</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_24013cdd" href="#TOC_HEAD_24013cdd">Component</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_11305">GDB     &nbsp;<a href="../tags/gdb.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb</a></li>
+	<li><a name="HEAD_HIDDEN_23b1fe">LLDB    &nbsp;<a href="../tags/LLDB.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLDB</a></li>
+	<li><a name="HEAD_HIDDEN_17ed8646">OpenOCD &nbsp;<a href="../tags/OpenOCD.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>OpenOCD</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_4b2fc60" href="#TOC_HEAD_4b2fc60">Refer</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_2bfe52d7"><a href="../refers/ac8549a175be4d02e885abf9e2122f20.html" target="_blank">2020&ndash;04&ndash;04 浅谈RISC V的DEBUG系统及其仿真 知乎.html</a></li>
+	<br />
+</ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

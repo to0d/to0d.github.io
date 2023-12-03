@@ -1,0 +1,150 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>DBG: How DWARF index cache works in gdb</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>DBG: How DWARF index cache works in gdb</h1>
+        <h3>todo(1)</h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-10-04</time>
+            <i><a href="../tags/DWARF-index-cache.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DWARF-index-cache</a>&nbsp;<a href="../tags/Topic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Topic</a>&nbsp;<a href="../tags/gdb.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb</a>&nbsp;<a href="../tags/symtab.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>symtab</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">Read more code &ndash; 2023/10/04 </a></li>
+</ol>
+</div>
+        <div class="entry-content">
+	<H2><a name="HEAD_23735199" href="#TOC_HEAD_23735199">1. Overview</a></H2>
+<p>
+	<img src="files/149dc09143deefb1af3b1729e36543ce.jpg" />
+</p>
+<ul>
+	<li>May 11th, 2019: GDB 8.3 Released!</li>
+	<ul>
+		<li>DWARF index cache: GDB can now automatically save indices of DWARF symbols on disk to speed up further loading of the same binaries.</li>
+		<br />
+	</ul>
+</ul>
+	<H2><a name="HEAD_14ef978" href="#TOC_HEAD_14ef978">2. What changed</a></H2>
+	<H3><a name="HEAD_7d1ca2d3" href="#TOC_HEAD_7d1ca2d3">2.1. New structure</a></H3>
+<pre><code>gdb 8.2 (gdb/dwarf2read.h):
+
+    struct dwarf2_per_objfile : public allocate_on_obstack
+    {
+
+
+gdb 13.2 (gdb/dwarf2/read.h):
+
+    struct dwarf2_per_bfd
+    {
+    ...
+
+    /* The mapped index, or NULL in the readnow case.  */
+    std::unique_ptr&lt;dwarf_scanner_base&gt; index_table;          &lt;======== new</code></pre>
+	<H3><a name="HEAD_bcad2ab9" href="#TOC_HEAD_bcad2ab9">2.2. build index_table in dwarf2_per_bfd</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_cbd1ac65">dwarf2_read_debug_names &ndash; read&ndash;debug&ndash;names.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/read-debug-names.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/read-debug-names.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_ccae89ba">read debug names from <strong>debug_names</strong> section &nbsp;<a href="../tags/debug_names-section.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>debug_names-section</a></li>
+		<br />
+		<pre><code>per_bfd-&gt;index_table = std::move (map);		</code></pre>
+	</ul>
+</ul>
+	<H3><a name="HEAD_9ec89181" href="#TOC_HEAD_9ec89181">2.3. Changed in <strong>save gdb&ndash;index</strong> command</a></H3><ul><a href="../tags/gdb-index.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-index</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_a8a17c8e">save_gdb_index_command &ndash; <a href="8ac6f0cc20f70d2612ae0c5d709737c9.html" target="_blank">index&ndash;write.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/index-write.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/index-write.c" target="_blank"><font color="red"><i>link</i></font></a></li>
+	<br />
+	<ul>
+		<li>from <strong>write_psymtabs_to_index</strong> to <strong>write_dwarf_index</strong></li>
+		<br />
+		<pre><code>gdb 8.2 (gdb/dwarf-index-write.c):
+
+static void
+save_gdb_index_command (const char *arg, int from_tty)
+{
+...
+    write_psymtabs_to_index (dwarf2_per_objfile, arg, index_kind);
+
+
+gdb 13.2 (gdb/dwarf2/index-write.c):
+
+static void
+save_gdb_index_command (const char *arg, int from_tty)
+{
+...
+    write_dwarf_index (per_objfile-&gt;per_bfd, arg, basename,
+            dwz_basename, index_kind);		</code></pre>
+	</ul>
+	<li><a name="HEAD_HIDDEN_59e4ea29">NOTE: <strong>gdb&ndash;index</strong> <strong><font color="red">不是</font></strong> 为了引入 <strong>DWARF index</strong> 加的新功能，其在GDB 8.2中已经存在 &nbsp;<a href="../tags/gdb-index.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb-index</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_24f41da9" href="#TOC_HEAD_24f41da9">2.4. Read more code &ndash; 2023/10/04</a> <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></H3><ul></ul>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT108001.cpp (Insufficient Nodes in Root to Leaf Paths)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT108001.cpp (Insufficient Nodes in Root to Leaf Paths)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-18</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT1080.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1080</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_d7eda0aa" href="#TOC_HEAD_d7eda0aa">Problem 1080 <strong>Insufficient Nodes in Root to Leaf Paths</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/insufficient-nodes-in-root-to-leaf-paths/" target="_blank">https://leetcode.com/problems/insufficient&ndash;nodes&ndash;in&ndash;root&ndash;to&ndash;leaf&ndash;paths/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>21.32</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_14cc2c88" href="#TOC_HEAD_14cc2c88">LT108001.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_e14b0982">LT1080 (name=Insufficient Nodes in Root to Leaf Paths, ptag=Leetcode) &nbsp;<a href="../tags/LT1080.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1080</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_87906fd7"><a href="https://leetcode.com/problems/insufficient-nodes-in-root-to-leaf-paths/" target="_blank">Insufficient Nodes in Root to Leaf Paths &ndash; Leetcode</a> &nbsp;<a href="../tags/LT1080.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1080</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_abc9abd5" href="#TOC_HEAD_abc9abd5">LT108001.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    TreeNode* sufficientSubset(TreeNode* root, int limit) {
+        vector&lt;TreeNode*&gt; path;
+        unordered_set&lt;TreeNode*&gt; hits;
+        _sufficientSubset1(root, path, hits, 0, limit, 0);
+        return _sufficientSubset2(root, hits);
+    }
+
+    void _sufficientSubset1(TreeNode* node, vector&lt;TreeNode*&gt;& path, unordered_set&lt;TreeNode*&gt;& hits, int len, int limit, int sum) {
+        if( path.size() == len )
+            path.push_back(node);
+        else
+            path[len] = node;
+
+        len++;
+        sum += node-&gt;val;
+
+        if( node-&gt;left == NULL && node-&gt;right == NULL )
+        {   if( sum &lt; limit )
+            {   for(int i = 0;i &lt; len; ++i)
+                    hits.insert(path[i]);
+            }
+            return;
+        }
+
+        if ( node-&gt;left != NULL )
+            _sufficientSubset1(node-&gt;left, path, hits, len, limit, sum);
+
+        if ( node-&gt;right != NULL )
+            _sufficientSubset1(node-&gt;right, path, hits, len, limit, sum);
+    }
+
+    TreeNode* _sufficientSubset2(TreeNode* node, unordered_set&lt;TreeNode*&gt;& hits) {
+        if ( node-&gt;left != NULL )
+            node-&gt;left = _sufficientSubset2(node-&gt;left, hits);
+
+        if ( node-&gt;right != NULL )
+            node-&gt;right = _sufficientSubset2(node-&gt;right, hits);
+
+        int childCount = 0, childHit = 0;
+        if( node-&gt;left != NULL )
+        {   childCount++;
+            if( hits.count(node-&gt;left) != 0 )
+                childHit++;
+        }
+
+        if( node-&gt;right != NULL )
+        {   childCount++;
+            if( hits.count(node-&gt;right) != 0 )
+                childHit++;
+        }
+
+        if( (childCount &gt; 0 && childCount == childHit) || (childCount == 0 && hits.count(node) != 0))
+            return NULL;
+
+        if( childCount &gt; 0 )
+            hits.erase(node);
+
+        return node;
+    }
+};
+
+
+
+void test(TreeNode* root, int limit)
+{
+    cout &lt;&lt; "input: limit=" &lt;&lt; limit &lt;&lt; ", tree=";
+    outputTree(root);
+    TreeNode* r = Solution().sufficientSubset(root, limit);
+    cout &lt;&lt; "; output: ";
+    outputTree(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(makeTree("{1,2,3,4,-99,-99,7,8,9,-99,-99,12,13,-99,14}"), 1);
+}
+
+// Result
+//
+// 2023-01-31: Runtime 59ms 24.71% Memory 35.6MB 5.2%, https://leetcode.com/problems/insufficient-nodes-in-root-to-leaf-paths/submissions/888831303/
+// 2023-02-18: Runtime 61ms 21.32% Memory 35.5MB 5.4%, https://leetcode.com/problems/insufficient-nodes-in-root-to-leaf-paths/submissions/900116010/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: limit=1, tree=[1,2,3,4,-99,-99,7,8,9,-99,-99,12,13,-99,14]; output: [1,2,3,4,null,null,7,8,9,null,14];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

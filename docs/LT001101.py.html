@@ -1,0 +1,148 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT001101.py (Container With Most Water)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT001101.py (Container With Most Water)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-11-02</time>
+            <i><a href="../tags/LT0011.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0011</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Python-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Python-Code</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_558bf6" href="#TOC_HEAD_558bf6">Problem 0011 <strong>Container With Most Water</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/container-with-most-water/" target="_blank">https://leetcode.com/problems/container&ndash;with&ndash;most&ndash;water/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>5</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_2bca2ca1" href="#TOC_HEAD_2bca2ca1">LT001101.py.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_ba90f28">LT0011 (name=Container With Most Water, ptag=Leetcode) &nbsp;<a href="../tags/LT0011.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0011</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_eeb1f6cc"><a href="https://leetcode.com/problems/container-with-most-water/" target="_blank">Container With Most Water &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0011.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0011</a></li>
+		<br />
+	</ul>
+	<p>
+		Given n non&ndash;negative integers a1, a2, ..., an, where each represents a point at coordinate (i, ai). n vertical lines are drawn such that the two endpoints of line i is at (i, ai) and (i, 0). Find two lines, which together with x&ndash;axis forms a container, such that the container contains the most water.
+	</p>
+	<p>
+		Note: You may not slant the container and n is at least 2.
+	</p>
+</ul>
+	<H3><a name="HEAD_1975a06e" href="#TOC_HEAD_1975a06e">LT001101.py</a></H3>
+<pre><code>#!/usr/bin/python
+
+class Solution(object):
+    def maxArea(self, height):
+        """
+        :type height: List[int]
+        :rtype: int
+        """
+
+        points, size = [], len(height)
+        for idx in range(size):
+            points.append((idx, height[idx]))
+
+        points = sorted(points, key=lambda p:p[1])
+
+        pos, left_idx, right_idx, max_area = size-2, points[size-1][0], points[size-1][0], 0
+
+        while pos &gt;= 0 :
+            cur_idx = points[pos][0]
+            if cur_idx &lt; left_idx :
+                cur_max_area = (right_idx-cur_idx) * points[pos][1]
+                left_idx     = cur_idx
+            elif cur_idx &gt; right_idx :
+                cur_max_area = (cur_idx-left_idx) * points[pos][1]
+                right_idx    = cur_idx
+            else :
+                cur_max_area = max((right_idx-cur_idx),(cur_idx-left_idx)) * points[pos][1]
+
+            if cur_max_area &gt; max_area :
+                max_area = cur_max_area
+            pos -= 1
+
+        return max_area
+
+
+height = [1,1]
+print "input:", height,
+output = Solution().maxArea(height)
+print "; output:", output
+
+# Result
+#
+# 2022-11-02: Runtime 2771ms 5% Memory 35.9MB 8.46%, https://leetcode.com/problems/container-with-most-water/submissions/835428797/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [1, 1] ; output: 1</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

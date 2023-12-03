@@ -1,0 +1,74 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC161212G.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC161212G.cpp</h1>
+            <h3>Heap Sort</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/HeapSort.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>HeapSort</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+int _quick_sort_partition(vector&lt;int&gt;& nums, int low, int high) {
+    int guard = nums[low];
+    while ( low &lt; high )
+    {   while(low &lt; high && guard &lt; nums[high])
+            --high;
+        nums[low] = nums[high];
+        while(low &lt; high && nums[low] &lt; guard)
+            ++low;
+        nums[high] = nums[low];
+    }
+    nums[low] = guard;
+    return low;
+}
+
+
+void _quick_sort(vector&lt;int&gt;& nums, int low, int high) {
+    if( low &lt; high)
+    {   int m = _quick_sort_partition(nums, low, high);
+        _quick_sort(nums, low, m-1);
+        _quick_sort(nums, m+1, high);
+    }
+}
+
+void quickSort(vector&lt;int&gt;& nums) {
+    int size = nums.size();
+    _quick_sort(nums,0, size-1);
+}
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    quickSort(nums);
+    cout &lt;&lt; "; output: ";
+    outputVector(nums);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main( void )
+{
+    test({8,9,3,2,6,5,7,1,4});
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

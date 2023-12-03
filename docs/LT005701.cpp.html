@@ -1,0 +1,192 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT005701.cpp (Insert Interval)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT005701.cpp (Insert Interval)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-17</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0057.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0057</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_f838594f" href="#TOC_HEAD_f838594f">Problem 0057 <strong>Insert Interval</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/insert-interval/" target="_blank">https://leetcode.com/problems/insert&ndash;interval/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>13.1</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_2e1a5613" href="#TOC_HEAD_2e1a5613">LT005701.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_c5256c01">LT0057 (name=Insert Interval, ptag=Leetcode) &nbsp;<a href="../tags/LT0057.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0057</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_fd841604"><a href="https://leetcode.com/problems/insert-interval/" target="_blank">Insert Interval &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0057.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0057</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a set of
+		<em>non&ndash;overlapping</em> intervals, insert a new interval into the intervals (merge if necessary).
+	</p>
+	<p>
+		You may assume that the intervals were initially sorted according to their start times.
+	</p>
+	<p>
+		<strong>Example 1:</strong>
+	</p>
+	<p>
+		Given intervals
+		<code>[1,3],[6,9]</code> , insert and merge
+		<code>[2,5]</code> in as
+		<code>[1,5],[6,9]</code> .
+	</p>
+	<p>
+		<strong>Example 2:</strong>
+	</p>
+	<p>
+		Given
+		<code>[1,2],[3,5],[6,7],[8,10],[12,16]</code> , insert and merge
+		<code>[4,9]</code> in as
+		<code>[1,2],[3,10],[12,16]</code> .
+	</p>
+	<p>
+		This is because the new interval
+		<code>[4,9]</code> overlaps with
+		<code>[3,5],[6,7],[8,10]</code> .
+	</p>
+	<li><a name="HEAD_HIDDEN_1d6e7309"><a href="LT005601.cpp.html" target="_blank">LT005601.cpp</a> &nbsp;<a href="../tags/LT0057.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0057</a>&nbsp;<a href="../tags/Ref.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Ref</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_f22852e0" href="#TOC_HEAD_f22852e0">LT005701.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+bool less_interval(const vector&lt;int&gt;& a, const vector&lt;int&gt;& b){
+    return a[0] &lt; b[0];
+}
+
+class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; insert(vector&lt;vector&lt;int&gt;&gt;& intervals, vector&lt;int&gt; newInterval) {
+        intervals.push_back( newInterval );
+        return merge(intervals);
+    }
+
+    vector&lt;vector&lt;int&gt;&gt; merge(vector&lt;vector&lt;int&gt;&gt;& intervals) {
+        if( intervals.size() &lt; 2 )
+            return intervals;
+
+        std::sort(intervals.begin(), intervals.end(), less_interval);
+
+        int i = 0, len = intervals.size();
+        for(int j = 1; j &lt; len ; ++j)
+        {   vector&lt;int&gt;& a = intervals[i], &b = intervals[j];
+            if( b[0] &gt; a[1] )
+            {   if( ++i != j )
+                    intervals[i] = b;
+            }
+            else if( b[1] &gt; a[1] )
+                a[1] = b[1];
+        }
+
+        if( i &lt; (len - 1) )
+            intervals.erase(intervals.begin() + i + 1, intervals.end());
+
+        return intervals;
+    }
+};
+
+
+
+void test(vector&lt;vector&lt;int&gt;&gt; intervals, vector&lt;int&gt; newInterval)
+{
+    cout &lt;&lt; "input: intervals=";
+    outputVector(intervals);
+    cout &lt;&lt; ", newInterval=";
+    outputVector(newInterval);
+    vector&lt;vector&lt;int&gt;&gt; r = Solution().insert(intervals, newInterval);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({{1,3},{6,9}}, {2,5});
+}
+
+
+// Result
+//
+// 2022-11-24: Runtime 80ms 5.29% Memory 17.8MB 8.54%, https://leetcode.com/problems/insert-interval/submissions/849016957/
+// 2023-02-17: Runtime 33ms 13.1% Memory 17.2MB 25.46%, https://leetcode.com/problems/insert-interval/submissions/899824122/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: intervals=[[1,3],[6,9]], newInterval=[2,5]; output: [[1,5],[6,9]];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

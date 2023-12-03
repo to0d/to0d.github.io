@@ -1,0 +1,42 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC230310F.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC230310F.cpp</h1>
+            <h3>C11 static_assert</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Cxx-static_assert.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-static_assert</a>&nbsp;<a href="../tags/Cxxv11.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxxv11</a>&nbsp;<a href="../tags/std-is_arithmetic.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-is_arithmetic</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+using namespace std;
+
+class GFG {
+};
+
+int main(void)
+{
+    static_assert(std::is_arithmetic&lt;int&gt;::value, "only supports arithmetic types");
+    cout &lt;&lt; "output: GFG=" &lt;&lt; is_arithmetic&lt;GFG&gt;::value;
+    cout &lt;&lt; ", bool="  &lt;&lt; is_arithmetic&lt;bool&gt;::value;
+    cout &lt;&lt; ", long="  &lt;&lt; is_arithmetic&lt;long&gt;::value;
+    cout &lt;&lt; ", short=" &lt;&lt; is_arithmetic&lt;short&gt;::value &lt;&lt; endl;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

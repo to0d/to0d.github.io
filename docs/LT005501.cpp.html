@@ -1,0 +1,187 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT005501.cpp (Jump Game)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT005501.cpp (Jump Game)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-07-25</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0055.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0055</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_730c0765" href="#TOC_HEAD_730c0765">Problem 0055 <strong>Jump Game</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/jump-game/" target="_blank">https://leetcode.com/problems/jump&ndash;game/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>58.13</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_450f091" href="#TOC_HEAD_450f091">LT005501.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_a345f657">LT0055 (name=Jump Game, ptag=Leetcode) &nbsp;<a href="../tags/LT0055.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0055</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_9b49d0d4"><a href="https://leetcode.com/problems/jump-game/" target="_blank">Jump Game &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0055.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0055</a></li>
+		<br />
+	</ul>
+	<p>
+		You are given an integer array nums. You are initially positioned at the array&#039;s first index, and each element in the array represents your maximum jump length at that position.
+	</p>
+	<p>
+		Return true if you can reach the last index, or false otherwise.
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input: nums = [2,3,1,1,4]
+Output: true
+Explanation: Jump 1 step from index 0 to 1, then 3 steps to the last index.	</code></pre>
+	<p>
+		Example 2:
+	</p>
+	<pre><code>Input: nums = [3,2,1,0,4]
+Output: false
+Explanation: You will always arrive at index 3 no matter what. Its maximum jump length is 0, which makes it impossible to reach the last index.	</code></pre>
+	<p>
+		Constraints:
+	</p>
+	<pre><code>1 &lt;= nums.length &lt;= 104
+0 &lt;= nums[i] &lt;= 105	</code></pre>
+	<li><a name="HEAD_HIDDEN_9b6adecb"><strong>2 optimize</strong> &nbsp;<a href="../tags/LT0055.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0055</a></li>
+	<br />
+	<ul>
+		<li>optimize a: dead point</li>
+		<li>optimize b</li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_885bdc5e" href="#TOC_HEAD_885bdc5e">LT005501.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool canJump(vector&lt;int&gt;& nums) {
+        if(nums.empty())
+            return true;
+
+        vector&lt;int&gt; rst(nums.size(), 0);
+        // optimize a: dead point [... 4 3 2 1 0 0]
+        for(int pos = nums.size() - 2, min = 1; pos &gt;= 0 && nums[pos] &lt; min; ++min, --pos)
+            rst[pos] = -1;
+
+        return canJumpAt(nums, rst, 0);
+    }
+
+    bool canJumpAt(vector&lt;int&gt;& nums, vector&lt;int&gt;& rst, int pos){
+        if(( pos + 1) &gt;= rst.size() )
+            return true;
+
+        int rj = rst[pos];
+        if( rj == 0 )
+        {   //optimize b
+            int n = std::min( nums[pos], (int)(nums.size() - pos - 1) );
+            for(int i = n; i &gt; 0 && rj == 0 ; --i)
+                if( canJumpAt(nums, rst, pos + i ) )
+                    rj = 1;
+
+            if(rj == 0)
+                rj = -1;
+
+            rst[pos] = rj;
+        }
+
+        return rj &gt; 0;
+    }
+};
+
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    bool r = Solution().canJump(nums);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({2,3,1,1,4});
+}
+
+// rst
+//
+// 2022-11-19: Runtime 191ms 23.7% Memory 51.2MB 8.32%, https://leetcode.com/problems/jump-game/submissions/846138659/
+// 2023-02-17: Runtime 78ms 39.34% Memory 51.2MB 8.55%, https://leetcode.com/problems/jump-game/submissions/899820431/
+// 2023-07-25: Runtime 52ms 58.13% Memory 48.83MB 5.03%, https://leetcode.cn/problems/jump-game/submissions/450106538/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [2,3,1,1,4]; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

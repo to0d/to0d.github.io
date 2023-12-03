@@ -1,0 +1,157 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT078301.cpp (Minimum Distance Between BST Nodes)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT078301.cpp (Minimum Distance Between BST Nodes)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-12-02</time>
+            <i><a href="../tags/BST.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>BST</a>&nbsp;<a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0783.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0783</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_399ac080" href="#TOC_HEAD_399ac080">Problem 0783 <strong>Minimum Distance Between BST Nodes</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/minimum-distance-between-bst-nodes/" target="_blank">https://leetcode.com/problems/minimum&ndash;distance&ndash;between&ndash;bst&ndash;nodes/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_7731a8b3" href="#TOC_HEAD_7731a8b3">LT078301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_1b6a698">LT0783 (name=Minimum Distance Between BST Nodes, ptag=Leetcode) &nbsp;<a href="../tags/BST.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>BST</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0783.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0783</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_27cc7917"><a href="https://leetcode.com/problems/minimum-distance-between-bst-nodes/" target="_blank">Minimum Distance Between BST Nodes &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0783.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0783</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_6411f580" href="#TOC_HEAD_6411f580">LT078301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+public:
+    int minDiffInBST(TreeNode* root) {
+
+        int minVal = INT_MAX, maxVal = INT_MIN, minDiff = INT_MAX;
+        _minDiffInBST(root, &minVal, &maxVal, &minDiff);
+        return minDiff;
+    }
+
+    void _minDiffInBST(TreeNode* node, int* minVal, int* maxVal, int* minDiff) {
+        // cout &lt;&lt; "diff: node=" &lt;&lt; node-&gt;val &lt;&lt; ", min=" &lt;&lt; *minVal &lt;&lt; ", max=" &lt;&lt; *maxVal &lt;&lt; ", diff=" &lt;&lt; *minDiff &lt;&lt; endl;
+        int leftMin, leftMax;
+        if( node-&gt;left != NULL )
+        {   _minDiffInBST(node-&gt;left, &leftMin, &leftMax, minDiff);
+            *minVal = leftMin;
+
+            if(*minDiff &gt; 1 )
+                *minDiff = std::min(*minDiff, node-&gt;val - leftMax);
+            else
+                return;
+        }
+        else
+            *minVal = node-&gt;val;
+
+        int rightMin, rightMax;
+        if( node-&gt;right != NULL )
+        {   _minDiffInBST(node-&gt;right, &rightMin, &rightMax, minDiff);
+            *maxVal = rightMax;
+            if(*minDiff &gt; 1 )
+                *minDiff = std::min(*minDiff, rightMin - node-&gt;val);
+        }
+        else
+            *maxVal = node-&gt;val;
+    }
+};
+
+
+void test(TreeNode* root)
+{
+    cout &lt;&lt; "input: ";
+    outputTree(root);
+    int r = Solution().minDiffInBST(root);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(makeTree("{4,2,6,1,3}"));
+}
+
+
+// Result
+//
+// 2022-12-02: Runtime 0ms 100% Memory 9.7MB 92.53%, https://leetcode.com/problems/minimum-distance-between-bst-nodes/submissions/853268644/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [4,2,6,1,3]; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

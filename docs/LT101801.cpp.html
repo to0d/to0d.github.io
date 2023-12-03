@@ -1,0 +1,143 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT101801.cpp (Binary Prefix Divisible By 5)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT101801.cpp (Binary Prefix Divisible By 5)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-12-08</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1018.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1018</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_557fb5c7" href="#TOC_HEAD_557fb5c7">Problem 1018 <strong>Binary Prefix Divisible By 5</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/binary-prefix-divisible-by-5/" target="_blank">https://leetcode.com/problems/binary&ndash;prefix&ndash;divisible&ndash;by&ndash;5/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>97.3</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_86163cf7" href="#TOC_HEAD_86163cf7">LT101801.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_de1013df">LT1018 (name=Binary Prefix Divisible By 5, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT1018.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1018</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_4aa8015d"><a href="https://leetcode.com/problems/binary-prefix-divisible-by-5/" target="_blank">Binary Prefix Divisible By 5 &ndash; Leetcode</a> &nbsp;<a href="../tags/LT1018.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT1018</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_7bd34bc4" href="#TOC_HEAD_7bd34bc4">LT101801.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+public:
+    vector&lt;bool&gt; prefixesDivBy5(vector&lt;int&gt;& nums) {
+        vector&lt;bool&gt; rst;
+        int v = 0;
+        for(int n : nums)
+        {   v = (v &lt;&lt; 1) | n;
+            if(v%5==0)
+            {   rst.push_back(true);
+                v = 0;
+            }
+            else
+            {   rst.push_back(false);
+                if( v &gt; 5 )
+                    v -= 5;
+            }
+        }
+        return rst;
+    }
+};
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    vector&lt;bool&gt; r = Solution().prefixesDivBy5(nums);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test({0,1,1});
+}
+
+
+// Result
+//
+// 2022-12-08: Runtime 7ms 97.3% Memory 14MB 52.42%, https://leetcode.com/problems/binary-prefix-divisible-by-5/submissions/856390914/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [0,1,1]; output: [1,0,0];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

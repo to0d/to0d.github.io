@@ -1,0 +1,162 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT088401.cpp (Uncommon Words from Two Sentences)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT088401.cpp (Uncommon Words from Two Sentences)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-12-21</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0884.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0884</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_53df16fe" href="#TOC_HEAD_53df16fe">Problem 0884 <strong>Uncommon Words from Two Sentences</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/uncommon-words-from-two-sentences/" target="_blank">https://leetcode.com/problems/uncommon&ndash;words&ndash;from&ndash;two&ndash;sentences/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_fa9961f5" href="#TOC_HEAD_fa9961f5">LT088401.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_7187ad30">LT0884 (name=Uncommon Words from Two Sentences, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0884.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0884</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_e1376c17"><a href="https://leetcode.com/problems/uncommon-words-from-two-sentences/" target="_blank">Uncommon Words from Two Sentences &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0884.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0884</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_2d3c9fc2" href="#TOC_HEAD_2d3c9fc2">LT088401.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+
+class Solution {
+public:
+    vector&lt;string&gt; uncommonFromSentences(string s1, string s2) {
+        vector&lt;string&gt; tmp, rst;
+        fill(tmp, s1);
+        fill(tmp, s2);
+        std::sort(tmp.begin(), tmp.end());
+        string last = "";
+        bool remove_last = false;
+        for(string& s : tmp )
+        {   if( s == last )
+            {   if(!remove_last)
+                {   rst.erase(rst.begin()+rst.size()-1);
+                    remove_last = true;
+                }
+                continue;
+            }
+            rst.push_back(s);
+            last = s;
+            remove_last = false;
+        }
+
+        return rst;
+    }
+
+    void fill(vector&lt;string&gt;& v, string s)
+    {   static char buf[200];
+        int buf_len = 0, len = s.length();
+        for(int i=0; i &lt;= len; ++i)
+        {   char c = (i == len? ' ' : s.at(i));
+            if( c == ' ' )
+            {   if( buf_len &gt; 0 )
+                    v.push_back(string(buf, buf_len));
+                buf_len = 0;
+            }
+            else
+                buf[buf_len++] = c;
+        }
+    }
+};
+
+
+void test(string s1, string s2)
+{
+    cout &lt;&lt; "input: s1=" &lt;&lt; s1 &lt;&lt; ", s2=" &lt;&lt; s2;
+    vector&lt;string&gt; r = Solution().uncommonFromSentences(s1, s2);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{   test("apple apple", "banana");
+}
+
+
+// Result
+//
+// 2022-12-21: Runtime 0ms 100% Memory 7MB 24.72%, https://leetcode.com/problems/uncommon-words-from-two-sentences/submissions/863006182/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: s1=apple apple, s2=banana; output: [banana];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

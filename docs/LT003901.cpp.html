@@ -1,0 +1,183 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT003901.cpp (Combination Sum)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT003901.cpp (Combination Sum)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-17</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0039.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0039</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/xSum-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>xSum-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_e8647281" href="#TOC_HEAD_e8647281">Problem 0039 <strong>Combination Sum</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/combination-sum/" target="_blank">https://leetcode.com/problems/combination&ndash;sum/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>60.70</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_488070d7" href="#TOC_HEAD_488070d7">LT003901.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_f11f83b3">LT0039 (name=Combination Sum, ptag=Leetcode) &nbsp;<a href="../tags/LT0039.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0039</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/xSum-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>xSum-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_19727cb0"><a href="https://leetcode.com/problems/combination-sum/" target="_blank">Combination Sum &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0039.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0039</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a set of candidate numbers (
+		<em>C</em> ) and a target number (
+		<em>T</em> ), find all unique combinations in
+		<em>C</em> where the candidate numbers sums to
+		<em>T</em> .
+	</p>
+	<p>
+		The <strong>same</strong> repeated number may be chosen from
+		<em>C</em> unlimited number of times.
+	</p>
+	<p>
+		<strong>Note:</strong>
+	</p>
+	<ul>
+		<li>All numbers (including target) will be positive integers.</li>
+		<li>The solution set must not contain duplicate combinations.</li>
+		<br />
+	</ul>
+	<p>
+		For example, given candidate set
+		<code>2,3,6,7</code> and target
+		<code>7</code> ,
+	</p>
+	<p>
+		A solution set is:
+	</p>
+	<pre><code>[
+[7],
+[2, 2, 3]
+]	</code></pre>
+</ul>
+	<H3><a name="HEAD_8c326fa4" href="#TOC_HEAD_8c326fa4">LT003901.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; combinationSum(vector&lt;int&gt;& candidates, int target) {
+        vector&lt;int&gt; path;
+        vector&lt;vector&lt;int&gt;&gt; result;
+        find(candidates, 0, target, path, result);
+        return result;
+    }
+
+    void find(vector&lt;int&gt;& candidates, int index, int target, vector&lt;int&gt;& path, vector&lt;vector&lt;int&gt;&gt;& result){
+        if( target == 0 )
+        {   result.push_back(path);
+            return;
+        }
+
+        int size = candidates.size();
+        if( index == size || target &lt; 0)
+            return;
+
+        int value = candidates[index];
+        if( target &gt;= value )
+        {   path.push_back(value);
+            find(candidates, index, target-value, path, result);
+            path.pop_back();
+        }
+
+        find(candidates, index+1, target, path, result);
+    }
+};
+
+
+
+void test(vector&lt;int&gt; candidates, int target)
+{
+    cout &lt;&lt; "input: target=" &lt;&lt; target &lt;&lt; ", candidates=";
+    outputVector(candidates);
+    auto r = Solution().combinationSum(candidates, target);
+    cout &lt;&lt; "; output: ";
+    outputVector(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({2,3,6,7}, 7);
+}
+
+// Result
+//
+// 2023-02-10: Runtime 4ms 82.22% Memory 17MB 32.26%, https://leetcode.com/problems/combination-sum/submissions/895376470/
+// 2023-02-17: Runtime 8ms 60.70% Memory 16.7MB 33.5%, https://leetcode.com/problems/combination-sum/submissions/899524836/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: target=7, candidates=[2,3,6,7]; output: [[2,2,3],[7]];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

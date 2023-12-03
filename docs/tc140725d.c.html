@@ -1,0 +1,43 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC140725D.c</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC140725D.c</h1>
+            <h3>test C macro #undef</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/undef.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>undef</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include "stdio.h"
+
+int main(void)
+{
+    int b = 5;
+    #define b  1
+    #define f(x) b*(x)
+    printf("macro b(1)* 1    = %d\n", f(1));
+
+    #undef b
+    printf("variable b(5)* 1 = %d\n", f(1));
+
+    printf( "output: done. \n" );
+
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

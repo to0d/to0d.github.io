@@ -1,0 +1,163 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT006101.cpp (Rotate List)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT006101.cpp (Rotate List)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-05</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0061.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0061</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/List-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>List-OJ</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_9661211f" href="#TOC_HEAD_9661211f">Problem 0061 <strong>Rotate List</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/rotate-list/" target="_blank">https://leetcode.com/problems/rotate&ndash;list/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>97.47</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_b86fcaec" href="#TOC_HEAD_b86fcaec">LT006101.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_c38e9d1">LT0061 (name=Rotate List, ptag=Leetcode) &nbsp;<a href="../tags/LT0061.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0061</a>&nbsp;<a href="../tags/List-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>List-OJ</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_178fbc16"><a href="https://leetcode.com/problems/rotate-list/" target="_blank">Rotate List &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0061.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0061</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a list, rotate the list to the right by <em>k</em> places, where <em>k</em> is non&ndash;negative.
+	</p>
+	<p>
+		For example:
+		Given <code>1&ndash;&gt;2&ndash;&gt;3&ndash;&gt;4&ndash;&gt;5&ndash;&gt;NULL</code> and <em>k</em> = <code>2</code> , return <code>4&ndash;&gt;5&ndash;&gt;1&ndash;&gt;2&ndash;&gt;3&ndash;&gt;NULL</code> .
+	</p>
+</ul>
+	<H3><a name="HEAD_1ca41c39" href="#TOC_HEAD_1ca41c39">LT006101.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+ListNode* travelList(ListNode *head, int& len) {
+    len = 0;
+    ListNode *tail = head;
+    if( tail == NULL )
+        return NULL;
+    for(++len; tail-&gt;next != NULL; tail = tail-&gt;next)
+        ++len;
+    return tail;
+}
+
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if( k == 0 || head == NULL)
+            return head;
+
+        int count = 0;
+        ListNode* tail = travelList(head, count);
+        if(k % count == 0 || count == 1)
+            return head;
+
+        tail-&gt;next = head;
+        k = count - k % count ;
+        for (int i = 0; i &lt; k; ++i)
+            tail = tail-&gt;next;
+
+        head = tail-&gt;next;
+        tail-&gt;next = NULL;
+        return head;
+    }
+};
+
+
+
+void test(ListNode* head, int k)
+{
+    cout &lt;&lt; "input: head=";
+    outputList(head);
+    cout &lt;&lt; ", k=" &lt;&lt; k;
+    ListNode* r = Solution().rotateRight(head, k);
+    cout &lt;&lt; "; output: ";
+    outputList(r);
+    cout &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test(makeList(5,1,2,3,4,5), 2);
+}
+
+// Result
+//
+// 2022-11-18: Runtime 29ms 5.66% Memory 11.7MB 91.3%, https://leetcode.com/problems/rotate-list/submissions/845889318/
+// 2023-02-18: Runtime 14ms 21.57% Memory 11.7MB 61.20%, https://leetcode.com/problems/rotate-list/submissions/900067880/
+// 2023-03-05: Runtime 3ms 97.47% Memory 11.7MB 61.29%, https://leetcode.com/problems/rotate-list/submissions/908995795/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: head=[1-&gt;2-&gt;3-&gt;4-&gt;5], k=2; output: [4-&gt;5-&gt;1-&gt;2-&gt;3];</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

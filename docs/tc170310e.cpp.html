@@ -1,0 +1,49 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC170310E.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC170310E.cpp</h1>
+            <h3>Insert to map</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/std-map.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-map</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+int main()
+{
+    using namespace std;
+
+    typedef map&lt;int,string&gt;             map_type;
+    typedef pair&lt;int,string&gt;            pair_type;
+    typedef map&lt;int,string&gt;::iterator   map_iter;
+
+    map_type  m;
+
+    //insert operation
+    m.insert(pair_type(1,"v1"));
+    m.insert(make_pair(2,"v2"));
+    m.insert(map_type::value_type(3,"v3"));
+    m[4] = "v4";
+
+    cout &lt;&lt; "output: ";
+    outputMap(m);
+    cout &lt;&lt; endl;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

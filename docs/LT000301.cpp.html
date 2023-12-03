@@ -1,0 +1,152 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT000301.cpp (Longest Substring Without Repeating Characters)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT000301.cpp (Longest Substring Without Repeating Characters)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-09-23</time>
+            <i><a href="../tags/ArrayMap-OJSolution.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ArrayMap-OJSolution</a>&nbsp;<a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0003.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0003</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Substring-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Substring-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_bea1e69c" href="#TOC_HEAD_bea1e69c">Problem 0003 <strong>Longest Substring Without Repeating Characters</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/longest-substring-without-repeating-characters" target="_blank">https://leetcode.com/problems/longest&ndash;substring&ndash;without&ndash;repeating&ndash;characters</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>91.14</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_b40f5034" href="#TOC_HEAD_b40f5034">LT000301.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_fc0ab7b4">LT0003 (name=Longest Substring Without Repeating Characters, ptag=Leetcode) &nbsp;<a href="../tags/LT0003.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0003</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Substring-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Substring-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_b4675e98"><a href="https://leetcode.com/problems/longest-substring-without-repeating-characters" target="_blank">Longest Substring Without Repeating Characters &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0003.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0003</a></li>
+		<br />
+	</ul>
+</ul>
+<p>
+	Given a string, find the length of the <strong>longest substring</strong> without repeating characters.
+</p>
+<p>
+	<strong>Examples:</strong>
+</p>
+<p>
+	Given &quot;abcabcbb&quot;, the answer is &quot;abc&quot;, which the length is 3.
+</p>
+<p>
+	Given &quot;bbbbb&quot;, the answer is &quot;b&quot;, with the length of 1.
+</p>
+<p>
+	Given &quot;pwwkew&quot;, the answer is &quot;wke&quot;, with the length of 3. Note that the answer must be a <strong>substring</strong> , &quot;pwke&quot; is a subsequence and not a substring.
+</p>
+<ul>
+	<li><a name="HEAD_HIDDEN_1827c539">ArrayMap&ndash;OJSolution (word=ArrayMap) &nbsp;<a href="../tags/ArrayMap-OJSolution.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>ArrayMap-OJSolution</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_17298581" href="#TOC_HEAD_17298581">LT000301.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int max_len = 0, idx = 1, last = 0;
+        int idx_map[256] = {0};
+        for( auto c : s )
+        {   last = std::max(last, idx_map[c]);
+            max_len = std::max(max_len, idx - last);
+            idx_map[c] = idx++;
+        }
+        return max_len;
+    }
+};
+
+
+void test(string s)
+{
+    cout &lt;&lt; "input: " &lt;&lt; s;
+    int r = Solution().lengthOfLongestSubstring(s);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("abcabcbb");
+}
+
+// Result
+//
+// 2023-02-06: Runtime 7ms 92.71% Memory 7MB 92.60%, https://leetcode.com/problems/longest-substring-without-repeating-characters/submissions/892658509/
+// 2023-07-20: Runtime 4 ms 97.17% Memory 6.7 MB 92.18%, https://leetcode.cn/submissions/detail/448576825/
+// 2023-09-23: Runtime 8 ms 91.14% Memory 6.86 MB 87.07%, https://leetcode.cn/problems/longest-substring-without-repeating-characters/submissions/468890816/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: abcabcbb; output: 3</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

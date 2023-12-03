@@ -1,0 +1,305 @@
+<html>
+	<head>
+		<meta charSet="utf-8"></meta>
+		<title data-rh="true">Cxx&nbsp;函数重载的实现机制之name&nbsp;mangling&nbsp;知乎</title>
+	</head>
+	<body class="WhiteBg-body PostIndex-body">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Fri Sep 29 10:31:19 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://zhuanlan.zhihu.com/p/359466948" target="_blank">
+				<font color="red" size="3">C++函数重载的实现机制之name&nbsp;mangling&nbsp;&ndash;&nbsp;知乎</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="RichText ztext Post-RichText css-117anjg" options="[object Object]">
+			<h2 data-first-child>更好地阅读体验：
+				<br>
+
+			</h2>
+			<a target="_blank" href="https://link.zhihu.com/?target=https%3A//mp.weixin.qq.com/s%3F__biz%3DMzkyMjIxMzIxNA%3D%3D%26tempkey%3DMTEwNV9oYU0wWnBmeUgxb0ZOZ0RqamloUDRYbmRrVmg0VERBZm04ZnlQa3NFci1jbDZtSUJGY0l1RklYdEdHal9CYmM4RlBSSkxuRFBhd3lfYm1DTTBlSk1BckZyZ2RuTG9CM0NvYzltV29XM3FaeXdTdkQwZlZnTUZyeUFTRVRFWWQ0SGJ1R3VlUjk5TUxaSEozdE5laGJ6aC0xWTVvQ3FFNUpraFdkUHVBfn4%253D%26chksm%3D41f689b9768100af07617fd09ee6a9c821f4febac6817a28893a88aa3dec65f00ee129aba573%23rd" data-draft-node="block" data-draft-type="link-card" data-text="深入了解C++ (14) | 走近 name mangling，揭秘函数重载本质" class="LinkCard new">
+				<span class="LinkCard-contents">
+					<span class="LinkCard-title loading" data-text="true"></span>
+					<span class="LinkCard-desc loading"></span>
+				</span>
+				<span class="LinkCard-image LinkCard-image--default"></span>
+			</a>
+			<hr></hr>
+			<p data-pid="SKduENcq">前一期【
+				<a href="https://link.zhihu.com/?target=https%3A//mp.weixin.qq.com/s%3F__biz%3DMzkyMjIxMzIxNA%3D%3D%26mid%3D2247485303%26idx%3D1%26sn%3D985f6128d6910a3f7376f10b61ce03f7%26chksm%3Dc1f68946f6810050e21b70ff44e7f302f355e63213a5139aaaf9b482ce44a13b9c98efcb68e4%26token%3D1580177273%26lang%3Dzh_CN%23rd" class=" wrap external" target="_blank" rel="nofollow noreferrer">走近vtpr、vtbl，揭秘动态多态</a>
+				】讲解了基于虚函数实现的动态多态，并且深入剖析了动态绑定在编译期、执行期各自完成的任务。本期继续讲解基于函数重载实现的静态多态。
+			</p>
+			<h3>函数重载</h3>
+			<p data-pid="PlPe-BUa">重载（overload），允许多个同名函数，而这些函数的参数列表不同，具体的参数类型，在编译期间就能确定。</p>
+			<h3>name&nbsp;mangling</h3>
+			<p data-pid="FTYT3Woe">C++函数重载底层原理是基于编译器的
+				<code>name&nbsp;mangling</code>
+				机制。
+			</p>
+			<p data-pid="e1Anng4u">编译器需要为C++中的所有函数，在符号表中生成唯一的标识符，来区分不同的函数。而对于同名不同参的函数，编译器在进行
+				<code>name&nbsp;mangling</code>
+				操作时，会通过函数名和其参数类型生成唯一标识符，来支持函数重载。
+			</p>
+			<p data-pid="pyq_s8AF">注意：
+				<code>name&nbsp;mangling</code>
+				后得到的函数标识符与返回值类型是无关的，因此函数重载与返回值类型无关。
+			</p>
+			<p data-pid="yy3KLGvz">比如，下面的几个同名函数
+				<code>func</code>
+				：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="kt">int</span>    <span class="nf">func</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span>           <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>     <span class="p">}</span>
+<span class="kt">float</span>  <span class="nf">func</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="kt">float</span> <span class="n">f</span><span class="p">)</span>  <span class="p">{</span> <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="n">f</span><span class="p">;</span> <span class="p">}</span>
+<span class="kt">double</span> <span class="nf">func</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="kt">double</span> <span class="n">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">i</span><span class="o">+</span><span class="n">d</span><span class="p">;</span>   <span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="hRv3_rSL">在经过编译中的
+				<code>name&nbsp;mangling</code>
+				操作后，得到的符号表中和
+				<code>func</code>
+				有关的如下：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="err">$</span> <span class="n">g</span><span class="o">++</span> <span class="n">main</span><span class="p">.</span><span class="n">cc</span> <span class="o">-</span><span class="n">o</span> <span class="n">main</span><span class="p">.</span><span class="n">o</span> <span class="o">&amp;&amp;</span> <span class="n">objdump</span> <span class="o">-</span><span class="n">t</span> <span class="n">main</span><span class="p">.</span><span class="n">o</span>
+<span class="n">main</span><span class="p">.</span><span class="nl">o</span><span class="p">:</span>     <span class="n">file</span> <span class="n">format</span> <span class="n">elf64</span><span class="o">-</span><span class="n">x86</span><span class="o">-</span><span class="mi">64</span>
+
+<span class="n">SYMBOL</span> <span class="nl">TABLE</span><span class="p">:</span>
+<span class="mo">0000000000001157</span> <span class="n">g</span>     <span class="n">F</span> <span class="p">.</span><span class="n">text</span>  <span class="mo">000000000000001</span><span class="n">c</span>              <span class="n">_Z4funcid</span>
+<span class="mo">000000000000113</span><span class="n">b</span> <span class="n">g</span>     <span class="n">F</span> <span class="p">.</span><span class="n">text</span>  <span class="mo">000000000000001</span><span class="n">c</span>              <span class="n">_Z4funcif</span>
+<span class="mo">000000000000112</span><span class="mi">9</span> <span class="n">g</span>     <span class="n">F</span> <span class="p">.</span><span class="n">text</span>  <span class="mo">0000000000000012</span>              <span class="n">_Z4funci</span>
+<span class="mo">0000000000001173</span> <span class="n">g</span>     <span class="n">F</span> <span class="p">.</span><span class="n">text</span>  <span class="mo">0000000000000016</span>              <span class="n">main</span>
+<span class="p">...</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="PxsCsWtb">其中，&nbsp;前缀
+				<code>_z</code>
+				是GCC的规定，
+				<code>4</code>
+				是函数名
+				<code>func</code>
+				的字符个数，
+				<code>i</code>
+				表示第一个函数的参数类型
+				<code>int</code>
+				，
+				<code>f</code>
+				是第二个函数的参数类型
+				<code>float</code>
+				，而
+				<code>d</code>
+				表示参数类型是
+				<code>double</code>
+				。经过
+				<code>name&nbsp;mangling</code>
+				后可以发现，函数重载与返回值类型无关，仅与函数名和函数参数类型相关。
+			</p>
+			<h3>类成员函数重载</h3>
+			<p data-pid="3CM7XEWR">看完上面的讲解，你心中可能仍有疑问，返回值类型真的不能表征函数重载吗？</p>
+			<p data-pid="yXKMeyaH">如果不能，那为啥在
+				<code>std::vector</code>
+				中，对于
+				<code>begin()</code>
+				函数，既返回了
+				<code>iteraotr</code>
+				类型，也返回了
+				<code>const&nbsp;iterator</code>
+				类型，编译器还没有报错，而且这种现象在STL的容器中几乎随处可见。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="c1">// from stl_vector.h  
+</span><span class="c1"></span>
+  <span class="n">iterator</span> <span class="nf">begin</span><span class="p">()</span> <span class="k">noexcept</span>
+  <span class="p">{</span> <span class="k">return</span> <span class="n">iterator</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_M_impl</span><span class="p">.</span><span class="n">_M_start</span><span class="p">);</span> <span class="p">}</span>
+
+  <span class="cm">/** Returns a read-only (constant) iterator that points to the
+</span><span class="cm">   *  first element in the vector.  Iteration is done in ordinary
+</span><span class="cm">   *  element order.
+</span><span class="cm">   */</span>
+  <span class="n">const_iterator</span> <span class="nf">begin</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span>
+  <span class="p">{</span> <span class="k">return</span> <span class="n">const_iterator</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_M_impl</span><span class="p">.</span><span class="n">_M_start</span><span class="p">);</span> <span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="cRKRdj-J">在回答这个问题之前啊，先讲解下编译器是怎么对类的成员函数进行转换、编译的。</p>
+			<p data-pid="6d_ScdGu">如下demo，类
+				<code>Number</code>
+				有成员函数
+				<code>add</code>
+				，这个成员函数经过编译器转换后是什么样子？
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">class</span> <span class="nc">Number</span> <span class="p">{</span> 
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">Number</span><span class="p">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">:</span><span class="n">val_</span><span class="p">{</span><span class="mi">0</span><span class="p">}</span> <span class="p">{};</span>
+
+  <span class="kt">int</span>       <span class="nf">val</span><span class="p">()</span>            <span class="p">{</span><span class="k">return</span> <span class="n">val_</span><span class="p">;}</span>
+  <span class="k">const</span> <span class="kt">int</span> <span class="nf">val</span><span class="p">()</span> <span class="k">const</span>      <span class="p">{</span><span class="k">return</span> <span class="n">val_</span><span class="p">;}</span>
+  <span class="kt">void</span>      <span class="nf">setVal</span><span class="p">(</span><span class="kt">int</span> <span class="n">val</span><span class="p">)</span>  <span class="p">{</span> <span class="n">val_</span> <span class="o">=</span> <span class="n">val</span><span class="p">;}</span>
+
+  <span class="kt">void</span> <span class="nf">add</span><span class="p">(</span><span class="k">const</span> <span class="n">Number</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="p">{</span> 
+    <span class="n">val_</span> <span class="o">+=</span> <span class="n">rhs</span><span class="p">.</span><span class="n">val_</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="kt">int</span> <span class="n">val_</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="p">};</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="JYEAoh6O">实际上，编译器会将所有的成员函数转换为C&ndash;Style的函数。为了实现这一操作，就需要将在
+				<code>add</code>
+				函数的第一个参数前插入
+				<code>this</code>
+				指针：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="c1">// _ZN6Number3addERKS_ 是经过 name mangling 后的唯一标识符
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">_ZN6Number3addERKS_</span><span class="p">(</span><span class="n">Number</span><span class="o">*</span> <span class="k">this</span><span class="p">,</span> <span class="k">const</span> <span class="n">Numer</span><span class="o">*</span> <span class="n">rhs</span><span class="p">)</span> <span class="p">{</span> 
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">val_</span> <span class="o">+=</span> <span class="n">rhs</span><span class="p">.</span><span class="n">val_</span><span class="p">;</span>
+<span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="LRLjzW99">同理，
+				<code>setval</code>
+				函数也会被转换为：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="c1">// _ZN6Number6setValEi 是经过 name mangling 后的唯一标识符
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">_ZN6Number6setValEi</span><span class="p">(</span><span class="n">Number</span><span class="o">*</span> <span class="k">this</span><span class="p">,</span> <span class="kt">int</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span> 
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">val_</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span>
+<span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="G9DK36WX">对于
+				<code>setval</code>
+				函数，其中，
+				<code>_ZN</code>
+				是固定前缀，
+				<code>6Number</code>
+				表示
+				<code>Number</code>
+				有6个字符，
+				<code>3add</code>
+				表示
+				<code>add</code>
+				有3个字符，
+				<code>E</code>
+				我理解为
+				<code>Extral</code>
+				（额外的意思，即this指针，需要额外插入），
+				<code>i</code>
+				则表示参数类型
+				<code>int</code>
+				。
+			</p>
+			<p data-pid="A6p8-TkA">对于
+				<code>add</code>
+				函数经过
+				<code>name&nbsp;mangling</code>
+				后，
+				<code>R</code>
+				表示引用（Reference&nbsp;），K是啥单词缩写不清楚。
+			</p>
+			<p data-pid="uw9NEPdE">简而言之：</p>
+			<ul>
+				<li data-pid="B4Xkrq0N">每个成员函数，都会在第一个参数前插入一个this指针，将成员函数转换为非成员函数；</li>
+				<li data-pid="vj6SNFdA">每个成员函数，经过
+					<code>name&nbsp;mangling</code>
+					转换后，都会生成唯一的标识符，并且这个标识符只与函数名与函数参数类型有关。
+				</li>
+			</ul>
+			<p data-pid="cvVgTdOs">此时，你就能理解，为什么
+				<code>Number</code>
+				类中，
+				<code>val()</code>
+				函数能有两个重载：
+				<code>val()</code>
+				函数能重载不是依赖于返回值类型不同，仍然是依赖于参数类型不同，因为在经过编译器插入this指针后，他们会变成：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="c1">// _ZN6Number3valEv 、_ZNK6Number3valEv 是 val 经过 name mangling 后的唯一标识符
+</span><span class="c1"></span> <span class="n">_ZN6Number3valEv</span><span class="p">(</span><span class="n">Number</span><span class="o">*</span> <span class="k">this</span><span class="p">);</span>
+ <span class="n">_ZNK6Number3valEv</span><span class="p">(</span><span class="k">const</span> <span class="n">Number</span><span class="o">*</span> <span class="k">this</span><span class="p">);</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="p8tVp5F2">
+				<code>Number</code>
+				的各个成员函数经过
+				<code>name&nbsp;mangling</code>
+				后的结果：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="mo">000000000000124</span><span class="mi">8</span>  <span class="n">w</span>    <span class="n">F</span> <span class="p">.</span><span class="n">text</span>  <span class="mo">0000000000000027</span>              <span class="n">_ZN6Number3addERKS_</span>   <span class="c1">// add
+</span><span class="c1"></span><span class="mo">000000000000122</span><span class="n">c</span>  <span class="n">w</span>    <span class="n">F</span> <span class="p">.</span><span class="n">text</span>  <span class="mo">000000000000001</span><span class="n">b</span>              <span class="n">_ZN6Number6setValEi</span>   <span class="c1">// setval
+</span><span class="c1"></span><span class="mo">000000000000121</span><span class="mi">8</span>  <span class="n">w</span>    <span class="n">F</span> <span class="p">.</span><span class="n">text</span>  <span class="mo">0000000000000014</span>              <span class="n">_ZN6Number3valEv</span>      <span class="c1">// val
+</span><span class="c1"></span><span class="mf">00000000000011f</span><span class="n">c</span>  <span class="n">w</span>    <span class="n">F</span> <span class="p">.</span><span class="n">text</span>  <span class="mo">000000000000001</span><span class="n">c</span>              <span class="n">_ZN6NumberC1Ei</span>        <span class="c1">// construct
+</span><span class="c1"></span><span class="mf">00000000000011f</span><span class="n">c</span>  <span class="n">w</span>    <span class="n">F</span> <span class="p">.</span><span class="n">text</span>  <span class="mo">000000000000001</span><span class="n">c</span>              <span class="n">_ZN6NumberC2Ei</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="AKE3ualJ">注意：不必过于关注
+				<code>name&nbsp;mangling</code>
+				本身，只需要知道
+				<code>name&nbsp;mangling</code>
+				这个机制是一套命名规则，为每个函数生成唯一的标识符即可，不必研究规则本身，是怎么命名的，每个单词是啥缩写，大致了解即可，不同的编译器规则都可能不同。
+			</p>
+			<p data-pid="edkMk50S">相信，到此，你应该明白了函数重载怎么回事：
+				<b>只依赖于函数名及其参数类型，与返回值类型无关</b>
+				！！！
+			</p>
+			<p data-pid="xx_8JbyA">
+				<b>by&nbsp;the&nbsp;way</b>
+			</p>
+			<p data-pid="WvuBnqr2">最后，顺便提下，为什么C编译器不支持函数重载？或者说，在C++环境中调用C的代码并且要求编译器按照C的编译风格来编译这部分代码时，要加上
+				<code>&#34;extern&nbsp;C&#34;</code>
+				？
+			</p>
+			<p data-pid="dJ9FkvAQ">就是因为C编译器的
+				<code>name&nbsp;mangling</code>
+				规则与C++的不同：C语言的命名规则仅依赖于函数名，和函数参数类型无关。比如：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-c"><span class="kt">int</span> <span class="nf">func</span><span class="p">(</span><span class="kt">int</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span></code>
+				</pre>
+			</div>
+			<p data-pid="mQ2lomku">经过
+				<code>name&nbsp;mangling</code>
+				后得到的标识符是
+				<code>func</code>
+				：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-c"><span class="err">$</span> <span class="n">gcc</span> <span class="n">name</span><span class="p">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">name</span><span class="p">.</span><span class="n">o</span> <span class="o">&amp;&amp;</span> <span class="n">objdump</span>  <span class="o">-</span><span class="n">t</span> <span class="n">name</span><span class="p">.</span><span class="n">o</span> <span class="o">|</span> <span class="n">grep</span> <span class="n">func</span>
+<span class="mo">000000000000112</span><span class="mi">9</span> <span class="n">g</span>     <span class="n">F</span> <span class="p">.</span><span class="n">text</span>  <span class="mo">0000000000000012</span>              <span class="n">func</span></code>
+				</pre>
+			</div>
+			<p data-pid="xVJbzc97">这就导致了C编译器不支持函数重载。</p>
+			<p data-pid="WfIh_mZ4">看完本期，相信你能对函数重载有了更为深刻且本质的认知，如果觉得写的不错就点个赞吧。</p>
+			<hr></hr>
+			<p data-pid="qI1in_mU">欢迎关注，个人技术公众号，vx搜一搜：
+				<code>look_code_art</code>
+				，点击关注，更多惊喜等你发现。
+			</p>
+			<p></p>
+			<p></p>
+		</div>
+	</body>
+</html>

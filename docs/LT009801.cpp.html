@@ -1,0 +1,185 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT009801.cpp (Validate Binary Search Tree)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT009801.cpp (Validate Binary Search Tree)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-13</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0098.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0098</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_c95ee281" href="#TOC_HEAD_c95ee281">Problem 0098 <strong>Validate Binary Search Tree</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/validate-binary-search-tree/" target="_blank">https://leetcode.com/problems/validate&ndash;binary&ndash;search&ndash;tree/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>80.56</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_e1c59e50" href="#TOC_HEAD_e1c59e50">LT009801.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_ea2eebb3">LT0098 (name=Validate Binary Search Tree, ptag=Leetcode) &nbsp;<a href="../tags/LT0098.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0098</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Tree-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Tree-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_c359917a"><a href="https://leetcode.com/problems/validate-binary-search-tree/" target="_blank">Validate Binary Search Tree &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0098.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0098</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a binary tree, determine if it is a valid binary search tree (BST).
+	</p>
+	<p>
+		Assume a BST is defined as follows:
+	</p>
+	<ul>
+		<li><p>
+		The left subtree of a node contains only nodes with keys
+		<strong>less than</strong>
+		the node&#039;s key.
+		<p></li>
+		<li><p>
+		The right subtree of a node contains only nodes with keys
+		<strong>greater than</strong>
+		the node&#039;s key.
+		<p></li>
+		<li>Both the left and right subtrees must also be binary search trees.</li>
+		<br />
+	</ul>
+	<p>
+		confused what
+		<code>&quot;{1,#,2,3}&quot;</code> means?
+		<a href="#" >&gt; read more on how binary tree is serialized on OJ.</a>
+	</p>
+	<p>
+		<strong>OJ&#039;s Binary Tree Serialization:</strong>
+	</p>
+	<p>
+		The serialization of a binary tree follows a level order traversal, where &#039;#&#039; signifies a path terminator where no node exists below.
+	</p>
+	<p>
+		Here&#039;s an example:
+	</p>
+	<pre><code>1
+/ \
+2   3
+/
+4
+\
+5	</code></pre>
+	<p>
+		The above binary tree is serialized as
+		<code>&quot;{1,2,3,#,#,4,#,#,5}&quot;</code> .
+	</p>
+</ul>
+	<H3><a name="HEAD_c693419d" href="#TOC_HEAD_c693419d">LT009801.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool isValidBST(TreeNode* root) {
+        return root == NULL || isValidBST(root, INT_MIN, INT_MAX);
+    }
+
+    bool isValidBST(TreeNode* node, int min, int max){
+        if( node-&gt;val &gt; max || node-&gt;val &lt; min )
+            return false;
+        if( node-&gt;left != NULL  && ( node-&gt;val == INT_MIN || !isValidBST(node-&gt;left, min, node-&gt;val-1 )))
+            return false;
+        if( node-&gt;right != NULL && ( node-&gt;val == INT_MAX || !isValidBST(node-&gt;right,node-&gt;val+1, max )))
+            return false;
+        return true;
+    }
+};
+
+
+
+void test(TreeNode* root)
+{
+    cout &lt;&lt; "input: ";
+    outputTree(root);
+    bool r = Solution().isValidBST(root);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+
+int main(void)
+{
+    test(makeTree("{5,1,4,null,null,3,6}"));
+}
+
+
+// Result
+//
+// 2022-11-22: Runtime 25ms 13.9% Memory 21.5MB 99.83%, https://leetcode.com/problems/validate-binary-search-tree/submissions/848095639/
+// 2023-02-22: Runtime 11ms 81.62% Memory 21.8MB 55.14%, https://leetcode.com/problems/validate-binary-search-tree/submissions/902636905/
+// 2023-03-13: Runtime 11ms 80.56% Memory 21.7MB 55.59%, https://leetcode.com/problems/validate-binary-search-tree/submissions/913908767/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [5,1,4,null,null,3,6]; output: 0;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

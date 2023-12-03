@@ -1,0 +1,39 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC150401B.sh</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC150401B.sh</h1>
+            <h3>Save list/result to variable</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/L-for.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>L-for</a>&nbsp;<a href="../tags/Loop.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Loop</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#!/bin/sh
+#####################################################
+
+XX=$(ls /)
+echo "Result: "$XX
+echo "It is a list:"
+for f in $XX
+{
+echo "  "$f
+}
+
+echo "output: done."</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

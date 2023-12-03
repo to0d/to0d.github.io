@@ -1,0 +1,171 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT030601.cpp (Additive Number)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT030601.cpp (Additive Number)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-22</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0306.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0306</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_9ef4a07" href="#TOC_HEAD_9ef4a07">Problem 0306 <strong>Additive Number</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/additive-number/" target="_blank">https://leetcode.com/problems/additive&ndash;number/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_3e467bfa" href="#TOC_HEAD_3e467bfa">LT030601.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_8413ef39">LT0306 (name=Additive Number, ptag=Leetcode) &nbsp;<a href="../tags/LT0306.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0306</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_91fc3b22"><a href="https://leetcode.com/problems/additive-number/" target="_blank">Additive Number &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0306.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0306</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_72a98447" href="#TOC_HEAD_72a98447">LT030601.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// |&lt;-a-&gt;|&lt;-b-&gt;|&lt;-c-&gt;|
+// |&lt;--          len       --&gt;|
+//  num[0..a-1] + num[a..a+b-1] = [a+b..a+b+c-1]
+//     a+b+c &lt;= len
+//     a &lt; c
+//     b &lt; c  ==&gt; b &lt;= (len - a) /2, a &lt;= len/2
+class Solution {
+public:
+    bool isAdditiveNumber(string num) {
+        const char *pa = num.c_str();
+        int len = num.size();
+        for(int la = len /2; la &gt; 0; --la )
+            for(int lb = ( len - la) / 2; lb &gt; 0; --lb)
+                if( dfs( pa, la, lb , len))
+                    return true;
+
+        return false;
+    }
+
+    bool dfs( const char* pa, int la, int lb, int len){
+        static char tmp[256] = {0};
+        if( lb &gt; ( len - la )/2 || (*(pa + la) == '0' && lb &gt; 1) )
+            return false;
+
+        const char* pb = pa + la;
+        char* pt = tmp + sizeof( tmp) / sizeof(char) - 2;
+        int lc(0), v(0);
+        for (int i = 0; i &lt; la || i &lt; lb || v != 0; v /= 10, ++i, ++lc, --pt)
+        {   if( i &lt; la )
+                v += *( pa + la - i - 1) - '0';
+            if( i &lt; lb )
+                v += *( pb + lb - i - 1) - '0';
+            *pt = '0' + v % 10;
+        }
+
+        // overflow
+        if( (la + lb + lc) &gt; len )
+        return false;
+
+        ++pt;
+        const char* pc = pa + la + lb;
+        for(int i = lc; i &gt; 0; --i,++pc, ++pt)
+            if( *pc != *pt)
+                return false;
+
+        return (la + lb + lc) == len || dfs( pa+la, lb, lc, len - la );
+    }
+};
+
+
+
+void test(string num)
+{
+    cout &lt;&lt; "input: " &lt;&lt; num;
+    bool r = Solution().isAdditiveNumber(num);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("112358");
+    test("199100199");
+}
+
+// Result
+//
+// 2022-11-22: Runtime 0ms 100% Memory 5.9MB 96.37%, https://leetcode.com/problems/additive-number/submissions/847767775/
+// 2023-02-22: Runtime 0ms 100% Memory 5.9MB 95.54%, https://leetcode.com/problems/additive-number/submissions/902741207/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: 112358; output: 1;
+input: 199100199; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

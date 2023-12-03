@@ -1,0 +1,208 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT007601.cpp (Minimum Window Substring)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT007601.cpp (Minimum Window Substring)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-18</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0076.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0076</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/String-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>String-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_36001c13" href="#TOC_HEAD_36001c13">Problem 0076 <strong>Minimum Window Substring</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/minimum-window-substring/" target="_blank">https://leetcode.com/problems/minimum&ndash;window&ndash;substring/</a></li>
+	<li>Difficulty <strong>Hard</strong></li>
+	<li><strong>95.24</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_a898ee10" href="#TOC_HEAD_a898ee10">LT007601.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_fc41432b">LT0076 (name=Minimum Window Substring, ptag=Leetcode) &nbsp;<a href="../tags/Hard-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Hard-OJ</a>&nbsp;<a href="../tags/LT0076.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0076</a>&nbsp;<a href="../tags/String-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>String-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_8bbf603d"><a href="https://leetcode.com/problems/minimum-window-substring/" target="_blank">Minimum Window Substring &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0076.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0076</a></li>
+		<br />
+	</ul>
+	<p>
+		Given a string S and a string T, find the minimum window in S which will contain all the characters in T in complexity O(n).
+	</p>
+	<p>
+		For example,
+	</p>
+	<p>
+		<strong>S</strong> = <code>&quot;ADOBECODEBANC&quot;</code>
+	</p>
+	<p>
+		<strong>T</strong> = <code>&quot;ABC&quot;</code>
+	</p>
+	<p>
+		Minimum window is <code>&quot;BANC&quot;</code> .
+	</p>
+	<p>
+		<strong>Note:</strong>
+	</p>
+	<p>
+		If there is no such window in S that covers all characters in T, return the empty string
+		<code>&quot;&quot;</code> .
+	</p>
+	<p>
+		If there are multiple such windows, you are guaranteed that there will always be only one unique minimum window in S.
+	</p>
+</ul>
+	<H3><a name="HEAD_8d04715d" href="#TOC_HEAD_8d04715d">LT007601.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        if( t.size() == 0 || s.size() &lt; t.size() )
+            return "";
+        if( t.size() == 1 )
+        {   char c = t[0];
+            for( char cc : s)
+                if( cc == c)
+                    return t;
+            return "";
+        }
+
+        int target[256] = {0}, hit[256] = {0};
+        int prev = 0, pos = 0, s_size = s.size(), targetCount = 0;
+        for( char c : t )
+        {   if( target[c]++ == 0)
+                ++targetCount;
+        }
+
+        // find first match
+        int hitCount = 0;
+        for( ;hitCount &lt; targetCount && pos &lt; s_size; ++pos)
+        {    char c = s[pos];
+            if( target[c] &gt; 0 && ++hit[c] == target[c] )
+                hitCount++;
+        }
+
+        if( hitCount &lt; targetCount)
+            return "";
+
+        int minPrev = 0, minSize = INT_MAX;
+        while( pos &lt;= s_size )
+        {   for(; prev &lt; pos; ++prev )
+            {   char pc = s[prev];
+                int& hc = hit[pc];
+                if( hc &gt; 0 )
+                {   if( hc == target[pc])
+                        break;
+                    --hc;
+                }
+            }
+
+            int len = pos - prev;
+            if( len &lt; minSize )
+            {   minSize = len;
+                minPrev = prev;
+            }
+
+            if( pos == s_size)
+                break;
+
+            char pc = s[prev], nc = 0;
+            while( pc != nc && pos &lt; s_size)
+            {   nc = s[pos++];
+                if( target[nc] &gt; 0 )
+                    ++hit[nc];
+            }
+        }
+
+        return s.substr(minPrev, minSize);
+    }
+};
+
+
+
+void test(string s, string t)
+{
+    cout &lt;&lt; "input: s=" &lt;&lt; s &lt;&lt; ", t=" &lt;&lt; t;
+    string r = Solution().minWindow(s, t);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("ADOBECODEBANC", "ABC");
+}
+
+// Result
+//
+// 2022-11-19: Runtime 27ms 60.62% Memory 7.6MB 99.53%, https://leetcode.com/problems/minimum-window-substring/submissions/846161635/
+// 2023-02-18: Runtime 7ms 95.24% Memory 7.7MB 98.57%, https://leetcode.com/problems/minimum-window-substring/submissions/900097634/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: s=ADOBECODEBANC, t=ABC; output: BANC;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

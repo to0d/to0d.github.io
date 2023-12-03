@@ -1,0 +1,155 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT041501.cpp (Add Strings)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT041501.cpp (Add Strings)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-22</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0415.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0415</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_d56e1b0c" href="#TOC_HEAD_d56e1b0c">Problem 0415 <strong>Add Strings</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/add-strings/" target="_blank">https://leetcode.com/problems/add&ndash;strings/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>100</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_9f967519" href="#TOC_HEAD_9f967519">LT041501.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_a374e27e">LT0415 (name=Add Strings, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0415.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0415</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_6ce1f950"><a href="https://leetcode.com/problems/add-strings/" target="_blank">Add Strings &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0415.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0415</a></li>
+		<br />
+	</ul>
+	<p>
+		Given two non&ndash;negative integers, num1 and num2 represented as string, return the sum of num1 and num2 as a string.
+	</p>
+	<p>
+		You must solve the problem without using any built&ndash;in library for handling large integers (such as BigInteger). You must also not convert the inputs to integers directly.
+	</p>
+	<li><a name="HEAD_HIDDEN_a5fc5329"><a href="LT006701.cpp.html" target="_blank">LT006701.cpp</a> &nbsp;<a href="../tags/LT0415.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0415</a>&nbsp;<a href="../tags/Ref.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Ref</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_39e8e4e6" href="#TOC_HEAD_39e8e4e6">LT041501.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    string addStrings(string a, string b) {
+        int a_size = a.size(), b_size = b.size();
+        if( a_size == 0 || b_size == 0 )
+            return a + b;
+
+        static char buf[20000];
+        int lc = std::max(a_size,b_size) + 1;
+        int pc(lc -1), v(0);
+
+        for(int pa=a_size-1, pb=b_size-1; pa &gt;= 0 || pb &gt;=0; --pa, --pb, --pc, v /= 10)
+        {   if( pa &gt;= 0 )
+                v += (int)(a.at(pa) - '0');
+            if( pb &gt;= 0 )
+                v += (int)(b.at(pb) - '0');
+            buf[pc] = v%10 + '0';
+        }
+
+        if( v &gt; 0 )
+        buf[0] = v + '0';
+        else
+        pc++;
+
+        return string(buf + pc, lc - pc);
+    }
+};
+
+
+
+void test(string a, string b)
+{
+    cout &lt;&lt; "input: a=" &lt;&lt; a &lt;&lt; ", b=" &lt;&lt; b;
+    string r = Solution().addStrings(a, b);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test("456", "77");
+}
+
+// Result
+//
+// 2022-11-25: Runtime 8ms 47.59% Memory 6.9MB 42.8%, https://leetcode.com/problems/add-strings/submissions/849496541/
+// 2023-02-22: Runtime 0ms 100% Memory 6.7MB 70.55%, https://leetcode.com/problems/add-strings/submissions/902961357/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: a=456, b=77; output: 533;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

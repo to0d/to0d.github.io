@@ -1,0 +1,149 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT026801.cpp (Missing Number)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT026801.cpp (Missing Number)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-19</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0268.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0268</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_2c306ffe" href="#TOC_HEAD_2c306ffe">Problem 0268 <strong>Missing Number</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/missing-number/" target="_blank">https://leetcode.com/problems/missing&ndash;number/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>77.14</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_a7b6bb35" href="#TOC_HEAD_a7b6bb35">LT026801.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_4a35f216">LT0268 (name=Missing Number, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT0268.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0268</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_2b903950"><a href="https://leetcode.com/problems/missing-number/" target="_blank">Missing Number &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0268.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0268</a></li>
+		<br />
+	</ul>
+	<p>
+		Given an array containing
+		<em>n</em> distinct numbers taken from
+		<code>0, 1, 2, ..., n</code> , find the one that is missing from the array.
+	</p>
+	<p>
+		For example,
+	</p>
+	<p>
+		Given
+		<em>nums</em> =
+		<code>[0, 1, 3]</code> return
+		<code>2</code> .
+	</p>
+	<p>
+		<strong>Note</strong>:
+	</p>
+	<p>
+		Your algorithm should run in linear runtime complexity. Could you implement it using only constant extra space complexity?
+	</p>
+</ul>
+	<H3><a name="HEAD_b7789902" href="#TOC_HEAD_b7789902">LT026801.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int missingNumber(vector&lt;int&gt;& nums) {
+        // **Deduce:**  Sum = n(n+1)/2
+        int size = nums.size();
+        return size*(size+1)/2 - std::accumulate(nums.begin(), nums.end(), 0);
+    }
+};
+
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    int r = Solution().missingNumber(nums);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({9,6,4,2,3,5,7,0,1});
+}
+
+// Result
+//
+// 2022-11-19: Runtime 63ms 7.27% Memory 18MB 24.94%, https://leetcode.com/problems/missing-number/submissions/846334363/
+// 2023-02-19: Runtime 19ms 77.14% Memory 17.9MB 94.59%, https://leetcode.com/problems/missing-number/submissions/900662898/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [9,6,4,2,3,5,7,0,1]; output: 8</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT034101.cpp (Flatten Nested List Iterator)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT034101.cpp (Flatten Nested List Iterator)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-27</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Iterator.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Iterator</a>&nbsp;<a href="../tags/LT0341.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0341</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_32dd8c62" href="#TOC_HEAD_32dd8c62">Problem 0341 <strong>Flatten Nested List Iterator</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/flatten-nested-list-iterator/" target="_blank">https://leetcode.com/problems/flatten&ndash;nested&ndash;list&ndash;iterator/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>97.4</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_749593b1" href="#TOC_HEAD_749593b1">LT034101.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_f7968c3a">LT0341 (name=Flatten Nested List Iterator, ptag=Leetcode) &nbsp;<a href="../tags/Iterator.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Iterator</a>&nbsp;<a href="../tags/LT0341.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0341</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_f3b28eb0"><a href="https://leetcode.com/problems/flatten-nested-list-iterator/" target="_blank">Flatten Nested List Iterator &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0341.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0341</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_9af0f7e" href="#TOC_HEAD_9af0f7e">LT034101.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+
+// This is the interface that allows for creating nested lists.
+// You should not implement it, or speculate about its implementation
+class NestedInteger {
+public:
+    // Return true if this NestedInteger holds a single integer, rather than a nested list.
+    bool isInteger() const;
+
+    // Return the single integer that this NestedInteger holds, if it holds a single integer
+    // The result is undefined if this NestedInteger holds a nested list
+    int getInteger() const;
+
+    // Return the nested list that this NestedInteger holds, if it holds a nested list
+    // The result is undefined if this NestedInteger holds a single integer
+    vector&lt;NestedInteger&gt; &getList() const;
+};
+
+
+class NestedIterator {
+public:
+    NestedIterator(vector&lt;NestedInteger&gt; &nestedList) {
+        pNestedInteger = NULL;
+        indexStack.push(-1);
+        listStack.push(&nestedList);
+    }
+
+    int next() {
+        int val = pNestedInteger-&gt;getInteger();
+        pNestedInteger = NULL;
+        return val;
+    }
+
+    bool hasNext() {
+        while(pNestedInteger == NULL && !indexStack.empty())
+        {   vector&lt;NestedInteger&gt;* pList = listStack.top();
+            int index = indexStack.top();
+            indexStack.pop();
+            ++index;
+
+            if( index&lt;(*pList).size())
+            {   indexStack.push( index );
+                NestedInteger* pNextedList = &(*pList)[index];
+                if( (*pNextedList).isInteger() )
+                pNestedInteger = pNextedList;
+                else
+                {
+                    indexStack.push( -1 );
+                    listStack.push(&(pNextedList-&gt;getList()));
+                }
+            }
+            else
+            listStack.pop();
+        }
+        return pNestedInteger != NULL;
+    }
+
+    stack&lt;vector&lt;NestedInteger&gt;*&gt; listStack;
+    stack&lt;int&gt; indexStack;
+    NestedInteger* pNestedInteger;
+};
+
+
+
+int main(void)
+{   cout &lt;&lt; "output: done" &lt;&lt; endl;
+}
+
+
+// Result
+//
+// 2022-12-05: Runtime 37ms 11.57% Memory 12.8MB 97.96%, https://leetcode.com/problems/flatten-nested-list-iterator/submissions/855081948/
+// 2023-02-27: Runtime 11ms 97.4% Memory 13MB 73.79%, https://leetcode.com/problems/flatten-nested-list-iterator/submissions/905735917/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>output: done</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

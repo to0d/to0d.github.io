@@ -1,0 +1,164 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT066501.cpp (Non-decreasing Array)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT066501.cpp (Non-decreasing Array)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-02-24</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/LT0665.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0665</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_9631feee" href="#TOC_HEAD_9631feee">Problem 0665 <strong>Non&ndash;decreasing Array</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/non-decreasing-array/" target="_blank">https://leetcode.com/problems/non&ndash;decreasing&ndash;array/</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<li><strong>85.70</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_a314bcf6" href="#TOC_HEAD_a314bcf6">LT066501.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_37f1a746">LT0665 (name=Non&ndash;decreasing Array, ptag=Leetcode) &nbsp;<a href="../tags/LT0665.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0665</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_91c23d6a"><a href="https://leetcode.com/problems/non-decreasing-array/" target="_blank">Non&ndash;decreasing Array &ndash; Leetcode</a> &nbsp;<a href="../tags/LT0665.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0665</a></li>
+		<br />
+	</ul>
+	<p>
+		Given an array with n integers, your task is to check if it could become non&ndash;decreasing by modifying at most 1 element.
+	</p>
+	<p>
+		We define an array is non&ndash;decreasing if <font color="red">array[i] &lt;= array[i + 1]</font> holds for every <font color="red">i</font> (1 &lt;= i &lt; n).
+	</p>
+	<p>
+		Example 1:
+	</p>
+	<pre><code>Input: [4,2,3]
+Output: True
+Explanation: You could modify the first
+4
+to
+1
+to get a non-decreasing array.	</code></pre>
+	<p>
+		Example 2:
+	</p>
+	<pre><code>Input: [4,2,1]
+Output: False
+Explanation: You can't get a non-decreasing array by modify at most one element.	</code></pre>
+	<p>
+		Note: The <code>n</code> belongs to <code>[1, 10,000].</code>
+	</p>
+</ul>
+	<H3><a name="HEAD_69d7a343" href="#TOC_HEAD_69d7a343">LT066501.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    bool checkPossibility(vector&lt;int&gt;& nums) {
+        int size = nums.size(), update = 0;
+        for( int i = 1; i &lt; size && update &lt; 2; ++i )
+        {   int a = nums[i-1], b = nums[i];
+            if( a &gt; b )
+            {   update++;
+                if( i == 1 || nums[i-2] &lt;= b)   // decrease left number
+                    continue;
+                else                            // increase right number
+                    nums[i] = nums[i-1];
+            }
+        }
+
+        return update &lt; 2;
+    }
+};
+
+
+
+void test(vector&lt;int&gt; nums)
+{
+    cout &lt;&lt; "input: ";
+    outputVector(nums);
+    bool r = Solution().checkPossibility(nums);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    test({4,2,3});
+}
+
+// Result
+//
+// 2022-11-19: Runtime 51ms 20% Memory 7.3MB 20%, https://leetcode.com/problems/non-decreasing-array/submissions/846377232/
+// 2023-02-24: Runtime 24ms 85.70% Memory 27.1MB 60.98%, https://leetcode.com/problems/non-decreasing-array/submissions/904184174/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: [4,2,3]; output: 1;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

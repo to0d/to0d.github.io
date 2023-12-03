@@ -1,0 +1,52 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC150327A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC150327A.cpp</h1>
+            <h3>test c11 - Hello C11</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Cxxv11.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxxv11</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+int main( void )
+{
+
+    // construction uses aggregate initialization
+    std::array&lt;int, 3&gt; a1{ {1,2,3} };  // double-braces required
+    std::array&lt;int, 3&gt; a2 = {1, 2, 3}; // except after =
+    std::array&lt;std::string, 2&gt; a3 = { std::string("a"), "b" };
+
+    std::cout &lt;&lt; "output: ";
+
+    // container operations are supported
+    std::sort(a1.begin(), a1.end());
+    std::cout &lt;&lt; "reverse_copy a2: ";
+    std::reverse_copy(a2.begin(), a2.end(),std::ostream_iterator&lt;int&gt;(std::cout, " "));
+    std::cout &lt;&lt; "; ";
+
+    //ranged for loop is supported
+    std::cout &lt;&lt; "auto a3: ";
+    for(auto s: a3) std::cout &lt;&lt; s &lt;&lt; ' ';
+    std::cout &lt;&lt; endl;
+
+    return 0;
+}</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

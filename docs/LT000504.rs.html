@@ -1,0 +1,173 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT000504.rs (Longest Palindromic Substring)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT000504.rs (Longest Palindromic Substring)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2022-10-30</time>
+            <i><a href="../tags/LT0005.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT0005</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;<a href="../tags/Medium-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Medium-OJ</a>&nbsp;<a href="../tags/290cb493.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Palindrome-OJ</a>&nbsp;<a href="../tags/Rulp-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Rulp-Code</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_1ba80f67" href="#TOC_HEAD_1ba80f67">Problem 0005 <strong>Longest Palindromic Substring</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/longest-palindromic-substring" target="_blank">https://leetcode.com/problems/longest&ndash;palindromic&ndash;substring</a></li>
+	<li>Difficulty <strong>Medium</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_eb6424fe" href="#TOC_HEAD_eb6424fe">LT000504.rs</a></H3>
+<pre><code>#!/usr/bin/rs
+
+(load "tool")
+(load "map")
+(load "opt")
+(load "test/pt_help")
+
+(defun longestPalindrome ((?s string))
+
+    (defvar ?len (length-of ?s))
+    (if (= ?len 0)
+        (return ?s)
+    )
+
+    (defvar ?maxPos 0)
+    (defvar ?maxWth 1)
+
+    (loop for ?i from 1 to (- ?len 1) do
+        (loop for ?j from 0 to 1 do
+            (defvar ?d (/ (+ ?maxWth 1) 2))
+            (defvar ?lx (- ?i ?d))
+            (defvar ?ly)
+
+            (if (= ?j 0)
+                (setq ?ly (- (+ ?i ?d) 1))  ;  even sequence
+                (setq ?ly (+ ?i ?d))        ;  odd sequence
+            )
+
+            (if (or (&lt; ?lx 0) (&gt;= ?ly ?len))
+                (continue)
+            )
+
+            (defvar ?llx ?lx)
+            (defvar ?lly ?ly)
+
+            (loop
+                (if (or (&gt;= ?llx ?lly) (!= (str-char-at ?s ?llx)  (str-char-at ?s ?lly)))
+                    (break)
+                )
+                (++ ?llx)
+                (-- ?lly)
+            )
+
+            (if (&lt; ?llx ?lly)
+                (continue)
+            )
+
+            (setq ?maxPos ?lx)
+            (setq ?maxWth (+ (- ?ly ?lx) 1))
+
+            (loop
+                (-- ?lx)
+                (if (&lt; ?lx 0)
+                    (break)
+                )
+
+                (++ ?ly)
+                (if (&gt; ?ly ?len)
+                    (break)
+                )
+
+                (if (!= (str-char-at ?s ?lx)  (str-char-at ?s ?ly))
+                    (break)
+                )
+
+                (-- ?maxPos)
+                (setq ?maxWth (+ ?maxWth 2))
+            )
+        )
+    )
+
+    (return (str-substr ?s ?maxPos ?maxWth))
+
+)[opt-full]
+
+(defun test ((?s string))
+    (print "input: " ?s)
+    (defvar ?r  (longestPalindrome ?s))
+    (println "; output: " ?r ";" )
+)
+
+(test "babad")
+
+(out_pt_summary)</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

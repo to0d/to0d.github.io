@@ -1,0 +1,161 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Leetcode Solution LT215401.cpp (Keep Multiplying Found Values by Two)</title>
+        <link href="img/favicon.ico" rel="icon">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="../index.html" target="_blank" class="navbar-brand"><img src="img/t.png" width="32"/>Todd's website</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="about.html" target="_blank"><i class="fa fa-question"></i>  <span class="icon-label">About</span> </a></li>
+                <li><a href="docs.html" target="_blank"> <i class="fa fa-th-list"></i>   <span class="icon-label">Docs</span>  </a></li>
+                <li><a href="tags.html" target="_blank"> <i class="fa fa-tags fa-fw"></i><span class="icon-label">Tags</span>  </a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+
+<div class="container">
+    <div class="row">
+        <article>
+        <h1>Leetcode Solution LT215401.cpp (Keep Multiplying Found Values by Two)</h1>
+        <h3></h3>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2023-03-11</time>
+            <i><a href="../tags/Cxx-Code.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Code</a>&nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT2154.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT2154</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H3><a name="HEAD_f547d0a7" href="#TOC_HEAD_f547d0a7">Problem 2154 <strong>Keep Multiplying Found Values by Two</strong></a></H3>
+<ul>
+	<li><a href="https://leetcode.com/problems/keep-multiplying-found-values-by-two/" target="_blank">https://leetcode.com/problems/keep&ndash;multiplying&ndash;found&ndash;values&ndash;by&ndash;two/</a></li>
+	<li>Difficulty <strong>Easy</strong></li>
+	<li><strong>86.47</strong></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_21aad78f" href="#TOC_HEAD_21aad78f">LT215401.cpp.ext</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_ad953fbf">LT2154 (name=Keep Multiplying Found Values by Two, ptag=Leetcode) &nbsp;<a href="../tags/Easy-OJ.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Easy-OJ</a>&nbsp;<a href="../tags/LT2154.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT2154</a>&nbsp;<a href="../tags/Leetcode.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Leetcode</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_9138444"><a href="https://leetcode.com/problems/keep-multiplying-found-values-by-two/" target="_blank">Keep Multiplying Found Values by Two &ndash; Leetcode</a> &nbsp;<a href="../tags/LT2154.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LT2154</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_d04cf25c" href="#TOC_HEAD_d04cf25c">LT215401.cpp</a></H3>
+<pre><code>#include &lt;lt_help/lt.h&gt;
+
+class Solution {
+public:
+    int findFinalValue(vector&lt;int&gt;& nums, int original) {
+        vector&lt;int&gt; index(32, 0);
+        for( auto num : nums)
+        {   if( num % original != 0 )
+                continue;
+            int idx = _indexOf(num/original);
+            if( idx != -1 )
+                index[idx-1]++;
+        }
+        for(int i = 0; i &lt; 32; ++i)
+            if( index[i] == 0 )
+                return _numOf(i+1)*original;
+        return original;
+    }
+
+    int _indexOf(int n) { //1=&gt;1, 0x10=&gt;2, 0x100=&gt;3, 0x10000=&gt;4
+        if( n == 1 ) return 1;
+        int num = 2;
+        while( n &gt; 1 )
+        {   if( n == 2 )
+                break;
+            if( (n & 1) != 0 )
+                return -1;
+            n = n &gt;&gt; 1;
+            ++num;
+        }
+        return num;
+    }
+
+    int _numOf(int n) { // 1=&gt;1, 2==&gt;10, 3==&gt;100
+        int val = 1;
+        while( --n &gt; 0 )
+            val = val &lt;&lt; 1;
+        return val;
+    }
+};
+
+
+
+void test(vector&lt;int&gt;& nums, int original)
+{
+    cout &lt;&lt; "input: original=" &lt;&lt; original &lt;&lt; ", nums=";
+    outputVector(nums);
+    int r = Solution().findFinalValue(nums, original);
+    cout &lt;&lt; "; output: " &lt;&lt; r &lt;&lt; ";" &lt;&lt; endl;
+}
+
+int main(void)
+{
+    vector&lt;int&gt; nums = {5,3,6,1,12};
+    test(nums, 3);
+}
+
+
+// Result
+//
+// 2022-12-02: Runtime 9ms 66.8% Memory 10.5MB 90.68%, https://leetcode.com/problems/keep-multiplying-found-values-by-two/submissions/853422660/
+// 2023-03-11: Runtime 6ms 86.47% Memory 10.5MB 67.53%, https://leetcode.com/problems/keep-multiplying-found-values-by-two/submissions/912967618/</code></pre>
+	<H3><a name="HEAD_214a9f39" href="#TOC_HEAD_214a9f39">Output:</a></H3>
+<pre><code>input: original=3, nums=[5,3,6,1,12]; output: 24;</code></pre>
+  
+        </div>
+        </article>
+    </div>
+    
+    <hr>
+</div>
+    
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) &reg; UNI TOOL</div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">BACK</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>
