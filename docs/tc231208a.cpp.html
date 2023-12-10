@@ -1,0 +1,84 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC231208A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC231208A.cpp</h1>
+            <h3>Test MemorySSAWrapperPass</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/LLVM-MemorySSAWrapperPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-MemorySSAWrapperPass</a>&nbsp;<a href="../tags/LLVM-Pass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-Pass</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/LLVM-MemorySSAWrapperPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-MemorySSAWrapperPass</a>&nbsp;<a href="../tags/SSA.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>SSA</a>&nbsp;<a href="../tags/def-use.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>def-use</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    <ul>
+	<li><a name="HEAD_HIDDEN_c208f577">LLVM&ndash;MemorySSAWrapperPass (ptag=LLVM&ndash;AnalysisPass) &nbsp;<a href="../tags/LLVM-MemorySSAWrapperPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-MemorySSAWrapperPass</a>&nbsp;<a href="../tags/SSA.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>SSA</a>&nbsp;<a href="../tags/def-use.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>def-use</a>&nbsp;<a href="../tags/LLVM-AnalysisPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-AnalysisPass</a></li>
+	<br />
+	<li><a name="HEAD_HIDDEN_12cce51b"><a href="https://llvm.org/docs/doxygen/classllvm_1_1MemorySSAWrapperPass.html" target="_blank">llvm::MemorySSAWrapperPass Class Reference</a> &nbsp;<a href="../tags/LLVM-MemorySSAWrapperPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-MemorySSAWrapperPass</a></li>
+	<br />
+</ul>
+	<hr/>
+<pre><code>#include "llvm/ADT/Statistic.h"
+#include "llvm/IR/Function.h"
+#include "llvm/Pass.h"
+#include "llvm/Support/raw_ostream.h"
+#include "llvm/Analysis/MemorySSA.h"
+
+using namespace llvm;
+
+#define DEBUG_TYPE "MyPass"
+
+namespace {
+// LoopPass - The first implementation, without getAnalysisUsage.
+struct MyPass : public FunctionPass {
+    static char ID; // Pass identification, replacement for typeid
+    MyPass() : FunctionPass(ID) {}
+
+    bool runOnFunction(Function &F) override {
+        MemorySSAWrapperPass *MSP = getAnalysisIfAvailable&lt;MemorySSAWrapperPass&gt;();
+        if (!MSP) {
+        errs() &lt;&lt; "MemorySSAWrapperPass not found\n";
+        return false;
+        }
+
+        MemorySSA &MSSA = MSP-&gt;getMSSA();
+        for (auto &BB : F) {
+        for (auto &I : BB) {
+            MemoryAccess *MA = MSSA.getMemoryAccess(&I);
+            if (MA) {
+            errs() &lt;&lt; "I:" &lt;&lt; I;
+
+            MemoryUseOrDef *UD = dyn_cast&lt;MemoryUseOrDef&gt;(MA);
+            std::string str;
+            raw_string_ostream OS(str);
+            UD-&gt;getDefiningAccess()-&gt;print(OS);
+            errs() &lt;&lt; "\tDA: " &lt;&lt; OS.str() &lt;&lt; "\n";
+            }
+        }
+        }
+
+        return false;
+    }
+
+    void getAnalysisUsage(AnalysisUsage &AU) const override {
+    AU.addRequired&lt;MemorySSAWrapperPass&gt;();
+    //AU.setPreservesAll();
+    }
+};
+}
+
+char MyPass::ID = 0;
+static RegisterPass&lt;MyPass&gt; X("mypass", "My Pass");</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

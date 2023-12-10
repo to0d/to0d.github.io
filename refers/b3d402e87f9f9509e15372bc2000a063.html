@@ -228,7 +228,7 @@ public class DynamicKnapSack {
                                 <p> &nbsp; &nbsp;和前面使用动态规划方法解决问题不一样。因为这里是部分背包问题，我们可以采用前面讨论过的一个思路。就是每次选择最优单位价格的物品，直到达到背包重量限制要求。</p>
                                 <p> &nbsp; &nbsp;以前面的示例来看，我们按照这种方式选择的物品结果应该如下图：</p>
                                 <p>
-                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/3f29aa6c77da06cb679d8fea8380383.jpeg"></img>
+                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/3f29aa6c77da06cb679d8fea83803830.jpeg"></img>
                                 </p>
                                 <p> &nbsp; &nbsp;现在，我们从实现的角度再来考虑一下。我们这里的最优解是每次挑选性价比最高的物品。对于这一组物品来说，我们需要将他们按照性价比从最高到最低的顺序来取。我们可能需要将他们进行排序。然后再依次取出来放入背包中。假定我们已经有数组v，w，他们已经按照性价比排好序了。一个参考代码的实现如下：</p>
                                 <p> </p>
@@ -353,7 +353,7 @@ public static int count(int[] array) {
                                 </p>
                                 <p style="font-size: 14px;"> &nbsp; &nbsp; &nbsp; &nbsp;如果我们要求两个数，使得它们的和为某个特定的值，那么我们的目的就是要找到所有符合这个条件的数值对。假定在这里我们要求使得任意两个数字的和为9,&nbsp;那么对于这个给定的数字来说。其实从数学的角度我们可以这样来看。如果我们取这个目标数字9的一半，也就是4.5，用它来划分这个数组的话，它左边的数字表示比它小的，它右边的数字表示比它大的。那么这里对应的一个划分则如下图所示：</p>
                                 <p style="font-size: 14px;">
-                                    <img height="224" style="display: block; margin-left: auto; margin-right: auto;" alt="391" src="files/49be2c62683a65d11f44eb5b1c57fd8.jpeg"></img>
+                                    <img height="224" style="display: block; margin-left: auto; margin-right: auto;" alt="391" src="files/49be2c62683a65d11f44eb5b1c57fd80.jpeg"></img>
                                 </p>
                                 <p style="font-size: 14px;"> &nbsp; &nbsp;实际上，如果我们需要去求得和为9的两个数字，肯定他们中间有一个在前面这个部分，一个在后面这个部分。而且还有一个更加有意思的特点，比如说这里的2&nbsp;+&nbsp;7&nbsp;=&nbsp;9。那么我们将左边的数字往右一个，右边的往左一个，他们还是有可能凑成一对符合条件的数字。这样我们就找到另外一种有意思的规律。</p>
                                 <p style="font-size: 14px;"> &nbsp; &nbsp;我们一开始从数组的开头和结尾去这两个数字，如果存在两个数字它们的和等于目标数字。它们肯定是一个大于我们给定数字的一半而另一个小于它的一半。我们可以先计算这两个数字的和，用它们来比较目标数字。如果大于目标数字，则右边的下标往左移一步，相当于将它们的和调小一点，如果小于的话，则移动左边的下标往右一步。这样我们就可以通过这样一次循环找到所有符合条件的数字了。</p>
@@ -1203,7 +1203,7 @@ Move disk 1 from c to b
                                 </p>
                                 <p> &nbsp; &nbsp;这里的一个要点是我们新构造的这个节点，它的频率为e和f频率的和。我们将这个节点当作一个字符加入到原来的集合里，然后再按照前面的过程来选取频率最低的两个：</p>
                                 <p>
-                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/1e900c989d98b507a62180b4a256ee.jpeg"></img>
+                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/1e900c989d98b507a62180b4a256ee00.jpeg"></img>
                                 </p>
                                 <p> &nbsp; &nbsp;按照这个过程，后面的流程如下：</p>
                                 <p>
@@ -2223,12 +2223,12 @@ public class Evaluate {
                                 <p> &nbsp; &nbsp;调整的话，我们考虑，假设它左边的元素和上面的元素都存在，而且比自己大的话，我们就需要取中间最大的那个元素，和当前元素交换位置。对于两边元素一样大的情况，先比较同行的或者同列的都可以。假定我们先比较同一列的，然后比较同一行的，则位置调整的步骤如下：</p>
                                 <p> &nbsp; &nbsp;1.&nbsp;7&nbsp;和上面的∞比较，因为7小于∞，根据先和同列元素比较的方式，则先将7与它上面的元素交换。这样一直将7交换到了最右上角。如下图：</p>
                                 <p> 
-                                    <img alt src="files/5fee83a2debcc6a636f6870eb82967c.jpg"></img>
+                                    <img alt src="files/5fee83a2debcc6a636f6870eb82967c0.jpg"></img>
                                 </p>
                                 <p> </p>
                                 <p> 2.&nbsp;现在，我们再来比较。7已经到了最右上角，它往上没有元素了，往左有一个9。所以在往左或者往上的方向上比它大的最大元素为9。它需要和9交换。如下图：</p>
                                 <p>
-                                    <img alt src="files/1eff4deb9fc4bdef57e7f48753efd7c.jpg"></img>
+                                    <img alt src="files/1eff4deb9fc4bdef57e7f48753efd7c0.jpg"></img>
                                 </p>
                                 <p> &nbsp; &nbsp;前面不断比较交换的过程终止条件是要么元素已经遍历到了矩阵的边角了，要么就是它所有左边和上面的元素都比它要小了。我们可以得出如下的代码：</p>
                                 <p> </p>
@@ -2539,7 +2539,7 @@ public static int genericSearch(int[] a, int value) {
                                     <img height="396" style="display: block; margin-left: auto; margin-right: auto;" alt="448" src="files/e0e350914eaafeb4e638e030ba1acff2.png"> &nbsp; &nbsp;对于另外一种情况，就是如果a[i&ndash;1]&nbsp;&lt;&nbsp;b[k&nbsp;&ndash;&nbsp;i&nbsp;&ndash;&nbsp;1]，那么表示a[i&ndash;1]这个元素所大于的元素还不到k个，这个时候需要去看a[i&ndash;1]后面的元素，如下图：</img>
                                 </p>
                                 <p>
-                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/dac453431e794a4729d8c9a8efe45e8.png"></img>
+                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/dac453431e794a4729d8c9a8efe45e80.png"></img>
                                 </p>
                                 <p> &nbsp; &nbsp; &nbsp;按照这边的讨论，我们相当于找到了一个逐步递归的步骤。但是递归的结束条件是什么呢？假设我们已经访问到数组a最小的元素，也就是a[0]了。这个时候，我们只需要直接去看b[k&ndash;1]。这里的k&ndash;1其实是相对于b数组的起始位置来说的。因为前面的每次递归我们都采用类似二分法的方式将搜索的范围减少一半。另外，如果我们要找的元素为第1个了，这个时候只要比较a[0],&nbsp;b[0]中间两者最小的那个就可以了。这里的a[0],&nbsp;b[0]也是相对位置。</p>
                                 <p> &nbsp; &nbsp;还要一个前面没有澄清的问题，就是我们假设是在数组a中间取到第i个元素。那么最开始我们该设定到哪个位置比较合适呢？随便乱取一个？从二分法的角度来说，我们可以先取k/2个元素，假设a[k/2&ndash;1]这个元素也满足&gt;&nbsp;b[k/2&ndash;1]并且&lt;b[k/2]的话不就是正好吗？如果没有则按照前面给定的递归关系进行调整。</p>
@@ -4196,7 +4196,7 @@ public boolean find(int key) {
                                 <p>增加一个新的节点进来还有一个需要考虑的问题就是要调整整个level的引用。比如说，该定义这个节点的级别。在前面结构描述的时候是提到了一种理想的情况。比如一级的对应整个链表。二级的对应每２个元素。而实际上我们的实现还是有点不同，我们并不是严格按照这个来。而是用一种随机选择level的方式。</p>
                                 <p>整个插入元素的过程如下图：</p>
                                 <p>
-                                    <img alt src="files/c64d076439283f6402a367a0458ce75.png"></img>
+                                    <img alt src="files/c64d076439283f6402a367a0458ce750.png"></img>
                                 </p>
                                 <p> 　详细的实现代码如下：</p>
                                 <p> </p>
@@ -4491,7 +4491,7 @@ public int itFind(int p) {
                                 <p>   &nbsp;还有一个需要说明的就是，前面提到过，我们构造的树和输入的数对也是有关系的。虽然前面的方法可以使得整个的路径得到压缩，在某些情况下，还是可以构造出最坏长度为logN的树来。比如说每次输入的数对都是两棵树的根节点，这样通过搜索从叶节点到根节点来压缩的效果就发挥不出来了。一个典型的输入如下：{&nbsp;(1,&nbsp;2),&nbsp;(3,&nbsp;4)&nbsp;(5,&nbsp;6)&nbsp;(7,&nbsp;8),&nbsp;(1,&nbsp;3),&nbsp;(5,&nbsp;7),&nbsp;(1,&nbsp;5)}&nbsp;。这里按照前面的思路得到的图如下：</p>
                                 <p>第一轮归并：</p>
                                 <p>
-                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/9742495a714038fbf758fc62b41e285.jpeg"></img>
+                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/9742495a714038fbf758fc62b41e2850.jpeg"></img>
                                 </p>
                                 <p>第二轮归并：</p>
                                 <p>
@@ -4799,7 +4799,7 @@ public class BinaryTree&lt;T&gt;
                                 </p>
                                 <p> &nbsp; &nbsp;对应的二叉树则转变成如下：</p>
                                 <p>
-                                    <img height="420" style="display: block; margin-left: auto; margin-right: auto;" alt="400" src="files/b8d012a5f2c4dd9016f1ee25e71e394.jpg"></img>
+                                    <img height="420" style="display: block; margin-left: auto; margin-right: auto;" alt="400" src="files/b8d012a5f2c4dd9016f1ee25e71e3940.jpg"></img>
                                 </p>
                                 <p> </p>
                                 <p> &nbsp; &nbsp;这部分带来的变动在节点和树的定义上影响比较小，加入了父节点会在后续的插入元素和删除元素的时候影响比较大。这里，节点对应的定义代码为：</p>
@@ -5063,7 +5063,7 @@ class BinaryNode&lt;T&gt;
                                 <p> &nbsp; &nbsp;实际上这种情况就是要找到节点左子树的最大值。</p>
                                 <p>2.&nbsp;如果该节点没有左子树，我们需要向上来查找。对于7这个节点来说，我们需要找到比它小的。但是如果它是它父节点的左儿子，则该父节点比它大，不符合要求。需要一直找到将它或者它上面的节点作为右儿子的那个节点。如下图：</p>
                                 <p> 
-                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/7a7bcdc7a56b3718d541cd5131d6fc7.jpg"></img>
+                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/7a7bcdc7a56b3718d541cd5131d6fc70.jpg"></img>
                                 </p>
                                 <p> &nbsp; &nbsp; 所以针对这种情况我们可以得出如下的代码：</p>
                                 <pre class="java" name="code">
@@ -5473,7 +5473,7 @@ public static void pourJugs(int a, int b, int volume) {
                                 </p>
                                 <p>   &nbsp;如果下一个元素是4呢？那么左边元素集合为{1,&nbsp;5,&nbsp;7,&nbsp;4}，中间元素为8,&nbsp;而右边元素不变。这个时候，实际上中间值应该就在7和8之间。这个时候对应的情况如下：</p>
                                 <p>
-                                    <img height="257" alt="655" src="files/a1e81b20bd48878ac52a62175e769a5.jpeg"></img>
+                                    <img height="257" alt="655" src="files/a1e81b20bd48878ac52a62175e769a50.jpeg"></img>
                                 </p>
                                 <p>   &nbsp;如果不调整中间值，而如果后面再增加一个元素比如3呢？这个时候，左边的集合成了{1,&nbsp;5,&nbsp;7,&nbsp;4,&nbsp;3}，中间值是8,&nbsp;右边的还是没有变化。现在就有问题了。左边的集合元素比右边的集合大2,&nbsp;必须要动态的去调整中间值节点。所以，必须要将8移到右边的集合里，而从左边的集合里取最大的那个来作为中间值。</p>
                                 <p>
@@ -5552,7 +5552,7 @@ public double getMedian(leftset, rightSet, input) { //其中左边集合为比�
                                 </p>
                                 <p> &nbsp; &nbsp;这样，经过前面几个步骤，我们就已经将第一个元素给反转过来了。后面的过程也类似。假设我们要接着反转第二个元素，那么它的过程如下图：</p>
                                 <p> 
-                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/9cd9bd30002e14dc76506cd341bcc17.jpg"></img>
+                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/9cd9bd30002e14dc76506cd341bcc170.jpg"></img>
                                 </p>
                                 <p> </p>
                                 <p> &nbsp; &nbsp; 这一步骤相当于执行了这么两句：temp&nbsp;=&nbsp;head;&nbsp;head&nbsp;=&nbsp;head.next;</p>
@@ -6200,7 +6200,7 @@ public void maxHeapInsert(int key) throws Exception
                                 </p>
                                 <p>    &nbsp;它对应的存储数组则如下图所示：</p>
                                 <p>
-                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/91e98d65c2d0853331d407668255cd9.jpeg"></img>
+                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/91e98d65c2d0853331d407668255cd90.jpeg"></img>
                                 </p>
                                 <p>    &nbsp;根据我们前面讨论的问题描述，对于一个堆来说，它里面的元素会动态调整，而对应的数据流却是相对固定的，所以我们需要有一个表来保存它们之间的映射关系。</p>
                                 <p> 于是我们这里就有一个表pq，&nbsp;其中pq定义为int[]的数组，它保存的是指向具体堆元素的索引。它是一个形式上的最小堆，不过它里面的元素只是索引而已。具体参加比较的还是对应的堆元素。因为中间有了这么一道转换，看起来稍微有点困难。我们可以这样来理解。假设我们要构成前面示例中的最小堆，它的二叉树结构里应该保存的样式是上图那样的。但是，因为我们考虑到具体的参加比较的堆元素如果变动位置的话比较麻烦，就让它们的位置不动。也就是说，前面的线性结构元素应该是上图那样的，但是因为我们这里不让堆元素动，所以它可能本身存的是如下的这样一个数组结构：</p>
@@ -6765,7 +6765,7 @@ public static void printBinaryArrays(int[] array)
                                 <p> &nbsp; &nbsp;实际上这个问题本身并不是很复杂，从一开始看的时候似乎也能找到一点类似的苗头。比如说我们要求2&nbsp;**&nbsp;7。我们知道，它可以拆分成2**4&nbsp;*&nbsp;2&nbsp;**&nbsp;3。而对于2的4次方可以拆分成2**2&nbsp;再做一次平方。对于一个理想的数字，比如说这个指数本身就是2的多少次方的，像4,&nbsp;我们只要求出2**2，然后再在它的基础上求它自己的平方，这不就得到2**4了吗？而对于前面2的7次方这个数字，我们将它拆成了2**4乘以2**3。既然2的4次方可以这样来求，对于这些奇数来说呢？实际上我们可以进一步拆分的。2**3可以拆成2**2再乘以2。这样，它们都可以被拆分成一系列的数字给拼起来。</p>
                                 <p> &nbsp; &nbsp;这个过程似乎带来了一点思路。我们针对前面这个问题再深入的看一下，假设我们要求的这个数字的指数是7,&nbsp;对它的拆分是将它拆成4和3。因为4是最接近它的2的指数，它可以通过两次求平方运算得到。而3呢，则需要再进一步按照这种方式来拆分。相当于找最接近它的那个2的指数。那么怎么找这个最接近它本身的2的指数呢？我们看7它的二进制表示形式：</p>
                                 <p>
-                                    <img height="105" style="display: block; margin-left: auto; margin-right: auto;" alt="249" src="files/7684d64dd92e9002bc3752cd76a0ade.jpeg"></img>
+                                    <img height="105" style="display: block; margin-left: auto; margin-right: auto;" alt="249" src="files/7684d64dd92e9002bc3752cd76a0ade0.jpeg"></img>
                                 </p>
                                 <p> &nbsp; &nbsp;这是一个用4个位来表示的二进制数字形式。其实，它最接近的那个2的指数不就是为1的最高位么？那么我们最终要凑这个数字无非就是将各个为1的位对应的数字加起来。既然我们的目的是将这些数字加起来，那么完全就没有必要考虑从左往右的拆分了。我们完全可以这样来求，看一个数字的某个位是否为1,比如我们从最低位开始。如果是1,&nbsp;我们就加上一个2**0，也就是1,&nbsp;而再往后一位对应的第1位的位置,&nbsp;如果这一个位置也是1的话，则加一个2**1的值。后面依次类推，对应的分别是2**2,&nbsp;2**3等等。我们这里相当于得出来一个根据二进制数字来凑这个整数的过程。类似的伪代码如下：</p>
                                 <p> </p>
@@ -7385,7 +7385,7 @@ public class CC {
                                 <p>   &nbsp;从这些图的结构里，我们可以看到一个这样的规律。就是从图中间构成环的任意一个节点开始，如果按照某个方向遍历，最终它某个可以访问的点是它前面已经遍历过的。对于一些特殊的情况，比如两个相邻的节点之间的连接，它们不能定义为环，需要被排除。这也是后面具体实现的细节里需要考虑的。</p>
                                 <p>   &nbsp;现在结合后面的这个图，我们来进一步细化前面考虑的步骤。假设我们仅仅用原来遍历图的数据结构，我们只是需要有一个boolean[]&nbsp;marked数组就可以了。那么，刚开始的时候，假设从节点1开始去遍历。第一步之后的情况应该如下：</p>
                                 <p>
-                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/1149bb80647a237f27fcdafe04c0ff8.jpeg"></img>
+                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/1149bb80647a237f27fcdafe04c0ff80.jpeg"></img>
                                 </p>
                                 <p>   &nbsp;按照前面的标记，makred[1]被标记为true。然后继续考虑1节点所邻接的节点2：</p>
                                 <p> </p>
@@ -8446,7 +8446,7 @@ public static void traverse(int[][] a)
                                     <span style="line-height: 1.5;"> &nbsp; &nbsp;首先，它既然是一个(a&nbsp;op&nbsp;b)这种结构。那么当我们把最外面那一层括号剥除的时候，它对应的应该是(1&nbsp;+&nbsp;2)&nbsp;*&nbsp;((3&ndash;&nbsp;4)&nbsp;*&nbsp;(5&nbsp;&ndash;&nbsp;6))&nbsp;，其中a对应(1&nbsp;+&nbsp;2)，&nbsp;op操作符对应&nbsp;*，&nbsp;b对应((3&ndash;4)&nbsp;*&nbsp;(5&nbsp;&ndash;&nbsp;6))。&nbsp;它对应的语法树结构如下：</span>
                                 </p>
                                 <p>
-                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/623c442cbf4f2c8c69d097a80a61081.jpeg"></img>
+                                    <img style="display: block; margin-left: auto; margin-right: auto;" alt src="files/623c442cbf4f2c8c69d097a80a610810.jpeg"></img>
                                 </p>
                                 <p> &nbsp; &nbsp;我们可以进一步的展开(1&nbsp;+&nbsp;2)，它既然也应该对应(a&nbsp;op&nbsp;b)这种结构，那么a=&nbsp;1,&nbsp;b&nbsp;=&nbsp;2,&nbsp;op&nbsp;=&nbsp;+：</p>
                                 <p>

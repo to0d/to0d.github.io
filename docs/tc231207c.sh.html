@@ -1,0 +1,36 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC231207C.sh</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC231207C.sh</h1>
+            <h3>Dump clang AST</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/AST.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>AST</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/debug-llvm.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>debug-llvm</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    <ul>
+	<li><a name="HEAD_HIDDEN_c4961857">dump ast &ndash; <code>clang &ndash;cc1 &ndash;ast&ndash;dump hello.c</code> &nbsp;<a href="../tags/debug-llvm.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>debug-llvm</a></li>
+	<li><a name="HEAD_HIDDEN_3dace499">dump ast &ndash; <code>clang &ndash;Xclang &ndash;ast&ndash;dump hello.c</code> &nbsp;<a href="../tags/debug-llvm.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>debug-llvm</a></li>
+	<br />
+</ul>
+	<hr/>
+<pre><code>#/bin/sh
+
+clang -cc1 -ast-dump hello.c &gt; hello.dump.txt
+echo "output: done!"</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

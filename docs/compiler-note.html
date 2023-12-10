@@ -1,0 +1,566 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Compiler Note</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">Compiler Note</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2016-11-30</time>
+            <i><a href="../tags/Compiler.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Compiler</a>&nbsp;<a href="../tags/Outline.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Outline</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl"><a href="../tags/alias-analysis.html" target="_blank"><i class="fa fa-tags fa-fw"></i>alias-analysis</a> </a></li>
+</ol>
+</div>
+        <div class="entry-content">
+	<H1><a name="HEAD_23735199" href="#TOC_HEAD_23735199">1. Overview</a></H1>
+	<H2><a name="HEAD_a7123" href="#TOC_HEAD_a7123">1.1. 入门</a></H2>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_2be8b8a8" href="#HEAD_2be8b8a8">1.1.1. 工作范围</a></li>
+	<li><a name="TOC_HEAD_92a2e98b" href="#HEAD_92a2e98b">1.1.2. 编译过程一般分为三段</a></li>
+</menu>
+
+</div>
+	<H3><a name="HEAD_2be8b8a8" href="#TOC_HEAD_2be8b8a8">1.1.1. 工作范围</a></H3>
+<ul>
+	<li>如果工作在前端，而中间表示不变，工作应该集中在语言的设计上，不需要系统结构知识。</li>
+	<li><a name="HEAD_HIDDEN_1445cdf1">如果工作在中端，做些 <a href="../tags/14d8ef8.html" target="_blank"><i class="fa fa-tags fa-fw"></i>向量化</a> ，cache <a href="../tags/40e73437.html" target="_blank"><i class="fa fa-tags fa-fw"></i>访存优化</a> 之类的，只需要了解部分系统结构的知识，如向量指令的宽度，向量指令提供了那些操作，或者cache的大小之类的 &nbsp;<a href="../tags/14d8ef8.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>向量化</a>&nbsp;<a href="../tags/40e73437.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>访存优化</a></li>
+	<li>如果工作在后端，主要是做寄存器分配和指令调度，虽然需要知道的系统结构相关的信息相对较多，但也仅停留在指令集层面，比如需要知道有哪些寄存器，每个指令的延迟等等。</li>
+	<li><a name="HEAD_HIDDEN_f425e2de">如果需要设计新的中间表示，比如 <a href="../tags/MLIR.html" target="_blank"><i class="fa fa-tags fa-fw"></i>MLIR</a> 需要能够在IR层面做特定的领域内优化，就需要设计者把领域内（domain specific）的信息设计到IR中，此IR的设计可能对指令集的理解有更高的要求，可能需要了解指令集中的所有指令及这么设计指令集的原因，因为所设计的IR会直接影响到后端的代码生成。 &nbsp;<a href="../tags/MLIR.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>MLIR</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_92a2e98b" href="#TOC_HEAD_92a2e98b">1.1.2. 编译过程一般分为三段</a></H3>
+<ol>
+	<li><strong>前端</strong> : 把源代码翻译成抽象语法树 <a href="../tags/AST.html" target="_blank"><i class="fa fa-tags fa-fw"></i>AST</a> ，再翻译到中间表示 <a href="../tags/IR.html" target="_blank"><i class="fa fa-tags fa-fw"></i>IR</a></li>
+	<br />
+	<ul>
+		<li>Source &ndash;&gt; AST &ndash;&gt; IR</li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_a8267296"><strong>中端</strong> : 在中间表示IR层面做代码分析优化，像基于控制流图CFG的 <a><b>数据流优化</b></a> , <a href="../tags/14d8ef8.html" target="_blank"><i class="fa fa-tags fa-fw"></i>向量化</a> 之类的  &nbsp;<a href="../tags/MEA.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>中端分析</a></li>
+	<br />
+	<ul>
+		<li><a name="HEAD_HIDDEN_174ae53f">机器无关优化 &nbsp;<a href="../tags/Optimization.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Optimization</a></li>
+		<ul>
+			<li><a><b>常量传播</b></a></li>
+			<li>常量折叠</li>
+			<li>复写传播</li>
+			<li>公共子表式消除</li>
+			<li>无用代码消除</li>
+			<li>数组范围检查消除</li>
+			<li>方法内联</li>
+			<li>逃逸分析</li>
+			<br />
+		</ul>
+		<li>机器相关优化</li>
+		<ul>
+			<li><a href="../tags/14d8ef8.html" target="_blank"><i class="fa fa-tags fa-fw"></i>向量化</a></li>
+			<li><a href="../tags/40e73437.html" target="_blank"><i class="fa fa-tags fa-fw"></i>访存优化</a></li>
+			<br />
+		</ul>
+		<li>设计新的中间表示</li>
+		<ul>
+			<li><a href="../tags/MLIR.html" target="_blank"><i class="fa fa-tags fa-fw"></i>MLIR</a></li>
+			<br />
+		</ul>
+	</ul>
+	<li><strong>后端</strong> : 从IR翻译到对应系统结构的指令集对应的机器码，主要做 <a><b>寄存器分配</b></a> 和简单的 <a><b>指令调度</b></a></li>
+	<br />
+	<ul>
+		<li><a><b>寄存器分配</b></a></li>
+		<li><a><b>指令调度</b></a></li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_79a8a190">refer &quot;2020&ndash;08&ndash;23 一名优秀编译器工程师的体系结构知识应该是什么水平 知乎.html&quot;</li>
+	<li><a name="HEAD_HIDDEN_f74cd0ad">refer &quot;2021&ndash;06&ndash;17 编译器常用的8种优化方法 知乎.html&quot;</li>
+	<br />
+</ol>
+	<H1><a name="HEAD_a7242" href="#TOC_HEAD_a7242">2. 前端</a></H1>
+	<H2><a name="HEAD_d26b3" href="#TOC_HEAD_d26b3">2.1. 概念</a></H2>
+<ul>
+	<li><a href="../tags/AST.html" target="_blank"><i class="fa fa-tags fa-fw"></i>AST</a></li>
+	<li><a href="../tags/FSM.html" target="_blank"><i class="fa fa-tags fa-fw"></i>FSM</a></li>
+	<li><a href="../tags/DFA.html" target="_blank"><i class="fa fa-tags fa-fw"></i>DFA</a></li>
+	<li><a><b>NFA</b></a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_70ec1dee" href="#TOC_HEAD_70ec1dee">2.2. <a><b>文法</b></a></a></H2>
+<ul>
+	<li><a><b>G-LALR-1</b></a></li>
+	<li><a><b>G-LL-1</b></a></li>
+	<li><a><b>G-LR-0</b></a></li>
+	<li><a><b>G-LR-1</b></a></li>
+	<li><a><b>G-SLR-1</b></a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_5cb3c3b2" href="#TOC_HEAD_5cb3c3b2">2.3. <a><b>词法分析</b></a></a></H2>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_145da94a" href="#HEAD_145da94a">2.3.1. Example</a></li>
+</menu>
+
+</div>
+	<H3><a name="HEAD_145da94a" href="#TOC_HEAD_145da94a">2.3.1. Example</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_d6bf8f8e">使用 <a href="../tags/DFA.html" target="_blank"><i class="fa fa-tags fa-fw"></i>DFA</a> 解决 <a href="../tags/LT0065.html" target="_blank">LT0065</a> 问题 &ndash; <a href="LT006501.cpp.html" target="_blank">LT006501.cpp</a></li>
+	<li><a name="HEAD_HIDDEN_15927cd7">使用 <a><b>NFA</b></a> 实现SQL Debug语法支持 &ndash; <a href="topic-sql-debug-command-parser-base-on-fsm.html" target="_blank">TC160722A.c</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_934ed792" href="#TOC_HEAD_934ed792">2.4. <a><b>语法分析</b></a></a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_70776fe8">Refer &ndash; YACC&ndash;LEFT&ndash;REC&ndash;1</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_75550577" href="#TOC_HEAD_75550577">2.5. 高级语言分类</a></H2>
+<ul>
+	<li>强制式语言(Imperative Language): FORTRAN, C, Pascal, Ada</li>
+	<li>应用式语言(Applicative Language): LISP, ML &ndash;&ndash; <strong><font color="red">函数式语言</font></strong></li>
+	<li>基于规则语言(Rule&ndash;Based Language): Prolog</li>
+	<li>面向对象语言(Object&ndash;Oriented Language)</li>
+	<br />
+</ul>
+	<H1><a name="HEAD_aa8a1" href="#TOC_HEAD_aa8a1">3. 后端</a></H1>
+	<H2><a name="HEAD_37f97bdb" href="#TOC_HEAD_37f97bdb">3.1. 寄存器分配</a></H2>
+<ul>
+	<li>可以抽象成图着色问题 图中的每个节点代表某个变量的活跃期或生存期 两节点之间的边表示这两个变量活跃期因为生命期（lifetime）重叠导致互相冲突或干涉 控制流图（CFG）</li>
+	<br />
+	<li>refer &ndash; <a><b>寄存器分配</b></a></li>
+	<li><a name="HEAD_HIDDEN_f6588086">refer &quot;2019&ndash;04&ndash;06 LLVM寄存器分配 知乎.html&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_c81e6069" href="#TOC_HEAD_c81e6069">3.2. 寄存器重命名</a></H2>
+<ul>
+	<li>refer &ndash; <a><b>寄存器重命名</b></a></li>
+	<li><a name="HEAD_HIDDEN_f9950d99">refer &quot;2020&ndash;11&ndash;18 Data Prefetch指令预取 知乎.html&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_2e3d6480" href="#TOC_HEAD_2e3d6480">3.3. 指令调度</a></H2>
+<ul>
+	<li>重新排列机器代码指令，旨在最小化执行特定指令序列所需的时钟周期数</li>
+	<li>最小化寄存器生存期 顺序代码内含着一些指令之间的依赖关系</li>
+	<br />
+	<li>refer &ndash; <a><b>指令调度</b></a></li>
+	<li><a name="HEAD_HIDDEN_f7d7036f">refer &quot;2019&ndash;01&ndash;17 指令调度基础 知乎.html&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_25ad2ecf" href="#TOC_HEAD_25ad2ecf">3.4. 代码生成</a></H2>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_7b2919bc" href="#HEAD_7b2919bc">3.4.1. 怎么做指令优化 比如说支持向量化指令集 <a href="../tags/14d8ef8.html" target="_blank"><i class="fa fa-tags fa-fw"></i>向量化</a></a></li>
+</menu>
+
+</div>
+	<H3><a name="HEAD_7b2919bc" href="#TOC_HEAD_7b2919bc">3.4.1. 怎么做指令优化 比如说支持向量化指令集 <a href="../tags/14d8ef8.html" target="_blank"><i class="fa fa-tags fa-fw"></i>向量化</a></a></H3>
+	<H1><a name="HEAD_d1fd7a0f" href="#TOC_HEAD_d1fd7a0f">4. 汇编 <a href="../tags/Assembler.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Assembler</a></a></H1>
+	<H2><a name="HEAD_a917af43" href="#TOC_HEAD_a917af43">4.1. <a href="../tags/Register.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Register</a></a></H2>
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l">Register</td>
+		<td id="mdt_td_l">Tips</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_Register-EBP_0" target="_blank" href="../tags/Register-EBP.html"><i class="fa fa-tags fa-fw"></i>Register-EBP</a></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_Register-EIP_0" target="_blank" href="../tags/Register-EIP.html"><i class="fa fa-tags fa-fw"></i>Register-EIP</a></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_Register-ESP_0" target="_blank" href="../tags/Register-ESP.html"><i class="fa fa-tags fa-fw"></i>Register-ESP</a></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_Register-EAX_0"><b>Register-EAX</b></a></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_Register-ECX_0"><b>Register-ECX</b></a></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_Register-EBX_0"><b>Register-EBX</b></a></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_Register-EDX_0"><b>Register-EDX</b></a></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_Register-GPR1_0"><b>Register-GPR1</b></a></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_Register-PC_0"><b>Register-PC</b></a></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_Register-RIP_0" target="_blank" href="../tags/Register-RIP.html"><i class="fa fa-tags fa-fw"></i><ruby>Register-RIP<rt>Instruction pointer</rt></ruby></a></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_Register-SP_0"><b>Register-SP</b></a></td>
+		<td></td>
+	</tr>
+</table>
+<br>
+	<H1><a name="HEAD_6658d8be" href="#TOC_HEAD_6658d8be">5. <a href="../tags/9e6fe.html" target="_blank"><i class="fa fa-tags fa-fw"></i>优化</a></a></H1>
+	<H2><a name="HEAD_dec578b9" href="#TOC_HEAD_dec578b9">5.1. <a href="../tags/alias-analysis.html" target="_blank"><i class="fa fa-tags fa-fw"></i>alias-analysis</a></a> <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></H2><ul></ul>
+	<H2><a name="HEAD_c88f94f8" href="#TOC_HEAD_c88f94f8">5.2. <a href="../tags/14d8ef8.html" target="_blank"><i class="fa fa-tags fa-fw"></i>向量化</a></a></H2>
+<ul>
+	<li><a><b>SIMD</b></a></li>
+	<ul>
+		<li><a><b>AVX</b></a></li>
+		<ul>
+			<li><a><b>FMA</b></a></li>
+		</ul>
+		<li><a><b>NEON</b></a></li>
+		<li><a><b>MSA</b></a></li>
+		<li><a><b>RVV</b></a></li>
+		<br />
+	</ul>
+	<li>refer https://zhuanlan.zhihu.com/p/544575114</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_9982bcc9" href="#TOC_HEAD_9982bcc9">5.3. <a name="wd_ln_访存优化_0" target="_blank" href="../tags/40e73437.html"><i class="fa fa-tags fa-fw"></i>访存优化</a></a></H2>
+<ul>
+	<li>更好register分配 L1/L2 Cache</li>
+	<li>通过调整代码和数据的布局方式，提高Cache命中率, 数据和指令的对齐</li>
+	<li><a name="HEAD_HIDDEN_f7732ac7">Cache 预取 prefetch &nbsp;<a href="../tags/prefetch.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>prefetch</a></li>
+	<br />
+	<li><a name="HEAD_HIDDEN_8ea1fbd">refer &ndash; &quot;2022&ndash;03&ndash;28 CUDA访存优化 1 知乎.html&quot;</li>
+	<li><a name="HEAD_HIDDEN_a5d52670">refer &ndash; &quot;2023&ndash;01&ndash;11 编译器优化 Cache优化 知乎.html&quot;</li>
+	<li><a name="HEAD_HIDDEN_422fd226">refer &ndash; &quot;2020&ndash;11&ndash;18 Data Prefetch指令预取 知乎.html&quot;</li>
+	<li>refer &ndash; https://zhuanlan.zhihu.com/p/84194049</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_ff61bd66" href="#TOC_HEAD_ff61bd66">5.4. <a href="../tags/Peephole-opt.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Peephole-opt</a></a></H2>
+	<H1><a name="HEAD_ee40a" href="#TOC_HEAD_ee40a">6. 硬件</a></H1>
+	<H2><a name="HEAD_d26b3_0" href="#TOC_HEAD_d26b3_0">6.1. 概念</a></H2>
+<ul>
+	<li><a><b>ASIC</b></a></li>
+	<li><a href="../tags/Qemu.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Qemu</a></li>
+	<li><a><b>Spike</b></a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_2e39080b" href="#TOC_HEAD_2e39080b">6.2. 指令架构</a></H2>
+<ul>
+	<li><a><b>RISC-V</b></a></li>
+	<li><a href="../tags/x86.html" target="_blank"><i class="fa fa-tags fa-fw"></i>x86</a></li>
+	<li><a href="../tags/ARM.html" target="_blank"><i class="fa fa-tags fa-fw"></i>ARM</a></li>
+	<li><a><b>Power</b></a></li>
+	<br />
+</ul>
+	<H1><a name="HEAD_6e1ce456" href="#TOC_HEAD_6e1ce456">7. <a><b>并行</b></a></a></H1>
+	<H2><a name="HEAD_f2e77c5c" href="#TOC_HEAD_f2e77c5c">7.1. 并行计算框架</a></H2>
+<ul>
+	<li><a><b>CUDA</b></a>   &ndash; 使用 NVIDIA GPU做异构计算</li>
+	<li><a><b>HIP</b></a>    &ndash; AMD版的CUDA</li>
+	<li><a><b>OpenCL</b></a> &ndash; 基于FPGAs的异构加速卡的模块</li>
+	<li><a><b>MPI</b></a></li>
+	<br />
+	<li><a name="HEAD_HIDDEN_1917dd2a">refer &quot;2012&ndash;05&ndash;30 从并行计算的角度对比 MPI 与 OpenMP 有什么区别 李超铮 知乎.html&quot;</li>
+	<br />
+</ul>
+	<H1><a name="HEAD_1fbc88e1" href="#TOC_HEAD_1fbc88e1">8. Coverage:  6%</a></H1>
+<ul>
+	<li><strong>Domain:</strong> <a href="../" target="_blank">Compiler</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_b2cd0618" href="#TOC_HEAD_b2cd0618">8.1. Nodes: 35/35</a></H2>
+<table id="mdt_t">
+	<tr id="mdt_hd"><td id="mdt_td_l">Nodes</td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="learn-dragon-book.html" target="_blank">2015&ndash;12&ndash;24 Learn Compilers Principles Techniques Tools 2nd Version (dragon book).pdf</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc150528a.sh.html" target="_blank">TC150528A.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc150528b.sh.html" target="_blank">TC150528B.sh</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc150528c.sh.html" target="_blank">TC150528C.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc150528d.sh.html" target="_blank">TC150528D.sh</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc150528e.sh.html" target="_blank">TC150528E.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc150528f.sh.html" target="_blank">TC150528F.sh</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="TC150528G.html" target="_blank">TC150528G</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc210706a.sh.html" target="_blank">TC210706A.sh</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc210706b.sh.html" target="_blank">TC210706B.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc210706c.sh.html" target="_blank">TC210706C.sh</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc210706d.sh.html" target="_blank">TC210706D.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc210706e.sh.html" target="_blank">TC210706E.sh</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc210706f.sh.html" target="_blank">TC210706F.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc210706g.sh.html" target="_blank">TC210706G.sh</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc210706h.sh.html" target="_blank">TC210706H.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc210707a.sh.html" target="_blank">TC210707A.sh</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc210707b.sh.html" target="_blank">TC210707B.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc210707c.sh.html" target="_blank">TC210707C.sh</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc210707d.sh.html" target="_blank">TC210707D.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc230324a.sh.html" target="_blank">TC230324A.sh</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc230513a.cpp.html" target="_blank">TC230513A.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc230513a.gdb.html" target="_blank">TC230513A.gdb</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc231005e.sh.html" target="_blank">TC231005E.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc231005f.sh.html" target="_blank">TC231005F.sh</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc231203a.sh.html" target="_blank">TC231203A.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc231204a.cpp.html" target="_blank">TC231204A.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc231204b.cpp.html" target="_blank">TC231204B.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc231207a.cpp.html" target="_blank">TC231207A.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc231207b.sh.html" target="_blank">TC231207B.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc231207c.sh.html" target="_blank">TC231207C.sh</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc231207d.sh.html" target="_blank">TC231207D.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc231208a.cpp.html" target="_blank">TC231208A.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc231208b.cpp.html" target="_blank">TC231208B.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="ee7ed9cf8b07221d93313ced02e96542.html" target="_blank">plugin_print_funcnames.cpp</a>&nbsp;<a href="https://github.com/to0d/llvm-clang-samples/blob/master/src_clang/plugin_print_funcnames.cpp" title="https://github.com/to0d/llvm-clang-samples/blob/master/src_clang/plugin_print_funcnames.cpp" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+</table>
+<br>
+	<H2><a name="HEAD_f2552596" href="#TOC_HEAD_f2552596">8.2. Tags: 52/58</a></H2>
+<table id="mdt_t">
+	<tr id="mdt_hd"><td id="mdt_td_l">Tags</td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/CFG.html" target="_blank">CFG</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Calling-Convention.html" target="_blank">Calling-Convention</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Clang-Plugin.html" target="_blank">Clang-Plugin</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Clang-RecursiveASTVisitor.html" target="_blank">Clang-RecursiveASTVisitor</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Compiler.html" target="_blank">Compiler</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Cxx-Code.html" target="_blank">Cxx-Code</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/DWARF.html" target="_blank">DWARF</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/FEA.html" target="_blank">FEA</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/HelloPass.html" target="_blank">HelloPass</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/L-dot.html" target="_blank">L-dot</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/L210706A.html" target="_blank">L210706A</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLT.html" target="_blank">LLT</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-17.html" target="_blank">LLVM-17</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-AnalysisPass.html" target="_blank">LLVM-AnalysisPass</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-CycleInfoWrapperPass.html" target="_blank">LLVM-CycleInfoWrapperPass</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-IR.html" target="_blank">LLVM-IR</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-LegacyPassManager.html" target="_blank">LLVM-LegacyPassManager</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-LoopInfoWrapperPass.html" target="_blank">LLVM-LoopInfoWrapperPass</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-MemorySSAWrapperPass.html" target="_blank">LLVM-MemorySSAWrapperPass</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-Pass.html" target="_blank">LLVM-Pass</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-ScalarEvolutionWrapperPass.html" target="_blank">LLVM-ScalarEvolutionWrapperPass</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/MEA.html" target="_blank">MEA</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Optimization.html" target="_blank">Optimization</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Pointer.html" target="_blank">Pointer</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/RegEx.html" target="_blank">RegEx</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/SCEV.html" target="_blank">SCEV</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/SH-Code.html" target="_blank">SH-Code</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/StaticAnalysis.html" target="_blank">StaticAnalysis</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/TCC.html" target="_blank">TCC</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Tool.html" target="_blank">Tool</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Yacc.html" target="_blank">Yacc</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/byacc.html" target="_blank">byacc</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/cast.html" target="_blank">cast</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/debug-llvm.html" target="_blank">debug-llvm</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/flex.html" target="_blank">flex</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/gdb-Script.html" target="_blank">gdb-Script</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-br.html" target="_blank">li-br</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-func.html" target="_blank">li-func</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-icmp.html" target="_blank">li-icmp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-phi.html" target="_blank">li-phi</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-select.html" target="_blank">li-select</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-switch.html" target="_blank">li-switch</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-trunc.html" target="_blank">li-trunc</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/llvm-dwarfdump.html" target="_blank">llvm-dwarfdump</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/llvm-llc.html" target="_blank">llvm-llc</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/llvm-nm.html" target="_blank">llvm-nm</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/mangling.html" target="_blank">mangling</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/prefetch.html" target="_blank">prefetch</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/readelf.html" target="_blank">readelf</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/strip.html" target="_blank">strip</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/x86-Assembler.html" target="_blank">x86-Assembler</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/13a1ed.html" target="_blank">龙书</a></td></tr>
+</table>
+<br>
+	<hr/>
+	<H1><a name="HEAD_9fbf43ae" href="#TOC_HEAD_9fbf43ae">9. Index (12)</a></H1>
+	<H2><a name="wd_def_Register-EAX" href="#TOC_wd_def_Register-EAX">9.1. Register&ndash;EAX (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Register-EAX_0" >Register-EAX</a>
+	</ul>
+	<H2><a name="wd_def_Register-EBP" href="#TOC_wd_def_Register-EBP">9.2. Register&ndash;EBP (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Register-EBP_0" >Register-EBP</a>
+	</ul>
+	<H2><a name="wd_def_Register-EBX" href="#TOC_wd_def_Register-EBX">9.3. Register&ndash;EBX (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Register-EBX_0" >Register-EBX</a>
+	</ul>
+	<H2><a name="wd_def_Register-ECX" href="#TOC_wd_def_Register-ECX">9.4. Register&ndash;ECX (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Register-ECX_0" >Register-ECX</a>
+	</ul>
+	<H2><a name="wd_def_Register-EDX" href="#TOC_wd_def_Register-EDX">9.5. Register&ndash;EDX (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Register-EDX_0" >Register-EDX</a>
+	</ul>
+	<H2><a name="wd_def_Register-EIP" href="#TOC_wd_def_Register-EIP">9.6. Register&ndash;EIP (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Register-EIP_0" >Register-EIP</a>
+	</ul>
+	<H2><a name="wd_def_Register-ESP" href="#TOC_wd_def_Register-ESP">9.7. Register&ndash;ESP (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Register-ESP_0" >Register-ESP</a>
+	</ul>
+	<H2><a name="wd_def_Register-GPR1" href="#TOC_wd_def_Register-GPR1">9.8. Register&ndash;GPR1 (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Register-GPR1_0" >Register-GPR1</a>
+	</ul>
+	<H2><a name="wd_def_Register-PC" href="#TOC_wd_def_Register-PC">9.9. Register&ndash;PC (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Register-PC_0" >Register-PC</a>
+	</ul>
+	<H2><a name="wd_def_Register-RIP" href="#TOC_wd_def_Register-RIP">9.10. Register&ndash;RIP (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Register-RIP_0" >Register-RIP</a>
+	</ul>
+	<H2><a name="wd_def_Register-SP" href="#TOC_wd_def_Register-SP">9.11. Register&ndash;SP (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Register-SP_0" >Register-SP</a>
+	</ul>
+	<H2><a name="wd_def_访存优化" href="#TOC_wd_def_访存优化">9.12. 访存优化 (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_访存优化_0" >访存优化</a>
+	</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    <b><a href="#HEAD_todo"><font color="red">TODO: 1</font></a></b><br>﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_23735199" href="#HEAD_23735199">1. Overview</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_a7123" href="#HEAD_a7123">1.1. 入门</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_a7242" href="#HEAD_a7242">2. 前端</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_d26b3" href="#HEAD_d26b3">2.1. 概念</a></li>
+		<li><a name="TOC_HEAD_70ec1dee" href="#HEAD_70ec1dee">2.2. <a><b>文法</b></a></a></li>
+		<li><a name="TOC_HEAD_5cb3c3b2" href="#HEAD_5cb3c3b2">2.3. <a><b>词法分析</b></a></a></li>
+		<li><a name="TOC_HEAD_934ed792" href="#HEAD_934ed792">2.4. <a><b>语法分析</b></a></a></li>
+		<li><a name="TOC_HEAD_75550577" href="#HEAD_75550577">2.5. 高级语言分类</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_aa8a1" href="#HEAD_aa8a1">3. 后端</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_37f97bdb" href="#HEAD_37f97bdb">3.1. 寄存器分配</a></li>
+		<li><a name="TOC_HEAD_c81e6069" href="#HEAD_c81e6069">3.2. 寄存器重命名</a></li>
+		<li><a name="TOC_HEAD_2e3d6480" href="#HEAD_2e3d6480">3.3. 指令调度</a></li>
+		<li><a name="TOC_HEAD_25ad2ecf" href="#HEAD_25ad2ecf">3.4. 代码生成</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_d1fd7a0f" href="#HEAD_d1fd7a0f">4. 汇编 <a href="../tags/Assembler.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Assembler</a></a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_a917af43" href="#HEAD_a917af43">4.1. <a href="../tags/Register.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Register</a></a></li>
+	</menu>
+	<b><a name="TOC_HEAD_6658d8be" href="#HEAD_6658d8be">5. <a href="../tags/9e6fe.html" target="_blank"><i class="fa fa-tags fa-fw"></i>优化</a></a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_dec578b9" href="#HEAD_dec578b9">5.1. <a href="../tags/alias-analysis.html" target="_blank"><i class="fa fa-tags fa-fw"></i>alias-analysis</a> &nbsp;<font color="red">@TODO</font></a></li>
+		<li><a name="TOC_HEAD_c88f94f8" href="#HEAD_c88f94f8">5.2. <a href="../tags/14d8ef8.html" target="_blank"><i class="fa fa-tags fa-fw"></i>向量化</a></a></li>
+		<li><a name="TOC_HEAD_9982bcc9" href="#HEAD_9982bcc9">5.3. <a name="wd_ln_访存优化_0" target="_blank" href="../tags/40e73437.html"><i class="fa fa-tags fa-fw"></i>访存优化</a></a></li>
+		<li><a name="TOC_HEAD_ff61bd66" href="#HEAD_ff61bd66">5.4. <a href="../tags/Peephole-opt.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Peephole-opt</a></a></li>
+	</menu>
+	<b><a name="TOC_HEAD_ee40a" href="#HEAD_ee40a">6. 硬件</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_d26b3_0" href="#HEAD_d26b3_0">6.1. 概念</a></li>
+		<li><a name="TOC_HEAD_2e39080b" href="#HEAD_2e39080b">6.2. 指令架构</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_6e1ce456" href="#HEAD_6e1ce456">7. <a><b>并行</b></a></a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_f2e77c5c" href="#HEAD_f2e77c5c">7.1. 并行计算框架</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_1fbc88e1" href="#HEAD_1fbc88e1">8. Coverage:  6%</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_b2cd0618" href="#HEAD_b2cd0618">8.1. Nodes: 35/35</a></li>
+		<li><a name="TOC_HEAD_f2552596" href="#HEAD_f2552596">8.2. Tags: 52/58</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_9fbf43ae" href="#HEAD_9fbf43ae">9. Index (12)</a></b><br>
+	<menu>
+		<li><a name="TOC_wd_def_Register-EAX" href="#wd_def_Register-EAX">9.1. Register&ndash;EAX (1) </a></li>
+		<li><a name="TOC_wd_def_Register-EBP" href="#wd_def_Register-EBP">9.2. Register&ndash;EBP (1) </a></li>
+		<li><a name="TOC_wd_def_Register-EBX" href="#wd_def_Register-EBX">9.3. Register&ndash;EBX (1) </a></li>
+		<li><a name="TOC_wd_def_Register-ECX" href="#wd_def_Register-ECX">9.4. Register&ndash;ECX (1) </a></li>
+		<li><a name="TOC_wd_def_Register-EDX" href="#wd_def_Register-EDX">9.5. Register&ndash;EDX (1) </a></li>
+		<li><a name="TOC_wd_def_Register-EIP" href="#wd_def_Register-EIP">9.6. Register&ndash;EIP (1) </a></li>
+		<li><a name="TOC_wd_def_Register-ESP" href="#wd_def_Register-ESP">9.7. Register&ndash;ESP (1) </a></li>
+		<li><a name="TOC_wd_def_Register-GPR1" href="#wd_def_Register-GPR1">9.8. Register&ndash;GPR1 (1) </a></li>
+		<li><a name="TOC_wd_def_Register-PC" href="#wd_def_Register-PC">9.9. Register&ndash;PC (1) </a></li>
+		<li><a name="TOC_wd_def_Register-RIP" href="#wd_def_Register-RIP">9.10. Register&ndash;RIP (1) </a></li>
+		<li><a name="TOC_wd_def_Register-SP" href="#wd_def_Register-SP">9.11. Register&ndash;SP (1) </a></li>
+		<li><a name="TOC_wd_def_访存优化" href="#wd_def_访存优化">9.12. 访存优化 (1) </a></li>
+	</menu>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

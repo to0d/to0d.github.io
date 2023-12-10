@@ -1,0 +1,836 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Debugger Note</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">Debugger Note</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2014-01-01</time>
+            <i><a href="../tags/Debugger.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Debugger</a>&nbsp;<a href="../tags/Outline.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Outline</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">压缩调试数据 </a></li>
+	<li><a name="TOC_MARK_2" href="#MARK_2" id="in-ttl">Add new language support </a></li>
+	<li><a name="TOC_MARK_3" href="#MARK_3" id="in-ttl">How to debug opt code &ndash; 2023&ndash;06&ndash;15 </a></li>
+</ol>
+</div>
+        <div class="entry-content">
+	<H1><a name="HEAD_23735199" href="#TOC_HEAD_23735199">1. Overview</a></H1>
+	<H2><a name="HEAD_404d5f2b" href="#TOC_HEAD_404d5f2b">1.1. Reference</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_a6527e23"><a href="null#HEAD_3" target="_blank">Writing a Linux Debugger Part 4: Elves and dwarves</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_dbc3cbaa" href="#TOC_HEAD_dbc3cbaa">1.2. Debug Features</a></H2><ul><a href="../tags/Debug-Feature.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Debug-Feature</a>&nbsp;</ul>
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l" colspan="2">Feature</td>
+		<td id="mdt_td_l">System debugger</td>
+		<td id="mdt_td_l">GDB</td>
+		<td id="mdt_td_l">LLDB</td>
+		<td id="mdt_td_l"><a href="../tags/VC.html" target="_blank">VC</a></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l" rowspan="3">主要</td>
+		<td id="mdt_td_l">历史</td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l">GCC&ndash;INTRO&ndash;1</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">最新/我安装版本</td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l">13.2/9.2 <a href="gdb-homepage.html#GDB-HOME-VERSION-1" target="_blank">May 27th, 2023: GDB 13.2 Released!</a></td>
+		<td id="mdt_td_l">17/10</td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">代码量</td>
+		<td id="mdt_td_l">DBG&ndash;NOTE&ndash;DBG&ndash;CODE&ndash;1</td>
+		<td id="mdt_td_l">GDB&ndash;NOTE&ndash;GDB&ndash;CODE&ndash;1</td>
+		<td id="mdt_td_l"><a href="cf3392d05f597a3f664c18bf4aa88ad3.html#LLDB-NOTE-LLDB-CODE-1" target="_blank">LLDB (LLVM 14) 大致有66万行代码</a></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l" colspan="6"><hr/></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l" rowspan="3">Debug data format</td>
+		<td id="mdt_td_l">Version</td>
+		<td id="mdt_td_l"><a href="../tags/DBG-View.html" target="_blank">View</a> <a href="../tags/HST.html" target="_blank">HST</a></td>
+		<td id="mdt_td_l">LLVM&ndash;DEF&ndash;DWARF&ndash;V5&ndash;1</td>
+		<td id="mdt_td_l">LLVM&ndash;DEF&ndash;DWARF&ndash;V5&ndash;2</td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="../tags/Debug-Separate-File.html" target="_blank">单独调试文件</a></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a href="gdb-user-manual.html#GDB-USER-MANUAL-SEP-FILE-1" target="_blank">18.3 Debugging Information in Separate Files</a></td>
+		<td id="mdt_td_l"><ul>
+	<li><a><b>dsym</b></a> file on iOS</li>
+</ul></td>
+		<td id="mdt_td_l"><ul>
+	<li><a><b>pdb</b></a> file on Windows</li>
+	<br />
+</ul></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">Internal debug data</td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a href="gdb-note.html#GDB-NOTE-GDB-INTERNAL-DEBUG-DATA-1" target="_blank">Internal debug data</a></td>
+		<td id="mdt_td_l"><a href="lldb-note.html#LLDB-NOTE-LLDB-INTERNAL-DEBUG-DATA-1" target="_blank">LLVM Internal debug data</a></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l" colspan="6"><hr/></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l" rowspan="9">Break</td>
+		<td id="mdt_td_l">断点</td>
+		<td id="mdt_td_l">普通断点</td>
+		<td id="mdt_td_l"><a href="../tags/BREAK.html" target="_blank">BREAK</a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">多线程断点</td>
+		<td id="mdt_td_l"><a href="../tags/TBREAK.html" target="_blank">TBREAK</a></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">条件断点</td>
+		<td id="mdt_td_l">BREAK/TBREAK/SBREAK n when expr</td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">Service entry breakpoint</td>
+		<td id="mdt_td_l"><a href="../tags/SBREAK.html" target="_blank">SBREAK</a></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">硬件断点</td>
+		<td id="mdt_td_l">NO</td>
+		<td id="mdt_td_l"><a href="../tags/hbreak.html" target="_blank">hbreak</a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="../tags/watchpoint.html" target="_blank">watchpoint</a></td>
+		<td id="mdt_td_l">WATCH</td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="../tags/catchpoint.html" target="_blank">catchpoint</a></td>
+		<td id="mdt_td_l">NO</td>
+		<td id="mdt_td_l"><a href="../tags/catchpoint.html" target="_blank">catchpoint</a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="../tags/gdb-checkpoint.html" target="_blank">gdb&ndash;checkpoint</a></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="../tags/TracePoint.html" target="_blank">TracePoint</a></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l" colspan="6"><hr/></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l" rowspan="3">Step</td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l">STEP</td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l">STEP INTO</td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l">STEP OUTOF</td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l" colspan="6"><hr/></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l" rowspan="5">Print</td>
+		<td id="mdt_td_l">读写变量</td>
+		<td id="mdt_td_l">EVAL</td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">Expression evaluation</td>
+		<td id="mdt_td_l">EVAL expr</td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">读写内存</td>
+		<td id="mdt_td_l">EVAL</td>
+		<td id="mdt_td_l">YES</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">打印变量类型</td>
+		<td id="mdt_td_l">ATTR</td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">C++11</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l" colspan="6"><hr/></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">Backtracing</td>
+		<td id="mdt_td_l">切换栈</td>
+		<td id="mdt_td_l"><a href="../tags/QUAL.html" target="_blank">QUAL</a></td>
+		<td id="mdt_td_l">up/down</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l" colspan="6"><hr/></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l" rowspan="2">others</td>
+		<td id="mdt_td_l">切换线程</td>
+		<td id="mdt_td_l">THREAD</td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">别名</td>
+		<td id="mdt_td_l"><a href="../tags/DBG-EQUATE.html" target="_blank">EQUATE</a></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l" colspan="6"><hr/></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l" rowspan="3">Support</td>
+		<td id="mdt_td_l">language</td>
+		<td id="mdt_td_l">ILE languages, <font color="red">more</font></td>
+		<td id="mdt_td_l">C/C++, <a href="gdb-note.html#GDB-SUPPORT-LANG" target="_blank"><font color="red">more</font></a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">OS</td>
+		<td id="mdt_td_l">IBM i</td>
+		<td id="mdt_td_l">Linux/AIX, <a href="gdb-note.html#GDB-SUPPORT-OS" target="_blank"><font color="red">more</font></a></td>
+		<td id="mdt_td_l">Linux/macOS/Windows, <a href="lldb-note.html#LLDB-SUPPORT-OS" target="_blank"><font color="red">more</font></a></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="../tags/ObjFileFormat.html" target="_blank"><i class="fa fa-tags fa-fw"></i>ObjFileFormat</a></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l">ELF, <a href="gdb-note.html#GDB-SUPPORT-OBJ" target="_blank"><font color="red">more</font></a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l" colspan="6"><hr/></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l" rowspan="12">Advance</td>
+		<td id="mdt_td_l"><a href="../tags/Remote-Debug.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Remote-Debug</a></td>
+		<td id="mdt_td_l"><a><b>DBG-GUI</b></a></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><ul>
+	<li>lldb&ndash;server: Linux/FreeBSD/NetBSD</li>
+	<li>MachO: debugserver</li>
+	<br />
+</ul></td>
+		<td id="mdt_td_l">YES, <a href="#Remote-Debug-Windows" ><font color="red">more</font></a></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="../tags/core-dump.html" target="_blank"><i class="fa fa-tags fa-fw"></i>core-dump</a></td>
+		<td id="mdt_td_l">NO</td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><ul>
+	<li>ELF: Linux/FreeBSD/NetBSD</li>
+	<li>MachO: macOS</li>
+	<li>Minidump: Windows</li>
+	<br />
+</ul></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="../tags/Debug-opt.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Debug-opt</a></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a href="gdb-user-manual.html#GDB-USER-MANUAL-OPT-CODE-1" target="_blank">11 Debugging Optimized Code</a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="../tags/Debug-macro.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Debug-macro</a></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a href="gdb-user-manual.html#GDB-USER-MANUAL-MACRO-1" target="_blank">12 C Preprocessor Macros</a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">Disassembly</td>
+		<td id="mdt_td_l"></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">JIT debugging</td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l">Linux(Symbolic debugging only??)</td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="../tags/TTD.html" target="_blank">TTD</a></td>
+		<td id="mdt_td_l">NO</td>
+		<td id="mdt_td_l"><ul>
+	<li><a name="IN_1_1_HEAD_HIDDEN_66c35a04">GDB&ndash;HOME&ndash;REVERSE&ndash;DEBUG&ndash;1</li>
+	<li><a href="../tags/Record-Replay.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Record-Replay</a></li>
+	<br />
+</ul></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">Overlay</td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a href="../tags/Overlay.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Overlay</a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">直接执行函数</td>
+		<td id="mdt_td_l">NO</td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">热跟新</td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><ul>
+	<li><a href="../tags/DBI.html" target="_blank">DBI</a> ??</li>
+	<li><a name="IN_1_2_HEAD_HIDDEN_bd9f2204"><a href="gdb-user-manual.html#GDB-USER-MANUAL-PATCH-PGM" target="_blank">17.6 Patching Programs</a></li>
+	<li><a name="IN_1_2_HEAD_HIDDEN_16469ce6"><a href="gdb-user-manual.html#GDB-USER-MANUAL-COMPILE-INJECT-CODE" target="_blank">17.7 Compiling and injecting code in GDB</a></li>
+</ul></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><ul>
+	<li><a><b>ENC</b></a></li>
+	<li><a><b>热重载</b></a></li>
+	<br />
+</ul></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">代码覆盖率工具</td>
+		<td id="mdt_td_l"><a><b>CCA</b></a> 2016&tilde;2017</td>
+		<td id="mdt_td_l"><a name="wd_ln_gcov_0"><b>gcov</b></a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="../tags/Debug-Debugger.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Debug-Debugger</a></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l" colspan="6"><hr/></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l" rowspan="3">底层</td>
+		<td id="mdt_td_l">System APIs</td>
+		<td id="mdt_td_l">DBG&ndash;NOTE&ndash;APIS</td>
+		<td id="mdt_td_l"><a name="wd_ln_gdb-mi_0"><b>gdb-mi</b></a> ??</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">System Call</td>
+		<td id="mdt_td_l">DBG&ndash;NOTE&ndash;DBGINT</td>
+		<td id="mdt_td_l">LINUX&ndash;DEBUG&ndash;PTRACE</td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l">WIN&ndash;DEBUG&ndash;APIS</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a><b>Interrupt</b></a></td>
+		<td id="mdt_td_l"><a><b>TWI</b></a></td>
+		<td id="mdt_td_l">int3 (0xCC)</td>
+		<td></td>
+		<td></td>
+	</tr>
+</table>
+<br>
+	<H2><a name="HEAD_6e86d3b8" href="#TOC_HEAD_6e86d3b8">1.3. Object format <a name="wd_ln_ObjFileFormat_0" target="_blank" href="../tags/ObjFileFormat.html"><i class="fa fa-tags fa-fw"></i>ObjFileFormat</a></a></H2>
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l">Obj Format</td>
+		<td id="mdt_td_l">Debug Format</td>
+		<td id="mdt_td_l">OS</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="../tags/ELF.html" target="_blank">ELF</a></td>
+		<td id="mdt_td_l"><a href="../tags/DWARF.html" target="_blank">DWARF</a></td>
+		<td id="mdt_td_l">Linux</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="../tags/a.out.html" target="_blank">a.out</a></td>
+		<td id="mdt_td_l"><a href="../tags/Stabs.html" target="_blank">Stabs</a></td>
+		<td id="mdt_td_l">Unix</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="../tags/COFF.html" target="_blank">COFF</a></td>
+		<td id="mdt_td_l">stabs&ndash;type</td>
+		<td id="mdt_td_l">Unix (System V)</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="../tags/XCOFF.html" target="_blank">XCOFF</a></td>
+		<td id="mdt_td_l">dbx&ndash;style stabs</td>
+		<td id="mdt_td_l">AIX IBM RS/6000</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="../tags/ECOFF.html" target="_blank">ECOFF</a></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l">MIPS and Alpha</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="../tags/PE.html" target="_blank">PE</a></td>
+		<td id="mdt_td_l">basically COFF with additional headers</td>
+		<td id="mdt_td_l">Windows</td>
+	</tr>
+</table>
+<br>
+	<H2><a name="HEAD_a6c16f56" href="#TOC_HEAD_a6c16f56">1.4. Debug format <a name="wd_ln_DebugInfoFormat_0"><b>DebugInfoFormat</b></a></a></H2>
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l">Debug Format</td>
+		<td id="mdt_td_l">Support tools</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="../tags/DWARF.html" target="_blank">DWARF</a></td>
+		<td id="mdt_td_l">Linux/gdb</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="../tags/Stabs.html" target="_blank">Stabs</a></td>
+		<td id="mdt_td_l">Unix</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="../tags/DBG-Data.html" target="_blank">DBG&ndash;Data</a></td>
+		<td id="mdt_td_l">IBMi/System debugger</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="../tags/CodeView.html" target="_blank">CodeView</a></td>
+		<td id="mdt_td_l">windows VS</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="../tags/pdb.html" target="_blank">pdb</a></td>
+		<td id="mdt_td_l">windows VS</td>
+	</tr>
+</table>
+<br>
+	<H1><a name="HEAD_9859ff32" href="#TOC_HEAD_9859ff32">2. ELF/DWARF</a></H1><ul><a href="../tags/DWARF.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DWARF</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_dc1971c3">refer &ndash; <a href="dwarf-homepage.html" target="_blank">DWARF Homepage</a></li>
+	<li><a name="HEAD_HIDDEN_d5ab9553">refer &ndash; &quot;Debugging using DWARF&ndash;2012.pdf&quot;</li>
+	<li><a name="HEAD_HIDDEN_1dcb45d4">refer &ndash; DWARF&ndash;FAQ&ndash;DWARF&ndash;VSSTABS</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_3d08938d" href="#TOC_HEAD_3d08938d">2.1. <a href="../tags/DWARF-version.html" target="_blank"><i class="fa fa-tags fa-fw"></i>DWARF-version</a></a></H2>
+<ul>
+	<li>当前最高版本 <a href="../tags/DWARFv5.html" target="_blank"><i class="fa fa-tags fa-fw"></i>DWARFv5</a></li>
+	<br />
+	<li><a name="HEAD_HIDDEN_ed93bb8e">refer &ndash; DWARF&ndash;HISTORY&ndash;1</li>
+	<li><a name="HEAD_HIDDEN_72f0f26e">refer &ndash; LLVM&ndash;DEF&ndash;DWARF&ndash;V5&ndash;2</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_9f1c26e4" href="#TOC_HEAD_9f1c26e4">2.2. Read DWARF information</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_fbf5caac">&quot;Dump DWARF information&quot;</li>
+	<li><a name="HEAD_HIDDEN_778658e0">Check&ndash;DWARF&ndash;version</li>
+	<li><a name="HEAD_HIDDEN_2d75b281"><a href="tc230324a.sh.html" target="_blank">TC230324A.sh</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_d116d5ae" href="#TOC_HEAD_d116d5ae">2.3. 压缩调试数据</a> <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></H2><ul><a href="../tags/shrink-debug-data.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>shrink-debug-data</a>&nbsp;</ul>
+<ul>
+	<li>两方面</li>
+	<ul>
+		<li>静态调试数据</li>
+		<li>调试时内存占用</li>
+		<br />
+	</ul>
+	<li>压缩源代码</li>
+	<li>DWARF 信息去重</li>
+	<ul>
+		<li>DWARF 到底有多少信息</li>
+		<li><a><b>BTF</b></a></li>
+	</ul>
+	<li><a name="HEAD_HIDDEN_7625cafa">DBG&ndash;OPEN&ndash;SRC&ndash;COMPRESS&ndash;1</li>
+	<li><a href="../tags/psymtabs.html" target="_blank">psymtabs</a></li>
+	<br />
+</ul>
+	<H1><a name="HEAD_91fd1d3b" href="#TOC_HEAD_91fd1d3b">3. Remote debug <a name="wd_ln_Remote-Debug_0" target="_blank" href="../tags/Remote-Debug.html"><i class="fa fa-tags fa-fw"></i>Remote-Debug</a></a></H1>
+	<H2><a name="HEAD_b2217605" href="#TOC_HEAD_b2217605">3.1. Debug Protocol</a></H2><ul><a href="../tags/Debug-Protocol.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Debug-Protocol</a>&nbsp;</ul>
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l"><a href="../tags/Debug-Protocol.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Debug-Protocol</a></td>
+		<td id="mdt_td_l">Company</td>
+		<td id="mdt_td_l">Support products</td>
+		<td id="mdt_td_l">Support Languages</td>
+		<td id="mdt_td_l">Description</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="../tags/DAP.html" target="_blank"><i class="fa fa-tags fa-fw"></i>DAP</a></td>
+		<td id="mdt_td_l">微软</td>
+		<td id="mdt_td_l">gdb</td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l">GUI debugger TCP package</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a><b>V8-Debug-Protocol</b></a></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a><b>nodejs</b></a></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a><b>JDWP</b></a></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a href="../tags/Java.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Java</a></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="../tags/JTAG.html" target="_blank"><i class="fa fa-tags fa-fw"></i>JTAG</a></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l">嵌入式</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="../tags/RSP.html" target="_blank"><i class="fa fa-tags fa-fw"></i><ruby>RSP<rt>GDB Remote Serial Protocol</rt></ruby></a></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l">gdb</td>
+		<td></td>
+		<td></td>
+	</tr>
+</table>
+<br>
+	<H2><a name="Remote-Debug-Windows" href="#TOC_Remote-Debug-Windows">3.2. Windows Remote Debug <a name="wd_ln_Windows-Debug_0"><b>Windows-Debug</b></a></a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_85c41c6f">refer VS&ndash;NOTE&ndash;REMOTE&ndash;DEBUG&ndash;1</li>
+	<br />
+</ul>
+	<H1><a name="HEAD_3e21dee2" href="#TOC_HEAD_3e21dee2">4. Debug support</a></H1>
+	<H2><a name="HEAD_3dc373c8" href="#TOC_HEAD_3dc373c8">4.1. Java debugging <a name="wd_ln_Java-Debug_0"><b>Java-Debug</b></a></a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_70ab95ce">refer &ndash; &quot;2019&ndash;07&ndash;25 Learn Java Platform Debugger Architecture &ndash; KC.html&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_eeb6d172" href="#TOC_HEAD_eeb6d172">4.2. Android debugging <a name="wd_ln_Android-Debug_0"><b>Android-Debug</b></a></a></H2>
+<pre><code>Java            JDWP(Java Debug Wire Protocol)
+Native          Linux</code></pre>
+	<H2><a name="HEAD_b69d1bc6" href="#TOC_HEAD_b69d1bc6">4.3. Add new language support</a> <a name="MARK_2" href="#TOC_MARK_2"><strong><font color="red">@TODO</font></strong></a></H2><ul><a href="../tags/New-Lang-Debug-Support.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>New-Lang-Debug-Support</a>&nbsp;<a href="../tags/PL-Support.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PL-Support</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_50df500d"><a href="gdb-internals-manual.html#GDB-INTERNAL-MANUAL-ADD-LANG-1" target="_blank">Adding a Source Language to GDB</a></li>
+	<br />
+</ul>
+	<H1><a name="HEAD_4413a77d" href="#TOC_HEAD_4413a77d">5. 代码覆盖 <a name="wd_ln_CodeCoverage_0"><b>CodeCoverage</b></a></a></H1>
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l">Code Coverage Tool</td>
+		<td id="mdt_td_l">ToolChain</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l">CCA</td>
+		<td id="mdt_td_l">System debugger</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">gcov</td>
+		<td id="mdt_td_l">gdb</td>
+	</tr>
+</table>
+<br>
+	<H1><a name="HEAD_b06da25b" href="#TOC_HEAD_b06da25b">6. Advanced features</a></H1>
+	<H2><a name="HEAD_c303c4ff" href="#TOC_HEAD_c303c4ff">6.1. <a><b>反调试</b></a></a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_a008e4a0">GDB&ndash;100&ndash;TIPS&ndash;ptrace&ndash;anti&ndash;debugging</li>
+	<li><a name="HEAD_HIDDEN_b9ab2df4">anti&ndash;debugging&ndash;win&ndash;1</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_3e2cbae9" href="#TOC_HEAD_3e2cbae9">6.2. 趋势及新技术</a></H2><ul><a href="../tags/Debug-Feature.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Debug-Feature</a>&nbsp;<a href="../tags/117694.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>趋势</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_8a2a92ab">refer &ndash; &quot;调试器领域有哪些新技术&quot;</li>
+	<li><a name="HEAD_HIDDEN_a1412bcc">refer &ndash; &quot;调试器领域未来可能一些新发展趋势&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_84ee0e2b" href="#TOC_HEAD_84ee0e2b">6.3. 时光调试 <a name="wd_ln_TTD_0"><b>TTD</b></a></a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_bf81c768">refer &ndash; &quot;时光调试器有哪些产品&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_e382e98a" href="#TOC_HEAD_e382e98a">6.4. DBI <a name="wd_ln_DBI_0"><b>DBI</b></a></a></H2>
+<pre><code>pin             Windows Intel
+DynamoRIO       Linux</code></pre>
+<ul>
+	<li><a name="HEAD_HIDDEN_f57d7867">refer &quot;说说调试器领域中Dynamic Binary Instrumentation技术&quot;</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_c3c095b4" href="#TOC_HEAD_c3c095b4">6.5. How to debug opt code &ndash; 2023&ndash;06&ndash;15</a> <a name="MARK_3" href="#TOC_MARK_3"><strong><font color="red">@TODO</font></strong></a></H2><ul><a href="../tags/Debug-opt.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Debug-opt</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_1af4b59a"><a href="lldb-src-lvl-dbg.html#LLDB-SRC-LVL-DBG-OPT-1" target="_blank">Debug information and optimizations</a></li>
+	<br />
+</ul>
+	<H1><a name="HEAD_1fbccf7a" href="#TOC_HEAD_1fbccf7a">7. Coverage: 30%</a></H1>
+<ul>
+	<li><strong>Domain:</strong> <a href="../" target="_blank">Debugger</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_f25570bf" href="#TOC_HEAD_f25570bf">7.1. Nodes: 2/3</a></H2>
+<table id="mdt_t">
+	<tr id="mdt_hd"><td id="mdt_td_l">Nodes</td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../refers/34f425aabf84546664283c945613472a.html" target="_blank">2011&ndash;01&ndash;23 How debuggers work &ndash; Eli Bendersky&#039;s website.html</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="topic-chip-debug-architecture-in-modern-ide.html" target="_blank">DBG: Chip debug architecture in modern IDE</a></td></tr>
+</table>
+<br>
+	<H2><a name="HEAD_f21ff5cd" href="#TOC_HEAD_f21ff5cd">7.2. Tags: 19/27</a></H2>
+<table id="mdt_t">
+	<tr id="mdt_hd"><td id="mdt_td_l">Tags</td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/@jianxu.html" target="_blank">@jianxu</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Chip-Debug.html" target="_blank">Chip-Debug</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Debug-Feature.html" target="_blank">Debug-Feature</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Debugger.html" target="_blank">Debugger</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Framework.html" target="_blank">Framework</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/IDE.html" target="_blank">IDE</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLDB.html" target="_blank">LLDB</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/MI.html" target="_blank">MI</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/New-Lang-Debug-Support.html" target="_blank">New-Lang-Debug-Support</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/OpenOCD.html" target="_blank">OpenOCD</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/PL-Support.html" target="_blank">PL-Support</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/TailCall.html" target="_blank">TailCall</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Topic.html" target="_blank">Topic</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/VsCode-DebuggerExtension.html" target="_blank">VsCode-DebuggerExtension</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/debug_names-section.html" target="_blank">debug_names-section</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/gdb.html" target="_blank">gdb</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/ptrace.html" target="_blank">ptrace</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/shrink-debug-data.html" target="_blank">shrink-debug-data</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/117694.html" target="_blank">趋势</a></td></tr>
+</table>
+<br>
+	<hr/>
+	<H1><a name="HEAD_9fbf438f" href="#TOC_HEAD_9fbf438f">8. Index (11)</a></H1>
+	<H2><a name="wd_def_Android-Debug" href="#TOC_wd_def_Android-Debug">8.1. Android&ndash;Debug (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Android-Debug_0" >Android debugging Android-Debug</a>
+	</ul>
+	<H2><a name="wd_def_CodeCoverage" href="#TOC_wd_def_CodeCoverage">8.2. CodeCoverage (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_CodeCoverage_0" >代码覆盖 CodeCoverage</a>
+	</ul>
+	<H2><a name="wd_def_DBI" href="#TOC_wd_def_DBI">8.3. DBI (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_DBI_0" >DBI DBI</a>
+	</ul>
+	<H2><a name="wd_def_DebugInfoFormat" href="#TOC_wd_def_DebugInfoFormat">8.4. DebugInfoFormat (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_DebugInfoFormat_0" >Debug format DebugInfoFormat</a>
+	</ul>
+	<H2><a name="wd_def_gcov" href="#TOC_wd_def_gcov">8.5. gcov (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_gcov_0" >gcov</a>
+	</ul>
+	<H2><a name="wd_def_gdb-mi" href="#TOC_wd_def_gdb-mi">8.6. gdb&ndash;mi (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_gdb-mi_0" >gdb-mi ??</a>
+	</ul>
+	<H2><a name="wd_def_Java-Debug" href="#TOC_wd_def_Java-Debug">8.7. Java&ndash;Debug (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Java-Debug_0" >Java debugging Java-Debug</a>
+	</ul>
+	<H2><a name="wd_def_ObjFileFormat" href="#TOC_wd_def_ObjFileFormat">8.8. ObjFileFormat (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_ObjFileFormat_0" >Object format ObjFileFormat</a>
+	</ul>
+	<H2><a name="wd_def_Remote-Debug" href="#TOC_wd_def_Remote-Debug">8.9. Remote&ndash;Debug (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Remote-Debug_0" >Remote debug Remote-Debug</a>
+	</ul>
+	<H2><a name="wd_def_TTD" href="#TOC_wd_def_TTD">8.10. TTD (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_TTD_0" >时光调试 TTD</a>
+	</ul>
+	<H2><a name="wd_def_Windows-Debug" href="#TOC_wd_def_Windows-Debug">8.11. Windows&ndash;Debug (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Windows-Debug_0" >Windows Remote Debug Windows-Debug</a>
+	</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    <b><a href="#HEAD_todo"><font color="red">TODO: 3</font></a></b><br>﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_23735199" href="#HEAD_23735199">1. Overview</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_404d5f2b" href="#HEAD_404d5f2b">1.1. Reference</a></li>
+		<li><a name="TOC_HEAD_dbc3cbaa" href="#HEAD_dbc3cbaa">1.2. Debug Features </a></li>
+		<li><a name="TOC_HEAD_6e86d3b8" href="#HEAD_6e86d3b8">1.3. Object format <a name="wd_ln_ObjFileFormat_0" target="_blank" href="../tags/ObjFileFormat.html"><i class="fa fa-tags fa-fw"></i>ObjFileFormat</a></a></li>
+		<li><a name="TOC_HEAD_a6c16f56" href="#HEAD_a6c16f56">1.4. Debug format <a name="wd_ln_DebugInfoFormat_0"><b>DebugInfoFormat</b></a></a></li>
+	</menu>
+	<b><a name="TOC_HEAD_9859ff32" href="#HEAD_9859ff32">2. ELF/DWARF </a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_3d08938d" href="#HEAD_3d08938d">2.1. <a href="../tags/DWARF-version.html" target="_blank"><i class="fa fa-tags fa-fw"></i>DWARF-version</a></a></li>
+		<li><a name="TOC_HEAD_9f1c26e4" href="#HEAD_9f1c26e4">2.2. Read DWARF information</a></li>
+		<li><a name="TOC_HEAD_d116d5ae" href="#HEAD_d116d5ae">2.3. 压缩调试数据 &nbsp;<font color="red">@TODO</font></a></li>
+	</menu>
+	<b><a name="TOC_HEAD_91fd1d3b" href="#HEAD_91fd1d3b">3. Remote debug <a name="wd_ln_Remote-Debug_0" target="_blank" href="../tags/Remote-Debug.html"><i class="fa fa-tags fa-fw"></i>Remote-Debug</a></a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_b2217605" href="#HEAD_b2217605">3.1. Debug Protocol </a></li>
+		<li><a name="TOC_Remote-Debug-Windows" href="#Remote-Debug-Windows">3.2. Windows Remote Debug <a name="wd_ln_Windows-Debug_1"><b>Windows-Debug</b></a> </a></li>
+	</menu>
+	<b><a name="TOC_HEAD_3e21dee2" href="#HEAD_3e21dee2">4. Debug support</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_3dc373c8" href="#HEAD_3dc373c8">4.1. Java debugging <a name="wd_ln_Java-Debug_0"><b>Java-Debug</b></a></a></li>
+		<li><a name="TOC_HEAD_eeb6d172" href="#HEAD_eeb6d172">4.2. Android debugging <a name="wd_ln_Android-Debug_0"><b>Android-Debug</b></a></a></li>
+		<li><a name="TOC_HEAD_b69d1bc6" href="#HEAD_b69d1bc6">4.3. Add new language support &nbsp;<font color="red">@TODO</font></a></li>
+	</menu>
+	<b><a name="TOC_HEAD_4413a77d" href="#HEAD_4413a77d">5. 代码覆盖 <a name="wd_ln_CodeCoverage_0"><b>CodeCoverage</b></a></a></b><br>
+	<b><a name="TOC_HEAD_b06da25b" href="#HEAD_b06da25b">6. Advanced features</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_c303c4ff" href="#HEAD_c303c4ff">6.1. <a><b>反调试</b></a></a></li>
+		<li><a name="TOC_HEAD_3e2cbae9" href="#HEAD_3e2cbae9">6.2. 趋势及新技术 </a></li>
+		<li><a name="TOC_HEAD_84ee0e2b" href="#HEAD_84ee0e2b">6.3. 时光调试 <a name="wd_ln_TTD_0"><b>TTD</b></a></a></li>
+		<li><a name="TOC_HEAD_e382e98a" href="#HEAD_e382e98a">6.4. DBI <a name="wd_ln_DBI_0"><b>DBI</b></a></a></li>
+		<li><a name="TOC_HEAD_c3c095b4" href="#HEAD_c3c095b4">6.5. How to debug opt code &ndash; 2023&ndash;06&ndash;15 &nbsp;<font color="red">@TODO</font></a></li>
+	</menu>
+	<b><a name="TOC_HEAD_1fbccf7a" href="#HEAD_1fbccf7a">7. Coverage: 30%</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_f25570bf" href="#HEAD_f25570bf">7.1. Nodes: 2/3</a></li>
+		<li><a name="TOC_HEAD_f21ff5cd" href="#HEAD_f21ff5cd">7.2. Tags: 19/27</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_9fbf438f" href="#HEAD_9fbf438f">8. Index (11)</a></b><br>
+	<menu>
+		<li><a name="TOC_wd_def_Android-Debug" href="#wd_def_Android-Debug">8.1. Android&ndash;Debug (1) </a></li>
+		<li><a name="TOC_wd_def_CodeCoverage" href="#wd_def_CodeCoverage">8.2. CodeCoverage (1) </a></li>
+		<li><a name="TOC_wd_def_DBI" href="#wd_def_DBI">8.3. DBI (1) </a></li>
+		<li><a name="TOC_wd_def_DebugInfoFormat" href="#wd_def_DebugInfoFormat">8.4. DebugInfoFormat (1) </a></li>
+		<li><a name="TOC_wd_def_gcov" href="#wd_def_gcov">8.5. gcov (1) </a></li>
+		<li><a name="TOC_wd_def_gdb-mi" href="#wd_def_gdb-mi">8.6. gdb&ndash;mi (1) </a></li>
+		<li><a name="TOC_wd_def_Java-Debug" href="#wd_def_Java-Debug">8.7. Java&ndash;Debug (1) </a></li>
+		<li><a name="TOC_wd_def_ObjFileFormat" href="#wd_def_ObjFileFormat">8.8. ObjFileFormat (1) </a></li>
+		<li><a name="TOC_wd_def_Remote-Debug" href="#wd_def_Remote-Debug">8.9. Remote&ndash;Debug (1) </a></li>
+		<li><a name="TOC_wd_def_TTD" href="#wd_def_TTD">8.10. TTD (1) </a></li>
+		<li><a name="TOC_wd_def_Windows-Debug" href="#wd_def_Windows-Debug">8.11. Windows&ndash;Debug (1) </a></li>
+	</menu>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

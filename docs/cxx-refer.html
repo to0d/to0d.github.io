@@ -1,0 +1,928 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>C++ Language Reference</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">C++ Language Reference</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2014-01-01</time>
+            <i><a href="../tags/Cxx.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx</a>&nbsp;<a href="../tags/Outline.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Outline</a>&nbsp;<a href="../tags/Reference.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Reference</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H1><a name="HEAD_23735199" href="#TOC_HEAD_23735199">1. Overview</a></H1>
+	<H2><a name="HEAD_a565d27a" href="#TOC_HEAD_a565d27a">1.1. <a href="../tags/Cxx-Keyword.html" target="_blank">Keywords</a></a></H2><ul><a href="../tags/Cxx-Keyword.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Keyword</a>&nbsp;</ul>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_REF-CXX-nullptr" href="#REF-CXX-nullptr">1.1.1. <a name="wd_ln_nullptr_2"><b>nullptr</b></a> </a></li>
+	<li><a name="TOC_REF-CXX-override-final" href="#REF-CXX-override-final">1.1.2. <a name="wd_ln_override_2" target="_blank" href="../tags/override.html"><i class="fa fa-tags fa-fw"></i>override</a> and <a name="wd_ln_final_2"><b>final</b></a> <a name="wd_ln_Cxxv11-override_2" target="_blank" href="../tags/Cxxv11-override.html"><i class="fa fa-tags fa-fw"></i>Cxxv11-override</a> </a></li>
+	<li><a name="TOC_REF-CXX-static_assert" href="#REF-CXX-static_assert">1.1.3. <a name="wd_ln_static_assert_2"><b>static_assert</b></a> <a name="wd_ln_Cxx-static_assert_2" target="_blank" href="../tags/Cxx-static_assert.html"><i class="fa fa-tags fa-fw"></i>Cxx-static_assert</a> </a></li>
+	<li><a name="TOC_REF-CXX-type_traits" href="#REF-CXX-type_traits">1.1.4. <a name="wd_ln_type_traits_2"><b>type_traits</b></a> </a></li>
+</menu>
+
+</div>
+	<H3><a name="REF-CXX-nullptr" href="#TOC_REF-CXX-nullptr">1.1.1. <a name="wd_ln_nullptr_0"><b>nullptr</b></a></a></H3><ul></ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_dad6eaa2">WHY&ndash;NULLPTR&ndash;1</li>
+	<br />
+</ul>
+	<H3><a name="REF-CXX-override-final" href="#TOC_REF-CXX-override-final">1.1.2. <a name="wd_ln_override_0" target="_blank" href="../tags/override.html"><i class="fa fa-tags fa-fw"></i>override</a> and <a name="wd_ln_final_0"><b>final</b></a> <a name="wd_ln_Cxxv11-override_0" target="_blank" href="../tags/Cxxv11-override.html"><i class="fa fa-tags fa-fw"></i>Cxxv11-override</a></a></H3><ul></ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_4c9aca28"><a href="tc230310a.cpp.html" target="_blank">TC230310A.cpp</a></li>
+	<br />
+</ul>
+	<H3><a name="REF-CXX-static_assert" href="#TOC_REF-CXX-static_assert">1.1.3. <a name="wd_ln_static_assert_0"><b>static_assert</b></a> <a name="wd_ln_Cxx-static_assert_0" target="_blank" href="../tags/Cxx-static_assert.html"><i class="fa fa-tags fa-fw"></i>Cxx-static_assert</a></a></H3><ul></ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_5519f26d"><a href="tc230310f.cpp.html" target="_blank">TC230310F.cpp</a></li>
+	<br />
+</ul>
+	<H3><a name="REF-CXX-type_traits" href="#TOC_REF-CXX-type_traits">1.1.4. <a name="wd_ln_type_traits_0"><b>type_traits</b></a></a></H3><ul></ul>
+	<H2><a name="HEAD_6479cdfe" href="#TOC_HEAD_6479cdfe">1.2. <a href="Cxx-version" target="_blank">New features</a></a></H2><ul><a href="../tags/Cxx-version.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-version</a>&nbsp;</ul>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_REF-CXX-Range-based-loop" href="#REF-CXX-Range-based-loop">1.2.1. Range&ndash;based for loops (基于范围的for循环) </a></li>
+	<li><a name="TOC_REF-CXX-enum-class" href="#REF-CXX-enum-class">1.2.2. Strongly&ndash;typed <a name="wd_ln_enums_2"><b>enums</b></a> (强类型枚举) <a name="wd_ln_Cxx-enum-class_2" target="_blank" href="../tags/Cxx-enum-class.html"><i class="fa fa-tags fa-fw"></i>Cxx-enum-class</a> </a></li>
+	<li><a name="TOC_REF-CXX-smart-pointer" href="#REF-CXX-smart-pointer">1.2.3. Smart Pointers <a name="wd_ln_智能指针_2" target="_blank" href="../tags/30861764.html"><i class="fa fa-tags fa-fw"></i>智能指针</a> </a></li>
+	<li><a name="TOC_REF-CXX-Lambdas" href="#REF-CXX-Lambdas">1.2.4. <a name="wd_ln_Lambdas_2"><b>Lambdas</b></a> (匿名函数) </a></li>
+	<li><a name="TOC_REF-CXX-begin-end" href="#REF-CXX-begin-end">1.2.5. <a name="wd_ln_begin()_2"><b>begin()</b></a> 和 <a name="wd_ln_end()_2"><b>end()</b></a> (非成员函数) <a name="wd_ln_std-begin-end_2" target="_blank" href="../tags/std-begin-end.html"><i class="fa fa-tags fa-fw"></i>std-begin-end</a>  </a></li>
+	<li><a name="TOC_REF-CXX-move-semantics" href="#REF-CXX-move-semantics">1.2.6. Move semantics (Move语义) <a name="wd_ln_右值引用_2"><b>右值引用</b></a>  </a></li>
+	<li><a name="TOC_REF-CXX-optional" href="#REF-CXX-optional">1.2.7. std::optional (对象的包装器) <a name="wd_ln_std-optional_2" target="_blank" href="../tags/std-optional.html"><i class="fa fa-tags fa-fw"></i>std-optional</a> </a></li>
+	<li><a name="TOC_REF-CXX-stacktrace" href="#REF-CXX-stacktrace">1.2.8. std::stacktrace <a name="wd_ln_std-stacktrace_2" target="_blank" href="../tags/std-stacktrace.html"><i class="fa fa-tags fa-fw"></i>std-stacktrace</a> </a></li>
+</menu>
+
+</div>
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l">C++</td>
+		<td id="mdt_td_l">New feature</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l" rowspan="11"><a href="../tags/Cxxv11.html" target="_blank">C++ 11</a></td>
+		<td id="mdt_td_l"><a name="wd_ln_auto_0"><b>auto</b></a></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="cxx-refer.html#REF-CXX-nullptr" target="_blank"><a name="wd_ln_nullptr_1"><b>nullptr</b></a></a></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="cxx-refer.html#REF-CXX-override-final" target="_blank"><a name="wd_ln_override_1" target="_blank" href="../tags/override.html"><i class="fa fa-tags fa-fw"></i>override</a> and <a name="wd_ln_final_1"><b>final</b></a> <a name="wd_ln_Cxxv11-override_1" target="_blank" href="../tags/Cxxv11-override.html"><i class="fa fa-tags fa-fw"></i>Cxxv11-override</a></a></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="cxx-refer.html#REF-CXX-static_assert" target="_blank"><a name="wd_ln_static_assert_1"><b>static_assert</b></a> <a name="wd_ln_Cxx-static_assert_1" target="_blank" href="../tags/Cxx-static_assert.html"><i class="fa fa-tags fa-fw"></i>Cxx-static_assert</a></a></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="cxx-refer.html#REF-CXX-type_traits" target="_blank"><a name="wd_ln_type_traits_1"><b>type_traits</b></a></a></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="cxx-refer.html#REF-CXX-Range-based-loop" target="_blank">Range&ndash;based for loops (基于范围的for循环)</a></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="cxx-refer.html#REF-CXX-enum-class" target="_blank">Strongly&ndash;typed <a name="wd_ln_enums_0"><b>enums</b></a> (强类型枚举) <a name="wd_ln_Cxx-enum-class_0" target="_blank" href="../tags/Cxx-enum-class.html"><i class="fa fa-tags fa-fw"></i>Cxx-enum-class</a></a></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="cxx-refer.html#REF-CXX-smart-pointer" target="_blank">Smart Pointers <a name="wd_ln_智能指针_0" target="_blank" href="../tags/30861764.html"><i class="fa fa-tags fa-fw"></i>智能指针</a></a></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="cxx-refer.html#REF-CXX-Lambdas" target="_blank"><a name="wd_ln_Lambdas_0"><b>Lambdas</b></a> (匿名函数)</a></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="cxx-refer.html#REF-CXX-begin-end" target="_blank"><a name="wd_ln_begin()_0"><b>begin()</b></a> 和 <a name="wd_ln_end()_0"><b>end()</b></a> (非成员函数) <a name="wd_ln_std-begin-end_0" target="_blank" href="../tags/std-begin-end.html"><i class="fa fa-tags fa-fw"></i>std-begin-end</a></a></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="cxx-refer.html#REF-CXX-move-semantics" target="_blank">Move semantics (Move语义) <a name="wd_ln_右值引用_0"><b>右值引用</b></a></a></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a href="../tags/Cxxv17.html" target="_blank">C++ 17</a></td>
+		<td id="mdt_td_l"><a href="cxx-refer.html#REF-CXX-optional" target="_blank">std::optional (对象的包装器) <a name="wd_ln_std-optional_0" target="_blank" href="../tags/std-optional.html"><i class="fa fa-tags fa-fw"></i>std-optional</a></a></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a href="../tags/Cxxv23.html" target="_blank">C++ 23</a></td>
+		<td id="mdt_td_l"><a href="cxx-refer.html#REF-CXX-stacktrace" target="_blank">std::stacktrace <a name="wd_ln_std-stacktrace_0" target="_blank" href="../tags/std-stacktrace.html"><i class="fa fa-tags fa-fw"></i>std-stacktrace</a></a></td>
+	</tr>
+</table>
+<br>
+	<H3><a name="REF-CXX-Range-based-loop" href="#TOC_REF-CXX-Range-based-loop">1.2.1. Range&ndash;based for loops (基于范围的for循环)</a></H3><ul></ul>
+<ul>
+	<li><code>for (int i : vec)</code></li>
+	<br />
+</ul>
+	<H3><a name="REF-CXX-enum-class" href="#TOC_REF-CXX-enum-class">1.2.2. Strongly&ndash;typed <a name="wd_ln_enums_1"><b>enums</b></a> (强类型枚举) <a name="wd_ln_Cxx-enum-class_1" target="_blank" href="../tags/Cxx-enum-class.html"><i class="fa fa-tags fa-fw"></i>Cxx-enum-class</a></a></H3><ul></ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_81810569"><a href="tc230310b.cpp.html" target="_blank">TC230310B.cpp</a></li>
+	<br />
+</ul>
+	<H3><a name="REF-CXX-smart-pointer" href="#TOC_REF-CXX-smart-pointer">1.2.3. Smart Pointers <a name="wd_ln_智能指针_1" target="_blank" href="../tags/30861764.html"><i class="fa fa-tags fa-fw"></i>智能指针</a></a></H3><ul></ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_81810569_0"><a href="tc230310b.cpp.html" target="_blank">TC230310B.cpp</a></li>
+	<br />
+</ul>
+	<H3><a name="REF-CXX-Lambdas" href="#TOC_REF-CXX-Lambdas">1.2.4. <a name="wd_ln_Lambdas_1"><b>Lambdas</b></a> (匿名函数)</a></H3><ul></ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_b66740aa"><a href="tc230310c.cpp.html" target="_blank">TC230310C.cpp</a></li>
+	<br />
+</ul>
+	<H3><a name="REF-CXX-begin-end" href="#TOC_REF-CXX-begin-end">1.2.5. <a name="wd_ln_begin()_1"><b>begin()</b></a> 和 <a name="wd_ln_end()_1"><b>end()</b></a> (非成员函数) <a name="wd_ln_std-begin-end_1" target="_blank" href="../tags/std-begin-end.html"><i class="fa fa-tags fa-fw"></i>std-begin-end</a></a></H3><ul></ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_1e5060fd">WHY&ndash;USE&ndash;BEG&ndash;END&ndash;1</li>
+	<li><a name="HEAD_HIDDEN_eb4d7beb"><a href="tc230310d.cpp.html" target="_blank">TC230310D.cpp</a></li>
+	<br />
+</ul>
+	<H3><a name="REF-CXX-move-semantics" href="#TOC_REF-CXX-move-semantics">1.2.6. Move semantics (Move语义) <a name="wd_ln_右值引用_1"><b>右值引用</b></a></a></H3><ul></ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_2033b72c"><a href="tc230310e.cpp.html" target="_blank">TC230310E.cpp</a></li>
+	<br />
+</ul>
+	<H3><a name="REF-CXX-optional" href="#TOC_REF-CXX-optional">1.2.7. std::optional (对象的包装器) <a name="wd_ln_std-optional_1" target="_blank" href="../tags/std-optional.html"><i class="fa fa-tags fa-fw"></i>std-optional</a></a></H3><ul></ul>
+<ul>
+	<li>Defined in header <code>&lt;optional&gt;</code></li>
+	<br />
+</ul>
+	<H3><a name="REF-CXX-stacktrace" href="#TOC_REF-CXX-stacktrace">1.2.8. std::stacktrace <a name="wd_ln_std-stacktrace_1" target="_blank" href="../tags/std-stacktrace.html"><i class="fa fa-tags fa-fw"></i>std-stacktrace</a></a></H3><ul></ul>
+<ul>
+	<li>Defined in header <code>&lt;stacktrace&gt;</code></li>
+	<li><a name="HEAD_HIDDEN_c3c03112">std&ndash;stacktrace (ptag=Cxx&ndash;lib) &nbsp;<a href="../tags/CallStack.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>CallStack</a>&nbsp;<a href="../tags/Cxxv23.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxxv23</a>&nbsp;<a href="../tags/std-stacktrace.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-stacktrace</a>&nbsp;<a href="../tags/Cxx-lib.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-lib</a></li>
+	<br />
+	<li><a name="HEAD_HIDDEN_ce42f939"><a href="https://github.com/0voice/cpp_new_features/blob/main/cpp_23/003_stacktrace_stacktrace_entry.cpp" target="_blank">stacktrace_entry 栈踪中求值的表示</a> &nbsp;<a href="../tags/std-stacktrace.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-stacktrace</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_6646335a" href="#TOC_HEAD_6646335a">1.3. <a href="../tags/Template.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Template</a></a></H2>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_194c5aec" href="#HEAD_194c5aec">1.3.1. 为什么需要模板/在哪里用模版? </a></li>
+</menu>
+
+</div>
+	<H3><a name="HEAD_194c5aec" href="#TOC_HEAD_194c5aec">1.3.1. 为什么需要模板/在哪里用模版?</a></H3><ul><a href="../tags/Template.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Template</a>&nbsp;</ul>
+<ul>
+	<li>为了提高复用性;</li>
+	<li>泛型化程序设计（GP）的思想: 算法被抽象，被泛化，独立于与之对应的数据结构。</li>
+	<br />
+</ul>
+<blockquote>
+	<p>
+	面向对象（OOP）的思想:更注重的是对数据的抽象,而算法则通常被附属于数据类型之中。 算法被作为成员函数（member function）包含在类（class）中，类和类则构成了错综复杂的继承体系。
+	</p>
+	<p>
+	functor ==&gt; function objects
+	</p>
+	<p>
+	</p>
+</blockquote>
+	<H1><a name="HEAD_a91b255f" href="#TOC_HEAD_a91b255f">2. <a name="wd_ln_STL_0" target="_blank" href="../tags/STL.html"><i class="fa fa-tags fa-fw"></i>STL</a></a></H1>
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l">Type</td>
+		<td id="mdt_td_l">STL</td>
+		<td id="mdt_td_l">Description</td>
+		<td id="mdt_td_l">Reference</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l" rowspan="7">Class</td>
+		<td id="mdt_td_l"><a name="wd_ln_std-vector_0" target="_blank" href="../tags/std-vector.html"><i class="fa fa-tags fa-fw"></i>std-vector</a></td>
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a href="cxx-refer.html#STL-Vector-remote-dup-1" target="_blank">vector 删除重复元素</a></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_std-array_0" target="_blank" href="../tags/std-array.html"><i class="fa fa-tags fa-fw"></i>std-array</a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_std-deque_0" target="_blank" href="../tags/std-deque.html"><i class="fa fa-tags fa-fw"></i>std-deque</a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_std-map_0" target="_blank" href="../tags/std-map.html"><i class="fa fa-tags fa-fw"></i>std-map</a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_std-set_0" target="_blank" href="../tags/std-set.html"><i class="fa fa-tags fa-fw"></i>std-set</a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_std-unordered_map_0"><b>std-unordered_map</b></a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_std-unordered_set_0"><b>std-unordered_set</b></a></td>
+		<td id="mdt_td_l">无序集合</td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l" rowspan="4">Factor</td>
+		<td id="mdt_td_l"><a name="wd_ln_std-less_0"><b>std-less</b></a></td>
+		<td id="mdt_td_l">param1 &lt;  param2</td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_std-less_equal_0"><b>std-less_equal</b></a></td>
+		<td id="mdt_td_l">param1 &lt;= param2</td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_std-greater_0"><b>std-greater</b></a></td>
+		<td id="mdt_td_l">param1 &gt;  param2</td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_std-greater_equal_0"><b>std-greater_equal</b></a></td>
+		<td id="mdt_td_l">param1 &gt;= param2</td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l">Function</td>
+		<td id="mdt_td_l"><a name="wd_ln_std-copy_0" target="_blank" href="../tags/std-copy.html"><i class="fa fa-tags fa-fw"></i>std-copy</a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a name="wd_ln_std-find_0" target="_blank" href="../tags/std-find.html"><i class="fa fa-tags fa-fw"></i>std-find</a></td>
+		<td id="mdt_td_l">比较条件为相等的查找</td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a name="wd_ln_std-find_if_0" target="_blank" href="../tags/std-find_if.html"><i class="fa fa-tags fa-fw"></i>std-find_if</a></td>
+		<td id="mdt_td_l">自定义比较函数</td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a name="wd_ln_std-count_0" target="_blank" href="../tags/std-count.html"><i class="fa fa-tags fa-fw"></i>std-count</a></td>
+		<td id="mdt_td_l">统计区间中某个元素出现的次数</td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a name="wd_ln_std-count_if_0" target="_blank" href="../tags/std-count_if.html"><i class="fa fa-tags fa-fw"></i>std-count_if</a></td>
+		<td id="mdt_td_l">count()的自定义比较函数版本</td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a name="wd_ln_std-search_n_0" target="_blank" href="../tags/std-search_n.html"><i class="fa fa-tags fa-fw"></i>std-search_n</a></td>
+		<td id="mdt_td_l">查询单个元素重复出现的位置</td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a name="wd_ln_std-binary_search_0" target="_blank" href="../tags/std-binary_search.html"><i class="fa fa-tags fa-fw"></i>std-binary_search</a></td>
+		<td id="mdt_td_l">有序区间的二分查找</td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a name="wd_ln_std-lower_bound_0" target="_blank" href="../tags/std-lower_bound.html"><i class="fa fa-tags fa-fw"></i>std-lower_bound</a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a name="wd_ln_std-min_0"><b>std-min</b></a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a name="wd_ln_std-max_0"><b>std-max</b></a></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"></td>
+		<td id="mdt_td_l"><a name="wd_ln_std-accumulate_0" target="_blank" href="../tags/std-accumulate.html"><i class="fa fa-tags fa-fw"></i>std-accumulate</a></td>
+		<td id="mdt_td_l">累加</td>
+		<td></td>
+	</tr>
+</table>
+<br>
+	<H2><a name="HEAD_38d5aa9d" href="#TOC_HEAD_38d5aa9d">2.1. 几个 STL 实现</a></H2>
+<pre><code>    STL:  HP STL, PJ STL, SGI STL
+
+    ======================================================
+    SGI STL: (v32)
+    ======================================================
+        87  Files</code></pre>
+	<H2><a name="HEAD_f6cc008c" href="#TOC_HEAD_f6cc008c">2.2. STL Container</a></H2>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_STL-Vector-remote-dup-1" href="#STL-Vector-remote-dup-1">2.2.1. vector 删除重复元素 </a></li>
+</menu>
+
+</div>
+<ul>
+	<li>Sequence containers:</li>
+	<ul>
+		<li>vector</li>
+		<li>deque</li>
+		<li>list</li>
+		<br />
+	</ul>
+	<li>Associative container:</li>
+	<ul>
+		<li>set</li>
+		<li>multiset</li>
+		<li>map</li>
+		<li>multimap</li>
+		<br />
+	</ul>
+	<li>Container Adapter:</li>
+	<ul>
+		<li>Stacks</li>
+		<li>Queues</li>
+		<li>Priority Queues</li>
+		<br />
+	</ul>
+	<li><a name="HEAD_HIDDEN_29e33359">std&ndash;vector (ptag=Cxx&ndash;Class) &nbsp;<a href="../tags/Collection.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Collection</a>&nbsp;<a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/Vector.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Vector</a>&nbsp;<a href="../tags/std-vector.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-vector</a>&nbsp;<a href="../tags/Cxx-Class.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Class</a></li>
+	<li><a name="HEAD_HIDDEN_9c1cc997">std&ndash;array (ptag=Cxx&ndash;Class) &nbsp;<a href="../tags/Array.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Array</a>&nbsp;<a href="../tags/Collection.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Collection</a>&nbsp;<a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/std-array.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-array</a>&nbsp;<a href="../tags/Cxx-Class.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Class</a></li>
+	<li><a name="HEAD_HIDDEN_5a31a430">std&ndash;deque (ptag=Cxx&ndash;Class) &nbsp;<a href="../tags/Collection.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Collection</a>&nbsp;<a href="../tags/Queue.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Queue</a>&nbsp;<a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/std-deque.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-deque</a>&nbsp;<a href="../tags/Cxx-Class.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Class</a></li>
+	<li><a name="HEAD_HIDDEN_f87f4f74">std&ndash;map (ptag=Cxx&ndash;Class) &nbsp;<a href="../tags/Collection.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Collection</a>&nbsp;<a href="../tags/Map.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Map</a>&nbsp;<a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/std-map.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-map</a>&nbsp;<a href="../tags/Cxx-Class.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Class</a></li>
+	<li><a name="HEAD_HIDDEN_af3b652e">std&ndash;set (ptag=Cxx&ndash;Class) &nbsp;<a href="../tags/Collection.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Collection</a>&nbsp;<a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/Set.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Set</a>&nbsp;<a href="../tags/std-set.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-set</a>&nbsp;<a href="../tags/Cxx-Class.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Class</a></li>
+	<br />
+</ul>
+	<H3><a name="STL-Vector-remote-dup-1" href="#TOC_STL-Vector-remote-dup-1">2.2.1. vector 删除重复元素</a></H3><ul><a href="../tags/std-vector.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-vector</a>&nbsp;</ul>
+<blockquote>
+	<p>
+	主要思路为，先排序,再唯一,然后删除最后面的那段重复代码。
+	</p>
+	<p>
+	</p>
+</blockquote>
+<ul>
+	<li>首先将vector排序</li>
+	<br />
+	<pre><code>sort( vecSrc.begin(), vecSrc.end() );　// 1,2,3,3,4,4,6,7,8,9	</code></pre>
+	<li>然后使用unique算法,unique返回值是重复元素的开始位置。</li>
+	<br />
+	<pre><code>vector&lt;int&gt;::iter pos;
+pos = unique(ivec.begin, ivec.end());  //1,2,3,4,6,7,8,9,3,4	</code></pre>
+	<li>最后删除后面的那段重复部分</li>
+	<br />
+	<pre><code>ivec.erase(pos, ivec.end());     //1,2,3,4,6,7,8,9	</code></pre>
+</ul>
+	<H2><a name="HEAD_ba4e2e52" href="#TOC_HEAD_ba4e2e52">2.3. STL functios</a></H2><ul><a href="../tags/Cxx-Function.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Function</a>&nbsp;</ul>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_c708b5bf" href="#HEAD_c708b5bf">2.3.1. <a name="wd_ln_std-search_n_1" target="_blank" href="../tags/std-search_n.html"><i class="fa fa-tags fa-fw"></i>std-search_n</a> </a></li>
+</menu>
+
+</div>
+<ul>
+	<li><a name="HEAD_HIDDEN_3eb8801d">std&ndash;copy              (ptag=Cxx&ndash;Function) &nbsp;<a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/std-copy.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-copy</a>&nbsp;<a href="../tags/Cxx-Function.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Function</a></li>
+	<li><a name="HEAD_HIDDEN_eee81259">std&ndash;find              (ptag=Cxx&ndash;Function) &nbsp;<a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/Search.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Search</a>&nbsp;<a href="../tags/std-find.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-find</a>&nbsp;<a href="../tags/Cxx-Function.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Function</a></li>
+	<li><a name="HEAD_HIDDEN_74684ef5">std&ndash;find_if           (ptag=Cxx&ndash;Function) &nbsp;<a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/Search.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Search</a>&nbsp;<a href="../tags/std-find_if.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-find_if</a>&nbsp;<a href="../tags/Cxx-Function.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Function</a></li>
+	<li><a name="HEAD_HIDDEN_eb6081e1">std&ndash;count             (ptag=Cxx&ndash;Function) &nbsp;<a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/Search.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Search</a>&nbsp;<a href="../tags/std-count.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-count</a>&nbsp;<a href="../tags/Cxx-Function.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Function</a></li>
+	<li><a name="HEAD_HIDDEN_94d841c5">std&ndash;count_if          (ptag=Cxx&ndash;Function) &nbsp;<a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/Search.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Search</a>&nbsp;<a href="../tags/std-count_if.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-count_if</a>&nbsp;<a href="../tags/Cxx-Function.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Function</a></li>
+	<li><a name="HEAD_HIDDEN_3b180e78">std&ndash;binary_search     (ptag=Cxx&ndash;Function) &nbsp;<a href="../tags/BinarySearch.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>BinarySearch</a>&nbsp;<a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/Search.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Search</a>&nbsp;<a href="../tags/std-binary_search.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-binary_search</a>&nbsp;<a href="../tags/Cxx-Function.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Function</a></li>
+	<li><a name="HEAD_HIDDEN_b616f392">std&ndash;lower_bound       (ptag=Cxx&ndash;Function) &nbsp;<a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/Search.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Search</a>&nbsp;<a href="../tags/std-lower_bound.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-lower_bound</a>&nbsp;<a href="../tags/Cxx-Function.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Function</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_c708b5bf" href="#TOC_HEAD_c708b5bf">2.3.1. <a name="wd_ln_std-search_n_0" target="_blank" href="../tags/std-search_n.html"><i class="fa fa-tags fa-fw"></i>std-search_n</a></a></H3><ul><a href="../tags/std-search_n.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-search_n</a>&nbsp;</ul>
+<pre><code>&gt; search_n() 查询单个元素重复出现的位置
+&gt; find用来查询单个元素，search_n则用来查找区间中重复出现n次的元素；</code></pre>
+<ul>
+	<li><a name="HEAD_HIDDEN_bf461a7d">std&ndash;search_n (ptag=Cxx&ndash;Function) &nbsp;<a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/Search.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Search</a>&nbsp;<a href="../tags/std-search_n.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-search_n</a>&nbsp;<a href="../tags/Cxx-Function.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Function</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_bbaa5c30" href="#TOC_HEAD_bbaa5c30">2.4. STL 异常类</a></H2><ul><a href="../tags/Cxx-Exception.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Exception</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_c1a507d6">std&ndash;out_of_range (ptag=Cxx&ndash;Class) &nbsp;<a href="../tags/Cxx-Exception.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Exception</a>&nbsp;<a href="../tags/std-out_of_range.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-out_of_range</a>&nbsp;<a href="../tags/Cxx-Class.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Class</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_cad56011" href="#TOC_HEAD_cad56011">2.5. string</a></H2><ul><a href="../tags/std-string.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-string</a>&nbsp;</ul>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_45c35d12" href="#HEAD_45c35d12">2.5.1. std::to_string</a></li>
+</menu>
+
+</div>
+<ul>
+	<li><a name="HEAD_HIDDEN_b6376a4b">std&ndash;string (ptag=Cxx&ndash;Class) &nbsp;<a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/String.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>String</a>&nbsp;<a href="../tags/std-string.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-string</a>&nbsp;<a href="../tags/Cxx-Class.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Class</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_45c35d12" href="#TOC_HEAD_45c35d12">2.5.1. std::to_string</a></H3>
+<pre><code>    string to_string (int val);
+    string to_string (long val);
+    string to_string (long long val);
+    string to_string (unsigned val);
+    string to_string (unsigned long val);
+    string to_string (unsigned long long val);
+    string to_string (float val);
+    string to_string (double val);
+    string to_string (long double val);</code></pre>
+	<H2><a name="HEAD_e5500b33" href="#TOC_HEAD_e5500b33">2.6. Math related</a></H2><ul><a href="../tags/Math.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Math</a>&nbsp;</ul>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_389cf58a" href="#HEAD_389cf58a">2.6.1. numeric_limits</a></li>
+	<li><a name="TOC_HEAD_721c023e" href="#HEAD_721c023e">2.6.2. min(), max()</a></li>
+	<li><a name="TOC_HEAD_3bc562" href="#HEAD_3bc562">2.6.3. accumulate </a></li>
+</menu>
+
+</div>
+	<H3><a name="HEAD_389cf58a" href="#TOC_HEAD_389cf58a">2.6.1. numeric_limits</a></H3>
+<pre><code>    #include &lt;limits&gt;
+    numeric_limits&lt;float&gt;::min()
+    numeric_limits&lt;float&gt;::max()</code></pre>
+	<H3><a name="HEAD_721c023e" href="#TOC_HEAD_721c023e">2.6.2. min(), max()</a></H3>
+<pre><code>template&lt;typename T, typename Com&gt;
+std::min(const T& left, const T& right, const Com& cmp);
+template&lt;typename T, typename Com&gt;
+std::max(const T& left, const T& right, const Com& cmp);</code></pre>
+	<H3><a name="HEAD_3bc562" href="#TOC_HEAD_3bc562">2.6.3. accumulate</a></H3><ul><a href="../tags/std-accumulate.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-accumulate</a>&nbsp;</ul>
+<pre><code>    #include &lt;numeric&gt;
+    int arr[]={10,20,30,40,50};
+    vector&lt;int&gt; va(&arr[0],&arr[5]);
+    int sum=accumulate(va.begin(),va.end(),0);  //sum = 150</code></pre>
+<blockquote>
+	<p>
+	accumulate带有三个形参：头两个形参指定要累加的元素范围，第三个形参则是累加的初值。
+	</p>
+	<p>
+	accumulate函数将它的一个内部变量设置为指定的初始值，然后在此初值上累加输入范围内所有元素的值。accumulate算法返回累加的结果，其返回类型就是其第三个实参的类型。
+	</p>
+	<p>
+	用于指定累加起始值的第三个参数是必要的，因为accumulate对将要累加的元素类型一无所知，除此之外，没有别的办法创建合适的起始值或者关联的类型。
+	</p>
+	<p>
+	</p>
+</blockquote>
+<ul>
+	<li><a name="HEAD_HIDDEN_bec93248">std&ndash;accumulate (ptag=Cxx&ndash;Function) &nbsp;<a href="../tags/Math.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Math</a>&nbsp;<a href="../tags/STL.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>STL</a>&nbsp;<a href="../tags/std-accumulate.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>std-accumulate</a>&nbsp;<a href="../tags/Cxx-Function.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Cxx-Function</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_30861764" href="#TOC_HEAD_30861764">2.7. 智能指针</a></H2><ul><a href="../tags/30861764.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>智能指针</a>&nbsp;</ul>
+<ul>
+	<li>STL: std::auto_ptr : 不能被用在STL容器中</li>
+	<br />
+	<li><a name="HEAD_HIDDEN_ae58de1">Boost 智能指针 &nbsp;<a href="../tags/Boost.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Boost</a></li>
+	<ul>
+		<li><code>scoped_ptr</code>/<code>scoped_array</code> 指向动态分配的对象，不可赋值，不能被用在STL容器中</li>
+		<li><code>shared_ptr</code>/<code>shared_array</code> 指向动态分配的对象，可赋值，可用在STL容器中</li>
+		<li><code>weak_ptr</code> 指向<code>shared_ptr</code>,可赋值，不会自动释放对象,</li>
+		<br />
+	</ul>
+	<p>
+		<strong>shared_ptr 会检查是否有 weak_ptr 指向该对象，如果有的话就将这些 weak_ptr 置为空。</strong>
+	</p>
+</ul>
+	<H1><a name="HEAD_1fbccbf7" href="#TOC_HEAD_1fbccbf7">3. Coverage: 22%</a></H1>
+<ul>
+	<li><strong>Domain:</strong> <a href="../" target="_blank">Cxx</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_b2e8c113" href="#TOC_HEAD_b2e8c113">3.1. Nodes: 54/60</a></H2>
+<table id="mdt_t">
+	<tr id="mdt_hd"><td id="mdt_td_l">Nodes</td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../refers/398da3ebbbc140c2ed80cb8bf4f06900.html" target="_blank">2021&ndash;03&ndash;24 Cxx 函数重载的实现机制之name mangling 知乎.html</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc140725a.c.html" target="_blank">TC140725A.c</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc140725b.c.html" target="_blank">TC140725B.c</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc140725c.c.html" target="_blank">TC140725C.c</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc140725d.c.html" target="_blank">TC140725D.c</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc150325a.cpp.html" target="_blank">TC150325A.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc150326a.c.html" target="_blank">TC150326A.c</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc150327a.cpp.html" target="_blank">TC150327A.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc150327b.cpp.html" target="_blank">TC150327B.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc150327c.c.html" target="_blank">TC150327C.c</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc150327d.c.html" target="_blank">TC150327D.c</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc150328a.cpp.html" target="_blank">TC150328A.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc150328b.c.html" target="_blank">TC150328B.c</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc150331a.c.html" target="_blank">TC150331A.c</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc150331b.c.html" target="_blank">TC150331B.c</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc150331c.c.html" target="_blank">TC150331C.c</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc150507a.c.html" target="_blank">TC150507A.c</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc150513a.c.html" target="_blank">TC150513A.c</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc151223a.cpp.html" target="_blank">TC151223A.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc151229a.cpp.html" target="_blank">TC151229A.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc160103a.cpp.html" target="_blank">TC160103A.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc160103b.cpp.html" target="_blank">TC160103B.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc160105a.c.html" target="_blank">TC160105A.c</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc160105b.c.html" target="_blank">TC160105B.c</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc160105c.c.html" target="_blank">TC160105C.c</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc160106a.cpp.html" target="_blank">TC160106A.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc160118a.cpp.html" target="_blank">TC160118A.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc160118b.cpp.html" target="_blank">TC160118B.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc161030a.cpp.html" target="_blank">TC161030A.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc161030b.cpp.html" target="_blank">TC161030B.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc161030c.c.html" target="_blank">TC161030C.c</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc161101a.cpp.html" target="_blank">TC161101A.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc161102a.cpp.html" target="_blank">TC161102A.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc161102b.cpp.html" target="_blank">TC161102B.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc161102c.cpp.html" target="_blank">TC161102C.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc161102d.cpp.html" target="_blank">TC161102D.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc161102e.c.html" target="_blank">TC161102E.c</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc161102f.c.html" target="_blank">TC161102F.c</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc170310a.cpp.html" target="_blank">TC170310A.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc170310b.cpp.html" target="_blank">TC170310B.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc170310c.cpp.html" target="_blank">TC170310C.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc170310d.cpp.html" target="_blank">TC170310D.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc170310e.cpp.html" target="_blank">TC170310E.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc170310f.cpp.html" target="_blank">TC170310F.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc170310g.cpp.html" target="_blank">TC170310G.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc170310h.cpp.html" target="_blank">TC170310H.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc170310i.cpp.html" target="_blank">TC170310I.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc170310j.cpp.html" target="_blank">TC170310J.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc181224a.c.html" target="_blank">TC181224A.c</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc220125c.c.html" target="_blank">TC220125C.c</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc221122a.cpp.html" target="_blank">TC221122A.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc230213a.cpp.html" target="_blank">TC230213A.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc230213b.cpp.html" target="_blank">TC230213B.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc230310g.cpp.html" target="_blank">TC230310G.cpp</a></td></tr>
+</table>
+<br>
+	<H2><a name="HEAD_f25525d2" href="#TOC_HEAD_f25525d2">3.2. Tags: 52/76</a></H2>
+<table id="mdt_t">
+	<tr id="mdt_hd"><td id="mdt_td_l">Tags</td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/AF_INET6.html" target="_blank">AF_INET6</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Array.html" target="_blank">Array</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/BTree.html" target="_blank">BTree</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Boost.html" target="_blank">Boost</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/C-Code.html" target="_blank">C-Code</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Cxx.html" target="_blank">Cxx</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Cxx-Class.html" target="_blank">Cxx-Class</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Cxx-Code.html" target="_blank">Cxx-Code</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Cxx-Exception.html" target="_blank">Cxx-Exception</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Cxx-Function.html" target="_blank">Cxx-Function</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Cxx-Operator.html" target="_blank">Cxx-Operator</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Cxx-lib.html" target="_blank">Cxx-lib</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Cxx-new.html" target="_blank">Cxx-new</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Cxx-version.html" target="_blank">Cxx-version</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/D_XOPEN_SOURCE.html" target="_blank">D_XOPEN_SOURCE</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Endian.html" target="_blank">Endian</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/IO.html" target="_blank">IO</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/IPv6.html" target="_blank">IPv6</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/MQ.html" target="_blank">MQ</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Math.html" target="_blank">Math</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Pointer.html" target="_blank">Pointer</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Process.html" target="_blank">Process</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Random.html" target="_blank">Random</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Reference.html" target="_blank">Reference</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Semaphore.html" target="_blank">Semaphore</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Singleton.html" target="_blank">Singleton</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Socket.html" target="_blank">Socket</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/String.html" target="_blank">String</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/TC220125C.html" target="_blank">TC220125C</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/TCX.html" target="_blank">TCX</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/UDP.html" target="_blank">UDP</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/const_cast.html" target="_blank">const_cast</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/daemon.html" target="_blank">daemon</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/dynamic_cast.html" target="_blank">dynamic_cast</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/enum.html" target="_blank">enum</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/gdb.html" target="_blank">gdb</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/lambda.html" target="_blank">lambda</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/mangling.html" target="_blank">mangling</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/overload.html" target="_blank">overload</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/pthread.html" target="_blank">pthread</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/rand.html" target="_blank">rand</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/rvalue-reference.html" target="_blank">rvalue-reference</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/sigio.html" target="_blank">sigio</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/sizeof.html" target="_blank">sizeof</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/std-is_arithmetic.html" target="_blank">std-is_arithmetic</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/std-move.html" target="_blank">std-move</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/std-out_of_range.html" target="_blank">std-out_of_range</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/std-string.html" target="_blank">std-string</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/std-thread.html" target="_blank">std-thread</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/undef.html" target="_blank">undef</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/45283a62.html" target="_blank">程序员面试宝典</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/123750.html" target="_blank">重载</a></td></tr>
+</table>
+<br>
+	<hr/>
+	<H1><a name="HEAD_9fbf4ed2" href="#TOC_HEAD_9fbf4ed2">4. Index (41)</a></H1>
+	<H2><a name="wd_def_auto" href="#TOC_wd_def_auto">4.1. auto (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_auto_0" >auto</a>
+	</ul>
+	<H2><a name="wd_def_begin()" href="#TOC_wd_def_begin()">4.2. begin() (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_begin()_1" >begin() 和 end() (非成员函数) std-begin-end</a>
+	</ul>
+	<H2><a name="wd_def_Cxx-enum-class" href="#TOC_wd_def_Cxx-enum-class">4.3. Cxx&ndash;enum&ndash;class (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Cxx-enum-class_1" >Strongly&ndash;typed enums (强类型枚举) Cxx-enum-class</a>
+	</ul>
+	<H2><a name="wd_def_Cxx-static_assert" href="#TOC_wd_def_Cxx-static_assert">4.4. Cxx&ndash;static_assert (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Cxx-static_assert_0" >static_assert Cxx-static_assert</a>
+	</ul>
+	<H2><a name="wd_def_Cxxv11-override" href="#TOC_wd_def_Cxxv11-override">4.5. Cxxv11&ndash;override (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Cxxv11-override_0" >override and final Cxxv11-override</a>
+	</ul>
+	<H2><a name="wd_def_end()" href="#TOC_wd_def_end()">4.6. end() (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_end()_1" >begin() 和 end() (非成员函数) std-begin-end</a>
+	</ul>
+	<H2><a name="wd_def_enums" href="#TOC_wd_def_enums">4.7. enums (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_enums_1" >Strongly&ndash;typed enums (强类型枚举) Cxx-enum-class</a>
+	</ul>
+	<H2><a name="wd_def_final" href="#TOC_wd_def_final">4.8. final (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_final_0" >override and final Cxxv11-override</a>
+	</ul>
+	<H2><a name="wd_def_Lambdas" href="#TOC_wd_def_Lambdas">4.9. Lambdas (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_Lambdas_1" >Lambdas (匿名函数)</a>
+	</ul>
+	<H2><a name="wd_def_nullptr" href="#TOC_wd_def_nullptr">4.10. nullptr (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_nullptr_0" >nullptr</a>
+	</ul>
+	<H2><a name="wd_def_override" href="#TOC_wd_def_override">4.11. override (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_override_0" >override and final Cxxv11-override</a>
+	</ul>
+	<H2><a name="wd_def_static_assert" href="#TOC_wd_def_static_assert">4.12. static_assert (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_static_assert_0" >static_assert Cxx-static_assert</a>
+	</ul>
+	<H2><a name="wd_def_std-accumulate" href="#TOC_wd_def_std-accumulate">4.13. std&ndash;accumulate (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-accumulate_0" >std-accumulate</a>
+	</ul>
+	<H2><a name="wd_def_std-array" href="#TOC_wd_def_std-array">4.14. std&ndash;array (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-array_0" >std-array</a>
+	</ul>
+	<H2><a name="wd_def_std-begin-end" href="#TOC_wd_def_std-begin-end">4.15. std&ndash;begin&ndash;end (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-begin-end_1" >begin() 和 end() (非成员函数) std-begin-end</a>
+	</ul>
+	<H2><a name="wd_def_std-binary_search" href="#TOC_wd_def_std-binary_search">4.16. std&ndash;binary_search (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-binary_search_0" >std-binary_search</a>
+	</ul>
+	<H2><a name="wd_def_std-copy" href="#TOC_wd_def_std-copy">4.17. std&ndash;copy (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-copy_0" >std-copy</a>
+	</ul>
+	<H2><a name="wd_def_std-count" href="#TOC_wd_def_std-count">4.18. std&ndash;count (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-count_0" >std-count</a>
+	</ul>
+	<H2><a name="wd_def_std-count_if" href="#TOC_wd_def_std-count_if">4.19. std&ndash;count_if (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-count_if_0" >std-count_if</a>
+	</ul>
+	<H2><a name="wd_def_std-deque" href="#TOC_wd_def_std-deque">4.20. std&ndash;deque (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-deque_0" >std-deque</a>
+	</ul>
+	<H2><a name="wd_def_std-find" href="#TOC_wd_def_std-find">4.21. std&ndash;find (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-find_0" >std-find</a>
+	</ul>
+	<H2><a name="wd_def_std-find_if" href="#TOC_wd_def_std-find_if">4.22. std&ndash;find_if (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-find_if_0" >std-find_if</a>
+	</ul>
+	<H2><a name="wd_def_std-greater" href="#TOC_wd_def_std-greater">4.23. std&ndash;greater (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-greater_0" >std-greater</a>
+	</ul>
+	<H2><a name="wd_def_std-greater_equal" href="#TOC_wd_def_std-greater_equal">4.24. std&ndash;greater_equal (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-greater_equal_0" >std-greater_equal</a>
+	</ul>
+	<H2><a name="wd_def_std-less" href="#TOC_wd_def_std-less">4.25. std&ndash;less (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-less_0" >std-less</a>
+	</ul>
+	<H2><a name="wd_def_std-less_equal" href="#TOC_wd_def_std-less_equal">4.26. std&ndash;less_equal (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-less_equal_0" >std-less_equal</a>
+	</ul>
+	<H2><a name="wd_def_std-lower_bound" href="#TOC_wd_def_std-lower_bound">4.27. std&ndash;lower_bound (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-lower_bound_0" >std-lower_bound</a>
+	</ul>
+	<H2><a name="wd_def_std-map" href="#TOC_wd_def_std-map">4.28. std&ndash;map (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-map_0" >std-map</a>
+	</ul>
+	<H2><a name="wd_def_std-max" href="#TOC_wd_def_std-max">4.29. std&ndash;max (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-max_0" >std-max</a>
+	</ul>
+	<H2><a name="wd_def_std-min" href="#TOC_wd_def_std-min">4.30. std&ndash;min (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-min_0" >std-min</a>
+	</ul>
+	<H2><a name="wd_def_std-optional" href="#TOC_wd_def_std-optional">4.31. std&ndash;optional (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-optional_1" >std::optional (对象的包装器) std-optional</a>
+	</ul>
+	<H2><a name="wd_def_std-search_n" href="#TOC_wd_def_std-search_n">4.32. std&ndash;search_n (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-search_n_0" >std-search_n</a>
+	</ul>
+	<H2><a name="wd_def_std-set" href="#TOC_wd_def_std-set">4.33. std&ndash;set (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-set_0" >std-set</a>
+	</ul>
+	<H2><a name="wd_def_std-stacktrace" href="#TOC_wd_def_std-stacktrace">4.34. std&ndash;stacktrace (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-stacktrace_1" >std::stacktrace std-stacktrace</a>
+	</ul>
+	<H2><a name="wd_def_std-unordered_map" href="#TOC_wd_def_std-unordered_map">4.35. std&ndash;unordered_map (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-unordered_map_0" >std-unordered_map</a>
+	</ul>
+	<H2><a name="wd_def_std-unordered_set" href="#TOC_wd_def_std-unordered_set">4.36. std&ndash;unordered_set (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-unordered_set_0" >std-unordered_set</a>
+	</ul>
+	<H2><a name="wd_def_std-vector" href="#TOC_wd_def_std-vector">4.37. std&ndash;vector (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_std-vector_0" >std-vector</a>
+	</ul>
+	<H2><a name="wd_def_STL" href="#TOC_wd_def_STL">4.38. STL (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_STL_0" >STL</a>
+	</ul>
+	<H2><a name="wd_def_type_traits" href="#TOC_wd_def_type_traits">4.39. type_traits (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_type_traits_0" >type_traits</a>
+	</ul>
+	<H2><a name="wd_def_右值引用" href="#TOC_wd_def_右值引用">4.40. 右值引用 (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_右值引用_1" >Move semantics (Move语义) 右值引用</a>
+	</ul>
+	<H2><a name="wd_def_智能指针" href="#TOC_wd_def_智能指针">4.41. 智能指针 (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_智能指针_1" >Smart Pointers 智能指针</a>
+	</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    ﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_23735199" href="#HEAD_23735199">1. Overview</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_a565d27a" href="#HEAD_a565d27a">1.1. <a href="../tags/Cxx-Keyword.html" target="_blank">Keywords</a> </a></li>
+		<li><a name="TOC_HEAD_6479cdfe" href="#HEAD_6479cdfe">1.2. <a href="Cxx-version" target="_blank">New features</a> </a></li>
+		<li><a name="TOC_HEAD_6646335a" href="#HEAD_6646335a">1.3. <a href="../tags/Template.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Template</a></a></li>
+	</menu>
+	<b><a name="TOC_HEAD_a91b255f" href="#HEAD_a91b255f">2. <a name="wd_ln_STL_0" target="_blank" href="../tags/STL.html"><i class="fa fa-tags fa-fw"></i>STL</a></a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_38d5aa9d" href="#HEAD_38d5aa9d">2.1. 几个 STL 实现</a></li>
+		<li><a name="TOC_HEAD_f6cc008c" href="#HEAD_f6cc008c">2.2. STL Container</a></li>
+		<li><a name="TOC_HEAD_ba4e2e52" href="#HEAD_ba4e2e52">2.3. STL functios </a></li>
+		<li><a name="TOC_HEAD_bbaa5c30" href="#HEAD_bbaa5c30">2.4. STL 异常类 </a></li>
+		<li><a name="TOC_HEAD_cad56011" href="#HEAD_cad56011">2.5. string </a></li>
+		<li><a name="TOC_HEAD_e5500b33" href="#HEAD_e5500b33">2.6. Math related </a></li>
+		<li><a name="TOC_HEAD_30861764" href="#HEAD_30861764">2.7. 智能指针 </a></li>
+	</menu>
+	<b><a name="TOC_HEAD_1fbccbf7" href="#HEAD_1fbccbf7">3. Coverage: 22%</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_b2e8c113" href="#HEAD_b2e8c113">3.1. Nodes: 54/60</a></li>
+		<li><a name="TOC_HEAD_f25525d2" href="#HEAD_f25525d2">3.2. Tags: 52/76</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_9fbf4ed2" href="#HEAD_9fbf4ed2">4. Index (41)</a></b><br>
+	<menu>
+		<li><a name="TOC_wd_def_auto" href="#wd_def_auto">4.1. auto (1) </a></li>
+		<li><a name="TOC_wd_def_begin()" href="#wd_def_begin()">4.2. begin() (2) </a></li>
+		<li><a name="TOC_wd_def_Cxx-enum-class" href="#wd_def_Cxx-enum-class">4.3. Cxx&ndash;enum&ndash;class (2) </a></li>
+		<li><a name="TOC_wd_def_Cxx-static_assert" href="#wd_def_Cxx-static_assert">4.4. Cxx&ndash;static_assert (2) </a></li>
+		<li><a name="TOC_wd_def_Cxxv11-override" href="#wd_def_Cxxv11-override">4.5. Cxxv11&ndash;override (2) </a></li>
+		<li><a name="TOC_wd_def_end()" href="#wd_def_end()">4.6. end() (2) </a></li>
+		<li><a name="TOC_wd_def_enums" href="#wd_def_enums">4.7. enums (2) </a></li>
+		<li><a name="TOC_wd_def_final" href="#wd_def_final">4.8. final (2) </a></li>
+		<li><a name="TOC_wd_def_Lambdas" href="#wd_def_Lambdas">4.9. Lambdas (2) </a></li>
+		<li><a name="TOC_wd_def_nullptr" href="#wd_def_nullptr">4.10. nullptr (2) </a></li>
+		<li><a name="TOC_wd_def_override" href="#wd_def_override">4.11. override (2) </a></li>
+		<li><a name="TOC_wd_def_static_assert" href="#wd_def_static_assert">4.12. static_assert (2) </a></li>
+		<li><a name="TOC_wd_def_std-accumulate" href="#wd_def_std-accumulate">4.13. std&ndash;accumulate (1) </a></li>
+		<li><a name="TOC_wd_def_std-array" href="#wd_def_std-array">4.14. std&ndash;array (1) </a></li>
+		<li><a name="TOC_wd_def_std-begin-end" href="#wd_def_std-begin-end">4.15. std&ndash;begin&ndash;end (2) </a></li>
+		<li><a name="TOC_wd_def_std-binary_search" href="#wd_def_std-binary_search">4.16. std&ndash;binary_search (1) </a></li>
+		<li><a name="TOC_wd_def_std-copy" href="#wd_def_std-copy">4.17. std&ndash;copy (1) </a></li>
+		<li><a name="TOC_wd_def_std-count" href="#wd_def_std-count">4.18. std&ndash;count (1) </a></li>
+		<li><a name="TOC_wd_def_std-count_if" href="#wd_def_std-count_if">4.19. std&ndash;count_if (1) </a></li>
+		<li><a name="TOC_wd_def_std-deque" href="#wd_def_std-deque">4.20. std&ndash;deque (1) </a></li>
+		<li><a name="TOC_wd_def_std-find" href="#wd_def_std-find">4.21. std&ndash;find (1) </a></li>
+		<li><a name="TOC_wd_def_std-find_if" href="#wd_def_std-find_if">4.22. std&ndash;find_if (1) </a></li>
+		<li><a name="TOC_wd_def_std-greater" href="#wd_def_std-greater">4.23. std&ndash;greater (1) </a></li>
+		<li><a name="TOC_wd_def_std-greater_equal" href="#wd_def_std-greater_equal">4.24. std&ndash;greater_equal (1) </a></li>
+		<li><a name="TOC_wd_def_std-less" href="#wd_def_std-less">4.25. std&ndash;less (1) </a></li>
+		<li><a name="TOC_wd_def_std-less_equal" href="#wd_def_std-less_equal">4.26. std&ndash;less_equal (1) </a></li>
+		<li><a name="TOC_wd_def_std-lower_bound" href="#wd_def_std-lower_bound">4.27. std&ndash;lower_bound (1) </a></li>
+		<li><a name="TOC_wd_def_std-map" href="#wd_def_std-map">4.28. std&ndash;map (1) </a></li>
+		<li><a name="TOC_wd_def_std-max" href="#wd_def_std-max">4.29. std&ndash;max (1) </a></li>
+		<li><a name="TOC_wd_def_std-min" href="#wd_def_std-min">4.30. std&ndash;min (1) </a></li>
+		<li><a name="TOC_wd_def_std-optional" href="#wd_def_std-optional">4.31. std&ndash;optional (2) </a></li>
+		<li><a name="TOC_wd_def_std-search_n" href="#wd_def_std-search_n">4.32. std&ndash;search_n (1) </a></li>
+		<li><a name="TOC_wd_def_std-set" href="#wd_def_std-set">4.33. std&ndash;set (1) </a></li>
+		<li><a name="TOC_wd_def_std-stacktrace" href="#wd_def_std-stacktrace">4.34. std&ndash;stacktrace (2) </a></li>
+		<li><a name="TOC_wd_def_std-unordered_map" href="#wd_def_std-unordered_map">4.35. std&ndash;unordered_map (1) </a></li>
+		<li><a name="TOC_wd_def_std-unordered_set" href="#wd_def_std-unordered_set">4.36. std&ndash;unordered_set (1) </a></li>
+		<li><a name="TOC_wd_def_std-vector" href="#wd_def_std-vector">4.37. std&ndash;vector (1) </a></li>
+		<li><a name="TOC_wd_def_STL" href="#wd_def_STL">4.38. STL (1) </a></li>
+		<li><a name="TOC_wd_def_type_traits" href="#wd_def_type_traits">4.39. type_traits (2) </a></li>
+		<li><a name="TOC_wd_def_右值引用" href="#wd_def_右值引用">4.40. 右值引用 (2) </a></li>
+		<li><a name="TOC_wd_def_智能指针" href="#wd_def_智能指针">4.41. 智能指针 (2) </a></li>
+	</menu>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

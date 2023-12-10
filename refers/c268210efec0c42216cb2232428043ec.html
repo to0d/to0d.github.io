@@ -1,0 +1,531 @@
+<html>
+	<head>
+		<meta charSet="utf-8"></meta>
+		<title data-rh="true">LLVM&nbsp;IR&nbsp;的第一个&nbsp;Pass&nbsp;上手官方文档&nbsp;Hello&nbsp;Pass&nbsp;知乎</title>
+	</head>
+	<body class="WhiteBg-body PostIndex-body">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Fri Dec 01 15:27:31 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://zhuanlan.zhihu.com/p/392381317" target="_blank">
+				<font color="red" size="3">LLVM&nbsp;IR&nbsp;的第一个&nbsp;Pass：上手官方文档&nbsp;Hello&nbsp;Pass&nbsp;&ndash;&nbsp;知乎</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="RichText ztext Post-RichText css-117anjg" options="[object Object]">
+			<h2 data-first-child id="h_392381317_0" data-into-catalog-status="">明确参考文件&nbsp;与&nbsp;本文目标导向</h2>
+			<p data-pid="rCu4bksZ">参考的内容基本上基于
+				<a href="https://link.zhihu.com/?target=https%3A//llvm.org/docs/WritingAnLLVMPass.html" class=" wrap external" target="_blank" rel="nofollow noreferrer">官方文档</a>
+				与源码，这篇介绍如何去写一个&nbsp;LLVM&nbsp;Pass&nbsp;的文档的整体介绍思路非常清晰，而且伴随着纯基础知识介绍，还有相应的源码解读，对于具体上手实践还是很有帮助的，只要认真读文档，遇到的若干问题都能迎刃而解。
+			</p>
+			<p data-pid="-dADhjsx">本文希望以最接近官方文档的方式，实现第一个&nbsp;LLVM&nbsp;IR&nbsp;Pass。本人作为&nbsp;LLVM&nbsp;新手，
+				<b>按照实操的过程介绍如何构建并运行&nbsp;Pass</b>
+				，
+				<b>同时适当地介绍其中蕴含的知识</b>
+				，对于细致的基础知识的内容还请移步&nbsp;LLVM&nbsp;相应官方文档和其他一些靠谱的文档总结。
+			</p>
+			<p data-pid="sdu4QGrT">
+				<b>着重强调</b>
+				：本文介绍的是传统&nbsp;LLVM&nbsp;Pass（the&nbsp;legacy&nbsp;pass&nbsp;manager），LLVM&nbsp;中除了&nbsp;codegen&nbsp;管线还使用传统的&nbsp;Pass，默认均使用新的&nbsp;pass&nbsp;管理，是通过优化管线来实现，本文对此不作介绍，详细内容请移步官方另一篇
+				<a href="https://link.zhihu.com/?target=https%3A//llvm.org/docs/NewPassManager.html" class=" wrap external" target="_blank" rel="nofollow noreferrer">文档</a>
+				。使用旧的&nbsp;pass&nbsp;的需要注意在命令中添加
+				<code>&ndash;enable&ndash;new&ndash;pm=0</code>
+				选项。
+			</p>
+			<p data-pid="uxwz_t68">
+				<b>Hello&nbsp;Pass&nbsp;的功能</b>
+				：简单地打印出编译程序中存在的非外部函数的名称。Pass&nbsp;只是检查程序，不修改程序。
+			</p>
+			<p data-pid="Fwrj7siu">注：（1）官方文档中的某些代码并非最新，故本篇文档中的所有代码均来字相应源码，与官方文档展示的差异不大。（2）本文中所提到的方法，特别是命令行的工具选项，都是在查看工具帮助的情况下，了解、学习、检索并不断调试实现的，对于将来的代码并不一定奏效，但是方法思路大概不变。（3）本文档介绍的顺序可能与官方文档中稍有不同，但该有的介绍都有。</p>
+			<h2 id="h_392381317_1" data-into-catalog-status="">第一步：配置环境和构建工具</h2>
+			<p data-pid="40TQ1sYt">这里有两种方式可以实现配置和构建&nbsp;LLVM&nbsp;项目，下载项目源码编译安装，或者直接安装预编译好的包。因为纯粹，我选择前者。会遇到很多问题，幸运的是，方法更多。直接&nbsp;apt&nbsp;install&nbsp;的方法文档很多。在此只介绍源码的方式进行安装，参考源码安装的
+				<a href="https://link.zhihu.com/?target=https%3A//llvm.org/docs/GettingStarted.html%23getting-the-source-code-and-building-llvm" class=" wrap external" target="_blank" rel="nofollow noreferrer">官方文档</a>
+				。
+			</p>
+			<p data-pid="ZG1jnoGU">
+				<b>构建环境</b>
+				：Ubuntu&nbsp;18.04，git&nbsp;版本：2.17.0，cmake&nbsp;版本：3.21.0&ndash;rc3。
+			</p>
+			<p data-pid="epL0B6c-">
+				<b>构建方法</b>
+				：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-bash"><span class="c1"># 源码下载，下载项目的 commit id: 5b51bd1</span>
+$ git clone https://github.com.cnpmjs.org/llvm/llvm-project.git
+
+<span class="c1"># 构建命令</span>
+$ <span class="nb">cd</span> llvm-project
+$ mkdir build <span class="o">&amp;&amp;</span> <span class="nb">cd</span> build
+$ cmake -G <span class="s2">&#34;Unix Makefiles&#34;</span> ../llvm <span class="se">\
+</span><span class="se"></span>        -DLLVM_TARGETS_TO_BUILD<span class="o">=</span><span class="s2">&#34;X86;RISCV&#34;</span> <span class="se">\
+</span><span class="se"></span>        -DLLVM_ENABLE_PROJECTS<span class="o">=</span><span class="s2">&#34;clang&#34;</span>
+$ make -j&lt;NN&gt;</code>
+				</pre>
+			</div>
+			<p data-pid="kHANjrUS">方法注释：（1）源码下载的链接中，
+				<a href="https://link.zhihu.com/?target=http%3A//github.com/" class=" wrap external" target="_blank" rel="nofollow noreferrer">github.com</a>
+				后面添加后缀
+				<code>.cnpmjs.org</code>
+				，该后缀是中国区镜像源，如果能命中，能显著增加项目文件的下载速度。（2）
+				<code>&ndash;DLLVM_ENABLE_PROJECTS=&#34;...&#34;</code>
+				：双引号之间填入需要构建的&nbsp;LLVM&nbsp;子项目，多个子项目之间使用分号分隔，在此需要构建&nbsp;clang&nbsp;子项目，需要使用构建的&nbsp;clang&nbsp;工具编译源代码并生成&nbsp;LLVM&nbsp;IR。（3）串行构建极慢，并行运行构建能够显著提高构建速度。对于&nbsp;make，使用选项
+				<code>&ndash;j&lt;NN&gt;</code>
+				，其中
+				<code>&lt;NN&gt;</code>
+				是并行作业的数量，即为可用的&nbsp;CPU&nbsp;数量。（4）一些常用的构建选项，在此均设置为默认。（5）使用
+				<code>&#34;Unix&nbsp;Makefiles&#34;</code>
+				构建器的原因：之后再重新构建（或更新）工具链的时候，官方文档提供的是&nbsp;make&nbsp;方式，故在此选择该构建器。
+			</p>
+			<h2 id="h_392381317_2" data-into-catalog-status="">第二步：代码基础</h2>
+			<p data-pid="TLAi4AlW">
+				<b>关键文件</b>
+				：如果上述构建顺利，在&nbsp;build/bin&nbsp;文件夹下有相应的工具链，之后会用到&nbsp;clang&nbsp;和&nbsp;opt；在&nbsp;build/lib&nbsp;文件夹下有一个动态链接库文件&nbsp;LLVMHello.so，这是之后需要生成的。
+			</p>
+			<p data-pid="rPBWqkHE">
+				<b>如果使用下载项目源码编译安装的&nbsp;LLVM&nbsp;项目</b>
+				，
+				<b>代码都是预设好的</b>
+				，
+				<b>根本不用再去写或者扩充</b>
+				，当然如果想要重新开始创建所有的内容，需要自己新建一个目录，使用另一个名称。但是对于安装预编译好的包的方式，就需要重新写（或拷贝）一下代码。
+			</p>
+			<p data-pid="SqEQHBCB">
+				<b>这里有&nbsp;2&nbsp;部分的代码需要准备</b>
+				，
+				<b>一部分是构建脚本的代码</b>
+				；
+				<b>另一部分是新&nbsp;Pass&nbsp;的源代码</b>
+				。在此的所有代码我都是用最新的代码，进行展示并介绍。
+			</p>
+			<ul>
+				<li data-pid="tm51SCbe">设置构建脚本，定义构建方式，目标及关系，需要写（或查看）两个脚本文件。</li>
+			</ul>
+			<p data-pid="yGezBV1d">
+				<b>其一</b>
+				，
+				<b>设置新Pass编译源代码的脚本</b>
+				。根据
+				<a href="https://link.zhihu.com/?target=https%3A//cmake.org/cmake/help/latest/command/add_library.html%3Fhighlight%3Dadd_library%23command%3Aadd_library" class=" wrap external" target="_blank" rel="nofollow noreferrer">cmake&nbsp;相应语法规则</a>
+				，是构建一个名字为&nbsp;LLVMHello&nbsp;的库，源码是&nbsp;Hello.cpp（接下来会介绍），并且需要在&nbsp;intrinsics_gen&nbsp;构建之后执行，能够嵌入到&nbsp;opt&nbsp;工具中。源码（与文档中稍有不同）位置：llvm&ndash;project/llvm/lib/Transforms/Hello/&nbsp;文件夹下，主要代码如下。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">... ...
+add_llvm_library( LLVMHello MODULE BUILDTREE_ONLY
+  Hello.cpp
+
+  DEPENDS
+  intrinsics_gen
+  PLUGIN_TOOL
+  opt
+  )</code>
+				</pre>
+			</div>
+			<p data-pid="ec4eRih5">
+				<b>其二</b>
+				，
+				<b>将一个子目录添加到构建中</b>
+				。根据
+				<a href="https://link.zhihu.com/?target=https%3A//cmake.org/cmake/help/latest/command/add_subdirectory.html%3Fhighlight%3Dadd_subdirectory" class=" wrap external" target="_blank" rel="nofollow noreferrer">cmake&nbsp;相应语法规则</a>
+				，将&nbsp;Hello&nbsp;子目录添加到构建中。代码位置：llvm&ndash;project/llvm/lib/Transforms/&nbsp;文件夹下，主要代码如下。
+			</p>
+			<div class="highlight">
+				<pre><code class="language-text">... ...
+add_subdirectory(Hello)
+... ...</code></pre>
+			</div>
+			<ul>
+				<li data-pid="trpcE261">上述实现了能够编译关于写（或拷贝）的&nbsp;Hello&nbsp;Pass&nbsp;代码。现在就需要写（或查看）&nbsp;Pass&nbsp;的定义源码。源码位置（与文档中稍有不同）：代码位置：llvm&ndash;project/llvm/lib/Transforms/Hello/&nbsp;文件夹下，主要代码如下，在代码中写出注释。</li>
+			</ul>
+			<p data-pid="_elgeJ5z">
+				<b>按意义块介绍代码</b>
+				：
+			</p>
+			<p data-pid="V8vA36w2">（1）头文件，正在编写的
+				<a href="https://link.zhihu.com/?target=https%3A//llvm.org/doxygen/classllvm_1_1Pass.html" class=" wrap external" target="_blank" rel="nofollow noreferrer">Pass</a>
+				，需要对
+				<a href="https://link.zhihu.com/?target=https%3A//llvm.org/doxygen/classllvm_1_1Function.html" class=" wrap external" target="_blank" rel="nofollow noreferrer">Function</a>
+				进行操作，并且还需要进行一些打印。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="cp">#include</span> <span class="cpf">&#34;llvm/ADT/Statistic.h&#34;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&#34;llvm/IR/Function.h&#34;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&#34;llvm/Pass.h&#34;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&#34;llvm/Support/raw_ostream.h&#34;</span><span class="cp">
+</span></code>
+				</pre>
+			</div>
+			<p data-pid="pfUB-Sxl">（2）包含文件中的函数位于&nbsp;llvm&nbsp;命名空间中。</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">using</span> <span class="k">namespace</span> <span class="n">llvm</span><span class="p">;</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="mXjO_Pe4">（3）设置&nbsp;DEBUG_TYPE&nbsp;是字符串&nbsp;hello，即设置命令行中的选项为&nbsp;hello。</p>
+			<div class="highlight">
+				<pre><code class="language-cpp"><span class="cp">#define DEBUG_TYPE &#34;hello&#34;
+</span></code></pre>
+			</div>
+			<p data-pid="9Qkhm5_R">（4）以匿名命名空间开始。匿名命名空间之于&nbsp;C++&nbsp;就像&ldquo;&nbsp;static&rdquo;关键字之于&nbsp;C（在全局范围内）。它使匿名命名空间内声明的内容仅对当前文件可见。注：此文件中的所有内容几乎都包含在一个匿名命名空间中，这反映了一个事实，即&nbsp;Pass&nbsp;是自包含单元（self&nbsp;contained&nbsp;unit），不需要外部接口（尽管它们可以拥有它们）才能发挥作用。</p>
+			<div class="highlight">
+				<pre><code class="language-cpp"><span class="k">namespace</span> <span class="p">{</span>
+</code></pre>
+			</div>
+			<p data-pid="fepmSvi1">（5）之后就是声明&nbsp;Pass&nbsp;的本身。此处声明了一个&ldquo;&nbsp;Hello&rdquo;类，它是
+				<a href="https://link.zhihu.com/?target=https%3A//llvm.org/docs/WritingAnLLVMPass.html%23writing-an-llvm-pass-functionpass" class=" wrap external" target="_blank" rel="nofollow noreferrer">FunctionPass</a>
+				的子类。FunctionPass&nbsp;一次对一个函数进行操作。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp">  <span class="c1">// Hello - The first implementation, without getAnalysisUsage.
+</span><span class="c1"></span>  <span class="k">struct</span> <span class="nc">Hello</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FunctionPass</span> <span class="p">{</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="7nqc3eIe">（6）这声明了&nbsp;LLVM&nbsp;用于标识传递的传递标识符。这允许&nbsp;LLVM&nbsp;避免使用昂贵的&nbsp;C++&nbsp;运行时信息。</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp">    <span class="k">static</span> <span class="kt">char</span> <span class="n">ID</span><span class="p">;</span> <span class="c1">// Pass identification, replacement for typeid
+</span><span class="c1"></span>    <span class="n">Hello</span><span class="p">()</span> <span class="o">:</span> <span class="n">FunctionPass</span><span class="p">(</span><span class="n">ID</span><span class="p">)</span> <span class="p">{}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="4ftEK9OG">（7）由于&nbsp;FunctionPass&nbsp;基类中存在纯虚函数&nbsp;runOnFunction，子类必须给予定义，才能成功定义&nbsp;Pass&nbsp;的转换或分析工作。所以，需要重写一个&nbsp;runOnFunction&nbsp;方法，能够实现打印出带有每个函数名称的消息。
+				<code>errs()</code>
+				函数，
+				<code>write_escaped()</code>
+				函数，声明均在头文件
+				<a href="https://link.zhihu.com/?target=https%3A//llvm.org/doxygen/raw__ostream_8h.html" class=" wrap external" target="_blank" rel="nofollow noreferrer">llvm/Support/raw_ostream.h</a>
+				中。
+				<code>llvm::raw_ostream</code>
+				类实现了一个非常快速的批量输出流，它只能输出到一个流。它不支持查找、行缓冲等。它是一个简单的缓冲区，一次输出一个语义块。
+				<code>++HelloCounter;</code>
+				在此并没有什么实质意义，
+				<code>HelloCounter</code>
+				用于统计&nbsp;LLVM&nbsp;IR&nbsp;的代码中存在多少个&nbsp;Function。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp">    <span class="kt">bool</span> <span class="nf">runOnFunction</span><span class="p">(</span><span class="n">Function</span> <span class="o">&amp;</span><span class="n">F</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+      <span class="o">++</span><span class="n">HelloCounter</span><span class="p">;</span>
+      <span class="n">errs</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Hello: &#34;</span><span class="p">;</span>
+      <span class="n">errs</span><span class="p">().</span><span class="n">write_escaped</span><span class="p">(</span><span class="n">F</span><span class="p">.</span><span class="n">getName</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="SYa46UZl">（8）之后，开始初始化&nbsp;pass&nbsp;ID。LLVM&nbsp;使用&nbsp;ID&nbsp;的地址来标识一个&nbsp;pass，初始化值并不重要。</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="kt">char</span> <span class="n">Hello</span><span class="o">::</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="8DJfXXc0">（9）接着，按照
+				<a href="https://link.zhihu.com/?target=https%3A//llvm.org/doxygen/PassSupport_8h_source.html" class=" wrap external" target="_blank" rel="nofollow noreferrer">官方的定义方式</a>
+				，
+				<code>static&nbsp;RegisterPass&lt;YourPassClassName&gt;&nbsp;tmp(&#34;passopt&#34;,&nbsp;&#34;My&nbsp;Pass&nbsp;Name&#34;);</code>
+				，
+				<code>RegisterPass&lt;t&gt;</code>
+				这个模板用于通知系统一个&nbsp;Pass&nbsp;可供使用，并将其注册到&nbsp;PassManager&nbsp;维护的内部数据库中，如此例如&nbsp;opt&nbsp;的工具就可以看到这个&nbsp;Pass。在注册&nbsp;Hello&nbsp;Pass&nbsp;时，给它一个命令行参数
+				<b>hello</b>
+				，在命令行中添加
+				<code>&ndash;hello</code>
+				即可调用注册的&nbsp;Pass；设置一个&nbsp;Pass&nbsp;的名字
+				<b>Hello&nbsp;World&nbsp;Pass</b>
+				，这个在终端中打印使用到的&nbsp;Pass&nbsp;条目的时候，显示的就是这个名字。
+			</p>
+			<p data-pid="VHCC8pC0">在最新的代码中，这块只有两个参数，但在官方文档中有四个参数，最后两个参数描述了它的行为：如果一个&nbsp;Pass&nbsp;在没有修改它的情况下遍历&nbsp;CFG（函数流程控制图，
+				<b>C</b>
+				ontrol
+				<b>F</b>
+				low
+				<b>G</b>
+				raph），那么第三个参数设置为&nbsp;true；如果传递是分析传递，例如支配树传递，则&nbsp;true&nbsp;作为第四个参数提供。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">static</span> <span class="n">RegisterPass</span><span class="o">&lt;</span><span class="n">Hello</span><span class="o">&gt;</span> <span class="n">X</span><span class="p">(</span><span class="s">&#34;hello&#34;</span><span class="p">,</span> <span class="s">&#34;Hello World Pass&#34;</span><span class="p">);</span>
+
+<span class="c1">// 官方文档中介绍
+</span><span class="c1">// static RegisterPass&lt;Hello&gt; X(&#34;hello&#34;, &#34;Hello World Pass&#34;,
+</span><span class="c1">//                              false /* Only looks at CFG */,
+</span><span class="c1">//                              false /* Analysis Pass */);
+</span></code>
+				</pre>
+			</div>
+			<p data-pid="uiHwalSp">（10）这一部分在最新的源码中并不存在，我就将文档中的内容直接摘抄过来。如果我们想将传递注册为现有管道的一个步骤，则提供了一些扩展点，例如
+				<code>PassManagerBuilder::EP_EarlyAsPossible</code>
+				在任何优化之前应用我们的传递，或
+				<code>PassManagerBuilder::EP_FullLinkTimeOptimizationLast</code>
+				在链接时间优化之后应用它。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">static</span> <span class="n">llvm</span><span class="o">::</span><span class="n">RegisterStandardPasses</span> <span class="n">Y</span><span class="p">(</span>
+    <span class="n">llvm</span><span class="o">::</span><span class="n">PassManagerBuilder</span><span class="o">::</span><span class="n">EP_EarlyAsPossible</span><span class="p">,</span>
+    <span class="p">[](</span><span class="k">const</span> <span class="n">llvm</span><span class="o">::</span><span class="n">PassManagerBuilder</span> <span class="o">&amp;</span><span class="n">Builder</span><span class="p">,</span>
+       <span class="n">llvm</span><span class="o">::</span><span class="n">legacy</span><span class="o">::</span><span class="n">PassManagerBase</span> <span class="o">&amp;</span><span class="n">PM</span><span class="p">)</span> <span class="p">{</span> <span class="n">PM</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Hello</span><span class="p">());</span> <span class="p">});</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="EFyJx3R9">（11）最后，生成上述创建&nbsp;Pass&nbsp;的共享目标文件（之后使用&nbsp;opt&nbsp;工具的&ndash;load选项进行加载，之后介绍）
+				<b>如果使用下载项目源码编译安装的&nbsp;LLVM&nbsp;项目</b>
+				，
+				<b>代码都是预设好的</b>
+				，
+				<b>根本不用再去写或者扩充</b>
+				。否则，需要回到构建项目的顶层重新编译一次文件，如果对于&nbsp;Pass&nbsp;部分有新的修改，一般是进入&nbsp;build&nbsp;文件夹，终端中执行
+				<code>$&nbsp;make&nbsp;&ndash;j&lt;NN&gt;</code>
+				即可，有任何的修改也可以在构建的过程中看出来。编译的结果就是在&nbsp;build/lib&nbsp;文件夹下有一个动态链接库文件&nbsp;LLVMHello.so，之后&nbsp;opt&nbsp;工具需要加载的共享目标文件。
+			</p>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<p data-pid="1xfgRruA">
+				<b>完整代码如下</b>
+				。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">#include &#34;llvm/ADT/Statistic.h&#34;
+#include &#34;llvm/IR/Function.h&#34;
+#include &#34;llvm/Pass.h&#34;
+#include &#34;llvm/Support/raw_ostream.h&#34;
+
+using namespace llvm;
+
+#define DEBUG_TYPE &#34;hello&#34;
+
+STATISTIC(HelloCounter, &#34;Counts number of functions greeted&#34;);
+
+namespace {
+  // Hello - The first implementation, without getAnalysisUsage.
+  struct Hello : public FunctionPass {
+    static char ID; // Pass identification, replacement for typeid
+    Hello() : FunctionPass(ID) {}
+
+    bool runOnFunction(Function &amp;F) override {
+      ++HelloCounter;
+      errs() &lt;&lt; &#34;Hello: &#34;;
+      errs().write_escaped(F.getName()) &lt;&lt; &#39;\n&#39;;
+      return false;
+    }
+  };
+}
+
+char Hello::ID = 0;
+static RegisterPass&lt;Hello&gt; X(&#34;hello&#34;, &#34;Hello World Pass&#34;);
+... ...</code>
+				</pre>
+			</div>
+			<h2 id="h_392381317_3" data-into-catalog-status="">第三步：构建样例</h2>
+			<p data-pid="8LD0lh7R">第二步能够将&nbsp;Pass&nbsp;设置和构建，需要一个简单的样例才能看出其实际的作用，而且&nbsp;Pass&nbsp;针对的是&nbsp;LLVM&nbsp;的&nbsp;bitcode&nbsp;文件（文件后缀&nbsp;.bc&nbsp;或&nbsp;.ll）。这部分的内容参考另一篇
+				<a href="https://link.zhihu.com/?target=https%3A//llvm.org/docs/GettingStarted.html%23an-example-using-the-llvm-tool-chain" class=" wrap external" target="_blank" rel="nofollow noreferrer">官方文档</a>
+				，且只介绍涉及到的部分内容，对于文件类型和其他工具链的使用不做赘述。
+			</p>
+			<ul>
+				<li data-pid="DRhRXu5t">创建一个&nbsp;C&nbsp;程序，命名为&nbsp;hello.c，源码如下。</li>
+			</ul>
+			<div class="highlight">
+				<pre>
+<code class="language-c"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span><span class="cp"></span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&#34;hello world!</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span></code>
+				</pre>
+			</div>
+			<ul>
+				<li data-pid="XjrxOKpg">编译源代码生成&nbsp;LLVM&nbsp;bitcode，终端指令如下，得到&nbsp;hello.bc&nbsp;文件。clang&nbsp;工具：位于&nbsp;build/bin&nbsp;文件夹下；
+					<code>&ndash;O3</code>
+					选项：表明优化等级；
+					<code>&ndash;emit&ndash;llvm</code>
+					选项：对汇编程序和对象文件使用LLVM表示；
+					<code>&ndash;c</code>
+					选项：生成&nbsp;LLVM&nbsp;.bc&nbsp;文件。
+				</li>
+			</ul>
+			<div class="highlight">
+				<pre><code class="language-bash">$ clang -O3 -emit-llvm hello.c -c -o hello.bc</code></pre>
+			</div>
+			<h2 id="h_392381317_4" data-into-catalog-status="">最后：使用工具&nbsp;opt&nbsp;测试&nbsp;Pass</h2>
+			<p data-pid="YrJYIrgq">最后，可以使用&nbsp;opt&nbsp;工具通过加载第二步中构建的&nbsp;Pass&nbsp;共享目标文件，由于上述&nbsp;Pass&nbsp;进行了注册，opt&nbsp;工具可以访问它，就可以对&nbsp;LLVM&nbsp;bitcode&nbsp;文件进行分析。</p>
+			<p data-pid="HWoRUl-W">
+				<b>执行如下的终端命令以测试&nbsp;Pass&nbsp;并查看中断返回的信息</b>
+				。注：因为官方文档中所述的指令运行可能会报错，所以稍作修改。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-bash">$ opt -load LLVMHello.so -hello &lt;hello.bc&gt; -o /dev/null -enable-new-pm<span class="o">=</span><span class="m">0</span> 
+Hello: main</code>
+				</pre>
+			</div>
+			<p data-pid="ok5NagOl">上述指令注释：</p>
+			<p data-pid="yT7Vf_v9">（1）
+				<code>&lt;hello.bc&gt;</code>
+				中的
+				<code>&lt;&gt;</code>
+				符号是&nbsp;BNF&nbsp;语法中常见内容，该部分填入待分析的&nbsp;.bc&nbsp;文件即可运行。
+			</p>
+			<p data-pid="FO2kfJjr">（2）
+				<code>&ndash;load&nbsp;LLVMHello.so</code>
+				：opt&nbsp;工具加载编译构建的共享目标文件，加载之后，
+				<code>&ndash;hello</code>
+				选项（当然也可以尝试
+				<code>&ndash;hello2</code>
+				选项）（
+				<b>第二步</b>
+				：
+				<b>代码基础</b>
+				（9）
+				<code>RegisterPass&lt;t&gt;</code>
+				中的第
+				<b>一</b>
+				个参数）才成为有效的命令行参数，使用下方的命令查看注册的&nbsp;Pass&nbsp;的情况。如果不添加
+				<code>&ndash;load</code>
+				，则不会出现这两个优化选项。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-bash">$ opt -load LLVMHello.so -help
+
+OVERVIEW: llvm .bc -&gt; .bc modular optimizer and analysis printer
+USAGE: opt <span class="o">[</span>options<span class="o">]</span> &lt;input bitcode file&gt;
+OPTIONS:
+General options:
+... ...
+  Optimizations available <span class="o">(</span>use <span class="s1">&#39;-passes=&#39;</span> <span class="k">for</span> the new pass manager<span class="o">)</span>
+... ... 
+    --hello                       - Hello World Pass
+    --hello2                      - Hello World Pass <span class="o">(</span>with getAnalysisUsage implemented<span class="o">)</span>
+... ...</code>
+				</pre>
+			</div>
+			<p data-pid="I5nDfhh3">（3）命令行中需要添加
+				<code>&ndash;o</code>
+				选项。Hello&nbsp;Pass&nbsp;不会修改程序，所以我们丢弃&nbsp;opt&nbsp;工具输出的结果，实现的方式：将其发送到
+				<code>/dev/null</code>
+				，发送的意思需要
+				<code>&ndash;o</code>
+				选项实现。
+				<code>/dev/null</code>
+				通常用于丢弃不需要的数据输出，&nbsp;或者用于输入流的空文件。在官方文档中并没有写全，可能会出现如下的错误。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-bash">opt: Too many positional arguments specified!
+Can specify at most <span class="m">1</span> positional arguments: See: opt --help</code>
+				</pre>
+			</div>
+			<p data-pid="UyTkA3S1">（4）需要添加
+				<code>&ndash;enable&ndash;new&ndash;pm=0</code>
+				选项。会出现一个非常奇妙的事情，使用命令
+				<code>$&nbsp;opt&nbsp;&ndash;load&nbsp;LLVMHello.so&nbsp;&ndash;help</code>
+				能够找到&ndash;hello和&ndash;hello2选项，证明动态库是成功加载上了，而运行指令
+				<code>$&nbsp;opt&nbsp;&ndash;load&nbsp;LLVMHello.so&nbsp;&ndash;hello&nbsp;&lt;hello.bc&gt;&nbsp;&ndash;o&nbsp;/dev/null</code>
+				，就会报如下的错误，意思是&nbsp;opt&nbsp;工具并不知道有一个叫&nbsp;hello&nbsp;的&nbsp;Pass，看起来前后是相互矛盾的。
+				<b>其实</b>
+				，
+				<b>官方文档中说了</b>
+				，
+				<b>是在最一开始的
+					<a href="https://link.zhihu.com/?target=https%3A//llvm.org/docs/WritingAnLLVMPass.html%23introduction-what-is-a-pass" class=" wrap external" target="_blank" rel="nofollow noreferrer">介绍</a>
+					中就提到了
+				</b>
+				，
+				<b>而且这部分还用红色的&nbsp;warning&nbsp;框</b>
+				，
+				<b>警示出来了</b>
+				。只是看过很多，忘了最初的内容。如果想使用&nbsp;opt&nbsp;工具中旧的&nbsp;Pass&nbsp;管理器（the&nbsp;legacy&nbsp;pass&nbsp;manager），请添加&nbsp;&ndash;enable&ndash;new&ndash;pm=0&nbsp;选项。
+			</p>
+			<div class="highlight">
+				<pre><code class="language-bash">opt: unknown pass name <span class="s1">&#39;hello&#39;</span></code></pre>
+			</div>
+			<p data-pid="NwslyJfw">（5）可以添加
+				<code>&ndash;time&ndash;passes</code>
+				选项。如果完成编译构建并经过测试，了解&nbsp;Pass&nbsp;的速度可能会很有用。该&nbsp;PassManager&nbsp;提供了一个很好的命令行选项&nbsp;&ndash;time&ndash;passes，可以获取当前&nbsp;Pass&nbsp;和其他&nbsp;Pass&nbsp;的执行时间信息。指令如下所示。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-bash">$ opt -load LLVMHello.so  -enable-new-pm<span class="o">=</span><span class="m">0</span> -hello hello.bc -o /dev/null -time-passes
+Hello: <span class="nv">main</span>
+<span class="o">===</span>-------------------------------------------------------------------------<span class="o">===</span>
+                      ... Pass execution timing report ...
+<span class="o">===</span>-------------------------------------------------------------------------<span class="o">===</span>
+  Total Execution Time: 0.0007 seconds <span class="o">(</span>0.0007 wall clock<span class="o">)</span>
+
+   --System Time--   --User+System--   ---Wall Time---  --- Name ---
+   0.0006 <span class="o">(</span> 79.8%<span class="o">)</span>   0.0006 <span class="o">(</span> 79.8%<span class="o">)</span>   0.0006 <span class="o">(</span> 79.6%<span class="o">)</span>  Bitcode Writer
+   0.0001 <span class="o">(</span> 10.7%<span class="o">)</span>   0.0001 <span class="o">(</span> 10.7%<span class="o">)</span>   0.0001 <span class="o">(</span> 10.9%<span class="o">)</span>  Module Verifier
+   0.0001 <span class="o">(</span>  9.5%<span class="o">)</span>   0.0001 <span class="o">(</span>  9.5%<span class="o">)</span>   0.0001 <span class="o">(</span>  9.5%<span class="o">)</span>  Hello World Pass
+   0.0007 <span class="o">(</span>100.0%<span class="o">)</span>   0.0007 <span class="o">(</span>100.0%<span class="o">)</span>   0.0007 <span class="o">(</span>100.0%<span class="o">)</span>  <span class="nv">Total</span>
+
+<span class="o">===</span>-------------------------------------------------------------------------<span class="o">===</span>
+                                LLVM IR <span class="nv">Parsing</span>
+<span class="o">===</span>-------------------------------------------------------------------------<span class="o">===</span>
+  Total Execution Time: 0.0013 seconds <span class="o">(</span>0.0013 wall clock<span class="o">)</span>
+
+   ---User Time---   --System Time--   --User+System--   ---Wall Time---  --- Name ---
+   0.0006 <span class="o">(</span>100.0%<span class="o">)</span>   0.0006 <span class="o">(</span>100.0%<span class="o">)</span>   0.0013 <span class="o">(</span>100.0%<span class="o">)</span>   0.0013 <span class="o">(</span>100.0%<span class="o">)</span>  Parse IR
+   0.0006 <span class="o">(</span>100.0%<span class="o">)</span>   0.0006 <span class="o">(</span>100.0%<span class="o">)</span>   0.0013 <span class="o">(</span>100.0%<span class="o">)</span>   0.0013 <span class="o">(</span>100.0%<span class="o">)</span>  Total</code>
+				</pre>
+			</div>
+			<p data-pid="eHTpMmqL">（6）可以添加
+				<code>&ndash;print&ndash;after&ndash;all</code>
+				选项。打印出&nbsp;IR&nbsp;的变化，查看&nbsp;Pass&nbsp;的执行情况。可以看到在定义&nbsp;Pass&nbsp;的名字（
+				<b>第二步</b>
+				：
+				<b>代码基础</b>
+				（9）
+				<code>RegisterPass&lt;t&gt;</code>
+				中的第
+				<b>二</b>
+				个参数）。
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-bash">$ opt -load LLVMHello.so  -enable-new-pm<span class="o">=</span><span class="m">0</span> -hello hello.bc -o /dev/null -print-after-all
+Hello: main
+*** IR Dump After Hello World Pass <span class="o">(</span>hello<span class="o">)</span> ***
+<span class="p">;</span> Function Attrs: nofree nounwind uwtable
+define dso_local i32 @main<span class="o">()</span> local_unnamed_addr <span class="c1">#0 {</span>
+entry:
+  %puts <span class="o">=</span> tail call i32 @puts<span class="o">(</span>i8* nonnull dereferenceable<span class="o">(</span>1<span class="o">)</span> getelementptr inbounds <span class="o">([</span><span class="m">13</span> x i8<span class="o">]</span>, <span class="o">[</span><span class="m">13</span> x i8<span class="o">]</span>* @str, i64 0, i64 0<span class="o">))</span>
+  ret i32 <span class="m">0</span>
+<span class="o">}</span>
+*** IR Dump After Module Verifier <span class="o">(</span>verify<span class="o">)</span> ***
+<span class="p">;</span> Function Attrs: nofree nounwind uwtable
+define dso_local i32 @main<span class="o">()</span> local_unnamed_addr <span class="c1">#0 {</span>
+entry:
+  %puts <span class="o">=</span> tail call i32 @puts<span class="o">(</span>i8* nonnull dereferenceable<span class="o">(</span>1<span class="o">)</span> getelementptr inbounds <span class="o">([</span><span class="m">13</span> x i8<span class="o">]</span>, <span class="o">[</span><span class="m">13</span> x i8<span class="o">]</span>* @str, i64 0, i64 0<span class="o">))</span>
+  ret i32 <span class="m">0</span>
+<span class="o">}</span></code>
+				</pre>
+			</div>
+			<p data-pid="zWtQc_qI">
+				<b>至此</b>
+				，
+				<b>LLVM&nbsp;IR&nbsp;的第一个&nbsp;Pass：上手官方文档&nbsp;Hello&nbsp;Pass</b>
+				<b>的介绍全部结束</b>
+				。
+				<b>如有错误</b>
+				，
+				<b>敬请指正</b>
+				。
+			</p>
+		</div>
+	</body>
+</html>

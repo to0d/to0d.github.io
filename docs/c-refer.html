@@ -1,0 +1,1268 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>C Language Reference</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">C Language Reference</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2014-01-01</time>
+            <i><a href="../tags/C.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>C</a>&nbsp;<a href="../tags/Outline.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Outline</a>&nbsp;<a href="../tags/Reference.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Reference</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"></div>
+        <div class="entry-content">
+	<H1><a name="HEAD_23735199" href="#TOC_HEAD_23735199">1. Overview</a></H1>
+	<H2><a name="HEAD_a55c8e6a" href="#TOC_HEAD_a55c8e6a">1.1. Beginner <a><b>C-Beginner</b></a></a></H2>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_5f26db37" href="#HEAD_5f26db37">1.1.1. 操作符 <a><b>C-Operator</b></a></a></li>
+	<menu>
+		<li><a name="TOC_HEAD_4293c1" href="#HEAD_4293c1">1.1.1.1. operator =</a></li>
+		<li><a name="TOC_HEAD_aadaff04" href="#HEAD_aadaff04">1.1.1.2. operator <a name="wd_ln_sizeof_0" target="_blank" href="../tags/sizeof.html"><i class="fa fa-tags fa-fw"></i>sizeof</a></a></li>
+		<li><a name="TOC_HEAD_ad0b50bb" href="#HEAD_ad0b50bb">1.1.1.3. operator <a name="wd_ln_enum_0" target="_blank" href="../tags/enum.html"><i class="fa fa-tags fa-fw"></i>enum</a></a></li>
+	</menu>
+</menu>
+
+</div>
+	<H3><a name="HEAD_5f26db37" href="#TOC_HEAD_5f26db37">1.1.1. 操作符 <a><b>C-Operator</b></a></a></H3>
+	<H4><a name="HEAD_4293c1" href="#TOC_HEAD_4293c1">1.1.1.1. operator =</a></H4>
+<ul>
+	<li>operator = of object, benefit : 减少一次构造开销</li>
+	<br />
+	<pre><code>A a = 10;  //相当于,  A _tmp(10); A a = _tmp;	</code></pre>
+</ul>
+	<H4><a name="HEAD_aadaff04" href="#TOC_HEAD_aadaff04">1.1.1.2. operator <a name="wd_ln_sizeof_0" target="_blank" href="../tags/sizeof.html"><i class="fa fa-tags fa-fw"></i>sizeof</a></a></H4>
+<ul>
+	<li><a name="HEAD_HIDDEN_9f0ac01f"><a href="tc140725b.c.html" target="_blank">TC140725B.c</a></li>
+	<br />
+</ul>
+	<H4><a name="HEAD_ad0b50bb" href="#TOC_HEAD_ad0b50bb">1.1.1.3. operator <a name="wd_ln_enum_0" target="_blank" href="../tags/enum.html"><i class="fa fa-tags fa-fw"></i>enum</a></a></H4>
+	<H2><a name="HEAD_c9261" href="#TOC_HEAD_c9261">1.2. 指针</a></H2><ul><a href="../tags/Pointer.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Pointer</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_9efca89e"><a href="tc140725a.c.html" target="_blank">TC140725A.c</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_76d117a7" href="#TOC_HEAD_76d117a7">1.3. Preprocessor (预编译) <a><b>预处理</b></a></a></H2>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_1649012" href="#HEAD_1649012">1.3.1. 宏替换</a></li>
+	<li><a name="TOC_HEAD_3036a9f0" href="#HEAD_3036a9f0">1.3.2. 条件编译</a></li>
+	<li><a name="TOC_HEAD_4f203348" href="#HEAD_4f203348">1.3.3. pragma <a name="wd_ln_pragma_0"><b>pragma</b></a></a></li>
+	<li><a name="TOC_HEAD_a2c20" href="#HEAD_a2c20">1.3.4. 其他</a></li>
+</menu>
+
+</div>
+	<H3><a name="HEAD_1649012" href="#TOC_HEAD_1649012">1.3.1. 宏替换</a></H3>
+<ul>
+	<li>#define</li>
+	<li>#undef <a name="wd_ln_undef_0" target="_blank" href="../tags/undef.html"><i class="fa fa-tags fa-fw"></i>undef</a></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_9f26ef21"><a href="tc140725d.c.html" target="_blank">TC140725D.c</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_3036a9f0" href="#TOC_HEAD_3036a9f0">1.3.2. 条件编译</a></H3>
+<ul>
+	<li>#if defined(identifier1)||defined(identifier2)|</li>
+	<li>#elif defined(identifier3)</li>
+	<li>#else</li>
+	<li>#endif</li>
+	<li>#ifdef</li>
+	<li>#ifndef</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_4f203348" href="#TOC_HEAD_4f203348">1.3.3. pragma <a name="wd_ln_pragma_0"><b>pragma</b></a></a></H3>
+<ul>
+	<li>pragma&ndash;pack</li>
+	<li>pragma&ndash;set&ndash;woff</li>
+	<li>pragma&ndash;reset</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_a2c20" href="#TOC_HEAD_a2c20">1.3.4. 其他</a></H3>
+<ul>
+	<li>#error</li>
+	<li>#line  ==&gt; 改变当前的行号和文件名, 用在编译器的编写中</li>
+	<br />
+</ul>
+	<H2><a name="HEAD_32af2e2e" href="#TOC_HEAD_32af2e2e">1.4. Macro (宏)</a></H2><ul><a href="../tags/C-Macro.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>C-Macro</a>&nbsp;</ul>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_437b2580" href="#HEAD_437b2580">1.4.1. 可变参数 <a><b>可变参数</b></a></a></li>
+</menu>
+
+</div>
+<pre><code>__LINE__
+__FILE__
+__DATE__
+__TIME__
+__STDC__        ==&gt; C
+__cplusplus     ==&gt; C++
+_WIN32_WCE      ==&gt; WinCE</code></pre>
+	<H3><a name="HEAD_437b2580" href="#TOC_HEAD_437b2580">1.4.1. 可变参数 <a><b>可变参数</b></a></a></H3>
+<ul>
+	<li><a name="wd_ln_va_start_0"><b>va_start</b></a></li>
+	<li><a name="wd_ln_va_arg_0"><b>va_arg</b></a></li>
+	<li><a name="wd_ln_va_end_0"><b>va_end</b></a></li>
+	<br />
+</ul>
+	<H1><a name="HEAD_1c42a52" href="#TOC_HEAD_1c42a52">2. <a href="../tags/C-Function.html" target="_blank">Functions</a></a></H1>
+	<H2><a name="HEAD_4051d0d2" href="#TOC_HEAD_4051d0d2">2.1. 字符串操作</a></H2><ul><a href="../tags/C-Function.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>C-Function</a>&nbsp;</ul>
+<ul>
+	<li>int <a name="wd_ln_sscanf_0"><b>sscanf</b></a> <code>(string str, string fmt, mixed var1, mixed var2 ... )</code> &ndash; 从一个字符串中读进与指定格式相符的数据.</li>
+	<li>int <a name="wd_ln_atoi_0" target="_blank" href="../tags/atoi.html"><i class="fa fa-tags fa-fw"></i>atoi</a> <code>(const char * str)</code></li>
+	<li>double <a name="wd_ln_atof_0"><b>atof</b></a> <code>(const char *nptr)</code></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_dd4be49" href="#TOC_HEAD_dd4be49">2.2. 宽窄字符串处理函数对照表</a></H2><ul><a href="../tags/C-Function.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>C-Function</a>&nbsp;</ul>
+<ul>
+	<li>字符分类：</li>
+	<br />
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l">宽字符函数</td>
+		<td id="mdt_td_l">普通C函数</td>
+		<td id="mdt_td_l">描述</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_iswalnum_0"><b>iswalnum</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_isalnum_0"><b>isalnum</b></a></td>
+		<td id="mdt_td_l">测试字符是否为数字或字母</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_iswalpha_0"><b>iswalpha</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_isalpha_0"><b>isalpha</b></a></td>
+		<td id="mdt_td_l">测试字符是否是字母</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_iswcntrl_0"><b>iswcntrl</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_iscntrl_0"><b>iscntrl</b></a></td>
+		<td id="mdt_td_l">测试字符是否是控制符</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_iswdigit_0"><b>iswdigit</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_isdigit_0"><b>isdigit</b></a></td>
+		<td id="mdt_td_l">测试字符是否为数字</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_iswgraph_0"><b>iswgraph</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_isgraph_0"><b>isgraph</b></a></td>
+		<td id="mdt_td_l">测试字符是否是可见字符</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_iswlower_0"><b>iswlower</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_islower_0"><b>islower</b></a></td>
+		<td id="mdt_td_l">测试字符是否是小写字符</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_iswprint_0"><b>iswprint</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_isprint_0"><b>isprint</b></a></td>
+		<td id="mdt_td_l">测试字符是否是可打印字符</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_iswpunct_0"><b>iswpunct</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_ispunct_0"><b>ispunct</b></a></td>
+		<td id="mdt_td_l">测试字符是否是标点符号</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_iswspace_0"><b>iswspace</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_isspace_0"><b>isspace</b></a></td>
+		<td id="mdt_td_l">测试字符是否是空白符号</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_iswupper_0"><b>iswupper</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_isupper_0"><b>isupper</b></a></td>
+		<td id="mdt_td_l">测试字符是否是大写字符</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_iswxdigit_0"><b>iswxdigit</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_isxdigit_0"><b>isxdigit</b></a></td>
+		<td id="mdt_td_l">测试字符是否是十六进制的数字</td>
+	</tr>
+</table>
+<br>
+	<li>大小写转换：</li>
+	<br />
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l">宽字符函数</td>
+		<td id="mdt_td_l">普通C函数</td>
+		<td id="mdt_td_l">描述</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_towlower_0"><b>towlower</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_tolower_0"><b>tolower</b></a></td>
+		<td id="mdt_td_l">把字符转换为小写</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_towupper_0"><b>towupper</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_toupper_0"><b>toupper</b></a></td>
+		<td id="mdt_td_l">把字符转换为大写</td>
+	</tr>
+</table>
+<br>
+	<li>字符比较：</li>
+	<br />
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l">宽字符函数</td>
+		<td id="mdt_td_l">普通C函数</td>
+		<td id="mdt_td_l">描述</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_wcscoll_0"><b>wcscoll</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strcoll_0"><b>strcoll</b></a></td>
+		<td id="mdt_td_l">比较字符串</td>
+	</tr>
+</table>
+<br>
+	<li>日期和时间转换：</li>
+	<br />
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l">宽字符函数</td>
+		<td id="mdt_td_l">描述</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_strftime_0"><b>strftime</b></a></td>
+		<td id="mdt_td_l">根据指定的字符串格式和locale设置格式化日期和时间</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_wcsftime_0"><b>wcsftime</b></a></td>
+		<td id="mdt_td_l">根据指定的字符串格式和locale设置格式化日期和时间， 并返回宽字符串</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_strptime_0"><b>strptime</b></a></td>
+		<td id="mdt_td_l">根据指定格式把字符串转换为时间值， 是strftime的反过程</td>
+	</tr>
+</table>
+<br>
+	<li>打印和扫描字符串：</li>
+	<br />
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l">字符函数</td>
+		<td id="mdt_td_l">描述</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_fprintf_0"><b>fprintf</b></a> / <a name="wd_ln_fwprintf_0"><b>fwprintf</b></a></td>
+		<td id="mdt_td_l">使用vararg参量的格式化输出</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_fscanf_0"><b>fscanf</b></a> / <a name="wd_ln_fwscanf_0"><b>fwscanf</b></a></td>
+		<td id="mdt_td_l">格式化读入</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_printf_0"><b>printf</b></a></td>
+		<td id="mdt_td_l">使用vararg参量的格式化输出到标准输出</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_scanf_0"><b>scanf</b></a></td>
+		<td id="mdt_td_l">从标准输入的格式化读入</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_sprintf_0"><b>sprintf</b></a> / <a name="wd_ln_swprintf_0"><b>swprintf</b></a></td>
+		<td id="mdt_td_l">根据vararg参量表格式化成字符串</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_sscanf_1"><b>sscanf</b></a></td>
+		<td id="mdt_td_l">以字符串作格式化读入</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_vfprintf_0"><b>vfprintf</b></a> / <a name="wd_ln_vfwprintf_0"><b>vfwprintf</b></a></td>
+		<td id="mdt_td_l">使用stdarg参量表格式化输出到文件</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_vprintf_0"><b>vprintf</b></a></td>
+		<td id="mdt_td_l">使用stdarg参量表格式化输出到标准输出</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_vsprintf_0"><b>vsprintf</b></a> / <a name="wd_ln_vswprintf_0"><b>vswprintf</b></a>)</td>
+		<td id="mdt_td_l">格式化stdarg参量表并写到字符串</td>
+	</tr>
+</table>
+<br>
+	<li>数字转换：</li>
+	<br />
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l">宽字符函数</td>
+		<td id="mdt_td_l">普通C函数</td>
+		<td id="mdt_td_l">描述</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_wcstod_0"><b>wcstod</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strtod_0"><b>strtod</b></a></td>
+		<td id="mdt_td_l">把宽字符的初始部分转换为双精度浮点数</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_wcstol_0"><b>wcstol</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strtol_0"><b>strtol</b></a></td>
+		<td id="mdt_td_l">把宽字符的初始部分转换为长整数</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_wcstoul_0"><b>wcstoul</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strtoul_0"><b>strtoul</b></a></td>
+		<td id="mdt_td_l">把宽字符的初始部分转换为无符号长整数</td>
+	</tr>
+</table>
+<br>
+	<li>多字节字符和宽字符转换及操作：</li>
+	<br />
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l">函数</td>
+		<td id="mdt_td_l">描述</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_mblen_0"><b>mblen</b></a></td>
+		<td id="mdt_td_l">根据locale的设置确定字符的字节数</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_mbstowcs_0"><b>mbstowcs</b></a></td>
+		<td id="mdt_td_l">把多字节字符串转换为宽字符串</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_mbtowcf_0"><b>mbtowcf</b></a> / <a name="wd_ln_btowc_0"><b>btowc</b></a></td>
+		<td id="mdt_td_l">把多字节字符转换为宽字符</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_wcstombs_0"><b>wcstombs</b></a></td>
+		<td id="mdt_td_l">把宽字符串转换为多字节字符串</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_wctombf_0"><b>wctombf</b></a> / <a name="wd_ln_wctob_0"><b>wctob</b></a></td>
+		<td id="mdt_td_l">把宽字符转换为多字节字符</td>
+	</tr>
+</table>
+<br>
+	<li>输入和输出：</li>
+	<br />
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l">宽字符函数</td>
+		<td id="mdt_td_l">普通C函数</td>
+		<td id="mdt_td_l">描述</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_fgetwc_0"><b>fgetwc</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_fgetc_0"><b>fgetc</b></a></td>
+		<td id="mdt_td_l">从流中读入一个字符并转换为宽字符</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_fgetws_0"><b>fgetws</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_fgets_0"><b>fgets</b></a></td>
+		<td id="mdt_td_l">从流中读入一个字符串并转换为宽字符串</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_fputwc_0"><b>fputwc</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_fputc_0"><b>fputc</b></a></td>
+		<td id="mdt_td_l">把宽字符转换为多字节字符并且输出到标准输出</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_fputws_0"><b>fputws</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_fputs_0"><b>fputs</b></a></td>
+		<td id="mdt_td_l">把宽字符串转换为多字节字符并且输出到标准输出串</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_getwc_0"><b>getwc</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_getc_0"><b>getc</b></a></td>
+		<td id="mdt_td_l">从标准输入中读取字符， 并且转换为宽字符</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_getwchar_0"><b>getwchar</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_getchar_0"><b>getchar</b></a></td>
+		<td id="mdt_td_l">从标准输入中读取字符， 并且转换为宽字符</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><font color="red">None</font></td>
+		<td id="mdt_td_l"><a name="wd_ln_gets_0"><b>gets</b></a></td>
+		<td id="mdt_td_l">使用 <a name="wd_ln_fgetws_1"><b>fgetws</b></a></td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_putwc_0"><b>putwc</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_putc_0"><b>putc</b></a></td>
+		<td id="mdt_td_l">把宽字符转换成多字节字符并且写到标准输出</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_putwchar_0"><b>putwchar</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_putchar_0"><b>putchar</b></a></td>
+		<td id="mdt_td_l">把宽字符转换成多字节字符并且写到标准输出</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><font color="red">None</font></td>
+		<td id="mdt_td_l"><a name="wd_ln_puts_0"><b>puts</b></a></td>
+		<td id="mdt_td_l">使用 <a name="wd_ln_fputws_1"><b>fputws</b></a></td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_ungetwc_0"><b>ungetwc</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_ungetc_0"><b>ungetc</b></a></td>
+		<td id="mdt_td_l">把一个宽字符放回到输入流中</td>
+	</tr>
+</table>
+<br>
+	<li>字符串操作：</li>
+	<br />
+<table id="mdt_t">
+	<tr id="mdt_hd">
+		<td id="mdt_td_l">宽字符函数</td>
+		<td id="mdt_td_l">普通C函数</td>
+		<td id="mdt_td_l">描述</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_wcscat_0"><b>wcscat</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strcat_0"><b>strcat</b></a></td>
+		<td id="mdt_td_l">把一个字符串接到另一个字符串的尾部</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_wcsncat_0"><b>wcsncat</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strncat_0"><b>strncat</b></a></td>
+		<td id="mdt_td_l">类似于wcscat%%%， 而且指定粘接字符串的粘接长度.</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_wcschr_0"><b>wcschr</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strchr_0"><b>strchr</b></a></td>
+		<td id="mdt_td_l">查找子字符串的第一个位置</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_wcsrchr_0"><b>wcsrchr</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strrchr_0"><b>strrchr</b></a></td>
+		<td id="mdt_td_l">从尾部开始查找子字符串出现的第一个位置</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_wcspbrk_0"><b>wcspbrk</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strpbrk_0"><b>strpbrk</b></a></td>
+		<td id="mdt_td_l">从一字符字符串中查找另一字符串中任何一个字符第一次出现的位置</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_wcswcs_0"><b>wcswcs</b></a> / <a name="wd_ln_wcsstr_0"><b>wcsstr</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strchr_0"><b>strchr</b></a></td>
+		<td id="mdt_td_l">在一字符串中查找另一字符串第一次出现的位置</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_wcscspn_0"><b>wcscspn</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strcspn_0"><b>strcspn</b></a></td>
+		<td id="mdt_td_l">返回不包含第二个字符串的的初始数目</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_wcsspn_0"><b>wcsspn</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strspn_0"><b>strspn</b></a></td>
+		<td id="mdt_td_l">返回包含第二个字符串的初始数目</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_wcscpy_0"><b>wcscpy</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strcpy_0"><b>strcpy</b></a></td>
+		<td id="mdt_td_l">拷贝字符串</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_wcsncpy_0"><b>wcsncpy</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strncpy_0"><b>strncpy</b></a></td>
+		<td id="mdt_td_l">类似于wcscpy%%%， 同时指定拷贝的数目</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_wcscmp_0"><b>wcscmp</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strcmp_0"><b>strcmp</b></a></td>
+		<td id="mdt_td_l">比较两个宽字符串</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_wcsncmp_0"><b>wcsncmp</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strncmp_0"><b>strncmp</b></a></td>
+		<td id="mdt_td_l">类似于wcscmp%%%， 还要指定比较字符字符串的数</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_wcslen_0"><b>wcslen</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strlen_0"><b>strlen</b></a></td>
+		<td id="mdt_td_l">获得宽字符串的数目</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_wcstok_0"><b>wcstok</b></a></td>
+		<td id="mdt_td_l"><a name="wd_ln_strtok_0"><b>strtok</b></a></td>
+		<td id="mdt_td_l">根据标示符把宽字符串分解成一系列字符串</td>
+	</tr>
+	<tr id="mdt_tr1">
+		<td id="mdt_td_l"><a name="wd_ln_wcswidth_0"><b>wcswidth</b></a></td>
+		<td id="mdt_td_l"><font color="red">None</font></td>
+		<td id="mdt_td_l">获得宽字符串的宽度</td>
+	</tr>
+	<tr id="mdt_tr2">
+		<td id="mdt_td_l"><a name="wd_ln_wcwidth_0"><b>wcwidth</b></a></td>
+		<td id="mdt_td_l"><font color="red">None</font></td>
+		<td id="mdt_td_l">获得宽字符的宽度</td>
+	</tr>
+</table>
+<br>
+</ul>
+<blockquote>
+	<p>
+	另外还有对应于 memory 操作的 <a name="wd_ln_wmemcpy_0"><b>wmemcpy</b></a>， <a name="wd_ln_wmemchr_0"><b>wmemchr</b></a>， <a name="wd_ln_wmemcmp_0"><b>wmemcmp</b></a>， <a name="wd_ln_wmemmove_0"><b>wmemmove</b></a>， <a name="wd_ln_wmemset_0"><b>wmemset</b></a>．
+	</p>
+	<p>
+	</p>
+</blockquote>
+	<H2><a name="HEAD_95629f0b" href="#TOC_HEAD_95629f0b">2.3. Math 函数</a></H2><ul><a href="../tags/C-Constant.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>C-Constant</a>&nbsp;</ul>
+<ul>
+	<li>Max value of each type</li>
+	<br />
+	<ul>
+		<li>float</li>
+		<br />
+		<pre><code>#include &lt;float.h&gt;
+
+FLT_MIN
+FLT_MAX		</code></pre>
+	</ul>
+</ul>
+	<H2><a name="HEAD_a2c20_0" href="#TOC_HEAD_a2c20_0">2.4. 其他</a></H2>
+<ul>
+	<li><a name="wd_ln_qsort_0"><b>qsort</b></a> 排序</li>
+	<br />
+</ul>
+	<H1><a name="HEAD_1fbcc8d1" href="#TOC_HEAD_1fbcc8d1">3. Coverage: 17%</a></H1>
+<ul>
+	<li><strong>Domain:</strong> <a href="../" target="_blank">C</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_f255693a" href="#TOC_HEAD_f255693a">3.1. Nodes: 0/0</a></H2>
+<table id="mdt_t">
+	<tr id="mdt_hd"><td id="mdt_td_l">Nodes</td></tr>
+</table>
+<br>
+	<H2><a name="HEAD_12e63f5d" href="#TOC_HEAD_12e63f5d">3.2. Tags: 5/6</a></H2>
+<table id="mdt_t">
+	<tr id="mdt_hd"><td id="mdt_td_l">Tags</td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/C.html" target="_blank">C</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/C-Constant.html" target="_blank">C-Constant</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/C-Macro.html" target="_blank">C-Macro</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Pointer.html" target="_blank">Pointer</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Reference.html" target="_blank">Reference</a></td></tr>
+</table>
+<br>
+	<hr/>
+	<H1><a name="HEAD_58293371" href="#TOC_HEAD_58293371">4. Index (123)</a></H1>
+	<H2><a name="wd_def_atof" href="#TOC_wd_def_atof">4.1. atof (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_atof_0" >double atof <code>(const char *nptr)</code></a>
+	</ul>
+	<H2><a name="wd_def_atoi" href="#TOC_wd_def_atoi">4.2. atoi (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_atoi_0" >int atoi <code>(const char * str)</code></a>
+	</ul>
+	<H2><a name="wd_def_btowc" href="#TOC_wd_def_btowc">4.3. btowc (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_btowc_0" >mbtowcf / btowc</a>
+	</ul>
+	<H2><a name="wd_def_enum" href="#TOC_wd_def_enum">4.4. enum (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_enum_0" >operator enum</a>
+	</ul>
+	<H2><a name="wd_def_fgetc" href="#TOC_wd_def_fgetc">4.5. fgetc (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_fgetc_0" >fgetc</a>
+	</ul>
+	<H2><a name="wd_def_fgets" href="#TOC_wd_def_fgets">4.6. fgets (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_fgets_0" >fgets</a>
+	</ul>
+	<H2><a name="wd_def_fgetwc" href="#TOC_wd_def_fgetwc">4.7. fgetwc (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_fgetwc_0" >fgetwc</a>
+	</ul>
+	<H2><a name="wd_def_fgetws" href="#TOC_wd_def_fgetws">4.8. fgetws (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_fgetws_0" >fgetws</a>
+		<li><a href="#wd_ln_fgetws_1" >使用 fgetws</a>
+	</ul>
+	<H2><a name="wd_def_fprintf" href="#TOC_wd_def_fprintf">4.9. fprintf (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_fprintf_0" >fprintf / fwprintf</a>
+	</ul>
+	<H2><a name="wd_def_fputc" href="#TOC_wd_def_fputc">4.10. fputc (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_fputc_0" >fputc</a>
+	</ul>
+	<H2><a name="wd_def_fputs" href="#TOC_wd_def_fputs">4.11. fputs (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_fputs_0" >fputs</a>
+	</ul>
+	<H2><a name="wd_def_fputwc" href="#TOC_wd_def_fputwc">4.12. fputwc (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_fputwc_0" >fputwc</a>
+	</ul>
+	<H2><a name="wd_def_fputws" href="#TOC_wd_def_fputws">4.13. fputws (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_fputws_0" >fputws</a>
+		<li><a href="#wd_ln_fputws_1" >使用 fputws</a>
+	</ul>
+	<H2><a name="wd_def_fscanf" href="#TOC_wd_def_fscanf">4.14. fscanf (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_fscanf_0" >fscanf / fwscanf</a>
+	</ul>
+	<H2><a name="wd_def_fwprintf" href="#TOC_wd_def_fwprintf">4.15. fwprintf (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_fwprintf_0" >fprintf / fwprintf</a>
+	</ul>
+	<H2><a name="wd_def_fwscanf" href="#TOC_wd_def_fwscanf">4.16. fwscanf (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_fwscanf_0" >fscanf / fwscanf</a>
+	</ul>
+	<H2><a name="wd_def_getc" href="#TOC_wd_def_getc">4.17. getc (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_getc_0" >getc</a>
+	</ul>
+	<H2><a name="wd_def_getchar" href="#TOC_wd_def_getchar">4.18. getchar (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_getchar_0" >getchar</a>
+	</ul>
+	<H2><a name="wd_def_gets" href="#TOC_wd_def_gets">4.19. gets (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_gets_0" >gets</a>
+	</ul>
+	<H2><a name="wd_def_getwc" href="#TOC_wd_def_getwc">4.20. getwc (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_getwc_0" >getwc</a>
+	</ul>
+	<H2><a name="wd_def_getwchar" href="#TOC_wd_def_getwchar">4.21. getwchar (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_getwchar_0" >getwchar</a>
+	</ul>
+	<H2><a name="wd_def_isalnum" href="#TOC_wd_def_isalnum">4.22. isalnum (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_isalnum_0" >isalnum</a>
+	</ul>
+	<H2><a name="wd_def_isalpha" href="#TOC_wd_def_isalpha">4.23. isalpha (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_isalpha_0" >isalpha</a>
+	</ul>
+	<H2><a name="wd_def_iscntrl" href="#TOC_wd_def_iscntrl">4.24. iscntrl (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_iscntrl_0" >iscntrl</a>
+	</ul>
+	<H2><a name="wd_def_isdigit" href="#TOC_wd_def_isdigit">4.25. isdigit (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_isdigit_0" >isdigit</a>
+	</ul>
+	<H2><a name="wd_def_isgraph" href="#TOC_wd_def_isgraph">4.26. isgraph (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_isgraph_0" >isgraph</a>
+	</ul>
+	<H2><a name="wd_def_islower" href="#TOC_wd_def_islower">4.27. islower (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_islower_0" >islower</a>
+	</ul>
+	<H2><a name="wd_def_isprint" href="#TOC_wd_def_isprint">4.28. isprint (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_isprint_0" >isprint</a>
+	</ul>
+	<H2><a name="wd_def_ispunct" href="#TOC_wd_def_ispunct">4.29. ispunct (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_ispunct_0" >ispunct</a>
+	</ul>
+	<H2><a name="wd_def_isspace" href="#TOC_wd_def_isspace">4.30. isspace (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_isspace_0" >isspace</a>
+	</ul>
+	<H2><a name="wd_def_isupper" href="#TOC_wd_def_isupper">4.31. isupper (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_isupper_0" >isupper</a>
+	</ul>
+	<H2><a name="wd_def_iswalnum" href="#TOC_wd_def_iswalnum">4.32. iswalnum (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_iswalnum_0" >iswalnum</a>
+	</ul>
+	<H2><a name="wd_def_iswalpha" href="#TOC_wd_def_iswalpha">4.33. iswalpha (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_iswalpha_0" >iswalpha</a>
+	</ul>
+	<H2><a name="wd_def_iswcntrl" href="#TOC_wd_def_iswcntrl">4.34. iswcntrl (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_iswcntrl_0" >iswcntrl</a>
+	</ul>
+	<H2><a name="wd_def_iswdigit" href="#TOC_wd_def_iswdigit">4.35. iswdigit (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_iswdigit_0" >iswdigit</a>
+	</ul>
+	<H2><a name="wd_def_iswgraph" href="#TOC_wd_def_iswgraph">4.36. iswgraph (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_iswgraph_0" >iswgraph</a>
+	</ul>
+	<H2><a name="wd_def_iswlower" href="#TOC_wd_def_iswlower">4.37. iswlower (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_iswlower_0" >iswlower</a>
+	</ul>
+	<H2><a name="wd_def_iswprint" href="#TOC_wd_def_iswprint">4.38. iswprint (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_iswprint_0" >iswprint</a>
+	</ul>
+	<H2><a name="wd_def_iswpunct" href="#TOC_wd_def_iswpunct">4.39. iswpunct (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_iswpunct_0" >iswpunct</a>
+	</ul>
+	<H2><a name="wd_def_iswspace" href="#TOC_wd_def_iswspace">4.40. iswspace (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_iswspace_0" >iswspace</a>
+	</ul>
+	<H2><a name="wd_def_iswupper" href="#TOC_wd_def_iswupper">4.41. iswupper (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_iswupper_0" >iswupper</a>
+	</ul>
+	<H2><a name="wd_def_iswxdigit" href="#TOC_wd_def_iswxdigit">4.42. iswxdigit (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_iswxdigit_0" >iswxdigit</a>
+	</ul>
+	<H2><a name="wd_def_isxdigit" href="#TOC_wd_def_isxdigit">4.43. isxdigit (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_isxdigit_0" >isxdigit</a>
+	</ul>
+	<H2><a name="wd_def_mblen" href="#TOC_wd_def_mblen">4.44. mblen (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_mblen_0" >mblen</a>
+	</ul>
+	<H2><a name="wd_def_mbstowcs" href="#TOC_wd_def_mbstowcs">4.45. mbstowcs (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_mbstowcs_0" >mbstowcs</a>
+	</ul>
+	<H2><a name="wd_def_mbtowcf" href="#TOC_wd_def_mbtowcf">4.46. mbtowcf (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_mbtowcf_0" >mbtowcf / btowc</a>
+	</ul>
+	<H2><a name="wd_def_pragma" href="#TOC_wd_def_pragma">4.47. pragma (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_pragma_0" >pragma pragma</a>
+	</ul>
+	<H2><a name="wd_def_printf" href="#TOC_wd_def_printf">4.48. printf (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_printf_0" >printf</a>
+	</ul>
+	<H2><a name="wd_def_putc" href="#TOC_wd_def_putc">4.49. putc (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_putc_0" >putc</a>
+	</ul>
+	<H2><a name="wd_def_putchar" href="#TOC_wd_def_putchar">4.50. putchar (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_putchar_0" >putchar</a>
+	</ul>
+	<H2><a name="wd_def_puts" href="#TOC_wd_def_puts">4.51. puts (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_puts_0" >puts</a>
+	</ul>
+	<H2><a name="wd_def_putwc" href="#TOC_wd_def_putwc">4.52. putwc (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_putwc_0" >putwc</a>
+	</ul>
+	<H2><a name="wd_def_putwchar" href="#TOC_wd_def_putwchar">4.53. putwchar (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_putwchar_0" >putwchar</a>
+	</ul>
+	<H2><a name="wd_def_qsort" href="#TOC_wd_def_qsort">4.54. qsort (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_qsort_0" >qsort 排序</a>
+	</ul>
+	<H2><a name="wd_def_scanf" href="#TOC_wd_def_scanf">4.55. scanf (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_scanf_0" >scanf</a>
+	</ul>
+	<H2><a name="wd_def_sizeof" href="#TOC_wd_def_sizeof">4.56. sizeof (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_sizeof_0" >operator sizeof</a>
+	</ul>
+	<H2><a name="wd_def_sprintf" href="#TOC_wd_def_sprintf">4.57. sprintf (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_sprintf_0" >sprintf / swprintf</a>
+	</ul>
+	<H2><a name="wd_def_sscanf" href="#TOC_wd_def_sscanf">4.58. sscanf (2)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_sscanf_0" >int sscanf <code>(string str, string fmt, mixed var1, mixed var2 ... )</code> &ndash; 从一个字符串中读进与指定格式相符的数据.</a>
+		<li><a href="#wd_ln_sscanf_1" >sscanf</a>
+	</ul>
+	<H2><a name="wd_def_strcat" href="#TOC_wd_def_strcat">4.59. strcat (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strcat_0" >strcat</a>
+	</ul>
+	<H2><a name="wd_def_strchr" href="#TOC_wd_def_strchr">4.60. strchr (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strchr_0" >strchr</a>
+	</ul>
+	<H2><a name="wd_def_strcmp" href="#TOC_wd_def_strcmp">4.61. strcmp (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strcmp_0" >strcmp</a>
+	</ul>
+	<H2><a name="wd_def_strcoll" href="#TOC_wd_def_strcoll">4.62. strcoll (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strcoll_0" >strcoll</a>
+	</ul>
+	<H2><a name="wd_def_strcpy" href="#TOC_wd_def_strcpy">4.63. strcpy (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strcpy_0" >strcpy</a>
+	</ul>
+	<H2><a name="wd_def_strcspn" href="#TOC_wd_def_strcspn">4.64. strcspn (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strcspn_0" >strcspn</a>
+	</ul>
+	<H2><a name="wd_def_strftime" href="#TOC_wd_def_strftime">4.65. strftime (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strftime_0" >strftime</a>
+	</ul>
+	<H2><a name="wd_def_strlen" href="#TOC_wd_def_strlen">4.66. strlen (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strlen_0" >strlen</a>
+	</ul>
+	<H2><a name="wd_def_strncat" href="#TOC_wd_def_strncat">4.67. strncat (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strncat_0" >strncat</a>
+	</ul>
+	<H2><a name="wd_def_strncmp" href="#TOC_wd_def_strncmp">4.68. strncmp (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strncmp_0" >strncmp</a>
+	</ul>
+	<H2><a name="wd_def_strncpy" href="#TOC_wd_def_strncpy">4.69. strncpy (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strncpy_0" >strncpy</a>
+	</ul>
+	<H2><a name="wd_def_strpbrk" href="#TOC_wd_def_strpbrk">4.70. strpbrk (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strpbrk_0" >strpbrk</a>
+	</ul>
+	<H2><a name="wd_def_strptime" href="#TOC_wd_def_strptime">4.71. strptime (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strptime_0" >strptime</a>
+	</ul>
+	<H2><a name="wd_def_strrchr" href="#TOC_wd_def_strrchr">4.72. strrchr (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strrchr_0" >strrchr</a>
+	</ul>
+	<H2><a name="wd_def_strspn" href="#TOC_wd_def_strspn">4.73. strspn (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strspn_0" >strspn</a>
+	</ul>
+	<H2><a name="wd_def_strtod" href="#TOC_wd_def_strtod">4.74. strtod (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strtod_0" >strtod</a>
+	</ul>
+	<H2><a name="wd_def_strtok" href="#TOC_wd_def_strtok">4.75. strtok (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strtok_0" >strtok</a>
+	</ul>
+	<H2><a name="wd_def_strtol" href="#TOC_wd_def_strtol">4.76. strtol (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strtol_0" >strtol</a>
+	</ul>
+	<H2><a name="wd_def_strtoul" href="#TOC_wd_def_strtoul">4.77. strtoul (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_strtoul_0" >strtoul</a>
+	</ul>
+	<H2><a name="wd_def_swprintf" href="#TOC_wd_def_swprintf">4.78. swprintf (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_swprintf_0" >sprintf / swprintf</a>
+	</ul>
+	<H2><a name="wd_def_tolower" href="#TOC_wd_def_tolower">4.79. tolower (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_tolower_0" >tolower</a>
+	</ul>
+	<H2><a name="wd_def_toupper" href="#TOC_wd_def_toupper">4.80. toupper (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_toupper_0" >toupper</a>
+	</ul>
+	<H2><a name="wd_def_towlower" href="#TOC_wd_def_towlower">4.81. towlower (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_towlower_0" >towlower</a>
+	</ul>
+	<H2><a name="wd_def_towupper" href="#TOC_wd_def_towupper">4.82. towupper (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_towupper_0" >towupper</a>
+	</ul>
+	<H2><a name="wd_def_undef" href="#TOC_wd_def_undef">4.83. undef (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_undef_0" >#undef undef</a>
+	</ul>
+	<H2><a name="wd_def_ungetc" href="#TOC_wd_def_ungetc">4.84. ungetc (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_ungetc_0" >ungetc</a>
+	</ul>
+	<H2><a name="wd_def_ungetwc" href="#TOC_wd_def_ungetwc">4.85. ungetwc (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_ungetwc_0" >ungetwc</a>
+	</ul>
+	<H2><a name="wd_def_va_arg" href="#TOC_wd_def_va_arg">4.86. va_arg (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_va_arg_0" >va_arg</a>
+	</ul>
+	<H2><a name="wd_def_va_end" href="#TOC_wd_def_va_end">4.87. va_end (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_va_end_0" >va_end</a>
+	</ul>
+	<H2><a name="wd_def_va_start" href="#TOC_wd_def_va_start">4.88. va_start (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_va_start_0" >va_start</a>
+	</ul>
+	<H2><a name="wd_def_vfprintf" href="#TOC_wd_def_vfprintf">4.89. vfprintf (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_vfprintf_0" >vfprintf / vfwprintf</a>
+	</ul>
+	<H2><a name="wd_def_vfwprintf" href="#TOC_wd_def_vfwprintf">4.90. vfwprintf (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_vfwprintf_0" >vfprintf / vfwprintf</a>
+	</ul>
+	<H2><a name="wd_def_vprintf" href="#TOC_wd_def_vprintf">4.91. vprintf (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_vprintf_0" >vprintf</a>
+	</ul>
+	<H2><a name="wd_def_vsprintf" href="#TOC_wd_def_vsprintf">4.92. vsprintf (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_vsprintf_0" >vsprintf / vswprintf)</a>
+	</ul>
+	<H2><a name="wd_def_vswprintf" href="#TOC_wd_def_vswprintf">4.93. vswprintf (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_vswprintf_0" >vsprintf / vswprintf)</a>
+	</ul>
+	<H2><a name="wd_def_wcscat" href="#TOC_wd_def_wcscat">4.94. wcscat (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcscat_0" >wcscat</a>
+	</ul>
+	<H2><a name="wd_def_wcschr" href="#TOC_wd_def_wcschr">4.95. wcschr (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcschr_0" >wcschr</a>
+	</ul>
+	<H2><a name="wd_def_wcscmp" href="#TOC_wd_def_wcscmp">4.96. wcscmp (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcscmp_0" >wcscmp</a>
+	</ul>
+	<H2><a name="wd_def_wcscoll" href="#TOC_wd_def_wcscoll">4.97. wcscoll (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcscoll_0" >wcscoll</a>
+	</ul>
+	<H2><a name="wd_def_wcscpy" href="#TOC_wd_def_wcscpy">4.98. wcscpy (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcscpy_0" >wcscpy</a>
+	</ul>
+	<H2><a name="wd_def_wcscspn" href="#TOC_wd_def_wcscspn">4.99. wcscspn (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcscspn_0" >wcscspn</a>
+	</ul>
+	<H2><a name="wd_def_wcsftime" href="#TOC_wd_def_wcsftime">4.100. wcsftime (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcsftime_0" >wcsftime</a>
+	</ul>
+	<H2><a name="wd_def_wcslen" href="#TOC_wd_def_wcslen">4.101. wcslen (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcslen_0" >wcslen</a>
+	</ul>
+	<H2><a name="wd_def_wcsncat" href="#TOC_wd_def_wcsncat">4.102. wcsncat (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcsncat_0" >wcsncat</a>
+	</ul>
+	<H2><a name="wd_def_wcsncmp" href="#TOC_wd_def_wcsncmp">4.103. wcsncmp (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcsncmp_0" >wcsncmp</a>
+	</ul>
+	<H2><a name="wd_def_wcsncpy" href="#TOC_wd_def_wcsncpy">4.104. wcsncpy (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcsncpy_0" >wcsncpy</a>
+	</ul>
+	<H2><a name="wd_def_wcspbrk" href="#TOC_wd_def_wcspbrk">4.105. wcspbrk (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcspbrk_0" >wcspbrk</a>
+	</ul>
+	<H2><a name="wd_def_wcsrchr" href="#TOC_wd_def_wcsrchr">4.106. wcsrchr (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcsrchr_0" >wcsrchr</a>
+	</ul>
+	<H2><a name="wd_def_wcsspn" href="#TOC_wd_def_wcsspn">4.107. wcsspn (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcsspn_0" >wcsspn</a>
+	</ul>
+	<H2><a name="wd_def_wcsstr" href="#TOC_wd_def_wcsstr">4.108. wcsstr (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcsstr_0" >wcswcs / wcsstr</a>
+	</ul>
+	<H2><a name="wd_def_wcstod" href="#TOC_wd_def_wcstod">4.109. wcstod (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcstod_0" >wcstod</a>
+	</ul>
+	<H2><a name="wd_def_wcstok" href="#TOC_wd_def_wcstok">4.110. wcstok (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcstok_0" >wcstok</a>
+	</ul>
+	<H2><a name="wd_def_wcstol" href="#TOC_wd_def_wcstol">4.111. wcstol (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcstol_0" >wcstol</a>
+	</ul>
+	<H2><a name="wd_def_wcstombs" href="#TOC_wd_def_wcstombs">4.112. wcstombs (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcstombs_0" >wcstombs</a>
+	</ul>
+	<H2><a name="wd_def_wcstoul" href="#TOC_wd_def_wcstoul">4.113. wcstoul (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcstoul_0" >wcstoul</a>
+	</ul>
+	<H2><a name="wd_def_wcswcs" href="#TOC_wd_def_wcswcs">4.114. wcswcs (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcswcs_0" >wcswcs / wcsstr</a>
+	</ul>
+	<H2><a name="wd_def_wcswidth" href="#TOC_wd_def_wcswidth">4.115. wcswidth (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcswidth_0" >wcswidth</a>
+	</ul>
+	<H2><a name="wd_def_wctob" href="#TOC_wd_def_wctob">4.116. wctob (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wctob_0" >wctombf / wctob</a>
+	</ul>
+	<H2><a name="wd_def_wctombf" href="#TOC_wd_def_wctombf">4.117. wctombf (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wctombf_0" >wctombf / wctob</a>
+	</ul>
+	<H2><a name="wd_def_wcwidth" href="#TOC_wd_def_wcwidth">4.118. wcwidth (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wcwidth_0" >wcwidth</a>
+	</ul>
+	<H2><a name="wd_def_wmemchr" href="#TOC_wd_def_wmemchr">4.119. wmemchr (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wmemchr_0" >另外还有对应于 memory 操作的 wmemcpy， wmemchr， wmemcmp， wmemmove， wmemset．</a>
+	</ul>
+	<H2><a name="wd_def_wmemcmp" href="#TOC_wd_def_wmemcmp">4.120. wmemcmp (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wmemcmp_0" >另外还有对应于 memory 操作的 wmemcpy， wmemchr， wmemcmp， wmemmove， wmemset．</a>
+	</ul>
+	<H2><a name="wd_def_wmemcpy" href="#TOC_wd_def_wmemcpy">4.121. wmemcpy (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wmemcpy_0" >另外还有对应于 memory 操作的 wmemcpy， wmemchr， wmemcmp， wmemmove， wmemset．</a>
+	</ul>
+	<H2><a name="wd_def_wmemmove" href="#TOC_wd_def_wmemmove">4.122. wmemmove (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wmemmove_0" >另外还有对应于 memory 操作的 wmemcpy， wmemchr， wmemcmp， wmemmove， wmemset．</a>
+	</ul>
+	<H2><a name="wd_def_wmemset" href="#TOC_wd_def_wmemset">4.123. wmemset (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_wmemset_0" >另外还有对应于 memory 操作的 wmemcpy， wmemchr， wmemcmp， wmemmove， wmemset．</a>
+	</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    ﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_23735199" href="#HEAD_23735199">1. Overview</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_a55c8e6a" href="#HEAD_a55c8e6a">1.1. Beginner <a><b>C-Beginner</b></a></a></li>
+		<li><a name="TOC_HEAD_c9261" href="#HEAD_c9261">1.2. 指针 </a></li>
+		<li><a name="TOC_HEAD_76d117a7" href="#HEAD_76d117a7">1.3. Preprocessor (预编译) <a><b>预处理</b></a></a></li>
+		<li><a name="TOC_HEAD_32af2e2e" href="#HEAD_32af2e2e">1.4. Macro (宏) </a></li>
+	</menu>
+	<b><a name="TOC_HEAD_1c42a52" href="#HEAD_1c42a52">2. <a href="../tags/C-Function.html" target="_blank">Functions</a></a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_4051d0d2" href="#HEAD_4051d0d2">2.1. 字符串操作 </a></li>
+		<li><a name="TOC_HEAD_dd4be49" href="#HEAD_dd4be49">2.2. 宽窄字符串处理函数对照表 </a></li>
+		<li><a name="TOC_HEAD_95629f0b" href="#HEAD_95629f0b">2.3. Math 函数 </a></li>
+		<li><a name="TOC_HEAD_a2c20_0" href="#HEAD_a2c20_0">2.4. 其他</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_1fbcc8d1" href="#HEAD_1fbcc8d1">3. Coverage: 17%</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_f255693a" href="#HEAD_f255693a">3.1. Nodes: 0/0</a></li>
+		<li><a name="TOC_HEAD_12e63f5d" href="#HEAD_12e63f5d">3.2. Tags: 5/6</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_58293371" href="#HEAD_58293371">4. Index (123)</a></b><br>
+	<menu>
+		<li><a name="TOC_wd_def_atof" href="#wd_def_atof">4.1. atof (1) </a></li>
+		<li><a name="TOC_wd_def_atoi" href="#wd_def_atoi">4.2. atoi (1) </a></li>
+		<li><a name="TOC_wd_def_btowc" href="#wd_def_btowc">4.3. btowc (1) </a></li>
+		<li><a name="TOC_wd_def_enum" href="#wd_def_enum">4.4. enum (1) </a></li>
+		<li><a name="TOC_wd_def_fgetc" href="#wd_def_fgetc">4.5. fgetc (1) </a></li>
+		<li><a name="TOC_wd_def_fgets" href="#wd_def_fgets">4.6. fgets (1) </a></li>
+		<li><a name="TOC_wd_def_fgetwc" href="#wd_def_fgetwc">4.7. fgetwc (1) </a></li>
+		<li><a name="TOC_wd_def_fgetws" href="#wd_def_fgetws">4.8. fgetws (2) </a></li>
+		<li><a name="TOC_wd_def_fprintf" href="#wd_def_fprintf">4.9. fprintf (1) </a></li>
+		<li><a name="TOC_wd_def_fputc" href="#wd_def_fputc">4.10. fputc (1) </a></li>
+		<li><a name="TOC_wd_def_fputs" href="#wd_def_fputs">4.11. fputs (1) </a></li>
+		<li><a name="TOC_wd_def_fputwc" href="#wd_def_fputwc">4.12. fputwc (1) </a></li>
+		<li><a name="TOC_wd_def_fputws" href="#wd_def_fputws">4.13. fputws (2) </a></li>
+		<li><a name="TOC_wd_def_fscanf" href="#wd_def_fscanf">4.14. fscanf (1) </a></li>
+		<li><a name="TOC_wd_def_fwprintf" href="#wd_def_fwprintf">4.15. fwprintf (1) </a></li>
+		<li><a name="TOC_wd_def_fwscanf" href="#wd_def_fwscanf">4.16. fwscanf (1) </a></li>
+		<li><a name="TOC_wd_def_getc" href="#wd_def_getc">4.17. getc (1) </a></li>
+		<li><a name="TOC_wd_def_getchar" href="#wd_def_getchar">4.18. getchar (1) </a></li>
+		<li><a name="TOC_wd_def_gets" href="#wd_def_gets">4.19. gets (1) </a></li>
+		<li><a name="TOC_wd_def_getwc" href="#wd_def_getwc">4.20. getwc (1) </a></li>
+		<li><a name="TOC_wd_def_getwchar" href="#wd_def_getwchar">4.21. getwchar (1) </a></li>
+		<li><a name="TOC_wd_def_isalnum" href="#wd_def_isalnum">4.22. isalnum (1) </a></li>
+		<li><a name="TOC_wd_def_isalpha" href="#wd_def_isalpha">4.23. isalpha (1) </a></li>
+		<li><a name="TOC_wd_def_iscntrl" href="#wd_def_iscntrl">4.24. iscntrl (1) </a></li>
+		<li><a name="TOC_wd_def_isdigit" href="#wd_def_isdigit">4.25. isdigit (1) </a></li>
+		<li><a name="TOC_wd_def_isgraph" href="#wd_def_isgraph">4.26. isgraph (1) </a></li>
+		<li><a name="TOC_wd_def_islower" href="#wd_def_islower">4.27. islower (1) </a></li>
+		<li><a name="TOC_wd_def_isprint" href="#wd_def_isprint">4.28. isprint (1) </a></li>
+		<li><a name="TOC_wd_def_ispunct" href="#wd_def_ispunct">4.29. ispunct (1) </a></li>
+		<li><a name="TOC_wd_def_isspace" href="#wd_def_isspace">4.30. isspace (1) </a></li>
+		<li><a name="TOC_wd_def_isupper" href="#wd_def_isupper">4.31. isupper (1) </a></li>
+		<li><a name="TOC_wd_def_iswalnum" href="#wd_def_iswalnum">4.32. iswalnum (1) </a></li>
+		<li><a name="TOC_wd_def_iswalpha" href="#wd_def_iswalpha">4.33. iswalpha (1) </a></li>
+		<li><a name="TOC_wd_def_iswcntrl" href="#wd_def_iswcntrl">4.34. iswcntrl (1) </a></li>
+		<li><a name="TOC_wd_def_iswdigit" href="#wd_def_iswdigit">4.35. iswdigit (1) </a></li>
+		<li><a name="TOC_wd_def_iswgraph" href="#wd_def_iswgraph">4.36. iswgraph (1) </a></li>
+		<li><a name="TOC_wd_def_iswlower" href="#wd_def_iswlower">4.37. iswlower (1) </a></li>
+		<li><a name="TOC_wd_def_iswprint" href="#wd_def_iswprint">4.38. iswprint (1) </a></li>
+		<li><a name="TOC_wd_def_iswpunct" href="#wd_def_iswpunct">4.39. iswpunct (1) </a></li>
+		<li><a name="TOC_wd_def_iswspace" href="#wd_def_iswspace">4.40. iswspace (1) </a></li>
+		<li><a name="TOC_wd_def_iswupper" href="#wd_def_iswupper">4.41. iswupper (1) </a></li>
+		<li><a name="TOC_wd_def_iswxdigit" href="#wd_def_iswxdigit">4.42. iswxdigit (1) </a></li>
+		<li><a name="TOC_wd_def_isxdigit" href="#wd_def_isxdigit">4.43. isxdigit (1) </a></li>
+		<li><a name="TOC_wd_def_mblen" href="#wd_def_mblen">4.44. mblen (1) </a></li>
+		<li><a name="TOC_wd_def_mbstowcs" href="#wd_def_mbstowcs">4.45. mbstowcs (1) </a></li>
+		<li><a name="TOC_wd_def_mbtowcf" href="#wd_def_mbtowcf">4.46. mbtowcf (1) </a></li>
+		<li><a name="TOC_wd_def_pragma" href="#wd_def_pragma">4.47. pragma (1) </a></li>
+		<li><a name="TOC_wd_def_printf" href="#wd_def_printf">4.48. printf (1) </a></li>
+		<li><a name="TOC_wd_def_putc" href="#wd_def_putc">4.49. putc (1) </a></li>
+		<li><a name="TOC_wd_def_putchar" href="#wd_def_putchar">4.50. putchar (1) </a></li>
+		<li><a name="TOC_wd_def_puts" href="#wd_def_puts">4.51. puts (1) </a></li>
+		<li><a name="TOC_wd_def_putwc" href="#wd_def_putwc">4.52. putwc (1) </a></li>
+		<li><a name="TOC_wd_def_putwchar" href="#wd_def_putwchar">4.53. putwchar (1) </a></li>
+		<li><a name="TOC_wd_def_qsort" href="#wd_def_qsort">4.54. qsort (1) </a></li>
+		<li><a name="TOC_wd_def_scanf" href="#wd_def_scanf">4.55. scanf (1) </a></li>
+		<li><a name="TOC_wd_def_sizeof" href="#wd_def_sizeof">4.56. sizeof (1) </a></li>
+		<li><a name="TOC_wd_def_sprintf" href="#wd_def_sprintf">4.57. sprintf (1) </a></li>
+		<li><a name="TOC_wd_def_sscanf" href="#wd_def_sscanf">4.58. sscanf (2) </a></li>
+		<li><a name="TOC_wd_def_strcat" href="#wd_def_strcat">4.59. strcat (1) </a></li>
+		<li><a name="TOC_wd_def_strchr" href="#wd_def_strchr">4.60. strchr (1) </a></li>
+		<li><a name="TOC_wd_def_strcmp" href="#wd_def_strcmp">4.61. strcmp (1) </a></li>
+		<li><a name="TOC_wd_def_strcoll" href="#wd_def_strcoll">4.62. strcoll (1) </a></li>
+		<li><a name="TOC_wd_def_strcpy" href="#wd_def_strcpy">4.63. strcpy (1) </a></li>
+		<li><a name="TOC_wd_def_strcspn" href="#wd_def_strcspn">4.64. strcspn (1) </a></li>
+		<li><a name="TOC_wd_def_strftime" href="#wd_def_strftime">4.65. strftime (1) </a></li>
+		<li><a name="TOC_wd_def_strlen" href="#wd_def_strlen">4.66. strlen (1) </a></li>
+		<li><a name="TOC_wd_def_strncat" href="#wd_def_strncat">4.67. strncat (1) </a></li>
+		<li><a name="TOC_wd_def_strncmp" href="#wd_def_strncmp">4.68. strncmp (1) </a></li>
+		<li><a name="TOC_wd_def_strncpy" href="#wd_def_strncpy">4.69. strncpy (1) </a></li>
+		<li><a name="TOC_wd_def_strpbrk" href="#wd_def_strpbrk">4.70. strpbrk (1) </a></li>
+		<li><a name="TOC_wd_def_strptime" href="#wd_def_strptime">4.71. strptime (1) </a></li>
+		<li><a name="TOC_wd_def_strrchr" href="#wd_def_strrchr">4.72. strrchr (1) </a></li>
+		<li><a name="TOC_wd_def_strspn" href="#wd_def_strspn">4.73. strspn (1) </a></li>
+		<li><a name="TOC_wd_def_strtod" href="#wd_def_strtod">4.74. strtod (1) </a></li>
+		<li><a name="TOC_wd_def_strtok" href="#wd_def_strtok">4.75. strtok (1) </a></li>
+		<li><a name="TOC_wd_def_strtol" href="#wd_def_strtol">4.76. strtol (1) </a></li>
+		<li><a name="TOC_wd_def_strtoul" href="#wd_def_strtoul">4.77. strtoul (1) </a></li>
+		<li><a name="TOC_wd_def_swprintf" href="#wd_def_swprintf">4.78. swprintf (1) </a></li>
+		<li><a name="TOC_wd_def_tolower" href="#wd_def_tolower">4.79. tolower (1) </a></li>
+		<li><a name="TOC_wd_def_toupper" href="#wd_def_toupper">4.80. toupper (1) </a></li>
+		<li><a name="TOC_wd_def_towlower" href="#wd_def_towlower">4.81. towlower (1) </a></li>
+		<li><a name="TOC_wd_def_towupper" href="#wd_def_towupper">4.82. towupper (1) </a></li>
+		<li><a name="TOC_wd_def_undef" href="#wd_def_undef">4.83. undef (1) </a></li>
+		<li><a name="TOC_wd_def_ungetc" href="#wd_def_ungetc">4.84. ungetc (1) </a></li>
+		<li><a name="TOC_wd_def_ungetwc" href="#wd_def_ungetwc">4.85. ungetwc (1) </a></li>
+		<li><a name="TOC_wd_def_va_arg" href="#wd_def_va_arg">4.86. va_arg (1) </a></li>
+		<li><a name="TOC_wd_def_va_end" href="#wd_def_va_end">4.87. va_end (1) </a></li>
+		<li><a name="TOC_wd_def_va_start" href="#wd_def_va_start">4.88. va_start (1) </a></li>
+		<li><a name="TOC_wd_def_vfprintf" href="#wd_def_vfprintf">4.89. vfprintf (1) </a></li>
+		<li><a name="TOC_wd_def_vfwprintf" href="#wd_def_vfwprintf">4.90. vfwprintf (1) </a></li>
+		<li><a name="TOC_wd_def_vprintf" href="#wd_def_vprintf">4.91. vprintf (1) </a></li>
+		<li><a name="TOC_wd_def_vsprintf" href="#wd_def_vsprintf">4.92. vsprintf (1) </a></li>
+		<li><a name="TOC_wd_def_vswprintf" href="#wd_def_vswprintf">4.93. vswprintf (1) </a></li>
+		<li><a name="TOC_wd_def_wcscat" href="#wd_def_wcscat">4.94. wcscat (1) </a></li>
+		<li><a name="TOC_wd_def_wcschr" href="#wd_def_wcschr">4.95. wcschr (1) </a></li>
+		<li><a name="TOC_wd_def_wcscmp" href="#wd_def_wcscmp">4.96. wcscmp (1) </a></li>
+		<li><a name="TOC_wd_def_wcscoll" href="#wd_def_wcscoll">4.97. wcscoll (1) </a></li>
+		<li><a name="TOC_wd_def_wcscpy" href="#wd_def_wcscpy">4.98. wcscpy (1) </a></li>
+		<li><a name="TOC_wd_def_wcscspn" href="#wd_def_wcscspn">4.99. wcscspn (1) </a></li>
+		<li><a name="TOC_wd_def_wcsftime" href="#wd_def_wcsftime">4.100. wcsftime (1) </a></li>
+		<li><a name="TOC_wd_def_wcslen" href="#wd_def_wcslen">4.101. wcslen (1) </a></li>
+		<li><a name="TOC_wd_def_wcsncat" href="#wd_def_wcsncat">4.102. wcsncat (1) </a></li>
+		<li><a name="TOC_wd_def_wcsncmp" href="#wd_def_wcsncmp">4.103. wcsncmp (1) </a></li>
+		<li><a name="TOC_wd_def_wcsncpy" href="#wd_def_wcsncpy">4.104. wcsncpy (1) </a></li>
+		<li><a name="TOC_wd_def_wcspbrk" href="#wd_def_wcspbrk">4.105. wcspbrk (1) </a></li>
+		<li><a name="TOC_wd_def_wcsrchr" href="#wd_def_wcsrchr">4.106. wcsrchr (1) </a></li>
+		<li><a name="TOC_wd_def_wcsspn" href="#wd_def_wcsspn">4.107. wcsspn (1) </a></li>
+		<li><a name="TOC_wd_def_wcsstr" href="#wd_def_wcsstr">4.108. wcsstr (1) </a></li>
+		<li><a name="TOC_wd_def_wcstod" href="#wd_def_wcstod">4.109. wcstod (1) </a></li>
+		<li><a name="TOC_wd_def_wcstok" href="#wd_def_wcstok">4.110. wcstok (1) </a></li>
+		<li><a name="TOC_wd_def_wcstol" href="#wd_def_wcstol">4.111. wcstol (1) </a></li>
+		<li><a name="TOC_wd_def_wcstombs" href="#wd_def_wcstombs">4.112. wcstombs (1) </a></li>
+		<li><a name="TOC_wd_def_wcstoul" href="#wd_def_wcstoul">4.113. wcstoul (1) </a></li>
+		<li><a name="TOC_wd_def_wcswcs" href="#wd_def_wcswcs">4.114. wcswcs (1) </a></li>
+		<li><a name="TOC_wd_def_wcswidth" href="#wd_def_wcswidth">4.115. wcswidth (1) </a></li>
+		<li><a name="TOC_wd_def_wctob" href="#wd_def_wctob">4.116. wctob (1) </a></li>
+		<li><a name="TOC_wd_def_wctombf" href="#wd_def_wctombf">4.117. wctombf (1) </a></li>
+		<li><a name="TOC_wd_def_wcwidth" href="#wd_def_wcwidth">4.118. wcwidth (1) </a></li>
+		<li><a name="TOC_wd_def_wmemchr" href="#wd_def_wmemchr">4.119. wmemchr (1) </a></li>
+		<li><a name="TOC_wd_def_wmemcmp" href="#wd_def_wmemcmp">4.120. wmemcmp (1) </a></li>
+		<li><a name="TOC_wd_def_wmemcpy" href="#wd_def_wmemcpy">4.121. wmemcpy (1) </a></li>
+		<li><a name="TOC_wd_def_wmemmove" href="#wd_def_wmemmove">4.122. wmemmove (1) </a></li>
+		<li><a name="TOC_wd_def_wmemset" href="#wd_def_wmemset">4.123. wmemset (1) </a></li>
+	</menu>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

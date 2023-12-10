@@ -1,0 +1,54 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC231207B.sh</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC231207B.sh</h1>
+            <h3>Generate dot</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/CFG.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>CFG</a>&nbsp;<a href="../tags/L-dot.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>L-dot</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/CFG.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>CFG</a>&nbsp;<a href="../tags/LLVM-17.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-17</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<H3><a name="HEAD_705695dd" href="#TOC_HEAD_705695dd">生成控制流图</a></H3><ul><a href="../tags/CFG.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>CFG</a>&nbsp;</ul>
+<ol>
+	<li>Install dot tool &ndash; <code>sudo apt&ndash;get install &ndash;y graphviz&ndash;doc libgraphviz&ndash;dev graphviz</code></li>
+	<br />
+	<li>Generate .ll file &ndash; <code>clang &ndash;emit&ndash;llvm hello.c &ndash;S &ndash;o hello.ll</code></li>
+	<br />
+	<li>Generate .dot file &ndash; <code>opt &ndash;dot&ndash;cfg hello.ll</code></li>
+	<ul>
+		<li><a name="HEAD_HIDDEN_c5345662">LLVM 17: <code>/usr/lib/llvm&ndash;17/bin/opt &ndash;passes=dot&ndash;cfg hello.ll</code> &nbsp;<a href="../tags/LLVM-17.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-17</a></li>
+		<br />
+	</ul>
+	<li>Generate .png file &ndash; <code>dot &ndash;Tpng &ndash;o main.png .main.dot</code></li>
+	<br />
+</ol>
+	<H3><a name="HEAD_675ec80" href="#TOC_HEAD_675ec80">refer</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_8b54ecc6">&quot;2022&ndash;10&ndash;11 LLVM Opt view cfg 优雅展示程序结构 – Qfrost.html&quot;</li>
+	<br />
+</ul>
+	<hr/>
+<pre><code>#/bin/sh
+
+opt -dot-cfg hello.ll
+dot -Tpng -o main.png .main.dot
+/usr/lib/llvm-17/bin/opt -passes=dot-callgraph hello.ll
+dot -Tpng -o hello.callgraph.png hello.ll.callgraph.dot
+
+echo "output: done!"</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

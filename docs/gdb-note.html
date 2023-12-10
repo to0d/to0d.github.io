@@ -1,0 +1,440 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>GDB Note</title>
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md2.css">
+        <link rel="stylesheet" type="text/css" href="css/inote_md_tb1.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/blog_all.css">
+        
+    </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PCRLYHSNM7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PCRLYHSNM7');
+</script>
+    
+<body>
+    <div id="in-main">
+        <h1 style="text-align:center">GDB Note</h1>
+        <span class="published">
+            <i class="fa fa-calendar"></i>
+            <time>2018-07-27</time>
+            <i><a href="../tags/Outline.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Outline</a>&nbsp;<a href="../tags/gdb.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gdb</a>&nbsp;</i>
+        </span>
+        <br/><br/>
+        <div id="in-ttb"><ol>
+<a name="HEAD_todo">TODO:</a>
+	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">Internal debug data </a></li>
+	<li><a name="TOC_MARK_2" href="#MARK_2" id="in-ttl">Support new language/target/debug format </a></li>
+</ol>
+</div>
+        <div class="entry-content">
+	<H2><a name="HEAD_23735199" href="#TOC_HEAD_23735199">1. Overview</a></H2>
+	<H3><a name="GDB-SUPPORT-LANG" href="#TOC_GDB-SUPPORT-LANG">1.1. Support Languages</a></H3><ul><a href="../tags/PL-Support.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>PL-Support</a>&nbsp;</ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_21957cc5">Refer &ndash; <a href="gdb-homepage.html#GDB-HOME-SUPPORT-LANG-1" target="_blank">GDB supports the following languages</a></li>
+	<ul>
+		<li>Ada</li>
+		<li>Assembly</li>
+		<li>C</li>
+		<li>C++</li>
+		<li>D</li>
+		<li>Fortran</li>
+		<li>Go</li>
+		<li>Objective&ndash;C</li>
+		<li>OpenCL</li>
+		<li>Modula&ndash;2</li>
+		<li>Pascal</li>
+		<li>Rust</li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="GDB-SUPPORT-OS" href="#TOC_GDB-SUPPORT-OS">1.2. Support OS</a></H3><ul></ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_15ab6d87">Refer &ndash; GDB&ndash;DOC&ndash;SUPPORT&ndash;TARGET&ndash;1</li>
+	<ul>
+		<li>AIX</li>
+		<li>Cygwin</li>
+		<li>DJGPP</li>
+		<li>Darwin</li>
+		<li>FreeBSD</li>
+		<li>Hurd</li>
+		<li>Linux</li>
+		<li>kFreeBSD</li>
+		<li>LynxOS</li>
+		<li>MinGW</li>
+		<li>mingw32ce</li>
+		<li>NetBSD</li>
+		<li>OpenBSD</li>
+		<li>QNX</li>
+		<li>Solaris</li>
+		<li>Windows CE</li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="GDB-SUPPORT-OBJ" href="#TOC_GDB-SUPPORT-OBJ">1.3. Support Object format</a></H3><ul></ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_198975fb">Refer &ndash; <a href="gdb-internals-manual.html#GDB-DOC-SUPPORT-OBJ-1" target="_blank">Object File Formats</a></li>
+	<ul>
+		<li><a href="../tags/ELF.html" target="_blank"><i class="fa fa-tags fa-fw"></i><ruby>ELF<rt>Executable and Linkable Format</rt></ruby></a></li>
+		<li><a href="../tags/COFF.html" target="_blank"><i class="fa fa-tags fa-fw"></i><ruby>COFF<rt>Common Object File Format</rt></ruby></a></li>
+		<li><a href="../tags/ECOFF.html" target="_blank"><i class="fa fa-tags fa-fw"></i><ruby>ECOFF<rt>Extended common object file format</rt></ruby></a></li>
+		<li><a href="../tags/PE.html" target="_blank"><i class="fa fa-tags fa-fw"></i>PE</a></li>
+		<br />
+	</ul>
+</ul>
+	<H3><a name="HEAD_dff06ea8" href="#TOC_HEAD_dff06ea8">1.4. Commands</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_67da6fae">refer &ndash; &quot;How to use gdb&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_c7a1b693" href="#TOC_HEAD_c7a1b693">1.5. Core file debugging <a name="wd_ln_core-dump_0" target="_blank" href="../tags/core-dump.html"><i class="fa fa-tags fa-fw"></i>core-dump</a></a></H3>
+<ul>
+	<li>当进程接收到某些信号而导致异常退出时，就会生成 coredump 文件</li>
+	<li>一个core文件首先是一个ELF文件，type为CORE, 通过 readelf 查看</li>
+	<br />
+	<li><a name="HEAD_HIDDEN_402594f2">refer &ndash; &quot;2023&ndash;04&ndash;30 Linux CoreDump 生成原理剖析 知乎.html&quot;</li>
+	<li><a name="HEAD_HIDDEN_223f5d4b">refer &ndash; &quot;2022&ndash;08&ndash;09 Linux下coredump文件是怎么生成的 知乎.html&quot;</li>
+	<li><a name="HEAD_HIDDEN_821cf18e">refer &ndash; &quot;How to debug core dump in gdb&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_831c5eda" href="#TOC_HEAD_831c5eda">1.6. Issues</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_4da9cfee">refer &ndash; &quot;GDB issue &ndash; gdb no symbol var defined&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_4c4d5b7f" href="#TOC_HEAD_4c4d5b7f">1.7. 脚本  <a name="wd_ln_gdb-Script_0" target="_blank" href="../tags/gdb-Script.html"><i class="fa fa-tags fa-fw"></i>gdb-Script</a></a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_e23f91b8">refer &ndash; <a href="tc230513a.gdb.html" target="_blank">TC230513A.gdb</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_79ceadde" href="#TOC_HEAD_79ceadde">2. Design</a></H2>
+	<H3><a name="GDB-NOTE-GDB-INTERNAL-DEBUG-DATA-1" href="#TOC_GDB-NOTE-GDB-INTERNAL-DEBUG-DATA-1">2.1. Internal debug data</a> <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></H3><ul></ul>
+<ul>
+	<li><a href="../tags/psymtabs.html" target="_blank"><i class="fa fa-tags fa-fw"></i><ruby>psymtabs<rt>Partial Symbol Tables</rt></ruby></a> ??</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_1e63f130" href="#TOC_HEAD_1e63f130">2.2. Call function in GDB</a></H3>
+<ul>
+	<li><a name="HEAD_HIDDEN_6e6f5f52">refer &ndash; &quot;2018&ndash;04&ndash;29 gdb 如何调用函数.html&quot;</li>
+	<li>refer &ndash; <a><b>DBI</b></a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_a6f2893e" href="#TOC_HEAD_a6f2893e">2.3. <a href="../tags/backtrace.html" target="_blank"><i class="fa fa-tags fa-fw"></i>backtrace</a></a></H3>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_e9916437" href="#HEAD_e9916437">2.3.1. 如果SP寄存器被优化掉没有压栈如何处理</a></li>
+</menu>
+
+</div>
+	<H4><a name="HEAD_e9916437" href="#TOC_HEAD_e9916437">2.3.1. 如果SP寄存器被优化掉没有压栈如何处理</a></H4>
+<ul>
+	<li>sp 指针如果忽略，如何查找前面frame</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_3d33fb75" href="#TOC_HEAD_3d33fb75">2.4. Reverse debug</a></H3>
+<ul>
+	<li>refer &ndash; <a href="../tags/gdb-reverse-debug.html" target="_blank"><i class="fa fa-tags fa-fw"></i>gdb-reverse-debug</a></li>
+	<li>refer &ndash; <a href="../tags/reverse-step.html" target="_blank"><i class="fa fa-tags fa-fw"></i>reverse-step</a></li>
+	<br />
+</ul>
+	<H3><a name="HEAD_709d21bc" href="#TOC_HEAD_709d21bc">2.5. Support new language/target/debug format</a> <a name="MARK_2" href="#TOC_MARK_2"><strong><font color="red">@TODO</font></strong></a></H3><ul></ul>
+<ul>
+	<li><a name="HEAD_HIDDEN_50df500d"><a href="gdb-internals-manual.html#GDB-INTERNAL-MANUAL-ADD-LANG-1" target="_blank">Adding a Source Language to GDB</a></li>
+	<li><a name="HEAD_HIDDEN_62c3c0f2"><a href="gdb-internals-manual.html#GDB-INTERNAL-MANUAL-ADD-SYM-READER-1" target="_blank">Adding a New Symbol Reader to GDB</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_20220d" href="#TOC_HEAD_20220d">3. Code</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_14d9962f">refer &ndash; GDB&ndash;NOTE&ndash;GDB&ndash;CODE&ndash;1</li>
+	<br />
+</ul>
+	<H1><a name="HEAD_1fbc88e1" href="#TOC_HEAD_1fbc88e1">4. Coverage:  6%</a></H1>
+<ul>
+	<li><strong>Domain:</strong> <a href="../" target="_blank">gdb</a></li>
+	<br />
+</ul>
+	<H2><a name="HEAD_b2f8aa2f" href="#TOC_HEAD_b2f8aa2f">4.1. Nodes: 68/70</a></H2>
+<table id="mdt_t">
+	<tr id="mdt_hd"><td id="mdt_td_l">Nodes</td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../refers/8a8f0249cd82343372a0c3837fba70a1.html" target="_blank">2015&ndash;02&ndash;15 How gdb loads symbol files GDB Wiki.html</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../refers/86b14708f291f0ba47b4052af6fa33cc.htm" target="_blank">2019&ndash;12&ndash;01 GDB Adds Multi&ndash;Threaded Symbol Loading For Faster Debugging Performance &ndash; Phoronix.htm</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../refers/e8ae41dfb9e059cc5c64aeab0737820b.htm" target="_blank">2020&ndash;10&ndash;26 GDB non&ndash;stop模式 &ndash; 面具下的戏命师 &ndash; 博客园.htm</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../refers/9862086639d25ed4c19d602bc184b7ef.htm" target="_blank">2021&ndash;10&ndash;09 gdb反汇编disassemble_gdb的disassemble&ndash;CSDN博客.htm</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../refers/572898d6c8879f99fc593417fe457056.html" target="_blank">2023&ndash;07&ndash;26 GDB 调试器如何通过调用帧信息来确定函数调用关系 Linux 中国 知乎.html</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="topic-how-dwarf-index-cache-works-in-gdb.html" target="_blank">DBG: How DWARF index cache works in gdb</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="topic-how-multi-threaded-symbol-loading-works-in-gdb.html" target="_blank">DBG: How Multi&ndash;Threaded Symbol Loading works in gdb</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="topic-how-addr2line-works.html" target="_blank">DBG: How addr2line works</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="topic-how-gdb-load-symbol-table.html" target="_blank">DBG: How gdb load symbol table</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="topic-how-gdb-support-multi-thread-debugging.html" target="_blank">DBG: How gdb support multi&ndash;thread debugging</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="topic-how-to-do-frame-unwind-in-gdb.html" target="_blank">DBG: How to do frame unwind in gdb</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="topic-how-to-support-riscv-in-gdb.html" target="_blank">DBG: How to support riscv in gdb</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="topic-why-need-upgrade-gdb-8.2-to-gdb-13.2.html" target="_blank">DBG: Why need upgrade gdb 8.2 to gdb 13.2</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="topic-gdb-architecture.html" target="_blank">DBG: gdb architecture</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="gdb-user-manual.html" target="_blank">GDB User Manual</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc230513b.sh.html" target="_blank">TC230513B.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="2602b0787683ebc2c9bd53240f74b46f.html" target="_blank">addr2line.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/binutils/addr2line.c" title="https://github.com/to0d/binutils-gdb/tree/master/binutils/addr2line.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="91327d8ff57ad822ffa40b4422c887e2.html" target="_blank">arch&ndash;utils.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/arch-utils.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/arch-utils.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">archures.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/archures.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/archures.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">as.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gas/as.c" title="https://github.com/to0d/binutils-gdb/tree/master/gas/as.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="9d770e3dccd365868d4baaae91c3c245.html" target="_blank">bfd&ndash;in2.h</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/bfd-in2.h" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/bfd-in2.h" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">bfd.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/bfd.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/bfd.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">cli&ndash;decode.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/cli/cli-decode.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/cli/cli-decode.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">coffread.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/coffread.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/coffread.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">cooked&ndash;index.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/cooked-index.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/cooked-index.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">cooked&ndash;index.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/cooked-index.h" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/cooked-index.h" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">cpu&ndash;riscv.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/cpu-riscv.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/cpu-riscv.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="6495876c76e00e1caf674ddf6a2fe3a9.html" target="_blank">dwarf2.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/dwarf2.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/dwarf2.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">elf&ndash;bfd.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/elf-bfd.h" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/elf-bfd.h" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">elf.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/elf.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/elf.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">elf64&ndash;x86&ndash;64.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/elf64-x86-64.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/elf64-x86-64.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">elfcode.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/elfcode.h" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/elfcode.h" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="fd399851a8b2891c585549c2f377a5f3.html" target="_blank">elfread.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/elfread.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/elfread.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">elfxx&ndash;target.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/elfxx-target.h" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/elfxx-target.h" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="exec.c.html" target="_blank">exec.c</a>&nbsp;<a href="https://github.com/to0d/linux/blob/master/fs/exec.c" title="https://github.com/to0d/linux/blob/master/fs/exec.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="c5fd503ca180f395c3ff9ef57d81a45b.html" target="_blank">expr.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gas/expr.c" title="https://github.com/to0d/binutils-gdb/tree/master/gas/expr.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">gdb_bfd.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/gdb_bfd.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/gdb_bfd.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">gdbarch.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/gdbarch.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/gdbarch.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">gdbarch.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/gdbarch.h" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/gdbarch.h" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">gprof.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gprof/gprof.c" title="https://github.com/to0d/binutils-gdb/tree/master/gprof/gprof.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">i386&ndash;tdep.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/i386-tdep.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/i386-tdep.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">i386&ndash;tdep.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/i386-tdep.h" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/i386-tdep.h" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="8ac6f0cc20f70d2612ae0c5d709737c9.html" target="_blank">index&ndash;write.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/index-write.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/index-write.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">inferior.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/inferior.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/inferior.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">inferior.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/inferior.h" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/inferior.h" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="374489b6133c93986c3e512859252233.html" target="_blank">infrun.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/infrun.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/infrun.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">libbfd.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/libbfd.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/libbfd.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="1cd96890a50d7cee9f804ea20d629496.html" target="_blank">linux&ndash;nat.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/linux-nat.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/linux-nat.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">linux&ndash;nat.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/linux-nat.h" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/linux-nat.h" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">mi&ndash;cmds.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/mi/mi-cmds.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/mi/mi-cmds.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">minsyms.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/minsyms.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/minsyms.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">mipsread.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/mipsread.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/mipsread.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">objdump.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/binutils/objdump.c" title="https://github.com/to0d/binutils-gdb/tree/master/binutils/objdump.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="bc9047358b401401f2459dde351b5e6c.html" target="_blank">objfiles.h</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/objfiles.h" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/objfiles.h" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">opncls.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/opncls.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/opncls.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">progspace.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/progspace.h" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/progspace.h" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">read&ndash;debug&ndash;names.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/read-debug-names.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/read-debug-names.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="c1594637a873080b5232f35081360bf3.html" target="_blank">read.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/read.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/read.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="18562f93a21a020cccf7af15fdc038f9.html" target="_blank">read.h</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/read.h" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/dwarf2/read.h" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">remote.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/remote.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/remote.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="d426c29c6fe7845798fb8370f595b400.html" target="_blank">reverse.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/reverse.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/reverse.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">section.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/section.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/section.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">symfile&ndash;debug.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile-debug.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile-debug.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="symfile.html" target="_blank">symfile.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">symfile.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.h" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/symfile.h" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">target.h&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/target.h" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/target.h" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">targets.c&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/bfd/targets.c" title="https://github.com/to0d/binutils-gdb/tree/master/bfd/targets.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="e79e6cb2b2c4f156ddc81fe2bbf14220.html" target="_blank">top.c</a>&nbsp;<a href="https://github.com/to0d/binutils-gdb/tree/master/gdb/top.c" title="https://github.com/to0d/binutils-gdb/tree/master/gdb/top.c" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+</table>
+<br>
+	<H2><a name="HEAD_daaac2dd" href="#TOC_HEAD_daaac2dd">4.2. Tags: 100/109</a></H2>
+<table id="mdt_t">
+	<tr id="mdt_hd"><td id="mdt_td_l">Tags</td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/ABI.html" target="_blank">ABI</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/AIX.html" target="_blank">AIX</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/BFD.html" target="_blank">BFD</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Byte-Order.html" target="_blank">Byte-Order</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/C-Code.html" target="_blank">C-Code</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/CFI.html" target="_blank">CFI</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Chip-Debug.html" target="_blank">Chip-Debug</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/DAP.html" target="_blank">DAP</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/DWARF.html" target="_blank">DWARF</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/DWARF-index-cache.html" target="_blank">DWARF-index-cache</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/DWARF-section.html" target="_blank">DWARF-section</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/DWARFv5.html" target="_blank">DWARFv5</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Debug-Debugger.html" target="_blank">Debug-Debugger</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Debug-Protocol.html" target="_blank">Debug-Protocol</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Debug-Separate-File.html" target="_blank">Debug-Separate-File</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Debug-macro.html" target="_blank">Debug-macro</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Debug-opt.html" target="_blank">Debug-opt</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/GAS.html" target="_blank">GAS</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Guile.html" target="_blank">Guile</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Hardware-Breakpoint.html" target="_blank">Hardware-Breakpoint</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Homepage.html" target="_blank">Homepage</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/JIT.html" target="_blank">JIT</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LoongArch.html" target="_blank">LoongArch</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/MI.html" target="_blank">MI</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/MI-async.html" target="_blank">MI-async</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/MI-version.html" target="_blank">MI-version</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/MIv1.html" target="_blank">MIv1</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/ObjFileFormat.html" target="_blank">ObjFileFormat</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Overlay.html" target="_blank">Overlay</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/PL-Support.html" target="_blank">PL-Support</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/RISCV.html" target="_blank">RISCV</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/RSP.html" target="_blank">RSP</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Record-Replay.html" target="_blank">Record-Replay</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Remote-Debug.html" target="_blank">Remote-Debug</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/SH-Code.html" target="_blank">SH-Code</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/SIGSTOP.html" target="_blank">SIGSTOP</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Software-Breakpoint.html" target="_blank">Software-Breakpoint</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/TCC.html" target="_blank">TCC</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/TailCall.html" target="_blank">TailCall</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Thread-Debug.html" target="_blank">Thread-Debug</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Tool.html" target="_blank">Tool</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Topic.html" target="_blank">Topic</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/TracePoint.html" target="_blank">TracePoint</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/XCOFF.html" target="_blank">XCOFF</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/a.out.html" target="_blank">a.out</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/addr2line.html" target="_blank">addr2line</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/bfd_target.html" target="_blank">bfd_target</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/dbx.html" target="_blank">dbx</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/debug_line-section.html" target="_blank">debug_line-section</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/debug_names-section.html" target="_blank">debug_names-section</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/disassembly.html" target="_blank">disassembly</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/dwarfdump.html" target="_blank">dwarfdump</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/frame-unwind.html" target="_blank">frame-unwind</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/fsymtabs.html" target="_blank">fsymtabs</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/gdb.html" target="_blank">gdb</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/gdb-Code.html" target="_blank">gdb-Code</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/gdb-IPA.html" target="_blank">gdb-IPA</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/gdb-Stub.html" target="_blank">gdb-Stub</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/gdb-all-stop.html" target="_blank">gdb-all-stop</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/gdb-call.html" target="_blank">gdb-call</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/gdb-checkpoint.html" target="_blank">gdb-checkpoint</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/gdb-cli.html" target="_blank">gdb-cli</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/gdb-command.html" target="_blank">gdb-command</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/gdb-doc.html" target="_blank">gdb-doc</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/gdb-expression.html" target="_blank">gdb-expression</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/gdb-file.html" target="_blank">gdb-file</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/gdb-index.html" target="_blank">gdb-index</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/gdb-mode.html" target="_blank">gdb-mode</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/gdb-non-stop.html" target="_blank">gdb-non-stop</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/gdb-server.html" target="_blank">gdb-server</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/gdb-set-non-stop.html" target="_blank">gdb-set-non-stop</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/gdb-show-arch.html" target="_blank">gdb-show-arch</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/gdb-symbol-file.html" target="_blank">gdb-symbol-file</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/gdb-target.html" target="_blank">gdb-target</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/gdb-tui.html" target="_blank">gdb-tui</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/gdb-version.html" target="_blank">gdb-version</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/gdbarch.html" target="_blank">gdbarch</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/gprof.html" target="_blank">gprof</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/hbreak.html" target="_blank">hbreak</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/inferior.html" target="_blank">inferior</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/inline.html" target="_blank">inline</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/ld.html" target="_blank">ld</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/libgdb.html" target="_blank">libgdb</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/llvm-dwarfdump.html" target="_blank">llvm-dwarfdump</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/longjmp.html" target="_blank">longjmp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/msymtabs.html" target="_blank">msymtabs</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/objdump.html" target="_blank">objdump</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/objfile.html" target="_blank">objfile</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/program_space.html" target="_blank">program_space</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/prologue.html" target="_blank">prologue</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/readelf.html" target="_blank">readelf</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/signal.html" target="_blank">signal</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/sym_fns.html" target="_blank">sym_fns</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/symtab.html" target="_blank">symtab</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/symtab-MultiThreadlLoad.html" target="_blank">symtab-MultiThreadlLoad</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/symtab-section.html" target="_blank">symtab-section</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/target_ops.html" target="_blank">target_ops</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/tdep.html" target="_blank">tdep</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/thbreak.html" target="_blank">thbreak</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/watchpoint.html" target="_blank">watchpoint</a></td></tr>
+</table>
+<br>
+	<hr/>
+	<H1><a name="HEAD_4737b7f1" href="#TOC_HEAD_4737b7f1">5. Index (2)</a></H1>
+	<H2><a name="wd_def_core-dump" href="#TOC_wd_def_core-dump">5.1. core&ndash;dump (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_core-dump_0" >Core file debugging core-dump</a>
+	</ul>
+	<H2><a name="wd_def_gdb-Script" href="#TOC_wd_def_gdb-Script">5.2. gdb&ndash;Script (1)</a></H2>
+	<ul>
+		<li><a href="#wd_ln_gdb-Script_0" >脚本  gdb-Script</a>
+	</ul>
+  
+        </div>
+        <hr>
+        <hr>
+        <div class="col-xs-10">&copy; 2017-2023 Todd(<a href="mailto:to0d@outlook.com" target="_blank">to0d@outlook.com</a>) <br> &reg; UNI TOOL
+        </div>
+
+<canvas id="canvas" width="60" height="60"></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var imageObj = new Image();
+imageObj.onload = function() {
+var x = canvas.width / 2;
+var y = canvas.height / 2;
+var radius = 30;
+context.save();
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.closePath();
+context.clip();
+context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(x, y, radius, 0, Math.PI * 2, false);
+context.lineWidth = 5;
+context.strokeStyle = '#fff';
+context.stroke();
+context.restore();
+};
+imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
+</script>   
+        
+    </div>
+    
+    <div id="in-nav">
+    <font size="2">
+    <b><a href="#HEAD_todo"><font color="red">TODO: 2</font></a></b><br>﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+	<b><a name="TOC_HEAD_23735199" href="#HEAD_23735199">1. Overview</a></b><br>
+	<menu>
+		<li><a name="TOC_GDB-SUPPORT-LANG" href="#GDB-SUPPORT-LANG">1.1. Support Languages </a></li>
+		<li><a name="TOC_GDB-SUPPORT-OS" href="#GDB-SUPPORT-OS">1.2. Support OS </a></li>
+		<li><a name="TOC_GDB-SUPPORT-OBJ" href="#GDB-SUPPORT-OBJ">1.3. Support Object format </a></li>
+		<li><a name="TOC_HEAD_dff06ea8" href="#HEAD_dff06ea8">1.4. Commands</a></li>
+		<li><a name="TOC_HEAD_c7a1b693" href="#HEAD_c7a1b693">1.5. Core file debugging <a name="wd_ln_core-dump_0" target="_blank" href="../tags/core-dump.html"><i class="fa fa-tags fa-fw"></i>core-dump</a></a></li>
+		<li><a name="TOC_HEAD_831c5eda" href="#HEAD_831c5eda">1.6. Issues</a></li>
+		<li><a name="TOC_HEAD_4c4d5b7f" href="#HEAD_4c4d5b7f">1.7. 脚本  <a name="wd_ln_gdb-Script_0" target="_blank" href="../tags/gdb-Script.html"><i class="fa fa-tags fa-fw"></i>gdb-Script</a></a></li>
+	</menu>
+	<b><a name="TOC_HEAD_79ceadde" href="#HEAD_79ceadde">2. Design</a></b><br>
+	<menu>
+		<li><a name="TOC_GDB-NOTE-GDB-INTERNAL-DEBUG-DATA-1" href="#GDB-NOTE-GDB-INTERNAL-DEBUG-DATA-1">2.1. Internal debug data &nbsp;<font color="red">@TODO</font></a></li>
+		<li><a name="TOC_HEAD_1e63f130" href="#HEAD_1e63f130">2.2. Call function in GDB</a></li>
+		<li><a name="TOC_HEAD_a6f2893e" href="#HEAD_a6f2893e">2.3. <a href="../tags/backtrace.html" target="_blank"><i class="fa fa-tags fa-fw"></i>backtrace</a></a></li>
+		<li><a name="TOC_HEAD_3d33fb75" href="#HEAD_3d33fb75">2.4. Reverse debug</a></li>
+		<li><a name="TOC_HEAD_709d21bc" href="#HEAD_709d21bc">2.5. Support new language/target/debug format &nbsp;<font color="red">@TODO</font></a></li>
+	</menu>
+	<b><a name="TOC_HEAD_20220d" href="#HEAD_20220d">3. Code</a></b><br>
+	<b><a name="TOC_HEAD_1fbc88e1" href="#HEAD_1fbc88e1">4. Coverage:  6%</a></b><br>
+	<menu>
+		<li><a name="TOC_HEAD_b2f8aa2f" href="#HEAD_b2f8aa2f">4.1. Nodes: 68/70</a></li>
+		<li><a name="TOC_HEAD_daaac2dd" href="#HEAD_daaac2dd">4.2. Tags: 100/109</a></li>
+	</menu>
+	<b><a name="TOC_HEAD_4737b7f1" href="#HEAD_4737b7f1">5. Index (2)</a></b><br>
+	<menu>
+		<li><a name="TOC_wd_def_core-dump" href="#wd_def_core-dump">5.1. core&ndash;dump (1) </a></li>
+		<li><a name="TOC_wd_def_gdb-Script" href="#wd_def_gdb-Script">5.2. gdb&ndash;Script (1) </a></li>
+	</menu>
+
+</div>
+
+    </font>
+    
+    </div>
+    
+
+<script src="js/jquery-2.js"></script>
+<script src="js/bootstrap.js"></script>
+<script language="javascript" src="js/note-toggle.js"></script>
+<script language="javascript" src="js/note-open.js"></script>
+</body>
+</html>

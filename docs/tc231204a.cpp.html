@@ -1,0 +1,101 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC231204A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC231204A.cpp</h1>
+            <h3>Test LoopInfoWrapperPass</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/LLVM-LegacyPassManager.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-LegacyPassManager</a>&nbsp;<a href="../tags/LLVM-LoopInfoWrapperPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-LoopInfoWrapperPass</a>&nbsp;<a href="../tags/LLVM-Pass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-Pass</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/LLVM-LoopInfoWrapperPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-LoopInfoWrapperPass</a>&nbsp;<a href="../tags/Loop.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Loop</a>&nbsp;<a href="../tags/debug-llvm.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>debug-llvm</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    <ul>
+	<li><a name="HEAD_HIDDEN_4d8d5d5">LLVM&ndash;LoopInfoWrapperPass (ptag=LLVM&ndash;AnalysisPass) &nbsp;<a href="../tags/LLVM-LoopInfoWrapperPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-LoopInfoWrapperPass</a>&nbsp;<a href="../tags/Loop.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Loop</a>&nbsp;<a href="../tags/LLVM-AnalysisPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-AnalysisPass</a></li>
+	<br />
+	<li>refer <a href=""2019-06-30 LLVM使用其他Pass的结果 - 转换无极限 - 博客园.htm"" target="_blank">&quot;2019&ndash;06&ndash;30 LLVM使用其他Pass的结果 &ndash; 转换无极限 &ndash; 博客园.htm&quot;</a></li>
+	<li><a name="HEAD_HIDDEN_2c0c2ff3"><a href="https://llvm.org/doxygen/classllvm_1_1LoopInfoWrapperPass.html" target="_blank">llvm::LoopInfoWrapperPass Class Reference</a> &nbsp;<a href="../tags/LLVM-LoopInfoWrapperPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-LoopInfoWrapperPass</a></li>
+	<br />
+	<li><a name="HEAD_HIDDEN_942bfae5">Debug opt passes &ndash; <code>opt &ndash;debug&ndash;pass=Structure</code> &nbsp;<a href="../tags/debug-llvm.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>debug-llvm</a></li>
+	<br />
+</ul>
+	<hr/>
+<pre><code>//===- Hello.cpp - Example code from "Writing an LLVM Pass" ---------------===//
+//
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
+//
+// This file implements two versions of the LLVM "Hello World" pass described
+// in docs/WritingAnLLVMPass.html
+//
+//===----------------------------------------------------------------------===//
+
+#include "llvm/ADT/Statistic.h"
+#include "llvm/IR/Function.h"
+#include "llvm/Pass.h"
+#include "llvm/Support/raw_ostream.h"
+#include "llvm/Analysis/LoopInfo.h"
+
+using namespace llvm;
+
+#define DEBUG_TYPE "LoopPass"
+
+namespace {
+// LoopPass - The first implementation, without getAnalysisUsage.
+struct LoopPass : public FunctionPass {
+    static char ID; // Pass identification, replacement for typeid
+    LoopPass() : FunctionPass(ID) {}
+
+    bool runOnFunction(Function &F) override {
+    errs() &lt;&lt;"Function "&lt;&lt; F.getName() &lt;&lt; '\n';
+
+    LoopInfo *LI = &getAnalysis&lt;LoopInfoWrapperPass&gt;().getLoopInfo();
+
+    for(Loop *L : *LI)
+        countBlocksInLoop(L, 0);
+
+    return false;
+    }
+
+    // We don't modify the program, so we preserve all analyses.
+    void countBlocksInLoop(Loop* L, unsigned level) {
+    unsigned num_Blocks = 0;
+    Loop::block_iterator bb;
+
+    for(bb = L-&gt;block_begin(); bb != L-&gt;block_end(); ++bb)
+    { num_Blocks ++;
+    }
+
+    errs() &lt;&lt; "Loop Level "&lt;&lt; level &lt;&lt; ": "&lt;&lt; num_Blocks &lt;&lt; " Blocks\n";
+
+    std::vector&lt;Loop*&gt; subLoops =L-&gt;getSubLoops();
+    for(auto child: subLoops)
+        countBlocksInLoop(child, level+1);
+    }
+
+    void getAnalysisUsage(AnalysisUsage &AU) const override {
+    AU.addRequired&lt;LoopInfoWrapperPass&gt;();
+    //AU.setPreservesAll();
+    }
+};
+}
+
+char LoopPass::ID = 0;
+static RegisterPass&lt;LoopPass&gt; X("myloop", "My Loop Pass");</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

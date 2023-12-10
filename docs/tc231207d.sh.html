@@ -1,0 +1,36 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC231207D.sh</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC231207D.sh</h1>
+            <h3>Dump ir after different passes</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/LLVM-Pass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-Pass</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/debug-llvm.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>debug-llvm</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    <ul>
+	<li><a name="HEAD_HIDDEN_391b6ae0"><code>clang &ndash;emit&ndash;llvm hello.c &ndash;mllvm &ndash;print&ndash;after&ndash;all &ndash;S</code> &nbsp;<a href="../tags/debug-llvm.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>debug-llvm</a></li>
+	<br />
+</ul>
+	<hr/>
+<pre><code>#/bin/sh
+
+clang -emit-llvm hello.c -mllvm -print-after-all -S -o - &&gt; hello.pass_dump.1.txt
+cat hello.pass.txt | grep "IR Dump"
+echo "output: done!"</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

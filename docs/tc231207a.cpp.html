@@ -1,0 +1,81 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC231207A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC231207A.cpp</h1>
+            <h3>Test CycleInfoWrapperPass</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/LLVM-CycleInfoWrapperPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-CycleInfoWrapperPass</a>&nbsp;<a href="../tags/LLVM-Pass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-Pass</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/LLVM-CycleInfoWrapperPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-CycleInfoWrapperPass</a>&nbsp;<a href="../tags/Loop.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Loop</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    <ul>
+	<li><a name="HEAD_HIDDEN_622000eb">LLVM&ndash;CycleInfoWrapperPass (ptag=LLVM&ndash;AnalysisPass) &nbsp;<a href="../tags/LLVM-CycleInfoWrapperPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-CycleInfoWrapperPass</a>&nbsp;<a href="../tags/Loop.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Loop</a>&nbsp;<a href="../tags/LLVM-AnalysisPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-AnalysisPass</a></li>
+	<br />
+	<li><a name="HEAD_HIDDEN_8108fb9b"><a href="https://llvm.org/docs/doxygen/classllvm_1_1CycleInfoWrapperPass.html" target="_blank">llvm::CycleInfoWrapperPass Class Reference</a> &nbsp;<a href="../tags/LLVM-CycleInfoWrapperPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-CycleInfoWrapperPass</a></li>
+	<br />
+</ul>
+	<hr/>
+<pre><code>#include "llvm/ADT/Statistic.h"
+#include "llvm/IR/Function.h"
+#include "llvm/Pass.h"
+#include "llvm/Support/raw_ostream.h"
+#include "llvm/Analysis/LoopInfo.h"
+#include "llvm/Analysis/CycleAnalysis.h"
+
+using namespace llvm;
+
+#define DEBUG_TYPE "LoopPass"
+
+namespace {
+// LoopPass - The first implementation, without getAnalysisUsage.
+struct LoopPass : public FunctionPass {
+    static char ID; // Pass identification, replacement for typeid
+    LoopPass() : FunctionPass(ID) {}
+
+    bool runOnFunction(Function &F) override {
+        errs() &lt;&lt;"Function "&lt;&lt; F.getName() &lt;&lt; '\n';
+
+        LoopInfo *LI = &getAnalysis&lt;LoopInfoWrapperPass&gt;().getLoopInfo();
+        CycleInfo *CI = &getAnalysis&lt;CycleInfoWrapperPass&gt;().getCycleInfo();
+
+        for (Loop *L : *LI) {
+            errs() &lt;&lt; "Loop Depth: " &lt;&lt; L-&gt;getLoopDepth() &lt;&lt; "\n";
+
+            for(auto bb = L-&gt;block_begin(); bb != L-&gt;block_end(); ++bb)
+            {
+                errs() &lt;&lt; "\tCycleDepth: " &lt;&lt; CI-&gt;getCycle(*bb)-&gt;getDepth() &lt;&lt; "\n";
+
+                for(BasicBlock::iterator i = (*bb)-&gt;begin(), e = (*bb)-&gt;end(); i != e; ++i)
+                    errs() &lt;&lt; "\tI: " &lt;&lt; *i &lt;&lt; "\n";
+            }
+        }
+
+        return false;
+    }
+
+    void getAnalysisUsage(AnalysisUsage &AU) const override {
+    AU.addRequired&lt;LoopInfoWrapperPass&gt;();
+    AU.addRequired&lt;CycleInfoWrapperPass&gt;();
+    //AU.setPreservesAll();
+    }
+};
+}
+
+char LoopPass::ID = 0;
+static RegisterPass&lt;LoopPass&gt; X("myloop", "My Loop Pass");</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

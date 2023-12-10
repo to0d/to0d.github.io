@@ -1,0 +1,802 @@
+<html>
+	<head>
+		<meta charSet="utf-8"></meta>
+		<title data-rh="true">LLVM中的pass及其管理机制&nbsp;知乎</title>
+	</head>
+	<body class="WhiteBg-body PostIndex-body">
+		<body>Original&nbsp;Link:&nbsp;
+			<b>
+				<font color="#000080" size="3">UPDATE by &reg; UNI TOOL - &copy; 2017-2022 TODD - to0d@outlook.com, at Mon Dec 04 21:26:07 CST 2023</font>
+			</b>
+			<br>
+
+			<a href="https://zhuanlan.zhihu.com/p/290946850" target="_blank">
+				<font color="red" size="3">LLVM中的pass及其管理机制&nbsp;&ndash;&nbsp;知乎</font>
+			</a>
+			<p></p>
+		</body>
+		<div class="RichText ztext Post-RichText css-117anjg" options="[object Object]">
+			<p data-first-child data-pid="5HHNTo5f">作者：汪岩</p>
+			<p data-pid="xoOrOhuK">LLVM编译器框架的核心概念是任务调度和执行。编译器开发者将IR分解为不同的处理对象，并将其处理过程实现为单独的pass类型。在编译器初始化时，pass被实例化，并被添加到pass管理器中。pass管理器以流水线的方式将各个独立的pass衔接起来，然后以预定义顺序遍历每个pass，根据pass实例返回值启动、停止或重复运行不同pass。因此，LLVM&nbsp;pass管理机制的主要模块包括pass、pass管理器、pass注册及相关模块，如PassRegistry、AnalysisUsage、AnalysisResolver等。</p>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<p data-pid="O_LQxbFw">1、LLVM&nbsp;Pass及常用子类</p>
+			<p data-pid="39HKXGlS">pass是一种编译器开发的结构化技术，用于完成编译对象（如IR）的转换、分析或优化等功能。pass的执行就是编译器对编译对象进行转换、分析和优化的过程，pass构建了这些过程所需要的分析结果。</p>
+			<p data-pid="THLYFI6s">LLVM&nbsp;Pass是LLVM系统的重要组成部分，定义在llvm\include\llvm\Pass.h中：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">class</span> <span class="nc">Pass</span> <span class="p">{</span>
+  <span class="n">AnalysisResolver</span> <span class="o">*</span><span class="n">Resolver</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>  <span class="c1">// Used to resolve analysis
+</span><span class="c1"></span>  <span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">PassID</span><span class="p">;</span>
+  <span class="n">PassKind</span> <span class="n">Kind</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">explicit</span> <span class="n">Pass</span><span class="p">(</span><span class="n">PassKind</span> <span class="n">K</span><span class="p">,</span> <span class="kt">char</span> <span class="o">&amp;</span><span class="n">pid</span><span class="p">)</span> <span class="o">:</span> <span class="n">PassID</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pid</span><span class="p">),</span> <span class="n">Kind</span><span class="p">(</span><span class="n">K</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="n">Pass</span><span class="p">(</span><span class="k">const</span> <span class="n">Pass</span> <span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+  <span class="n">Pass</span> <span class="o">&amp;</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Pass</span> <span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+  <span class="k">virtual</span> <span class="o">~</span><span class="n">Pass</span><span class="p">();</span>
+<span class="err">……</span>
+<span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="soofUvVm">LLVM提供的pass分为三类:Analysis&nbsp;pass、Transform&nbsp;pass和Utility&nbsp;pass。Analysis&nbsp;pass计算相关IR单元的高层信息，但不对其进行修改。这些信息可以被其他pass使用，或用于调试和程序可视化。简言之，Analysis&nbsp;pass提供其它pass需要查询的信息并提供查询接口。例如，basic&ndash;aa&nbsp;pass是基本别名分析（Basic&nbsp;Alias&nbsp;Analysis）pass，得到的别名分析结果可以用于后续的其它优化pass。Analysis&nbsp;pass不仅从IR中得到有用信息，还可以通过调用其它Analysis&nbsp;pass得到信息，并将这些信息结合起来，得到关于IR更有价值的信息。这些分析结果可以被缓存下来，直到分析的IR被修改，原有的分析结果当然也就失效了。</p>
+			<p data-pid="rrPc-Ate">Transform&nbsp;pass可以使用Analysis&nbsp;pass。Transform&nbsp;pass会检视IR，查询Analysis&nbsp;pass得到IR的高层信息，然后以某种方式改变和优化IR，并保证改变后的IR仍然合法有效。例如，adce&nbsp;pass是激进的死代码消除（Aggressive&nbsp;Dead&nbsp;Code&nbsp;Elimination）pass，会将死代码从原来的模块中删除。</p>
+			<p data-pid="dEP0uva8">Utility&nbsp;pass是一些功能性的实用程序，既不属于Analysis&nbsp;pass，也不属于Transform&nbsp;pass。例如，extract&ndash;blocks&nbsp;pass将basic&nbsp;block从模块中提取出来供bugpoint使用，这个utility&nbsp;pass既不属于Analysis&nbsp;pass，也不属于Transform&nbsp;pass。参考文献[1]中列出了LLVM提供的所有pass。当调用RegisterPass()注册自定义pass时，会要求指定是否为Analysis&nbsp;pass。通过RegisterPass()注册自定义pass后，就可以使用LLVM&nbsp;opt工具对IR调用自定义pass功能。</p>
+			<p data-pid="Bwebu7p_">LLVM&nbsp;Pass的基础模块是Pass类，这是所有pass的基类。自定义的pass类都要从预定义子类中继承，并根据自定义pass的具体功能要求覆写虚函数或增加新的功能函数。预定义子类包括ModulePass、CallGraphSCCPass、FunctionPass、LoopPass和RegionPass类等等。不同的子类有不同的约束条件，这些约束条件在调度pass时会用到。设计自定义pass时的首要任务就是确定自定义pass的基类。在为pass选择基类时，应在满足要求的前提下，尽可能选择最相关的类。这些类会为LLVM&nbsp;Pass基础结构提供优化运行所必需的信息，避免生成的编译器因为选择的基类不合适而导致运行速度变慢。各种pass组合在一起，完成各种IR优化任务。Pass之间的组合可以分为两类：一、多个pass作用于同一个IR单元，function&nbsp;pass是一个典型例子。如下图A所示，Function&nbsp;pass作用于一个function&nbsp;IR，但也可以在某个function&nbsp;pass中运行其它几个function&nbsp;pass，将这几个function&nbsp;pass组合起来作用于同一个IR单元，获得更好的优化效果。二、将一个IR单元分解为更小的单元，并用相应类型的pass处理。如下图B所示，module&nbsp;pass作用于module，但也可以在某个module&nbsp;pass中运行function&nbsp;pass，作用于module中的每一个function，这就将一个IR单元分解为粒度更细的单元来处理。在编译器开发时，可以混合使用两种方式，将各种pass组合为流水线，对IR做不同处理和优化。</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/f7fce0052237bf377f61b04bd1acde17.jpg"></img>
+				</div>
+				<img></img>
+				<figcaption>图&nbsp;1</figcaption>
+			</figure>
+			<p data-pid="qGlLEUSE">LLVM&nbsp;Pass类及其子类如下图所示：</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/563cf3e5380c93e51a700908e7709840.jpg"></img>
+				</div>
+				<img></img>
+				<figcaption>图&nbsp;2</figcaption>
+			</figure>
+			<p data-pid="ryr7m-uZ">1.1&nbsp;ImmutablePass类</p>
+			<p data-pid="waxvLtoF">ImmutablePass类是ModulePass的派生类，类定义在llvm\include\llvm\Pass.h中：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">class</span> <span class="nc">ImmutablePass</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ModulePass</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">explicit</span> <span class="n">ImmutablePass</span><span class="p">(</span><span class="kt">char</span> <span class="o">&amp;</span><span class="n">pid</span><span class="p">)</span> <span class="o">:</span> <span class="n">ModulePass</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="o">~</span><span class="n">ImmutablePass</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">initializePass</span><span class="p">();</span>
+  <span class="n">ImmutablePass</span> <span class="o">*</span><span class="nf">getAsImmutablePass</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="kt">bool</span> <span class="nf">runOnModule</span><span class="p">(</span><span class="n">Module</span> <span class="o">&amp;</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="6fdt9mi3">ImmutablePass类不是通常意义的转换或分析类型。当使用其它类型pass有复杂性等问题时，可以考虑使用ImmutablePass。ImmutablePass可以不和任何IR单元关联。ImmutablePass结果是不变的（immutable），也不会失效（invalidated）。这种pass的一个重要作用是提供当前目标机器的编译器配置信息，以及可能影响其它各种转换的信息。例如，AMDGPU后端中的AMDGPUAAWrapperPass（llvm\lib\Target\AMDGPU\AMDGPUAliasAnalysis.h）就是派生自ImmutablePass类，这是一个提供AMDGPUAAResult对象的包装pass，通过TBAA&nbsp;metadata为其它pass返回别名查询结果：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">class</span> <span class="nc">AMDGPUAAWrapperPass</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ImmutablePass</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">AMDGPUAAResult</span><span class="o">&gt;</span> <span class="n">Result</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">static</span> <span class="kt">char</span> <span class="n">ID</span><span class="p">;</span>
+
+  <span class="n">AMDGPUAAWrapperPass</span><span class="p">()</span> <span class="o">:</span> <span class="n">ImmutablePass</span><span class="p">(</span><span class="n">ID</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">initializeAMDGPUAAWrapperPassPass</span><span class="p">(</span><span class="o">*</span><span class="n">PassRegistry</span><span class="o">::</span><span class="n">getPassRegistry</span><span class="p">());</span>
+  <span class="p">}</span>
+
+  <span class="n">AMDGPUAAResult</span> <span class="o">&amp;</span><span class="n">getResult</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="o">*</span><span class="n">Result</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">const</span> <span class="n">AMDGPUAAResult</span> <span class="o">&amp;</span><span class="n">getResult</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="o">*</span><span class="n">Result</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="kt">bool</span> <span class="nf">doInitialization</span><span class="p">(</span><span class="n">Module</span> <span class="o">&amp;</span><span class="n">M</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="n">Result</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">AMDGPUAAResult</span><span class="p">(</span><span class="n">M</span><span class="p">.</span><span class="n">getDataLayout</span><span class="p">(),</span>
+        <span class="n">Triple</span><span class="p">(</span><span class="n">M</span><span class="p">.</span><span class="n">getTargetTriple</span><span class="p">())));</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kt">bool</span> <span class="nf">doFinalization</span><span class="p">(</span><span class="n">Module</span> <span class="o">&amp;</span><span class="n">M</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="n">Result</span><span class="p">.</span><span class="n">reset</span><span class="p">();</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kt">void</span> <span class="nf">getAnalysisUsage</span><span class="p">(</span><span class="n">AnalysisUsage</span> <span class="o">&amp;</span><span class="n">AU</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="szUrebGB">1.2&nbsp;ModulePass类</p>
+			<p data-pid="MWLGpENH">ModulePass类是Pass的派生类，类定义在llvm\include\llvm\Pass.h中：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-text">class ModulePass : public Pass {
+public:
+  explicit ModulePass(char &amp;pid) : Pass(PT_Module, pid) {}
+  ~ModulePass() override;
+  Pass *createPrinterPass(raw_ostream &amp;OS,
+                          const std::string &amp;Banner) const override;
+
+  virtual bool runOnModule(Module &amp;M) = 0;
+  void assignPassManager(PMStack &amp;PMS, PassManagerType T) override;
+
+  PassManagerType getPotentialPassManagerType() const override;
+
+protected:
+  bool skipModule(Module &amp;M) const;
+};</code>
+				</pre>
+			</div>
+			<p data-pid="Xen7Dti6">ModulePass类用于实现非结构化的过程间优化和分析，几乎可以对程序执行任何操作。因此，ModulePass类可能是所有Pass类中最常用的类​​。由ModulePass派生的自定义pass将整个程序作为一个处理单元，可以对其中任何函数体做删改。由于ModulePass派生类的行为不可知，因此无法对其执行过程进行优化。例如，AMDGPU后端的AMDGPULowerIntrinsics就是派生自ModulePass类：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">class</span> <span class="nc">AMDGPULowerIntrinsics</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ModulePass</span> <span class="p">{</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="kt">bool</span> <span class="n">makeLIDRangeMetadata</span><span class="p">(</span><span class="n">Function</span> <span class="o">&amp;</span><span class="n">F</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">static</span> <span class="kt">char</span> <span class="n">ID</span><span class="p">;</span>
+
+  <span class="n">AMDGPULowerIntrinsics</span><span class="p">()</span> <span class="o">:</span> <span class="n">ModulePass</span><span class="p">(</span><span class="n">ID</span><span class="p">)</span> <span class="p">{}</span>
+
+  <span class="kt">bool</span> <span class="nf">runOnModule</span><span class="p">(</span><span class="n">Module</span> <span class="o">&amp;</span><span class="n">M</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="nf">expandMemIntrinsicUses</span><span class="p">(</span><span class="n">Function</span> <span class="o">&amp;</span><span class="n">F</span><span class="p">);</span>
+  <span class="n">StringRef</span> <span class="nf">getPassName</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s">&#34;AMDGPU Lower Intrinsics&#34;</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kt">void</span> <span class="nf">getAnalysisUsage</span><span class="p">(</span><span class="n">AnalysisUsage</span> <span class="o">&amp;</span><span class="n">AU</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="n">AU</span><span class="p">.</span><span class="n">addRequired</span><span class="o">&lt;</span><span class="n">TargetTransformInfoWrapperPass</span><span class="o">&gt;</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="lAegc1Ev">派生的ModulePass子类要覆写runOnModule()方法，派生类的大部分功能都在这个方法中实现，例如AMDGPULowerIntrinsics类中intrinsic实现。如果修改了模块，则runOnModule()方法应返回true，否则返回false。</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="kt">bool</span> <span class="n">AMDGPULowerIntrinsics</span><span class="o">::</span><span class="n">runOnModule</span><span class="p">(</span><span class="n">Module</span> <span class="o">&amp;</span><span class="n">M</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">bool</span> <span class="n">Changed</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="n">Function</span> <span class="o">&amp;</span><span class="nl">F</span> <span class="p">:</span> <span class="n">M</span><span class="p">)</span> <span class="p">{</span>
+  <span class="err">…</span><span class="p">...</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">F</span><span class="p">.</span><span class="n">getIntrinsicID</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">Intrinsic</span><span class="o">::</span><span class="nl">memcpy</span><span class="p">:</span>
+    <span class="err">…</span><span class="p">...</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">expandMemIntrinsicUses</span><span class="p">(</span><span class="n">F</span><span class="p">))</span>
+        <span class="n">Changed</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+      <span class="k">break</span><span class="p">;</span>
+
+    <span class="k">case</span> <span class="n">Intrinsic</span><span class="o">::</span><span class="nl">amdgcn_workitem_id_x</span><span class="p">:</span>
+    <span class="err">…</span><span class="p">...</span>
+      <span class="n">Changed</span> <span class="o">|=</span> <span class="n">makeLIDRangeMetadata</span><span class="p">(</span><span class="n">F</span><span class="p">);</span>
+      <span class="k">break</span><span class="p">;</span>
+
+    <span class="k">default</span><span class="o">:</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="n">Changed</span><span class="p">;</span>
+<span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="F2m9lwA9">1.3&nbsp;CallGraphSCCPass类</p>
+			<p data-pid="sgN-fqMJ">CallGraphSCCPass类是Pass的派生类，类定义在llvm/include/llvm/Analysis/CallGraphSCCPass.h中：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">class</span> <span class="nc">CallGraphSCCPass</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Pass</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">explicit</span> <span class="n">CallGraphSCCPass</span><span class="p">(</span><span class="kt">char</span> <span class="o">&amp;</span><span class="n">pid</span><span class="p">)</span> <span class="o">:</span> <span class="n">Pass</span><span class="p">(</span><span class="n">PT_CallGraphSCC</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="n">Pass</span> <span class="o">*</span><span class="nf">createPrinterPass</span><span class="p">(</span><span class="n">raw_ostream</span> <span class="o">&amp;</span><span class="n">OS</span><span class="p">,</span>
+                          <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">Banner</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+
+  <span class="k">using</span> <span class="n">llvm</span><span class="o">::</span><span class="n">Pass</span><span class="o">::</span><span class="n">doInitialization</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">llvm</span><span class="o">::</span><span class="n">Pass</span><span class="o">::</span><span class="n">doFinalization</span><span class="p">;</span>
+
+  <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">doInitialization</span><span class="p">(</span><span class="n">CallGraph</span> <span class="o">&amp;</span><span class="n">CG</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">runOnSCC</span><span class="p">(</span><span class="n">CallGraphSCC</span> <span class="o">&amp;</span><span class="n">SCC</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">doFinalization</span><span class="p">(</span><span class="n">CallGraph</span> <span class="o">&amp;</span><span class="n">CG</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kt">void</span> <span class="nf">assignPassManager</span><span class="p">(</span><span class="n">PMStack</span> <span class="o">&amp;</span><span class="n">PMS</span><span class="p">,</span> <span class="n">PassManagerType</span> <span class="n">PMT</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+  <span class="n">PassManagerType</span> <span class="nf">getPotentialPassManagerType</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">PMT_CallGraphPassManager</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kt">void</span> <span class="nf">getAnalysisUsage</span><span class="p">(</span><span class="n">AnalysisUsage</span> <span class="o">&amp;</span><span class="n">Info</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+
+<span class="k">protected</span><span class="o">:</span>
+  <span class="kt">bool</span> <span class="n">skipSCC</span><span class="p">(</span><span class="n">CallGraphSCC</span> <span class="o">&amp;</span><span class="n">SCC</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="p-T9qzZA">CallGraphSCCPass用于在调用图（call&nbsp;graph）上从下至上的遍历程序。为了理解CallGraphSCCPass，首先要了解两个概念：调用图和SCC。</p>
+			<p data-pid="kB-w3kWg">调用图表示程序方法间的关系，其中的节点表示程序方法，其中的边表示从调用方法和被调方法的调用关系。调用图中是否有环，取决于代码中是否存在直接或间接递归调用。如果程序中有递归调用，那么定向调用图中也就包含环。实际上，LLVM中没有模块表示调用图，pass通过分析call指令来计算调用图，从IR中的call指令推断出调用图。</p>
+			<p data-pid="7Ob11uht">SCC全称
+				<a href="https://link.zhihu.com/?target=http%3A//en.wikipedia.org/wiki/Strongly_connected_component" class=" wrap external" target="_blank" rel="nofollow noreferrer">strongly&nbsp;connected&nbsp;component</a>
+				，即强连接分量。要理解SCC，需要从理解什么是连通。如果从图中的节点v到节点w之间存在一条路径，则称v和w是连通的。如果无向图中任意两个节点均连通，则该图称为连通图。对于非连通图，其中可能仍然有部分子图属于连通图，这种连通子图称为连通分量。连通分量的顶点数达到极大，意味着新增加任何顶点都可能使原连通分量不再连通。另外，连通分量的边数达到极大，意味着与子图中所有顶点相连的边都应包含在连通分量中。例如，下图A中的图是非连通图，但仍可分解为图B所示的两个连通分量。图C不能被称为连通分量，因为其中缺少顶点B和C之间的边。图D更不能被称为连通分量，因为其中缺少顶点A及其关联的边。
+			</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/dba176d848a89215dd2d63ff697e0e76.jpg"></img>
+				</div>
+				<img></img>
+				<figcaption>图&nbsp;3</figcaption>
+			</figure>
+			<p data-pid="QyaYQ9wv">连通分量针对的是无向图，对于有向图则可分为强连通和弱连通两类。在有向图中，如果两个顶点间至少存在一条双向路径，则称两个顶点强连通（strongly&nbsp;connected）。如果有向图的任意两个顶点都强连通，称该图为强连通图。即，从图内任意一个顶点出发，存在通向图内任意一点的的一条路径。非强连通有向图的极大强连通子图，称为强连通分量。例如下图A是一个非强连通有向图，可以分解为图B所示的两个强连通分量。图B中的A、B、C组成一个强连通图，其中的任意两个顶点都存在一条双向路径。但如果加上顶点D，就不再是一个强连通图。顶点D是一个单独的强连通分量。将非强连通有向图分解为强连通分量的目的是由于强连通分量内部的节点性质相同，因此可以将一个强连通分量内的顶点简化为一个点，即消除了环。例如，图A中顶点A、B、C构成的强连通分量可简化为顶点E。如此一来，原图A就变成了图C所示的有向无环图(directed&nbsp;acyclic&nbsp;graph，DAG)。</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/5b34bdde8fdd13fce22646a2f1a5831f.jpg"></img>
+				</div>
+				<img></img>
+				<figcaption>图&nbsp;4</figcaption>
+			</figure>
+			<p data-pid="EfZ4BdiX">强连通分量调用图（SCC&nbsp;call&nbsp;graph）是调用图的强连通分量图，在LLVM中称为CallGraphSCC。强连通分量调用图的某个顶点可以仅包含一个方法，也可以包含调用图中的多个顶点。通过将调用图的有环子图分解为强连通分量，强连通分量调用图将变为无环图，也就是变为有向无环图。</p>
+			<p data-pid="kFoJhE6w">CallGraphSCCPass构成了LLVM的过程间优化的重要组成部分。CallGraphSCCPass派生类在调用图的强连通分量上运行，并且提供了用于构建和遍历调用图的机制（即以后序方式遍历图），所以可以有效地对程序中的所有调用边进行成对的过程间优化，同时逐步细化并改善这些成对优化。</p>
+			<p data-pid="8fm7RX88">自定义SCC&nbsp;pass只能检查和修改当前SCC中的函数，以及直接调用当前SCC的函数和直接被当前SCC调用的函数。如下图所示，自定义SCC&nbsp;pass不能修改和检查顶点B中的函数，除此之外的函数都可以检查和修改。所以，自定义SCC&nbsp;pass并不只属于SCC，而是属于所有SCC可能调用的方法，以及这些方法可能调用的所有方法。自定义SCC&nbsp;pass还属于可能调用SCC中的方法的所有方法。自定义SCC&nbsp;pass还需要保留当前的CallGraph对象，如果程序有任何修改，自定义SCC&nbsp;pass都应负责对CallGraph对象进行更新。自定义SCC&nbsp;pass可能会修改当前SCC的内容，但不允许在当前模块中添加或删除SCC。</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/9c17bb1dc723973d86e8375d566f68e3.jpg"></img>
+				</div>
+				<img></img>
+				<figcaption>图&nbsp;5</figcaption>
+			</figure>
+			<p data-pid="LWNS8RAj">AMDGPU后端中的AMDGPUPerfHintAnalysis就是一个自定义SCC&nbsp;pass：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">struct</span> <span class="nc">AMDGPUPerfHintAnalysis</span> <span class="o">:</span> <span class="k">public</span> <span class="n">CallGraphSCCPass</span> <span class="p">{</span>
+<span class="p">...</span>
+  <span class="kt">bool</span> <span class="n">runOnSCC</span><span class="p">(</span><span class="n">CallGraphSCC</span> <span class="o">&amp;</span><span class="n">SCC</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+
+  <span class="kt">void</span> <span class="nf">getAnalysisUsage</span><span class="p">(</span><span class="n">AnalysisUsage</span> <span class="o">&amp;</span><span class="n">AU</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="n">AU</span><span class="p">.</span><span class="n">setPreservesAll</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="kt">bool</span> <span class="nf">isMemoryBound</span><span class="p">(</span><span class="k">const</span> <span class="n">Function</span> <span class="o">*</span><span class="n">F</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+  <span class="kt">bool</span> <span class="nf">needsWaveLimiter</span><span class="p">(</span><span class="k">const</span> <span class="n">Function</span> <span class="o">*</span><span class="n">F</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+  <span class="k">struct</span> <span class="nc">FuncInfo</span> <span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="n">MemInstCount</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="n">InstCount</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="n">IAMInstCount</span><span class="p">;</span> <span class="c1">// Indirect access memory instruction count
+</span><span class="c1"></span>    <span class="kt">unsigned</span> <span class="n">LSMInstCount</span><span class="p">;</span> <span class="c1">// Large stride memory instruction count
+</span><span class="c1"></span>    <span class="n">FuncInfo</span><span class="p">()</span> <span class="o">:</span> <span class="n">MemInstCount</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">InstCount</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">IAMInstCount</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                 <span class="n">LSMInstCount</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="p">};</span>
+
+  <span class="k">typedef</span> <span class="n">ValueMap</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">Function</span><span class="o">*</span><span class="p">,</span> <span class="n">FuncInfo</span><span class="o">&gt;</span> <span class="n">FuncInfoMap</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+
+  <span class="n">FuncInfoMap</span> <span class="n">FIM</span><span class="p">;</span>
+<span class="p">};</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="Wwjk6cfi">CallGraphSCCPass派生类的大部分功能在runOnSCC中实现。如果修改了模块，则runOnSCC()方法应返回true，否则返回false。</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="kt">bool</span> <span class="n">AMDGPUPerfHintAnalysis</span><span class="o">::</span><span class="n">runOnSCC</span><span class="p">(</span><span class="n">CallGraphSCC</span> <span class="o">&amp;</span><span class="n">SCC</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="o">*</span><span class="n">TPC</span> <span class="o">=</span> <span class="n">getAnalysisIfAvailable</span><span class="o">&lt;</span><span class="n">TargetPassConfig</span><span class="o">&gt;</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">TPC</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+
+  <span class="k">const</span> <span class="n">TargetMachine</span> <span class="o">&amp;</span><span class="n">TM</span> <span class="o">=</span> <span class="n">TPC</span><span class="o">-&gt;</span><span class="n">getTM</span><span class="o">&lt;</span><span class="n">TargetMachine</span><span class="o">&gt;</span><span class="p">();</span>
+
+  <span class="kt">bool</span> <span class="n">Changed</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">CallGraphNode</span> <span class="o">*</span><span class="nl">I</span> <span class="p">:</span> <span class="n">SCC</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Function</span> <span class="o">*</span><span class="n">F</span> <span class="o">=</span> <span class="n">I</span><span class="o">-&gt;</span><span class="n">getFunction</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">F</span> <span class="o">||</span> <span class="n">F</span><span class="o">-&gt;</span><span class="n">isDeclaration</span><span class="p">())</span>
+      <span class="k">continue</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="n">TargetSubtargetInfo</span> <span class="o">*</span><span class="n">ST</span> <span class="o">=</span> <span class="n">TM</span><span class="p">.</span><span class="n">getSubtargetImpl</span><span class="p">(</span><span class="o">*</span><span class="n">F</span><span class="p">);</span>
+    <span class="n">AMDGPUPerfHint</span> <span class="nf">Analyzer</span><span class="p">(</span><span class="n">FIM</span><span class="p">,</span> <span class="n">ST</span><span class="o">-&gt;</span><span class="n">getTargetLowering</span><span class="p">());</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">Analyzer</span><span class="p">.</span><span class="n">runOnFunction</span><span class="p">(</span><span class="o">*</span><span class="n">F</span><span class="p">))</span>
+      <span class="n">Changed</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="n">Changed</span><span class="p">;</span>
+<span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="xUh0drFY">1.4&nbsp;FunctionPass类</p>
+			<p data-pid="ruPejjOW">FunctionPass&nbsp;类是Pass的派生类，类定义在llvm\include\llvm\Pass.h中：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">class</span> <span class="nc">FunctionPass</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Pass</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">explicit</span> <span class="n">FunctionPass</span><span class="p">(</span><span class="kt">char</span> <span class="o">&amp;</span><span class="n">pid</span><span class="p">)</span> <span class="o">:</span> <span class="n">Pass</span><span class="p">(</span><span class="n">PT_Function</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="n">Pass</span> <span class="o">*</span><span class="nf">createPrinterPass</span><span class="p">(</span><span class="n">raw_ostream</span> <span class="o">&amp;</span><span class="n">OS</span><span class="p">,</span>
+                          <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">Banner</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+
+  <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">runOnFunction</span><span class="p">(</span><span class="n">Function</span> <span class="o">&amp;</span><span class="n">F</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="kt">void</span> <span class="nf">assignPassManager</span><span class="p">(</span><span class="n">PMStack</span> <span class="o">&amp;</span><span class="n">PMS</span><span class="p">,</span> <span class="n">PassManagerType</span> <span class="n">T</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+  <span class="n">PassManagerType</span> <span class="nf">getPotentialPassManagerType</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+
+<span class="k">protected</span><span class="o">:</span>
+  <span class="kt">bool</span> <span class="n">skipFunction</span><span class="p">(</span><span class="k">const</span> <span class="n">Function</span> <span class="o">&amp;</span><span class="n">F</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="OdJ77gNj">与ModulePass子类相反，FunctionPass子类具有系统可以预期的局部行为。所有FunctionPass在程序中的每个方法上执行，独立于程序中的所有其它方法。&nbsp;FunctionPass子类不需要以特定顺序执行，并且不会修改外部方法。</p>
+			<p data-pid="-pDkmq-J">明确地说，FunctionPass子类不允许检查或修改当前正在处理的方法以外的其它方法，也不允许添加或删除当前模块的方法和全局变量。AMDGPU后端中的AMDGPUPromoteAllocaToVector&nbsp;pass就是一个function&nbsp;pass。这个pass通过将Alloc指令转换为向量消除Alloc指令：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">class</span> <span class="nc">AMDGPUPromoteAllocaToVector</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FunctionPass</span> <span class="p">{</span>
+<span class="err">……</span>
+  <span class="kt">bool</span> <span class="n">runOnFunction</span><span class="p">(</span><span class="n">Function</span> <span class="o">&amp;</span><span class="n">F</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+<span class="err">……</span>
+  <span class="kt">bool</span> <span class="n">handleAlloca</span><span class="p">(</span><span class="n">AllocaInst</span> <span class="o">&amp;</span><span class="n">I</span><span class="p">);</span>
+
+  <span class="kt">void</span> <span class="nf">getAnalysisUsage</span><span class="p">(</span><span class="n">AnalysisUsage</span> <span class="o">&amp;</span><span class="n">AU</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="n">AU</span><span class="p">.</span><span class="n">setPreservesCFG</span><span class="p">();</span>
+    <span class="n">FunctionPass</span><span class="o">::</span><span class="n">getAnalysisUsage</span><span class="p">(</span><span class="n">AU</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="mTUoyjEE">FunctionPass派生类的大部分功能在runOnFunction()中实现。如果修改了模块，则runOnFunction()方法应返回true，否则返回false。以下是AMDGPUPromoteAllocaToVector&nbsp;&nbsp;pass的runOnFunction()：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="kt">bool</span> <span class="n">AMDGPUPromoteAlloca</span><span class="o">::</span><span class="n">runOnFunction</span><span class="p">(</span><span class="n">Function</span> <span class="o">&amp;</span><span class="n">F</span><span class="p">)</span> <span class="p">{</span>
+<span class="err">……</span>
+  <span class="kt">bool</span> <span class="n">Changed</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="n">BasicBlock</span> <span class="o">&amp;</span><span class="n">EntryBB</span> <span class="o">=</span> <span class="o">*</span><span class="n">F</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+
+  <span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">AllocaInst</span> <span class="o">*</span><span class="p">,</span> <span class="mi">16</span><span class="o">&gt;</span> <span class="n">Allocas</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">Instruction</span> <span class="o">&amp;</span><span class="nl">I</span> <span class="p">:</span> <span class="n">EntryBB</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">AllocaInst</span> <span class="o">*</span><span class="n">AI</span> <span class="o">=</span> <span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">AllocaInst</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">I</span><span class="p">))</span>
+      <span class="n">Allocas</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">AI</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="n">AllocaInst</span> <span class="o">*</span><span class="nl">AI</span> <span class="p">:</span> <span class="n">Allocas</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">handleAlloca</span><span class="p">(</span><span class="o">*</span><span class="n">AI</span><span class="p">))</span>
+      <span class="n">Changed</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="n">Changed</span><span class="p">;</span>
+<span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="T4jiscTu">1.5&nbsp;LoopPass类</p>
+			<p data-pid="O_DLgzHw">LoopPass类是Pass的派生类，类定义在llvm/include/llvm/Analysis/LoopPass.h中：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">class</span> <span class="nc">LoopPass</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Pass</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">explicit</span> <span class="n">LoopPass</span><span class="p">(</span><span class="kt">char</span> <span class="o">&amp;</span><span class="n">pid</span><span class="p">)</span> <span class="o">:</span> <span class="n">Pass</span><span class="p">(</span><span class="n">PT_Loop</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="n">Pass</span> <span class="o">*</span><span class="nf">createPrinterPass</span><span class="p">(</span><span class="n">raw_ostream</span> <span class="o">&amp;</span><span class="n">O</span><span class="p">,</span>
+                          <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">Banner</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+  <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">runOnLoop</span><span class="p">(</span><span class="n">Loop</span> <span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="n">LPPassManager</span> <span class="o">&amp;</span><span class="n">LPM</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="k">using</span> <span class="n">llvm</span><span class="o">::</span><span class="n">Pass</span><span class="o">::</span><span class="n">doInitialization</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">llvm</span><span class="o">::</span><span class="n">Pass</span><span class="o">::</span><span class="n">doFinalization</span><span class="p">;</span>
+
+  <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">doInitialization</span><span class="p">(</span><span class="n">Loop</span> <span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="n">LPPassManager</span> <span class="o">&amp;</span><span class="n">LPM</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">doFinalization</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+  <span class="kt">void</span> <span class="nf">preparePassManager</span><span class="p">(</span><span class="n">PMStack</span> <span class="o">&amp;</span><span class="n">PMS</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+  <span class="kt">void</span> <span class="nf">assignPassManager</span><span class="p">(</span><span class="n">PMStack</span> <span class="o">&amp;</span><span class="n">PMS</span><span class="p">,</span> <span class="n">PassManagerType</span> <span class="n">PMT</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+  <span class="n">PassManagerType</span> <span class="nf">getPotentialPassManagerType</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">PMT_LoopPassManager</span><span class="p">;</span>
+  <span class="p">}</span>
+
+<span class="k">protected</span><span class="o">:</span>
+  <span class="kt">bool</span> <span class="n">skipLoop</span><span class="p">(</span><span class="k">const</span> <span class="n">Loop</span> <span class="o">*</span><span class="n">L</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="593qqf4Z">所有LoopPass在函数中的每个循环上执行，与函数中的所有其它循环无关。&nbsp;LoopPass以循环嵌套顺序处理循环，最外层循环最后处理。LoopPass不仅仅是作用在IR中的某个loop结构，而是有可能（有时是必须）修改包含loop结构的外层结构（如包含该loop的函数），或将loop内部的指令移到loop外。类似的修改可能影响相邻的其它模块，从这个意义上说，LoopPass有点像FunctionPass。</p>
+			<p data-pid="HBelcGVU">LoopPass子类可以使用LPPassManager接口更新循环嵌套。LoopPass子类需要重写三个虚函数来完成其工作。如果这些方法修改了程序，则应返回true；否则，应返回false。</p>
+			<p data-pid="xtUtsMka">作为主循环pass一部分运行的LoopPass子类，需要保存其它loop&nbsp;pass在pipeline中所需的所有函数分析pass（function&nbsp;analyses）。为了简化操作，LoopUtils.h提供了getLoopAnalysisUsage()函数。可以在LoopPass子类重写的getAnalysisUsage()函数中调用getLoopAnalysisUsage()函数，以获取正确的分析结果。INITIALIZE_PASS_DEPENDENCY(LoopPass)将初始化这组函数分析pass（function&nbsp;analyses）。</p>
+			<p data-pid="GimudgJf">1.6&nbsp;RegionPass类</p>
+			<p data-pid="K-pVafDp">RegionPass类是Pass的派生类，类定义在llvm/include/llvm/Analysis/RegionPass.h中：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">class</span> <span class="nc">RegionPass</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Pass</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">explicit</span> <span class="n">RegionPass</span><span class="p">(</span><span class="kt">char</span> <span class="o">&amp;</span><span class="n">pid</span><span class="p">)</span> <span class="o">:</span> <span class="n">Pass</span><span class="p">(</span><span class="n">PT_Region</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">runOnRegion</span><span class="p">(</span><span class="n">Region</span> <span class="o">*</span><span class="n">R</span><span class="p">,</span> <span class="n">RGPassManager</span> <span class="o">&amp;</span><span class="n">RGM</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">Pass</span> <span class="o">*</span><span class="nf">createPrinterPass</span><span class="p">(</span><span class="n">raw_ostream</span> <span class="o">&amp;</span><span class="n">O</span><span class="p">,</span>
+                          <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">Banner</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+
+  <span class="k">using</span> <span class="n">llvm</span><span class="o">::</span><span class="n">Pass</span><span class="o">::</span><span class="n">doInitialization</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">llvm</span><span class="o">::</span><span class="n">Pass</span><span class="o">::</span><span class="n">doFinalization</span><span class="p">;</span>
+
+  <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">doInitialization</span><span class="p">(</span><span class="n">Region</span> <span class="o">*</span><span class="n">R</span><span class="p">,</span> <span class="n">RGPassManager</span> <span class="o">&amp;</span><span class="n">RGM</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">doFinalization</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+  <span class="kt">void</span> <span class="nf">preparePassManager</span><span class="p">(</span><span class="n">PMStack</span> <span class="o">&amp;</span><span class="n">PMS</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+  <span class="kt">void</span> <span class="nf">assignPassManager</span><span class="p">(</span><span class="n">PMStack</span> <span class="o">&amp;</span><span class="n">PMS</span><span class="p">,</span>
+                         <span class="n">PassManagerType</span> <span class="n">PMT</span> <span class="o">=</span> <span class="n">PMT_RegionPassManager</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+
+  <span class="n">PassManagerType</span> <span class="nf">getPotentialPassManagerType</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">PMT_RegionPassManager</span><span class="p">;</span>
+  <span class="p">}</span>
+
+<span class="k">protected</span><span class="o">:</span>
+  <span class="kt">bool</span> <span class="n">skipRegion</span><span class="p">(</span><span class="n">Region</span> <span class="o">&amp;</span><span class="n">R</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="oRHjkS-u">RegionPass较少使用，其用法与LoopPass有相似之处，不过是在函数中的每个单入口单出口region执行。&nbsp;RegionPass由RGPassManager管理，以嵌套顺序处理region，最外层region放在最后处理。RegionPass子类可以通过使用RGPassManager接口更新region树。编译器开发者可以重写RegionPass的三个虚函数来实现自定义RegionPass。如果方法修改了程序，则返回true；否则，返回false。</p>
+			<p data-pid="osazOwHc">1.7&nbsp;MachineFunctionPass&nbsp;类</p>
+			<p data-pid="-hPLjawS">MachineFunctionPass类是FunctionPass的派生类，类定义在llvm/include/llvm/CodeGen/MachineFunctionPass.h中：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">class</span> <span class="nc">MachineFunctionPass</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FunctionPass</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="kt">bool</span> <span class="n">doInitialization</span><span class="p">(</span><span class="n">Module</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="n">RequiredProperties</span> <span class="o">=</span> <span class="n">getRequiredProperties</span><span class="p">();</span>
+    <span class="n">SetProperties</span> <span class="o">=</span> <span class="n">getSetProperties</span><span class="p">();</span>
+    <span class="n">ClearedProperties</span> <span class="o">=</span> <span class="n">getClearedProperties</span><span class="p">();</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="k">protected</span><span class="o">:</span>
+  <span class="k">explicit</span> <span class="n">MachineFunctionPass</span><span class="p">(</span><span class="kt">char</span> <span class="o">&amp;</span><span class="n">ID</span><span class="p">)</span> <span class="o">:</span> <span class="n">FunctionPass</span><span class="p">(</span><span class="n">ID</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">runOnMachineFunction</span><span class="p">(</span><span class="n">MachineFunction</span> <span class="o">&amp;</span><span class="n">MF</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="kt">void</span> <span class="nf">getAnalysisUsage</span><span class="p">(</span><span class="n">AnalysisUsage</span> <span class="o">&amp;</span><span class="n">AU</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+  <span class="k">virtual</span> <span class="n">MachineFunctionProperties</span> <span class="nf">getRequiredProperties</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">MachineFunctionProperties</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">virtual</span> <span class="n">MachineFunctionProperties</span> <span class="nf">getSetProperties</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">MachineFunctionProperties</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">virtual</span> <span class="n">MachineFunctionProperties</span> <span class="nf">getClearedProperties</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">MachineFunctionProperties</span><span class="p">();</span>
+  <span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">MachineFunctionProperties</span> <span class="n">RequiredProperties</span><span class="p">;</span>
+  <span class="n">MachineFunctionProperties</span> <span class="n">SetProperties</span><span class="p">;</span>
+  <span class="n">MachineFunctionProperties</span> <span class="n">ClearedProperties</span><span class="p">;</span>
+
+  <span class="c1">/// createPrinterPass - Get a machine function printer pass.
+</span><span class="c1"></span>  <span class="n">Pass</span> <span class="o">*</span><span class="nf">createPrinterPass</span><span class="p">(</span><span class="n">raw_ostream</span> <span class="o">&amp;</span><span class="n">O</span><span class="p">,</span>
+                          <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">Banner</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+
+  <span class="kt">bool</span> <span class="nf">runOnFunction</span><span class="p">(</span><span class="n">Function</span> <span class="o">&amp;</span><span class="n">F</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="aVNDMXCh">MachineFunctionPass是LLVM代码生成器的一部分，在程序中与机器相关的LLVM&nbsp;function&nbsp;IR上执行。</p>
+			<p data-pid="Qq3-bK0G">代码生成器pass由TargetMachine&nbsp;::&nbsp;addPassesToEmitFile和类似例程专门注册和初始化，因此通常不能从opt或bugpoint命令调用代码生成器pass。MachineFunctionPass也是FunctionPass，因此适用于FunctionPass的所有限制也都适用于MachineFunctionPass。&nbsp;MachineFunctionPasses还有其他限制。例如，MachineFunctionPasses不允许修改或生成任何LLVM&nbsp;IR&nbsp;Instruction、BasicBlock、Argument、Functions、GlobalVariables、GlobalAlias或者Module，也不能修改当前正在处理的MachineFunction&nbsp;以外的MachineFunction&nbsp;。</p>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<p data-pid="SQr_HkXG">2、Pass管理器（Pass&nbsp;Manager）</p>
+			<p data-pid="M3SixOiz">Pass管理器用于注册、调度pass，并维护pass之间的依赖关系。Pass管理器会维护一个pass序列，Pass管理器负责维护和优化这些pass的执行，保证先行（prerequisite）pass正确设置。pass序列中的每一个pass在特定IR单元上依次运行。当前pass可以指定自己对其它pass的依赖性，也就是说，被依赖pass需要在当前pass之前运行。另外，当前pass可以指定将由于执行当前pass而失效的pass。&nbsp;LLVM中的PassManager类可确保在运行pass之前获得所需的分析结果，并确保在编译过程结束并销毁PassManager时一并销毁pass。因此，PassManager类是pass流水线结构的最主要和最基本的构建模块。</p>
+			<p data-pid="wT3h1bTD">PassManager类的pass流水线嵌套结构和IR单元的嵌套结构对应。IR中的Module&nbsp;IR有ModulePassManager与之对应，CGSCC(Call&nbsp;Graph&nbsp;Strongly&nbsp;Connected&nbsp;Component)&nbsp;IR有SCCPassManager，Function&nbsp;IR有FunctionPassManager等等。各种类型的PassManager通过其内部更小的流水线结构遍历对应的IR单元，如此这般才确定了所有pass的执行顺序。PassManager内部实际上是通过依赖图组织pass，开发者不需要了解依赖图如何实现，因为LLVM&nbsp;API使开发者可以在编译过程的不同阶段注册和添加任何pass，比如，只需要通过PassManager的add()接口就可以向PassManager添加pass。IR单元和PassManager类型的对应关系如下图所示：</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/52c4c932af0b7f8bdf7095be01608ec1.jpg"></img>
+				</div>
+				<img></img>
+				<figcaption>图&nbsp;6</figcaption>
+			</figure>
+			<p data-pid="yG2pCWKm">LLVM中有两类Pass管理器：Legacy&nbsp;Pass&nbsp;Manager和New&nbsp;Pass&nbsp;Manager。Legacy&nbsp;Pass&nbsp;Manager包含两个层次的类。llvm::Pass和&nbsp;llvm::legacy::PassManagerBase。Pass类的功能上一节中已经提及，此处不再赘述。</p>
+			<p data-pid="aytfpI5q">PassManager类高效调度和运行pass。所有运行pass的LLVM工具都使用PassManager来执行这些pass。&nbsp;PassManager的责任是确保正确完成pass之间的交互。而当PassManager要以更优化的方式执行pass时，PassManager就必须维护有关pass之间如何交互以及pass之间依赖关系的信息。</p>
+			<p data-pid="26LY3R2X">PassManager通过两种方式减少pass序列的执行时间：第一，pass之间共享分析结果。PassManager的主要任务之一避免是重复计算分析结果，这就需要PassManager跟踪维护哪些分析可用、哪些分析失效以及哪些分析是必需的。&nbsp;PassManager跟踪分析结果的生命周期，并在不再需要某些分析结果时，释放这部分分析结果占用的内存，从而实现最优内存使用。第二，PassManager将pass连接起来，以pipeline的方式执行，可以获得更好的内存和缓存结果，从而改善了编译器的缓存行为。例如，当给出一系列连续的FunctionPass时，PassManager将在第一个函数上执行所有FunctionPass，然后在第二个函数上执行所有FunctionPass，依此类推。这种处理方式可改善缓存行为，因为这样一次只会处理LLVM&nbsp;IR的一个函数，而不是处理整个程序，减少了编译器的内存消耗。</p>
+			<p data-pid="NaR3w8Nv">LLVM中添加pass的方式非常灵活。AMDGPU后端是基于llvm::TargetPassConfig类派生AMDGPUPassConfig类，并通过重写其中的虚函数，如addIRPasses()、addCodeGenPrepare()、addInstSelector()等，在代码生成过程中的不同阶段（如如在寄存器分配之前、之后或在汇编代码生成之前）向AMDGPU后端目标添加pass，并应用自定义优化。以下是AMDGPU后端实现addIRPasses()的示例代码：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="kt">void</span> <span class="n">AMDGPUPassConfig</span><span class="o">::</span><span class="n">addIRPasses</span><span class="p">()</span> <span class="p">{</span>
+<span class="err">…</span><span class="p">...</span>
+  <span class="n">addPass</span><span class="p">(</span><span class="n">createAMDGPUPrintfRuntimeBinding</span><span class="p">());</span>
+
+  <span class="n">addPass</span><span class="p">(</span><span class="n">createAMDGPUFixFunctionBitcastsPass</span><span class="p">());</span>
+
+  <span class="n">addPass</span><span class="p">(</span><span class="n">createAMDGPUPropagateAttributesEarlyPass</span><span class="p">(</span><span class="o">&amp;</span><span class="n">TM</span><span class="p">));</span>
+
+  <span class="n">addPass</span><span class="p">(</span><span class="n">createAtomicExpandPass</span><span class="p">());</span>
+<span class="err">…</span><span class="p">..</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">TM</span><span class="p">.</span><span class="n">getTargetTriple</span><span class="p">().</span><span class="n">getArch</span><span class="p">()</span> <span class="o">==</span> <span class="n">Triple</span><span class="o">::</span><span class="n">amdgcn</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">addPass</span><span class="p">(</span><span class="n">createAMDGPUCodeGenPreparePass</span><span class="p">());</span>
+  <span class="p">}</span>
+<span class="err">……</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="UOYLGcyn">在addIRPasses()实现中，只有amdgcn架构才添加CodeGenPrepare&nbsp;pass，即后端可以根据特定目标信息决定是否添加特定pass。</p>
+			<p data-pid="A5-QuRVW">从2012年开始，LLVM开始开发New&nbsp;Pass&nbsp;Manager。Legacy&nbsp;Pass&nbsp;Manager下的pass是通过继承来定义pass接口，而New&nbsp;Pass&nbsp;Manager下的pass依赖于基于概念的多态（concept&ndash;based&nbsp;polymorphism）定义pass接口，也就是说，New&nbsp;Pass&nbsp;Manager下的pass没有显式接口或虚拟成员函数定义，也没有Legacy&nbsp;Pass&nbsp;Manager那样的Pass层次。所有pass都继承自CRTP（
+				<a href="https://link.zhihu.com/?target=https%3A//stackoverflow.com/questions/35854686/curiously-recurring-template-pattern-crtp-with-static-constexpr-in-clang" class=" wrap external" target="_blank" rel="nofollow noreferrer">Curiously&nbsp;Recurring&nbsp;Template&nbsp;Pattern</a>
+				）&nbsp;mix&ndash;in&nbsp;PassInfoMixin&nbsp;&lt;PassT&gt;，如下所示：
+			</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">class</span> <span class="nc">MyPass</span> <span class="o">:</span> <span class="k">public</span> <span class="n">PassInfoMixin</span><span class="o">&lt;</span><span class="n">MyPass</span> <span class="o">&gt;</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">PreservedAnalyses</span> <span class="n">run</span><span class="p">(</span><span class="n">Function</span> <span class="o">&amp;</span><span class="n">F</span><span class="p">,</span> <span class="n">FunctionAnalysisManager</span> <span class="o">&amp;</span><span class="n">AM</span><span class="p">);</span>
+  <span class="k">static</span> <span class="kt">bool</span> <span class="nf">isRequired</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">true</span><span class="p">;</span> <span class="p">}</span>
+<span class="err">…</span><span class="p">...</span>
+<span class="p">};</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="FXEIv1Tq">如果自定义pass中定义了静态isRequired()方法并返回true，那么这个pass是一个必需（required&nbsp;）pass。在执行时，pass管理器不能跳过必需pass，因为必需pass会计算需要保留的分析结果，后续的pass可能会用到这些分析结果。pass管理器本身是一个必需pass，因为pass管理器可能包含其它必需pass。</p>
+			<p data-pid="twzSd_It">New&nbsp;Pass&nbsp;Manager下的pass都应有run()方法。不同于Lagacy&nbsp;Pass&nbsp;Manager下的runXXX()方法只返回一个布尔类型结果，New&nbsp;Pass&nbsp;Manager下的run()方法以IR单元以及分析管理器为参数，并返回PreservedAnalyses。例如，function&nbsp;pass的run()方法定义为:</p>
+			<p data-pid="GRWU8Oxk">PreservedAnalyses&nbsp;run(Function＆F，FunctionAnalysisManager＆AM)</p>
+			<p data-pid="PP_9xpYQ">如果当前pass没有修改任何fucntion&nbsp;IR，其run()方法应返回PreservedAnalyses::all()，表示在当前pass执行之后，所有分析结果仍然有效。PreservedAnalyses是New&nbsp;Pass&nbsp;Manager提高效率的方式之一。</p>
+			<p data-pid="QNOG7-_l">New&nbsp;Pass&nbsp;Manager下的pass注册在&lt;root&gt;/llvm/lib/Passes/PassRegistry.def文件中实现。PassRegistry.def文件是LLVM核心库的pass注册表，其中描述了Analysis&nbsp;pass和Transform&nbsp;pass。编译器启动时，根据PassRegistry.def文件完成pass子系统的注册和初始化，并由PassRegistry类协助PassManager解决pass依赖关系。PassRegistry.def文件内容如下所示：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="n">MODULE_ANALYSIS</span><span class="p">(</span><span class="s">&#34;callgraph&#34;</span><span class="p">,</span> <span class="n">CallGraphAnalysis</span><span class="p">())</span>
+<span class="p">......</span>
+<span class="n">MODULE_PASS</span><span class="p">(</span><span class="s">&#34;always-inline&#34;</span><span class="p">,</span> <span class="n">AlwaysInlinerPass</span><span class="p">())</span>
+<span class="p">......</span>
+<span class="n">CGSCC_ANALYSIS</span><span class="p">(</span><span class="s">&#34;no-op-cgscc&#34;</span><span class="p">,</span> <span class="n">NoOpCGSCCAnalysis</span><span class="p">())</span>
+<span class="p">......</span>
+<span class="n">CGSCC_PASS</span><span class="p">(</span><span class="s">&#34;argpromotion&#34;</span><span class="p">,</span> <span class="n">ArgumentPromotionPass</span><span class="p">())</span>
+<span class="p">......</span>
+<span class="n">FUNCTION_ANALYSIS</span><span class="p">(</span><span class="s">&#34;aa&#34;</span><span class="p">,</span> <span class="n">AAManager</span><span class="p">())</span>
+<span class="p">......</span>
+<span class="n">FUNCTION_PASS</span><span class="p">(</span><span class="s">&#34;aa-eval&#34;</span><span class="p">,</span> <span class="n">AAEvaluator</span><span class="p">())</span>
+<span class="p">......</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="1FO3Kjzi">New&nbsp;Pass&nbsp;Manager提供了模板化的&nbsp;llvm::PassManager和llvm::AnalysisManager。模板化PassManager类定义如下：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">class</span> <span class="nc">PassManager</span> <span class="o">:</span> <span class="k">public</span> <span class="n">PassInfoMixin</span><span class="o">&lt;</span>
+                     <span class="n">PassManager</span><span class="o">&lt;</span><span class="n">IRUnitT</span><span class="p">,</span> <span class="n">AnalysisManagerT</span><span class="p">,</span> <span class="n">ExtraArgTs</span><span class="p">...</span><span class="o">&gt;&gt;</span> <span class="p">{</span>
+<span class="err">…</span><span class="p">..</span>
+<span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="By3DMn4-">当实例化New&nbsp;Pass&nbsp;Manager时，须以AnalysisManager&lt;IRUnitT&gt;作为参数。pass管理器会将该AnalysisManager传递给pass管理器运行的每个pass，并以pass的PreservedAnalyses返回结果为参数，调用AnalysisManager的失效例程（invalidation&nbsp;routine）。如果需要获取之前的分析结果，也要通过AnalysisManager。</p>
+			<p data-pid="WIv0TmNr">LLVM中关于New&nbsp;Pass&nbsp;Manager的文档较少，本文涉及Pass管理器时仍以Legacy&nbsp;Pass&nbsp;Manager为主。</p>
+			<p data-pid="8_T9RmiL">PassManager的主要职责之一是确保pass之间能够正确交互。因为PassManager试图优化pass的执行，所以必须知道pass之间如何交互以及各个pass之间存在什么样的依赖关系。为了记录这种依赖关系，每个pass可以声明哪些pass应该在当前pass之前执行，哪些pass可以使当前pass失效（因为运行任何Transform&nbsp;pass都可以使之前计算的分析结果失效）。通过在当前pass中实现getAnalysisUsage方法，可以为当前pass指定必需和失效pass集合。如果某个pass未实现getAnalysisUsage()方法，则默认为这个pass不需要提前运行任何pass。</p>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<p data-pid="gOkU9Awc">3、AnalysisUsage和AnalysisResolver</p>
+			<p data-pid="wGK1NrWY">AnalysisUsage表示pass的分析使用（analysis&nbsp;usage）情况信息。LLVM通过AnalysisUsage对象来处理pass依赖性。AnalysisUsage类定义在llvm\include\llvm\PassAnalysisSupport.h中。AnalysisUsage的类结构图如下所示：</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/7db652961676a6f3aab2092e028d2ea3.jpg"></img>
+				</div>
+				<img></img>
+				<figcaption>图&nbsp;7</figcaption>
+			</figure>
+			<p data-pid="30YPe6YI">其中，向量Required、RequiredTransitive、Preserved、Used中分别保存当前pass需要使用的分析pass和需要保留结果的pass集合。成员函数addRequired()、addRequiredTransitive()、addPreserved()、addUsedIfAvailable()负责操作上述成员变量。</p>
+			<p data-pid="1v30gYog">3.1&nbsp;getAnalysisUsage()函数</p>
+			<p data-pid="y03_u_is">编译器开发者在实现pass时，可以定义pass之间的依赖性。在LLVM中，通常通过实现getAnalysisUsage(AnalysisUsage＆AU)方法来访问另一pass的数据结构。getAnalysisUsage()函数原型如下：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">virtual</span> <span class="kt">void</span> <span class="nf">getAnalysisUsage</span><span class="p">(</span><span class="n">AnalysisUsage</span> <span class="o">&amp;</span><span class="n">Info</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="slbKGOSU">前已提及，通过实现getAnalysisUsage方法，可以为pass指定必需和失效集。在实现getAnalysisUsage方法时，应在AnalysisUsage对象中指定需要哪些pass和使哪些pass失效。为此，pass可以调用AnalysisUsage对象的AnalysisUsage::addRequired&lt;&gt;方法，调度某个或某些pass在当前pass前执行。</p>
+			<p data-pid="mTExNayu">例如，在AMDGPU后端的AMDGPULowerIntrinsics&nbsp;pass中需要用到TargetTransformInfoWrapperPass的分析结果，因此有：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp">  <span class="kt">void</span> <span class="nf">getAnalysisUsage</span><span class="p">(</span><span class="n">AnalysisUsage</span> <span class="o">&amp;</span><span class="n">AU</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="n">AU</span><span class="p">.</span><span class="n">addRequired</span><span class="o">&lt;</span><span class="n">TargetTransformInfoWrapperPass</span><span class="o">&gt;</span><span class="p">();</span>
+  <span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="mjG-V40X">TargetTransformInfoWrapperPass将codegen信息暴露给IR级别的pass。每个使用codegen信息的转换都分为三个部分：IR层次的analysis&nbsp;pass、提供信息的IR转换接口和使用特定目标hook的Codegen实现。TargetTransformInfoWrapperPass实现了其中的IR转换接口，这是IR级转换用来查询codegen的接口。通过调用addRequired()函数，表明AMDGPULowerIntrinsics&nbsp;pass需要用到TargetTransformInfoWrapperPass中的分析结果。当AMDGPULowerIntrinsics::runOnModule()方法调用expandMemIntrinsicUses()时，可通过getAnalysis()获得TargetTransformInfo引用：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="kt">bool</span> <span class="n">AMDGPULowerIntrinsics</span><span class="o">::</span><span class="n">expandMemIntrinsicUses</span><span class="p">(</span><span class="n">Function</span> <span class="o">&amp;</span><span class="n">F</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">...</span>
+        <span class="k">const</span> <span class="n">TargetTransformInfo</span> <span class="o">&amp;</span><span class="n">TTI</span> <span class="o">=</span>
+            <span class="n">getAnalysis</span><span class="o">&lt;</span><span class="n">TargetTransformInfoWrapperPass</span><span class="o">&gt;</span><span class="p">().</span><span class="n">getTTI</span><span class="p">(</span><span class="o">*</span><span class="n">ParentFunc</span><span class="p">);</span>
+<span class="err">…</span>
+<span class="n">getAnalysis</span><span class="p">()</span><span class="err">函数定义在</span><span class="n">llvm</span><span class="err">\</span><span class="n">include</span><span class="err">\</span><span class="n">llvm</span><span class="err">\</span><span class="n">PassAnalysisSupport</span><span class="p">.</span><span class="n">h中</span><span class="err">：</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">AnalysisType</span><span class="o">&gt;</span>
+<span class="n">AnalysisType</span> <span class="o">&amp;</span><span class="n">Pass</span><span class="o">::</span><span class="n">getAnalysis</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">Resolver</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;Pass has not been inserted into a PassManager object!&#34;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">getAnalysisID</span><span class="o">&lt;</span><span class="n">AnalysisType</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">AnalysisType</span><span class="o">::</span><span class="n">ID</span><span class="p">);</span>
+<span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="GQt8G5AW">getAnalysis()方法通过将模板参数指定为getAnalysisUsage()方法中声明的pass，可以得到pass的引用。这里的模板参数是TargetTransformInfoWrapperPass，然后通过TargetTransformInfoWrapperPass引用调用getTTI()函数得到TargetTransformInfo引用。</p>
+			<p data-pid="W_2OzUAi">有些情况下，某些分析需要链接到其它分析才能完成。例如，某个别名分析pass实现需要链接到其它别名分析pass。这时，应调用addRequiredTransitive()方法而不是addRequired()方法。addRequiredTransitive()方法会通知PassManager，只要调用addRequiredTransitive()方法的pass（即提出请求的pass）还未销毁，被请求的pass就不能被销毁。addRequiredTransitive()方法较少使用。</p>
+			<p data-pid="ueoR44ym">PassManager的有效性直接受到其所调度的pass行为的影响。如果pass没有实现getAnalysisUsage()方法，pass执行期间得到分析结果不会被保留。如果后续pass要用到之前的分析结果，PassManager要重新启动之前已经运行过的pass，计算分析结果，这无疑增加了编译器的运行时间和内存开销。</p>
+			<p data-pid="CjYtN8ic">3.2&nbsp;AnalysisUsage::addPreserved&lt;&gt;函数</p>
+			<p data-pid="i-QuExjo">PassManager的任务之一是优化分析pass的执行，特别是避免重复计算数据。因此，LLVM允许pass声明保留现有分析结果（即不会使现有分析结果失效）。例如，简单的常量折叠pass不会修改CFG，因此不可能影响必经节点（dominator）分析的结果。默认情况下，应假定所有pass都会使其它pass失效。</p>
+			<p data-pid="cZjEhaze">AnalysisUsage类提供了几种addPreserved()方法。第一种方法是setPreservesAll()方法，用来表示pass（一般是analysis&nbsp;pass）没有修改程序，应保留所有之前的分析结果。比如AMDGPU后端中的别名分析pass：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="kt">void</span> <span class="n">AMDGPUAAWrapperPass</span><span class="o">::</span><span class="n">getAnalysisUsage</span><span class="p">(</span><span class="n">AnalysisUsage</span> <span class="o">&amp;</span><span class="n">AU</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">AU</span><span class="p">.</span><span class="n">setPreservesAll</span><span class="p">();</span>
+<span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="2vX4qJzr">第二种方法是setPreservesCFG()方法，用来表示pass更改了程序中的指令，但没有修改程序的CFG或终止（terminator）指令，例如AMDGPU&nbsp;backend中的SIInsertWaitcnts&nbsp;pass：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp">  <span class="kt">void</span> <span class="nf">getAnalysisUsage</span><span class="p">(</span><span class="n">AnalysisUsage</span> <span class="o">&amp;</span><span class="n">AU</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span> <span class="p">{</span>
+    <span class="n">AU</span><span class="p">.</span><span class="n">setPreservesCFG</span><span class="p">();</span>
+    <span class="n">AU</span><span class="p">.</span><span class="n">addRequired</span><span class="o">&lt;</span><span class="n">MachinePostDominatorTree</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="n">MachineFunctionPass</span><span class="o">::</span><span class="n">getAnalysisUsage</span><span class="p">(</span><span class="n">AU</span><span class="p">);</span>
+  <span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="qAlmcJCI">3.3&nbsp;AnalysisResolver</p>
+			<p data-pid="VudGBzH3">AnalysisResolver是一个简单的接口，Pass对象通过此接口从pass管理器中获得所有分析信息AnalysisResolver类定义在llvm\include\llvm\PassAnalysisSupport.h中。AnalysisResolver的类结构图如下所示：</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/857c71c61f10d50896bb12f03fe10692.jpg"></img>
+				</div>
+				<img></img>
+				<figcaption>图&nbsp;8</figcaption>
+			</figure>
+			<p data-pid="gzumSdbC">其中，AnalysisResolver类的成员变量PM是用于解析分析信息的PassManager，成员变量AnalysisImpls向量中保存了AnalysisID和pass的对应关系，可用于跟踪哪些pass实现了当前pass所需的接口：</p>
+			<p data-pid="NT7JQfVj">std::vector&lt;std::pair&lt;AnalysisID,&nbsp;Pass&nbsp;*&gt;&gt;&nbsp;AnalysisImpls;</p>
+			<p data-pid="lzQCwTOK">AnalysisResolver的成员函数findImplPass()和addAnalysisImplsPair()的代码实现都主要是围绕AnalysisImpls操作。为了建立不同pass之间的依赖关系，PassManager在调用run()方法遍历运行pass之前，会在PassManagerImpl::add()方法中调用findAnalysisPass()，得到当前pass依赖的passs对应的AnalysisID，并通过当前pass的getResolver()接口获得AnalysisResolver指针AR，然后再通过指针AR调用AnalysisResolver::addAnalysisImplsPair()，将AnalysisID及其对应的pass对象加入AnalysisResolver::AnalysisImpls，从而建立AnalysisID与依赖pass的映射关系。调用流程如图所示：</p>
+			<figure data-size="normal">
+				<div>
+					<img src="files/ada7931b4b58820709f7a8d4745ec9c9.jpg"></img>
+				</div>
+				<img></img>
+				<figcaption>图&nbsp;9</figcaption>
+			</figure>
+			<p data-pid="9WxMQ3M7">其中的initializeAnalysisImpl()方法代码实现如下：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="kt">void</span> <span class="n">PMDataManager</span><span class="o">::</span><span class="n">initializeAnalysisImpl</span><span class="p">(</span><span class="n">Pass</span> <span class="o">*</span><span class="n">P</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">AnalysisUsage</span> <span class="o">*</span><span class="n">AnUsage</span> <span class="o">=</span> <span class="n">TPM</span><span class="o">-&gt;</span><span class="n">findAnalysisUsage</span><span class="p">(</span><span class="n">P</span><span class="p">);</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="n">AnalysisID</span> <span class="nl">ID</span> <span class="p">:</span> <span class="n">AnUsage</span><span class="o">-&gt;</span><span class="n">getRequiredSet</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">Pass</span> <span class="o">*</span><span class="n">Impl</span> <span class="o">=</span> <span class="n">findAnalysisPass</span><span class="p">(</span><span class="n">ID</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">Impl</span><span class="p">)</span>
+      <span class="c1">// This may be analysis pass that is initialized on the fly.
+</span><span class="c1"></span>      <span class="c1">// If that is not the case then it will raise an assert when it is used.
+</span><span class="c1"></span>      <span class="k">continue</span><span class="p">;</span>
+    <span class="n">AnalysisResolver</span> <span class="o">*</span><span class="n">AR</span> <span class="o">=</span> <span class="n">P</span><span class="o">-&gt;</span><span class="n">getResolver</span><span class="p">();</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">AR</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;Analysis Resolver is not set&#34;</span><span class="p">);</span>
+    <span class="n">AR</span><span class="o">-&gt;</span><span class="n">addAnalysisImplsPair</span><span class="p">(</span><span class="n">ID</span><span class="p">,</span> <span class="n">Impl</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="1kJuuF2N">AnalysisResolver的addAnalysisImplsPair()方法的代码实现如下：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp">  <span class="kt">void</span> <span class="nf">addAnalysisImplsPair</span><span class="p">(</span><span class="n">AnalysisID</span> <span class="n">PI</span><span class="p">,</span> <span class="n">Pass</span> <span class="o">*</span><span class="n">P</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">findImplPass</span><span class="p">(</span><span class="n">PI</span><span class="p">)</span> <span class="o">==</span> <span class="n">P</span><span class="p">)</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">AnalysisID</span><span class="p">,</span> <span class="n">Pass</span><span class="o">*&gt;</span> <span class="n">pir</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="n">PI</span><span class="p">,</span><span class="n">P</span><span class="p">);</span>
+    <span class="n">AnalysisImpls</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">pir</span><span class="p">);</span>
+  <span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="uYtAYJQz">综上所述，在编译器开发过程中，如果要建立不同pass之间的依赖关系，如pass&nbsp;A要使用pass&nbsp;B的分析结果，具体步骤如下：</p>
+			<p data-pid="hFgy9M6I">1）pass&nbsp;A为了表明自己需要pass&nbsp;B，pass&nbsp;A需要在其getAnalysisUsage()方法中调用AU.addRequired&lt;passBPass&gt;()。</p>
+			<p data-pid="c1ItzyHl">每个pass各自需要实现自己的getAnalysisUsage()函数，其中调用addRequiredID()或addRequired()或其它函数，将该pass所依赖的pass的AnalysisID加入对应变量，如AnalysisUsage::Required。例如，pass&nbsp;A依赖于pass&nbsp;B，passAPass::getAnalysisUsage()会将pass&nbsp;B的AnalysisID加入AnalysisUsage::Required。</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="kt">void</span> <span class="n">passAPass</span><span class="o">::</span><span class="n">getAnalysisUsage</span><span class="p">(</span><span class="n">AnalysisUsage</span><span class="o">&amp;</span> <span class="n">pUsage</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">pUsage</span><span class="p">.</span><span class="n">addRequired</span><span class="o">&lt;</span><span class="n">passBPass</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="Oj01owmv">2）为了在编译器中正确建立pass之间的依赖关系，需要考虑两个方面。第一是不同pass的执行顺序，即某个pass一定要在另一个pass之前运行。第二是不同pass的输入输出之间的依赖，即某个pass要用到另一个pass的分析结果。不能保证pass执行顺序的正确，就不能保证输入输出结果的依赖。</p>
+			<p data-pid="LK5EkVvY">当pass运行过程中需要用到其依赖pass的处理结果时，可以以所依赖pass的AnalysisID为参数，在当前pass的XXXPass::runOnModule()（或runOnFunction()、runOnBasicBlock()等）方法中调用Pass::getAnalysis()。Pass::getAnalysis()再调用Pass::getAnalysisID()，进而调用AnalysisResolver::findImplPass()，从AnalysisResolver::AnalysisImpls中找到AnalysisID的依赖pass。例如，pass&nbsp;A要使用pass&nbsp;B的分析结果，就应当在pass&nbsp;A的runOnModule()方法中通过调用getAnalysis&lt;passBPass&gt;()获得pass&nbsp;B的引用（或指针）：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="kt">bool</span> <span class="n">passAPass</span><span class="o">::</span><span class="n">runOnModule</span><span class="p">(</span><span class="n">Module</span> <span class="o">&amp;</span><span class="n">pModule</span><span class="p">)</span> <span class="p">{</span>
+<span class="err">……</span><span class="p">.</span>
+  <span class="n">passBPass</span> <span class="o">*</span><span class="n">passB</span> <span class="o">=</span> <span class="n">getAnalysis</span><span class="o">&lt;</span><span class="n">passBPass</span> <span class="o">&gt;</span><span class="p">();</span>
+<span class="err">…</span><span class="p">...</span>
+<span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="VT7MX6v2">getAnalysis根据Analysis&nbsp;id找到对应的pass，子类可以使用此方法获取在getAnalysisUsage()中声称要使用的分析信息：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">AnalysisType</span><span class="o">&gt;</span>
+<span class="n">AnalysisType</span> <span class="o">&amp;</span><span class="n">Pass</span><span class="o">::</span><span class="n">getAnalysis</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">Resolver</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;Pass has not been inserted into a PassManager object!&#34;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">getAnalysisID</span><span class="o">&lt;</span><span class="n">AnalysisType</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">AnalysisType</span><span class="o">::</span><span class="n">ID</span><span class="p">);</span>
+<span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="3JvhiCrz">Pass::getAnalysis()再调用Pass::getAnalysisID()，Pass::getAnalysisID()代码实现如下：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">AnalysisType</span><span class="o">&gt;</span>
+<span class="n">AnalysisType</span> <span class="o">&amp;</span><span class="n">Pass</span><span class="o">::</span><span class="n">getAnalysisID</span><span class="p">(</span><span class="n">AnalysisID</span> <span class="n">PI</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">PI</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;getAnalysis for unregistered pass!&#34;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">Resolver</span><span class="o">&amp;&amp;</span><span class="s">&#34;Pass has not been inserted into a PassManager object!&#34;</span><span class="p">);</span>
+
+  <span class="n">Pass</span> <span class="o">*</span><span class="n">ResultPass</span> <span class="o">=</span> <span class="n">Resolver</span><span class="o">-&gt;</span><span class="n">findImplPass</span><span class="p">(</span><span class="n">PI</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">ResultPass</span> <span class="o">&amp;&amp;</span>
+         <span class="s">&#34;getAnalysis*() called on an analysis that was not &#34;</span>
+         <span class="s">&#34;&#39;required&#39; by pass!&#34;</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="o">*</span><span class="p">(</span><span class="n">AnalysisType</span><span class="o">*</span><span class="p">)</span><span class="n">ResultPass</span><span class="o">-&gt;</span><span class="n">getAdjustedAnalysisPointer</span><span class="p">(</span><span class="n">PI</span><span class="p">);</span>
+<span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="fSJbCuUr">AnalysisResolver::findImplPass()代码实现如下：</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp">  <span class="n">Pass</span> <span class="o">*</span><span class="nf">findImplPass</span><span class="p">(</span><span class="n">AnalysisID</span> <span class="n">PI</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Pass</span> <span class="o">*</span><span class="n">ResultPass</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="nl">AnalysisImpl</span> <span class="p">:</span> <span class="n">AnalysisImpls</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">AnalysisImpl</span><span class="p">.</span><span class="n">first</span> <span class="o">==</span> <span class="n">PI</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ResultPass</span> <span class="o">=</span> <span class="n">AnalysisImpl</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">ResultPass</span><span class="p">;</span>
+  <span class="p">}</span>
+</code>
+				</pre>
+			</div>
+			<p data-pid="fMn8f647">3)&nbsp;pass&nbsp;B要实现一个返回分析结果的方法，如getAnalysisResult()。pass&nbsp;A可以使用getAnalysis&lt;passBPass&gt;()获取对pass&nbsp;B对象的引用，然后通过pass&nbsp;B对象调用此方法以获取pass&nbsp;B的分析结果。</p>
+			<div class="highlight">
+				<pre>
+<code class="language-cpp">  <span class="n">passBPass</span> <span class="o">*</span><span class="n">passB</span> <span class="o">=</span> <span class="n">getAnalysis</span><span class="o">&lt;</span><span class="n">passBPass</span> <span class="o">&gt;</span><span class="p">();</span>
+  <span class="n">AR</span> <span class="o">=</span> <span class="n">passB</span><span class="o">-&gt;</span><span class="n">getAnalysisResult</span><span class="p">();</span>
+</code>
+				</pre>
+			</div>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<p class="ztext-empty-paragraph">
+				<br>
+
+			</p>
+			<p data-pid="okss_vnG">参考文献</p>
+			<p data-pid="r271TyoJ">[1]
+				<a href="https://link.zhihu.com/?target=https%3A//llvm.org/docs/Passes.html" class=" external" target="_blank" rel="nofollow noreferrer">
+					<span class="invisible">https://</span>
+					<span class="visible">llvm.org/docs/Passes.ht</span>
+					<span class="invisible">ml</span>
+					<span class="ellipsis"></span>
+				</a>
+			</p>
+			<p data-pid="hUVr1gSo">[2]
+				<a href="https://link.zhihu.com/?target=https%3A//llvm.org/devmtg/2019-10/slides/Warzynski-WritingAnLLVMPass.pdf" class=" external" target="_blank" rel="nofollow noreferrer">
+					<span class="invisible">https://</span>
+					<span class="visible">llvm.org/devmtg/2019&ndash;10</span>
+					<span class="invisible">/slides/Warzynski&ndash;WritingAnLLVMPass.pdf</span>
+					<span class="ellipsis"></span>
+				</a>
+			</p>
+			<p></p>
+		</div>
+	</body>
+</html>
