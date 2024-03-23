@@ -1,0 +1,73 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC231213D.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC231213D.cpp</h1>
+            <h3>Test BasicAAWrapperPass</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/LLVM-BasicAAWrapperPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-BasicAAWrapperPass</a>&nbsp;<a href="../tags/LLVM-Pass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-Pass</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/LLVM-BasicAAWrapperPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-BasicAAWrapperPass</a>&nbsp;<a href="../tags/alias-analysis.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>alias-analysis</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    <ul>
+	<li><a name="HEAD_HIDDEN_69572085">LLVM&ndash;BasicAAWrapperPass (ptag=LLVM&ndash;AnalysisPass) &nbsp;<a href="../tags/LLVM-BasicAAWrapperPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-BasicAAWrapperPass</a>&nbsp;<a href="../tags/alias-analysis.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>alias-analysis</a>&nbsp;<a href="../tags/LLVM-AnalysisPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-AnalysisPass</a></li>
+	<br />
+</ul>
+	<hr/>
+<pre><code>#include "llvm/Pass.h"
+#include "llvm/IR/Function.h"
+#include "llvm/IR/Instructions.h"
+#include "llvm/Analysis/BasicAliasAnalysis.h"
+#include "llvm/Support/raw_ostream.h"
+
+using namespace llvm;
+
+#define DEBUG_TYPE "MyPass"
+
+namespace {
+
+struct MyPass : public FunctionPass {
+    static char ID;
+    MyPass() : FunctionPass(ID) {}
+
+    bool runOnFunction(Function &F) override {
+    BasicAAResult &BAR = getAnalysis&lt;BasicAAWrapperPass&gt;().getResult();
+
+    for (BasicBlock &BB : F) {
+        for (Instruction &I : BB) {
+        if (I.mayReadOrWriteMemory()) {
+            MemoryLocation Loc = MemoryLocation::getBeforeOrAfter(&I);
+            AliasResult Result = BAR.alias(Loc, AliasAnalysis::UnknownSize, Loc, AliasAnalysis::UnknownSize);
+
+            errs() &lt;&lt; "Instruction: " &lt;&lt; I &lt;&lt; "\n";
+            errs() &lt;&lt; "  Alias Result: " &lt;&lt; Result &lt;&lt; "\n";
+        }
+        }
+    }
+    return false;
+    }
+
+    void getAnalysisUsage(AnalysisUsage &AU) const override {
+    AU.addRequired&lt;BasicAAWrapperPass&gt;();
+    //AU.setPreservesAll();
+    }
+};
+}
+
+char MyPass::ID = 0;
+static RegisterPass&lt;MyPass&gt; X("mypass", "My Pass");</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

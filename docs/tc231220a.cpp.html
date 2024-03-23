@@ -1,0 +1,74 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC231220A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC231220A.cpp</h1>
+            <h3>Test NewPassManager - not work</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/LLVM-NewPassManager.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-NewPassManager</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#include "llvm/Pass.h"
+#include "llvm/IR/Function.h"
+#include "llvm/IR/PassManager.h"
+#include "llvm/Support/raw_ostream.h"
+#include "llvm/Passes/PassPlugin.h"
+#include "llvm/Passes/PassBuilder.h"
+
+using namespace llvm;
+
+namespace {
+struct MyPass : public PassInfoMixin&lt;MyPass&gt; {
+    PreservedAnalyses run(Function &F, FunctionAnalysisManager &) {
+    errs() &lt;&lt; "Running MyPass on function: " &lt;&lt; F.getName() &lt;&lt; "\n";
+    return PreservedAnalyses::all();
+    }
+};
+}
+
+
+/* New PM Registration */
+llvm::PassPluginLibraryInfo getByePluginInfo() {
+return {LLVM_PLUGIN_API_VERSION, "MyPass", LLVM_VERSION_STRING,
+        [](PassBuilder &PB) {
+            PB.registerVectorizerStartEPCallback(
+                [](llvm::FunctionPassManager &PM, OptimizationLevel Level) {
+                PM.addPass(MyPass());
+                });
+            PB.registerPipelineParsingCallback(
+                [](StringRef Name, llvm::FunctionPassManager &PM,
+                ArrayRef&lt;llvm::PassBuilder::PipelineElement&gt;) {
+                if (Name == "mypass") {
+                    PM.addPass(MyPass());
+                    return true;
+                }
+                return false;
+                });
+        }};
+}
+
+#ifndef LLVM_BYE_LINK_INTO_TOOLS
+extern "C" LLVM_ATTRIBUTE_WEAK ::llvm::PassPluginLibraryInfo
+llvmGetPassPluginInfo() {
+    printf("call here\n");
+    errs() &lt;&lt; "called\n";
+return getByePluginInfo();
+}
+#endif</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

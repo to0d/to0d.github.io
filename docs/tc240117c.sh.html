@@ -1,0 +1,49 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC240117C.sh</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC240117C.sh</h1>
+            <h3>解决 inline 冲突问题 by pass</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/LLVM-IR.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-IR</a>&nbsp;<a href="../tags/LLVM-Pass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-Pass</a>&nbsp;<a href="../tags/inline.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>inline</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#/bin/sh
+
+clang -emit-llvm -S -c test.c -o test.ll -I ./include_1
+
+# sed  "s/@func/@func_wrap/g" test.ll &gt; test2.ll
+echo "update ir"
+OPT_CMD=`llvm-config --bindir`/opt
+OPT_VER_STR=`$OPT_CMD --version | grep version | awk '{print $4}' | awk -F . '{print $1}'`
+OPT_VER=`expr $OPT_VER_STR`
+OPT_ARG=
+
+if [ $OPT_VER -gt 10 ] ;
+then
+    OPT_ARG=$OPT_ARG" -enable-new-pm=0"
+fi
+
+$OPT_CMD -S -load ./mypass.so -mypass test.ll -o test2.ll $OPT_ARG
+
+clang -c test2.ll -o test.o
+clang test.o impl.o -o test.out
+./test.out
+echo "output: done!"</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

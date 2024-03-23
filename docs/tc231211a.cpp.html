@@ -1,7 +1,7 @@
 ﻿<html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>lfc_macro_util.h</title>
+        <title>TC231211A.cpp</title>
         <link href="img/favicon.ico" rel="icon">
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
         <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
@@ -46,18 +46,83 @@
 <div class="container">
     <div class="row">
         <article>
-        <h1>lfc_macro_util.h</h1>
-        <h3></h3>
+        <h1>TC231211A.cpp</h1>
+        <h3>Test C/C++ keyword restrict</h3>
         <span class="published">
             <i class="fa fa-calendar"></i>
-            <time>2016-12-22</time>
-            <i></i>
+            <time>2023-12-11</time>
+            <i><a href="../tags/C-restrict.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>C-restrict</a>&nbsp;</i>
         </span>
         <br/><br/>
         <div id="in-ttb"></div>
         <div class="entry-content">
-	<H3><a name="HEAD_616cbb0d" href="#TOC_HEAD_616cbb0d">Macro LFC_STATIC_ASSERT</a></H3><ul><a href="../tags/LFC_STATIC_ASSERT.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LFC_STATIC_ASSERT</a>&nbsp;</ul>
-<pre><code>typedef char AUTO_NAME(Static)[(e)? 1:-1];</code></pre>
+	<H2><a name="HEAD_b23438d1" href="#TOC_HEAD_b23438d1">restrict code</a></H2>
+<pre><code>int add2(int* __restrict a, int* __restrict b)
+{
+    *a = 1;
+    *b = 2;
+    return *a + *b ;
+}</code></pre>
+	<H3><a name="HEAD_d5f8ae79" href="#TOC_HEAD_d5f8ae79">restrict O0 disassembly</a></H3>
+<pre><code>objdump -d a.out
+
+00000000000011e9 &lt;_Z4add2PiS_&gt;:
+    11e9:	f3 0f 1e fa          	endbr64
+    11ed:	55                   	push   %rbp
+    11ee:	48 89 e5             	mov    %rsp,%rbp
+    11f1:	48 89 7d f8          	mov    %rdi,-0x8(%rbp)
+    11f5:	48 89 75 f0          	mov    %rsi,-0x10(%rbp)
+    11f9:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+    11fd:	c7 00 01 00 00 00    	movl   $0x1,(%rax)
+    1203:	48 8b 45 f0          	mov    -0x10(%rbp),%rax
+    1207:	c7 00 02 00 00 00    	movl   $0x2,(%rax)
+    120d:	48 8b 45 f8          	mov    -0x8(%rbp),%rax
+    1211:	8b 10                	mov    (%rax),%edx
+    1213:	48 8b 45 f0          	mov    -0x10(%rbp),%rax
+    1217:	8b 00                	mov    (%rax),%eax
+    1219:	01 d0                	add    %edx,%eax
+    121b:	5d                   	pop    %rbp
+    121c:	c3                   	retq</code></pre>
+	<H3><a name="HEAD_a181c1fc" href="#TOC_HEAD_a181c1fc">restrict O3 disassembly</a></H3><ul><a href="../tags/gcc-o3.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>gcc-o3</a>&nbsp;<a href="../tags/266f9b0c.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>内存依赖</a>&nbsp;</ul>
+<pre><code>0000000000001310 &lt;_Z4add2PiS_&gt;:
+    1310:	f3 0f 1e fa          	endbr64
+    1314:	c7 07 01 00 00 00    	movl   $0x1,(%rdi)      // *a = 1
+    131a:	b8 03 00 00 00       	mov    $0x3,%eax        // return 3 directly
+    131f:	c7 06 02 00 00 00    	movl   $0x2,(%rsi)      // *b = 2
+    1325:	c3                   	retq
+    1326:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)
+    132d:	00 00 00</code></pre>
+	<H2><a name="HEAD_675ec80" href="#TOC_HEAD_675ec80">refer</a></H2>
+<ul>
+	<li><a name="HEAD_HIDDEN_468c9574">&quot;2021&ndash;02&ndash;06 C_Cxx关键字之 restrict &ndash; 知乎.htm&quot;</li>
+	<br />
+</ul>
+	<hr/>
+<pre><code>#include &lt;iostream&gt;
+
+int add2(int* __restrict a, int* __restrict b)
+{
+    *a = 1;
+    *b = 2;
+    return *a + *b ;
+}
+
+int main(void)
+{
+    {
+        int x = 0, y = 0;
+        int z = add2(&x, &x);
+        std::cout&lt;&lt; "bad : x=" &lt;&lt; x &lt;&lt; ", y=" &lt;&lt; y &lt;&lt; ", z=" &lt;&lt; z &lt;&lt; std::endl;
+    }
+
+    {
+        int x = 0, y = 0;
+        int z = add2(&x, &y);
+        std::cout&lt;&lt; "good: x=" &lt;&lt; x &lt;&lt; ", y=" &lt;&lt; y &lt;&lt; ", z=" &lt;&lt; z &lt;&lt; std::endl;
+    }
+
+    return 0;
+}</code></pre>
   
         </div>
         </article>

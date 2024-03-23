@@ -2723,10 +2723,13 @@ objdump -s ch4/ch4_1_math.cpu0.1.o
 	<li><a name="wd_ln_git-commit_67"><b>git-commit</b></a> &ndash; &quot;ch5_1: succ to gen obj&quot;</li>
 	<br />
 </ul>
-	<H2><a name="HEAD_ed869ab1" href="#TOC_HEAD_ed869ab1">12. ch6: Global variables</a></H2>
+	<H2><a name="HEAD_ed869ab1" href="#TOC_HEAD_ed869ab1">12. ch6: Global variables</a></H2><ul><a href="../tags/GlobalVariable.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>GlobalVariable</a>&nbsp;</ul>
 	<H3><a name="HEAD_3f344f0a" href="#TOC_HEAD_3f344f0a">12.1. test ch6_1.cpp</a></H3>
 <pre><code>~/llvm-cpu0/build/bin/clang -target mips-unknown-linux-gnu -c ch6_1.cpp -emit-llvm -o ch4/ch6_1.bc
 ~/llvm-cpu0/build/bin/llvm-dis ch4/ch6_1.bc -o -
+
+    @gStart = dso_local global i32 3, align 4
+    @gI = dso_local global i32 100, align 4
 
     define dso_local i32 @_Z11test_globalv() #0 {
     %1 = alloca i32, align 4
@@ -3062,7 +3065,7 @@ imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
 		<li><a name="TOC_HEAD_af2517f9" href="#HEAD_af2517f9">11.8. Register the MC Code Emitter</a></li>
 		<li><a name="TOC_HEAD_c7d3c9a2" href="#HEAD_c7d3c9a2">11.9. <strong><font color="red">succ to gen obj</font></strong></a></li>
 	</menu>
-	<b><a name="TOC_HEAD_ed869ab1" href="#HEAD_ed869ab1">12. ch6: Global variables</a></b><br>
+	<b><a name="TOC_HEAD_ed869ab1" href="#HEAD_ed869ab1">12. ch6: Global variables </a></b><br>
 	<menu>
 		<li><a name="TOC_HEAD_3f344f0a" href="#HEAD_3f344f0a">12.1. test ch6_1.cpp</a></li>
 		<li><a name="TOC_HEAD_4eef8e09" href="#HEAD_4eef8e09">12.2. handle <strong><font color="red">GlobalAddress</font></strong> node</a></li>

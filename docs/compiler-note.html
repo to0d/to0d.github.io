@@ -152,21 +152,13 @@
 	<br />
 </ul>
 	<H1><a name="HEAD_aa8a1" href="#TOC_HEAD_aa8a1">3. 后端</a></H1>
-	<H2><a name="HEAD_37f97bdb" href="#TOC_HEAD_37f97bdb">3.1. 寄存器分配</a></H2>
-<ul>
-	<li>可以抽象成图着色问题 图中的每个节点代表某个变量的活跃期或生存期 两节点之间的边表示这两个变量活跃期因为生命期（lifetime）重叠导致互相冲突或干涉 控制流图（CFG）</li>
-	<br />
-	<li>refer &ndash; <a><b>寄存器分配</b></a></li>
-	<li><a name="HEAD_HIDDEN_f6588086">refer &quot;2019&ndash;04&ndash;06 LLVM寄存器分配 知乎.html&quot;</li>
-	<br />
-</ul>
-	<H2><a name="HEAD_c81e6069" href="#TOC_HEAD_c81e6069">3.2. 寄存器重命名</a></H2>
+	<H2><a name="HEAD_c81e6069" href="#TOC_HEAD_c81e6069">3.1. 寄存器重命名</a></H2>
 <ul>
 	<li>refer &ndash; <a><b>寄存器重命名</b></a></li>
 	<li><a name="HEAD_HIDDEN_f9950d99">refer &quot;2020&ndash;11&ndash;18 Data Prefetch指令预取 知乎.html&quot;</li>
 	<br />
 </ul>
-	<H2><a name="HEAD_2e3d6480" href="#TOC_HEAD_2e3d6480">3.3. 指令调度</a></H2>
+	<H2><a name="HEAD_2e3d6480" href="#TOC_HEAD_2e3d6480">3.2. 指令调度</a></H2>
 <ul>
 	<li>重新排列机器代码指令，旨在最小化执行特定指令序列所需的时钟周期数</li>
 	<li>最小化寄存器生存期 顺序代码内含着一些指令之间的依赖关系</li>
@@ -175,18 +167,18 @@
 	<li><a name="HEAD_HIDDEN_f7d7036f">refer &quot;2019&ndash;01&ndash;17 指令调度基础 知乎.html&quot;</li>
 	<br />
 </ul>
-	<H2><a name="HEAD_25ad2ecf" href="#TOC_HEAD_25ad2ecf">3.4. 代码生成</a></H2>
+	<H2><a name="HEAD_25ad2ecf" href="#TOC_HEAD_25ad2ecf">3.3. 代码生成</a></H2>
 ﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
 <!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
     <span style="float:left">Table of Contents</span>
 </p>
 <br> -->
 <menu>
-	<li><a name="TOC_HEAD_7b2919bc" href="#HEAD_7b2919bc">3.4.1. 怎么做指令优化 比如说支持向量化指令集 <a href="../tags/14d8ef8.html" target="_blank"><i class="fa fa-tags fa-fw"></i>向量化</a></a></li>
+	<li><a name="TOC_HEAD_7b2919bc" href="#HEAD_7b2919bc">3.3.1. 怎么做指令优化 比如说支持向量化指令集 <a href="../tags/14d8ef8.html" target="_blank"><i class="fa fa-tags fa-fw"></i>向量化</a></a></li>
 </menu>
 
 </div>
-	<H3><a name="HEAD_7b2919bc" href="#TOC_HEAD_7b2919bc">3.4.1. 怎么做指令优化 比如说支持向量化指令集 <a href="../tags/14d8ef8.html" target="_blank"><i class="fa fa-tags fa-fw"></i>向量化</a></a></H3>
+	<H3><a name="HEAD_7b2919bc" href="#TOC_HEAD_7b2919bc">3.3.1. 怎么做指令优化 比如说支持向量化指令集 <a href="../tags/14d8ef8.html" target="_blank"><i class="fa fa-tags fa-fw"></i>向量化</a></a></H3>
 	<H1><a name="HEAD_d1fd7a0f" href="#TOC_HEAD_d1fd7a0f">4. 汇编 <a href="../tags/Assembler.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Assembler</a></a></H1>
 	<H2><a name="HEAD_a917af43" href="#TOC_HEAD_a917af43">4.1. <a href="../tags/Register.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Register</a></a></H2>
 <table id="mdt_t">
@@ -284,7 +276,7 @@
 	<li><a><b>RISC-V</b></a></li>
 	<li><a href="../tags/x86.html" target="_blank"><i class="fa fa-tags fa-fw"></i>x86</a></li>
 	<li><a href="../tags/ARM.html" target="_blank"><i class="fa fa-tags fa-fw"></i>ARM</a></li>
-	<li><a><b>Power</b></a></li>
+	<li><a><b>PowerPC</b></a></li>
 	<br />
 </ul>
 	<H1><a name="HEAD_6e1ce456" href="#TOC_HEAD_6e1ce456">7. <a><b>并行</b></a></a></H1>
@@ -293,17 +285,17 @@
 	<li><a><b>CUDA</b></a>   &ndash; 使用 NVIDIA GPU做异构计算</li>
 	<li><a><b>HIP</b></a>    &ndash; AMD版的CUDA</li>
 	<li><a><b>OpenCL</b></a> &ndash; 基于FPGAs的异构加速卡的模块</li>
-	<li><a><b>MPI</b></a></li>
+	<li><a href="../tags/MPI.html" target="_blank"><i class="fa fa-tags fa-fw"></i>MPI</a></li>
 	<br />
 	<li><a name="HEAD_HIDDEN_1917dd2a">refer &quot;2012&ndash;05&ndash;30 从并行计算的角度对比 MPI 与 OpenMP 有什么区别 李超铮 知乎.html&quot;</li>
 	<br />
 </ul>
-	<H1><a name="HEAD_1fbc88e1" href="#TOC_HEAD_1fbc88e1">8. Coverage:  6%</a></H1>
+	<H1><a name="HEAD_1fbc8900" href="#TOC_HEAD_1fbc8900">8. Coverage:  7%</a></H1>
 <ul>
 	<li><strong>Domain:</strong> <a href="../" target="_blank">Compiler</a></li>
 	<br />
 </ul>
-	<H2><a name="HEAD_b2cd0618" href="#TOC_HEAD_b2cd0618">8.1. Nodes: 35/35</a></H2>
+	<H2><a name="HEAD_b2d9c098" href="#TOC_HEAD_b2d9c098">8.1. Nodes: 42/42</a></H2>
 <table id="mdt_t">
 	<tr id="mdt_hd"><td id="mdt_td_l">Nodes</td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="learn-dragon-book.html" target="_blank">2015&ndash;12&ndash;24 Learn Compilers Principles Techniques Tools 2nd Version (dragon book).pdf</a></td></tr>
@@ -331,19 +323,26 @@
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc230513a.gdb.html" target="_blank">TC230513A.gdb</a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc231005e.sh.html" target="_blank">TC231005E.sh</a></td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc231005f.sh.html" target="_blank">TC231005F.sh</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc231203a.sh.html" target="_blank">TC231203A.sh</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc231204a.cpp.html" target="_blank">TC231204A.cpp</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc231204b.cpp.html" target="_blank">TC231204B.cpp</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc231207a.cpp.html" target="_blank">TC231207A.cpp</a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc231207b.sh.html" target="_blank">TC231207B.sh</a></td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc231207c.sh.html" target="_blank">TC231207C.sh</a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc231207d.sh.html" target="_blank">TC231207D.sh</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc231208a.cpp.html" target="_blank">TC231208A.cpp</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc231208b.cpp.html" target="_blank">TC231208B.cpp</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="ee7ed9cf8b07221d93313ced02e96542.html" target="_blank">plugin_print_funcnames.cpp</a>&nbsp;<a href="https://github.com/to0d/llvm-clang-samples/blob/master/src_clang/plugin_print_funcnames.cpp" title="https://github.com/to0d/llvm-clang-samples/blob/master/src_clang/plugin_print_funcnames.cpp" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc231208b.cpp.html" target="_blank">TC231208B.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc231213d.cpp.html" target="_blank">TC231213D.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc231220a.cpp.html" target="_blank">TC231220A.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc231220c.sh.html" target="_blank">TC231220C.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc231222a.sh.html" target="_blank">TC231222A.sh</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc231224a.sh.html" target="_blank">TC231224A.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc240109a.cpp.html" target="_blank">TC240109A.cpp</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc240109b.sh.html" target="_blank">TC240109B.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc240114a.sh.html" target="_blank">TC240114A.sh</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc240117a.sh.html" target="_blank">TC240117A.sh</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc240117c.sh.html" target="_blank">TC240117C.sh</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="tc240122a.cpp.html" target="_blank">TC240122A.cpp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="tc240123a.sh.html" target="_blank">TC240123A.sh</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="ee7ed9cf8b07221d93313ced02e96542.html" target="_blank">plugin_print_funcnames.cpp</a>&nbsp;<a href="https://github.com/to0d/llvm-clang-samples/blob/master/src_clang/plugin_print_funcnames.cpp" title="https://github.com/to0d/llvm-clang-samples/blob/master/src_clang/plugin_print_funcnames.cpp" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
 </table>
 <br>
-	<H2><a name="HEAD_f2552596" href="#TOC_HEAD_f2552596">8.2. Tags: 52/58</a></H2>
+	<H2><a name="HEAD_f256f72c" href="#TOC_HEAD_f256f72c">8.2. Tags: 56/63</a></H2>
 <table id="mdt_t">
 	<tr id="mdt_hd"><td id="mdt_td_l">Tags</td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/CFG.html" target="_blank">CFG</a></td></tr>
@@ -352,28 +351,30 @@
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Clang-RecursiveASTVisitor.html" target="_blank">Clang-RecursiveASTVisitor</a></td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Compiler.html" target="_blank">Compiler</a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Cxx-Code.html" target="_blank">Cxx-Code</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/DWARF.html" target="_blank">DWARF</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/FEA.html" target="_blank">FEA</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/HelloPass.html" target="_blank">HelloPass</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/L-dot.html" target="_blank">L-dot</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/DFG.html" target="_blank">DFG</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/DWARF.html" target="_blank">DWARF</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/FEA.html" target="_blank">FEA</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/GitHub.html" target="_blank">GitHub</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/L-dot.html" target="_blank">L-dot</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/L-ldd.html" target="_blank">L-ldd</a></td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/L210706A.html" target="_blank">L210706A</a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLT.html" target="_blank">LLT</a></td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-17.html" target="_blank">LLVM-17</a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-AnalysisPass.html" target="_blank">LLVM-AnalysisPass</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-CycleInfoWrapperPass.html" target="_blank">LLVM-CycleInfoWrapperPass</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-BasicAAWrapperPass.html" target="_blank">LLVM-BasicAAWrapperPass</a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-IR.html" target="_blank">LLVM-IR</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-LegacyPassManager.html" target="_blank">LLVM-LegacyPassManager</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-LoopInfoWrapperPass.html" target="_blank">LLVM-LoopInfoWrapperPass</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-MemorySSAWrapperPass.html" target="_blank">LLVM-MemorySSAWrapperPass</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-Pass.html" target="_blank">LLVM-Pass</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-ScalarEvolutionWrapperPass.html" target="_blank">LLVM-ScalarEvolutionWrapperPass</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-MemorySSA.html" target="_blank">LLVM-MemorySSA</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-NewPassManager.html" target="_blank">LLVM-NewPassManager</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-Pass.html" target="_blank">LLVM-Pass</a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/MEA.html" target="_blank">MEA</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Macro-expansion.html" target="_blank">Macro-expansion</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/OpenMP.html" target="_blank">OpenMP</a></td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Optimization.html" target="_blank">Optimization</a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Pointer.html" target="_blank">Pointer</a></td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/RegEx.html" target="_blank">RegEx</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/SCEV.html" target="_blank">SCEV</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/SH-Code.html" target="_blank">SH-Code</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/StaticAnalysis.html" target="_blank">StaticAnalysis</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/SH-Code.html" target="_blank">SH-Code</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/StaticAnalysis.html" target="_blank">StaticAnalysis</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/TBAA.html" target="_blank">TBAA</a></td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/TCC.html" target="_blank">TCC</a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Tool.html" target="_blank">Tool</a></td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Yacc.html" target="_blank">Yacc</a></td></tr>
@@ -382,17 +383,19 @@
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/debug-llvm.html" target="_blank">debug-llvm</a></td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/flex.html" target="_blank">flex</a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/gdb-Script.html" target="_blank">gdb-Script</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-br.html" target="_blank">li-br</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-func.html" target="_blank">li-func</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-icmp.html" target="_blank">li-icmp</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-phi.html" target="_blank">li-phi</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-select.html" target="_blank">li-select</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-switch.html" target="_blank">li-switch</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-trunc.html" target="_blank">li-trunc</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/llvm-dwarfdump.html" target="_blank">llvm-dwarfdump</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/llvm-llc.html" target="_blank">llvm-llc</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/llvm-nm.html" target="_blank">llvm-nm</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/mangling.html" target="_blank">mangling</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/inline.html" target="_blank">inline</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-br.html" target="_blank">li-br</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-func.html" target="_blank">li-func</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-icmp.html" target="_blank">li-icmp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-phi.html" target="_blank">li-phi</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-select.html" target="_blank">li-select</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-switch.html" target="_blank">li-switch</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-trunc.html" target="_blank">li-trunc</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/llvm-dwarfdump.html" target="_blank">llvm-dwarfdump</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/llvm-llc.html" target="_blank">llvm-llc</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/llvm-nm.html" target="_blank">llvm-nm</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/mangling.html" target="_blank">mangling</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/pragma.html" target="_blank">pragma</a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/prefetch.html" target="_blank">prefetch</a></td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/readelf.html" target="_blank">readelf</a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/strip.html" target="_blank">strip</a></td></tr>
@@ -505,10 +508,9 @@ imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
 	</menu>
 	<b><a name="TOC_HEAD_aa8a1" href="#HEAD_aa8a1">3. 后端</a></b><br>
 	<menu>
-		<li><a name="TOC_HEAD_37f97bdb" href="#HEAD_37f97bdb">3.1. 寄存器分配</a></li>
-		<li><a name="TOC_HEAD_c81e6069" href="#HEAD_c81e6069">3.2. 寄存器重命名</a></li>
-		<li><a name="TOC_HEAD_2e3d6480" href="#HEAD_2e3d6480">3.3. 指令调度</a></li>
-		<li><a name="TOC_HEAD_25ad2ecf" href="#HEAD_25ad2ecf">3.4. 代码生成</a></li>
+		<li><a name="TOC_HEAD_c81e6069" href="#HEAD_c81e6069">3.1. 寄存器重命名</a></li>
+		<li><a name="TOC_HEAD_2e3d6480" href="#HEAD_2e3d6480">3.2. 指令调度</a></li>
+		<li><a name="TOC_HEAD_25ad2ecf" href="#HEAD_25ad2ecf">3.3. 代码生成</a></li>
 	</menu>
 	<b><a name="TOC_HEAD_d1fd7a0f" href="#HEAD_d1fd7a0f">4. 汇编 <a href="../tags/Assembler.html" target="_blank"><i class="fa fa-tags fa-fw"></i>Assembler</a></a></b><br>
 	<menu>
@@ -530,10 +532,10 @@ imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
 	<menu>
 		<li><a name="TOC_HEAD_f2e77c5c" href="#HEAD_f2e77c5c">7.1. 并行计算框架</a></li>
 	</menu>
-	<b><a name="TOC_HEAD_1fbc88e1" href="#HEAD_1fbc88e1">8. Coverage:  6%</a></b><br>
+	<b><a name="TOC_HEAD_1fbc8900" href="#HEAD_1fbc8900">8. Coverage:  7%</a></b><br>
 	<menu>
-		<li><a name="TOC_HEAD_b2cd0618" href="#HEAD_b2cd0618">8.1. Nodes: 35/35</a></li>
-		<li><a name="TOC_HEAD_f2552596" href="#HEAD_f2552596">8.2. Tags: 52/58</a></li>
+		<li><a name="TOC_HEAD_b2d9c098" href="#HEAD_b2d9c098">8.1. Nodes: 42/42</a></li>
+		<li><a name="TOC_HEAD_f256f72c" href="#HEAD_f256f72c">8.2. Tags: 56/63</a></li>
 	</menu>
 	<b><a name="TOC_HEAD_9fbf43ae" href="#HEAD_9fbf43ae">9. Index (12)</a></b><br>
 	<menu>

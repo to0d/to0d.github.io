@@ -1,0 +1,105 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC240122A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC240122A.cpp</h1>
+            <h3>Clang Plugin - recognize pragma</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/Clang-Plugin.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Clang-Plugin</a>&nbsp;<a href="../tags/pragma.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>pragma</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/Clang-Plugin.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Clang-Plugin</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<H2><a name="HEAD_7164d186" href="#TOC_HEAD_7164d186">Install clang&ndash;14 for clang 插件</a></H2><ul><a href="../tags/Clang-Plugin.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>Clang-Plugin</a>&nbsp;</ul>
+<pre><code>sudo apt install clang-14 libclang-14-dev</code></pre>
+	<hr/>
+<pre><code>#include "clang/AST/AST.h"
+#include "clang/AST/ASTConsumer.h"
+#include "clang/AST/RecursiveASTVisitor.h"
+#include "clang/Frontend/CompilerInstance.h"
+#include "clang/Frontend/FrontendPluginRegistry.h"
+#include "llvm/Support/raw_ostream.h"
+
+
+using namespace clang;
+
+namespace {
+
+// 自定义的PragmaVisitor类，用于访问AST并处理自定义的pragma指令
+class PragmaVisitor : public RecursiveASTVisitor&lt;PragmaVisitor&gt; {
+public:
+explicit PragmaVisitor(ASTContext *Context) : Context(Context) {}
+
+bool VisitFunctionDecl(FunctionDecl *FD) {
+    // if (FD-&gt;hasAttr()) {
+    //   llvm::outs() &lt;&lt; "Found my_pragma in function " &lt;&lt; FD-&gt;getName() &lt;&lt; "\n";
+    // }
+    return true;
+}
+
+// 处理Pragma指令
+bool VisitPragmaDirective(MacroDirective *PD) {
+
+
+
+    llvm::errs() &lt;&lt; "test2\n" ;
+    SourceLocation Loc = PD-&gt;getLocation();
+    if (Loc.isValid()) {
+    llvm::outs() &lt;&lt; "Found custom pragma at ";
+    Loc.print(llvm::outs(), Context-&gt;getSourceManager());
+    llvm::outs() &lt;&lt; "\n";
+    }
+    return true;
+}
+
+private:
+ASTContext *Context;
+};
+
+// 自定义的ASTConsumer类，用于创建PragmaVisitor并遍历AST
+class PragmaASTConsumer : public ASTConsumer {
+public:
+explicit PragmaASTConsumer(ASTContext *Context) : Visitor(Context) {}
+
+// 遍历AST
+void HandleTranslationUnit(ASTContext &Context) override {
+    Visitor.TraverseDecl(Context.getTranslationUnitDecl());
+}
+
+private:
+PragmaVisitor Visitor;
+};
+
+// 自定义的FrontendAction类，用于创建PragmaASTConsumer
+class PragmaFrontendAction : public PluginASTAction {
+protected:
+std::unique_ptr&lt;ASTConsumer&gt; CreateASTConsumer(CompilerInstance &CI,
+                                                llvm::StringRef) override {
+                                                llvm::errs() &lt;&lt; "test\n" ;
+    return std::make_unique&lt;PragmaASTConsumer&gt;(&CI.getASTContext());
+}
+
+bool ParseArgs(const CompilerInstance &CI,
+                const std::vector&lt;std::string&gt; &args) override {
+    return true;
+}
+};
+
+} // namespace
+
+static FrontendPluginRegistry::Add&lt;PragmaFrontendAction&gt;
+    X("myplugin", "Custom pragma plugin");</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

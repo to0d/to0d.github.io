@@ -1,7 +1,7 @@
 ﻿<html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>TC161029A.c</title>
+        <title>TC240114A.sh</title>
         <link rel="stylesheet" href="css/font-awesome.min.css">
         <link rel="stylesheet" href="css/inote_md.css">
 		<link rel="stylesheet" href="css/inote_md_tb1.css">
@@ -9,28 +9,22 @@
 <body style="word-wrap:break-word" bgcolor="#CCE8CF">
     <div id="in-main">
         <div class="in-header">
-            <h1>TC161029A.c</h1>
-            <h3>lfc_dump_memory_hex testcase</h3>
-            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/lfc_dump_memory_hex.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>lfc_dump_memory_hex</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <h1>TC240114A.sh</h1>
+            <h3>解决 inline 冲突问题</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/LLVM-IR.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-IR</a>&nbsp;<a href="../tags/inline.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>inline</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
             <div id="in-ttb"></div>
             <hr/>
         </div>
     
     	<hr/>
-<pre><code>#include "stdio.h"
-#include &lt;lfc/lfc.h&gt;
+<pre><code>#/bin/sh
 
-int main( void )
-{
-    char test[10] = {"ABCDEFGH"};
-    char other[90] = {"Others"};
-    other[88] = 'a';
-
-    lfc_dump_memory_hex((void*)test, 100);
-
-    printf( "output: done.\n" );
-    return 0;
-}</code></pre>
+clang -emit-llvm -S -c test.c -o test.ll -I ./include_1
+sed  "s/@func/@func_wrap/g" test.ll &gt; test2.ll
+clang -c test2.ll -o test.o
+clang test.o impl.o -o test.out
+./test.out
+echo "output: done!"</code></pre>
     
     <hr>
     <font color="#000080" size="1">&reg; UNI TOOL</font><br>

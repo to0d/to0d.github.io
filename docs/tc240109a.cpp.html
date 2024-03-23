@@ -1,0 +1,268 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC240109A.cpp</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC240109A.cpp</h1>
+            <h3>Print DFG dot graph</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/DFG.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DFG</a>&nbsp;<a href="../tags/L-dot.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>L-dot</a>&nbsp;<a href="../tags/LLVM-Pass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-Pass</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> <a href="../tags/DFG.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DFG</a>&nbsp;<a href="../tags/GitHub.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>GitHub</a>&nbsp;</li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    <ul>
+	<li><a name="HEAD_HIDDEN_cd9e7a02">refer <a href="https://github.com/PL97/LLVM-CFG-DFG-pass" target="_blank">https://github.com/PL97/LLVM&ndash;CFG&ndash;DFG&ndash;pass</a> &nbsp;<a href="../tags/DFG.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>DFG</a>&nbsp;<a href="../tags/GitHub.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>GitHub</a></li>
+	<br />
+</ul>
+	<hr/>
+<pre><code>#include "llvm/Pass.h"
+#include "llvm/IR/Function.h"
+#include "llvm/IR/Module.h"
+#include "llvm/IR/Instructions.h"
+#include "llvm/Analysis/RegionInfo.h"
+#include "llvm/Support/raw_ostream.h"
+#include"graph.h"
+
+using namespace llvm;
+using namespace std;
+
+#define DEBUG_TYPE "MyPass"
+
+static bool is_llvm_instrinsics(const std::string& func){
+// llvm.dbg.declare
+if( func == "llvm.dbg.declare" )
+    return true;
+return false;
+}
+
+struct DFGPass : public ModulePass {
+
+    static char ID;
+    map&lt;string, Graph*&gt; DFGs;
+    map&lt;string, Graph*&gt; CFGs;
+
+    DFGPass() : ModulePass(ID) {}
+
+bool runOnModule(Module &M) override {
+    for (Function& F : M) {
+
+    std::string func_name = F.getName().str();
+
+    Graph* control_flow_G = new Graph(&F);
+    Graph* data_flow_G = new Graph(&F);
+
+    DFGs.insert(pair&lt;string, Graph*&gt;(func_name, data_flow_G));
+    CFGs.insert(pair&lt;string, Graph*&gt;(func_name, control_flow_G));
+
+    control_flow_G-&gt;head.push_back(pair&lt;Value*, Value*&gt;(&*(F.begin())-&gt;begin(), &*(F.begin())-&gt;begin()));
+    for (BasicBlock& B : F) {
+
+        for (BasicBlock::iterator II = B.begin(), IEnd = B.end(); II != IEnd; ++II) {
+        Instruction* curII = &*II;
+        switch (curII-&gt;getOpcode()){
+            // for the case of load operation, we should save the value of it
+            case llvm::Instruction::Load:{
+            LoadInst* linst = dyn_cast&lt;LoadInst&gt;(curII);
+            Value* loadValPtr = linst-&gt;getPointerOperand();
+            insert(data_flow_G, pair&lt;Value*, Value*&gt;(loadValPtr, curII));
+            break;
+            }
+            // for the case of store operation, both of the pointer and value should be recoded
+            case llvm::Instruction::Store: {
+            StoreInst* sinst = dyn_cast&lt;StoreInst&gt;(curII);
+            Value* storeValPtr = sinst-&gt;getPointerOperand();
+            Value* storeVal = sinst-&gt;getValueOperand();
+            insert(data_flow_G, pair&lt;Value*, Value*&gt;(storeVal, curII));
+            insert(data_flow_G, pair&lt;Value*, Value*&gt;(curII, storeValPtr));
+
+            data_flow_G-&gt;head.push_back(pair&lt;Value*, Value*&gt;(storeValPtr, storeVal));
+            break;
+            }
+
+            case llvm::Instruction::Call: {
+            CallInst* cinst = dyn_cast&lt;CallInst&gt;(curII);
+            string f_name = cinst-&gt;getCalledFunction()-&gt;getName().str();
+
+            if(!is_llvm_instrinsics(f_name))
+            {
+
+                if( DFGs.find(f_name) == DFGs.end()){
+                        // errs() &lt;&lt; "null func=" &lt;&lt; f_name &lt;&lt; "\n" ;
+                        //     errs() &lt;&lt; "I=" &lt;&lt; *cinst &lt;&lt; "\n" ;
+                }
+                else
+                {
+                    for(auto iter = DFGs[f_name]-&gt;F-&gt;arg_begin(), iter_end = DFGs[f_name]-&gt;F-&gt;arg_end(); iter != iter_end; iter++){
+                        data_flow_G-&gt;link.push_back(pair&lt;Value*, Value*&gt;(cinst, iter));
+                        errs()&lt;&lt;*cinst&lt;&lt;cinst&lt;&lt;"-&gt;"&lt;&lt;*iter&lt;&lt;iter&lt;&lt;"\n";
+                        // insert(data_flow_G, pair&lt;Value*, Value*&gt;(cinst, iter));
+                    }
+                    if(!DFGs[f_name]-&gt;F-&gt;doesNotReturn()){
+                        Value* ret_i = &*(--(--DFGs[f_name]-&gt;F-&gt;end())-&gt;end());
+                        data_flow_G-&gt;link.push_back(pair&lt;Value*, Value*&gt;(ret_i, cinst));
+                        // insert(data_flow_G, pair&lt;Value*, Value*&gt;(ret_i, cinst));
+                    }
+
+                }
+            }
+            break;
+            }
+                        // for other operation, we get all the operand point to the current instruction
+            default: {
+            for (Instruction::op_iterator op = curII-&gt;op_begin(), opEnd = curII-&gt;op_end(); op != opEnd; ++op){
+                Instruction* tempIns;
+                if (dyn_cast&lt;Instruction&gt;(*op)){
+                insert(data_flow_G, pair&lt;Value*, Value*&gt;(op-&gt;get(), curII));
+                }
+            }
+            break;
+            }
+        }
+
+        BasicBlock::iterator next = II;
+        ++next;
+        if (next != IEnd) {
+            insert(control_flow_G, pair&lt;Value*, Value*&gt;(curII, &*next));
+        }
+        }
+
+
+        Instruction* terminator = B.getTerminator();
+        for (BasicBlock* sucBB : successors(&B)) {
+        Instruction* first = &*(sucBB-&gt;begin());
+        insert(control_flow_G, pair&lt;Value*, Value*&gt;(terminator, first));
+        }
+    }
+
+    writeFileByGraph(&F);
+    }
+
+    // NOTWITHCFHG indicate the fianl graph represents no CFG information
+    writeFileByGraphGloble(NOTWITHCFG);
+    errs()&lt;&lt;"end\n";
+    return false;
+}
+
+void DFS_plot(Edge* v, Graph* G, raw_fd_ostream& file){
+    Edge* p = v;
+    while (p){
+    if (mark.find(pair&lt;int, int&gt;(p-&gt;v_from, p-&gt;v_to)) == mark.end())
+    {
+        mark.insert(pair&lt;int, int&gt;(p-&gt;v_from, p-&gt;v_to));
+        file &lt;&lt; "\tNode" &lt;&lt; G-&gt;v[p-&gt;v_from]-&gt;va &lt;&lt; " -&gt; Node" &lt;&lt; G-&gt;v[p-&gt;v_to]-&gt;va &lt;&lt; "\n";
+        DFS_plot(G-&gt;v[p-&gt;v_to]-&gt;first_out, G, file);
+    }
+    p = p-&gt;out_edge;
+    }
+}
+
+void writeFileByGraph(Function *F){
+
+
+    std::error_code error;
+    enum sys::fs::OpenFlags F_None;
+    std::string fun_name = F-&gt;getName().str();
+    std::string fileName(fun_name + ".dot");
+    raw_fd_ostream file(fileName, error, F_None);
+    Graph* data_flow_G =  DFGs[fun_name];
+    Graph* control_flow_G = CFGs[fun_name];
+
+    file &lt;&lt; "digraph \"DFG for'" + F-&gt;getName() + "\' function\" {\n";
+    for (auto node_iter = data_flow_G-&gt;v.begin(), node_end = data_flow_G-&gt;v.end(); node_iter != node_end; ++node_iter)
+    {
+    Value* p = (*node_iter)-&gt;va;
+    if(isa&lt;Instruction&gt;(*p))
+    {
+        file &lt;&lt; "\tNode" &lt;&lt; p &lt;&lt; "[shape=record, label=\"" &lt;&lt; *p &lt;&lt; "\"];\n";
+    }
+    else
+    {
+        file &lt;&lt; "\tNode" &lt;&lt; p &lt;&lt; "[shape=ellipse, label=\"" &lt;&lt; *p &lt;&lt; "\\l" &lt;&lt; p &lt;&lt; "\"];\n";
+    }
+    }
+    // plot the instruction flow edge
+    mark.clear();
+    for(auto iter = control_flow_G-&gt;head.begin(), iter_end = control_flow_G-&gt;head.end(); iter != iter_end; iter++){
+    DFS_plot(control_flow_G-&gt;v[find(control_flow_G-&gt;v, iter-&gt;second)]-&gt;first_out, control_flow_G, file);
+    }
+
+    // plot the data flow edge
+    file &lt;&lt; "edge [color=red]" &lt;&lt; "\n";
+    mark.clear();
+    for(auto iter = data_flow_G-&gt;head.begin(), iter_end = data_flow_G-&gt;head.end(); iter != iter_end; iter++){
+    DFS_plot(data_flow_G-&gt;v[find(data_flow_G-&gt;v, iter-&gt;second)]-&gt;first_out, data_flow_G, file);
+    }
+    file &lt;&lt; "}\n";
+    file.close();
+}
+
+void writeFileByGraphGloble(Mode m){
+    std::error_code error;
+    enum sys::fs::OpenFlags F_None;
+    StringRef fileName("all.dot");
+    raw_fd_ostream file(fileName, error, F_None);
+
+    file &lt;&lt; "digraph \"DFG for all\" {\n";
+    for(auto F_iter = DFGs.begin(), F_iter_end = DFGs.end(); F_iter != F_iter_end; F_iter++){
+    Graph* data_flow_G = DFGs[F_iter-&gt;first];
+    Graph* control_flow_G = CFGs[F_iter-&gt;first];
+    auto nodes = F_iter-&gt;second-&gt;v;
+    for (auto node_iter = nodes.begin(), node_end =  nodes.end(); node_iter != node_end; ++node_iter)
+    {
+        Value* p = (*node_iter)-&gt;va;
+        if(isa&lt;Instruction&gt;(*p))
+        {
+        file &lt;&lt; "\tNode" &lt;&lt; p &lt;&lt; "[shape=record, label=\"" &lt;&lt; *p &lt;&lt; "\"];\n";
+        }
+        else
+        {
+        file &lt;&lt; "\tNode" &lt;&lt; p &lt;&lt; "[shape=ellipse, label=\"" &lt;&lt; *p &lt;&lt; "\\l" &lt;&lt; p &lt;&lt; "\"];\n";
+        }
+    }
+    // plot the instruction flow edge
+    if(m != NOTWITHCFG){
+        file &lt;&lt; "edge [color=black]" &lt;&lt; "\n";
+        mark.clear();
+        for(auto iter = control_flow_G-&gt;head.begin(), iter_end = control_flow_G-&gt;head.end(); iter != iter_end; iter++){
+        DFS_plot(control_flow_G-&gt;v[find(control_flow_G-&gt;v, iter-&gt;second)]-&gt;first_out, control_flow_G, file);
+        }
+    }
+
+    // plot the data flow edge
+    vector&lt;string&gt; color_set = {"red", "blue", "cyan", "orange", "yellow"};
+    mark.clear();
+    int count = 0;
+    for(auto iter = data_flow_G-&gt;head.begin(), iter_end = data_flow_G-&gt;head.end(); iter != iter_end; iter++){
+        file &lt;&lt; "edge [color=" &lt;&lt; color_set[count++] &lt;&lt; "]" &lt;&lt; "\n";
+        DFS_plot(data_flow_G-&gt;v[find(data_flow_G-&gt;v, iter-&gt;second)]-&gt;first_out, data_flow_G, file);
+    }
+
+    for(auto iter = data_flow_G-&gt;link.begin(), iter_end = data_flow_G-&gt;link.end(); iter != iter_end; iter++){
+        file &lt;&lt; "edge [color=grey]" &lt;&lt; "\n";
+        file &lt;&lt; "\tNode" &lt;&lt; iter-&gt;first &lt;&lt; " -&gt; Node" &lt;&lt; iter-&gt;second &lt;&lt; "\n";
+        errs() &lt;&lt; *iter-&gt;first &lt;&lt; *iter-&gt;second &lt;&lt; "\n";
+    }
+    }
+    file &lt;&lt; "}\n";
+    file.close();
+}
+
+};
+
+
+char DFGPass::ID = 0;
+static RegisterPass&lt;DFGPass&gt; X("DFGPass", "DFG Pass Analyse");</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

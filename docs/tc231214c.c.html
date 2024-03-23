@@ -1,7 +1,7 @@
 ﻿<html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>TC161019A.c</title>
+        <title>TC231214C.c</title>
         <link rel="stylesheet" href="css/font-awesome.min.css">
         <link rel="stylesheet" href="css/inote_md.css">
 		<link rel="stylesheet" href="css/inote_md_tb1.css">
@@ -9,29 +9,33 @@
 <body style="word-wrap:break-word" bgcolor="#CCE8CF">
     <div id="in-main">
         <div class="in-header">
-            <h1>TC161019A.c</h1>
-            <h3>lfc_memrchr testcase</h3>
-            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/lfc_memrchr.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>lfc_memrchr</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <h1>TC231214C.c</h1>
+            <h3>C call C++ code example</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/extern-C.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>extern-C</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
             <div id="in-ttb"></div>
             <hr/>
         </div>
     
     	<hr/>
-<pre><code>#include "stdio.h"
-#include &lt;lfc/lfc.h&gt;
+<pre><code>#include "test.h"
 
-void _test(const char* s, char c, size_t len)
+extern "C"{
+
+class C1
 {
-    const char* rst = lfc_memrchr(s, c, len);
-    printf( "s=%s, c=%c, len=%d, rst=%s\n", s, c, len, rst);
+public:
+    C1(int val):value(val){};
+    int get_value(){return value+1;}
+private:
+    int value;
+};
+
+int func(int x)
+{
+    C1 c(1);
+    return x + c.get_value();
 }
 
-int main( void )
-{
-    _test("xx.yy.z", '.', 6);
-    _test("xx.yy.z", '.', 5);
-    printf( "output: done.\n" );
-    return 0;
 }</code></pre>
     
     <hr>

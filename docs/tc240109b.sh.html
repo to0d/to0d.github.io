@@ -1,0 +1,38 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC240109B.sh</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC240109B.sh</h1>
+            <h3>LLVM OpenMP example 1</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/L-ldd.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>L-ldd</a>&nbsp;<a href="../tags/OpenMP.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>OpenMP</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#/bin/sh
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/todd/openmp/lib
+export LIBRARY_PATH=$LIBRARY_PATH:/home/todd/openmp/lib
+clang++ -o a.out TC240109B.o -lomp
+
+echo -n "openmp lib:"
+ldd a.out | grep openmp
+./a.out
+
+echo "output: done!"</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>

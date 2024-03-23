@@ -1,7 +1,7 @@
 ﻿<html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>TC231203A.sh</title>
+        <title>TC240123A.sh</title>
         <link rel="stylesheet" href="css/font-awesome.min.css">
         <link rel="stylesheet" href="css/inote_md.css">
 		<link rel="stylesheet" href="css/inote_md_tb1.css">
@@ -9,9 +9,9 @@
 <body style="word-wrap:break-word" bgcolor="#CCE8CF">
     <div id="in-main">
         <div class="in-header">
-            <h1>TC231203A.sh</h1>
-            <h3>LLVM Pass - standalone project</h3>
-            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/HelloPass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>HelloPass</a>&nbsp;<a href="../tags/LLVM-Pass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-Pass</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <h1>TC240123A.sh</h1>
+            <h3>Print MemorySSA by print<memoryssa></h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/LLVM-MemorySSA.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-MemorySSA</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
             <div id="in-ttb"></div>
             <hr/>
         </div>
@@ -19,17 +19,19 @@
     	<hr/>
 <pre><code>#/bin/sh
 
-OPT_VER_STR=`opt --version | grep version | awk '{print $4}' | awk -F . '{print $1}'`
+OPT_CMD=`llvm-config --bindir`/opt
+OPT_VER_STR=`$OPT_CMD --version | grep version | awk '{print $4}' | awk -F . '{print $1}'`
 OPT_VER=`expr $OPT_VER_STR`
 OPT_ARG=
 
-if [ $OPT_VER -gt 10 ]
+if [ $OPT_VER -gt 10 ] ;
 then
     OPT_ARG=$OPT_ARG" -enable-new-pm=0"
 fi
 
-opt -load ./mypass.so -hello hello.bc -o /dev/null $OPT_ARG
-opt -load ./mypass.so -hello2 hello.bc -o /dev/null -time-passes $OPT_ARG
+echo $OPT_CMD
+$OPT_CMD -passes='print&lt;memoryssa&gt;' test.ll -o /dev/null $OPT_ARG
+
 echo "output: done!"</code></pre>
     
     <hr>

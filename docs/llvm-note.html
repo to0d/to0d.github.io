@@ -33,22 +33,24 @@
         <div id="in-ttb"><ol>
 <a name="HEAD_todo">TODO:</a>
 	<li><a name="TOC_MARK_1" href="#MARK_1" id="in-ttl">Alias </a></li>
+	<li><a name="TOC_MARK_2" href="#MARK_2" id="in-ttl"><a><b>指令调度</b></a> </a></li>
+	<li><a name="TOC_MARK_3" href="#MARK_3" id="in-ttl"><a><b>寄存器分配</b></a> </a></li>
 </ol>
 </div>
         <div class="entry-content">
-	<H2><a name="HEAD_5ca16872" href="#TOC_HEAD_5ca16872">Beginner</a></H2>
-	<H3><a name="HEAD_da8cf547" href="#TOC_HEAD_da8cf547">Operation</a></H3>
+	<H2><a name="HEAD_5ca16872" href="#TOC_HEAD_5ca16872">1. Beginner</a></H2>
+	<H3><a name="HEAD_da8cf547" href="#TOC_HEAD_da8cf547">1.1. Operation</a></H3>
 <ul>
 	<li><a name="HEAD_HIDDEN_b4874e2a"><a href="d9acebdc8660ace312631315bd11b909.html" target="_blank">Build LLVM on WSL</a></li>
 	<li><a name="HEAD_HIDDEN_640269e6">&quot;2023&ndash;08&ndash;01 在 Ubuntu Linux 上安装 Clang 知乎.html&quot;</li>
 	<br />
 </ul>
-	<H2><a name="HEAD_8e109c9f" href="#TOC_HEAD_8e109c9f">Passes</a></H2>
+	<H2><a name="HEAD_8e109c9f" href="#TOC_HEAD_8e109c9f">2. Passes</a></H2>
 <ul>
 	<li><a name="HEAD_HIDDEN_5f04804d"><a href="d78425110812a1351ca20d82c3701c98.html#HTML-20-11-14-A-1" target="_blank">LLVM提供的pass分为三类: Analysis pass、Transform pass和Utility pass。</a>&nbsp;<a href="../refers/6494dd4cff8d2417f75d238b0265ef3e.html" title="2020-11-14 LLVM中的pass及其管理机制 知乎.html" target="_blank"><font color="red"><i>html</i></font></a></li>
 	<br />
 </ul>
-	<H3><a name="HEAD_8e109c9f_0" href="#TOC_HEAD_8e109c9f_0">Passes</a></H3><ul><a href="../tags/LLVM-Pass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-Pass</a>&nbsp;</ul>
+	<H3><a name="HEAD_8e109c9f_0" href="#TOC_HEAD_8e109c9f_0">2.1. Passes</a></H3><ul><a href="../tags/LLVM-Pass.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-Pass</a>&nbsp;</ul>
 <table id="mdt_t">
 	<tr id="mdt_hd">
 		<td id="mdt_td_l">Category</td>
@@ -58,21 +60,21 @@
 	<tr id="mdt_tr1">
 		<td id="mdt_td_l" rowspan="2"><a href="../tags/LLVM-AnalysisPass.html" target="_blank"><i class="fa fa-tags fa-fw"></i>LLVM-AnalysisPass</a></td>
 		<td id="mdt_td_l"><a href="../tags/LLVM-CycleInfoWrapperPass.html" target="_blank"><i class="fa fa-tags fa-fw"></i>LLVM-CycleInfoWrapperPass</a></td>
-		<td id="mdt_td_l"><a href="tc231207a.cpp.html" target="_blank">TC231207A.cpp</a></td>
+		<td id="mdt_td_l">&quot;TC231207A.cpp&quot;</td>
 	</tr>
 	<tr id="mdt_tr2">
 		<td id="mdt_td_l"><a href="../tags/LLVM-LoopInfoWrapperPass.html" target="_blank"><i class="fa fa-tags fa-fw"></i>LLVM-LoopInfoWrapperPass</a></td>
-		<td id="mdt_td_l"><a href="tc231204a.cpp.html" target="_blank">TC231204A.cpp</a></td>
+		<td id="mdt_td_l">&quot;TC231204A.cpp&quot;</td>
 	</tr>
 	<tr id="mdt_tr1">
 		<td id="mdt_td_l"></td>
-		<td id="mdt_td_l"><a href="../tags/LLVM-MemorySSAWrapperPass.html" target="_blank"><i class="fa fa-tags fa-fw"></i>LLVM-MemorySSAWrapperPass</a></td>
-		<td id="mdt_td_l"><a href="tc231208a.cpp.html" target="_blank">TC231208A.cpp</a></td>
+		<td id="mdt_td_l"><a><b>LLVM-MemorySSAWrapperPass</b></a></td>
+		<td id="mdt_td_l">&quot;TC231208A.cpp&quot;</td>
 	</tr>
 	<tr id="mdt_tr2">
 		<td id="mdt_td_l"></td>
 		<td id="mdt_td_l"><a href="../tags/LLVM-ScalarEvolutionWrapperPass.html" target="_blank"><i class="fa fa-tags fa-fw"></i>LLVM-ScalarEvolutionWrapperPass</a></td>
-		<td id="mdt_td_l"><a href="tc231204b.cpp.html" target="_blank">TC231204B.cpp</a></td>
+		<td id="mdt_td_l">&quot;TC231204B.cpp&quot;</td>
 	</tr>
 	<tr id="mdt_tr1">
 		<td id="mdt_td_l"><a href="../tags/LLVM-TransformPass.html" target="_blank"><i class="fa fa-tags fa-fw"></i>LLVM-TransformPass</a></td>
@@ -86,13 +88,13 @@
 	</tr>
 </table>
 <br>
-	<H3><a name="HEAD_f132663c" href="#TOC_HEAD_f132663c">PassManager</a></H3><ul><a href="../tags/LLVM-PassManager.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-PassManager</a>&nbsp;</ul>
+	<H3><a name="HEAD_f132663c" href="#TOC_HEAD_f132663c">2.2. PassManager</a></H3><ul><a href="../tags/LLVM-PassManager.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-PassManager</a>&nbsp;</ul>
 <ul>
 	<li><a name="HEAD_HIDDEN_5f04806c"><a href="d78425110812a1351ca20d82c3701c98.html#HTML-20-11-14-A-2" target="_blank">LLVM中有两类Pass管理器：Legacy Pass Manager和New Pass Manager。</a>&nbsp;<a href="../refers/6494dd4cff8d2417f75d238b0265ef3e.html" title="2020-11-14 LLVM中的pass及其管理机制 知乎.html" target="_blank"><font color="red"><i>html</i></font></a></li>
 	<br />
 	<li><a href="../tags/LLVM-LegacyPassManager.html" target="_blank"><i class="fa fa-tags fa-fw"></i>LLVM-LegacyPassManager</a></li>
 	<ul>
-		<li><a name="HEAD_HIDDEN_57ae1e76">write <strong><font color="red">standalone</font></strong> Pass Manager &ndash; refer <a href="tc231204a.cpp.html" target="_blank">TC231204A.cpp</a></li>
+		<li><a name="HEAD_HIDDEN_57ae1e76">write <strong><font color="red">standalone</font></strong> Pass Manager &ndash; refer &quot;TC231204A.cpp&quot;</li>
 		<br />
 	</ul>
 	<li><a href="../tags/LLVM-NewPassManager.html" target="_blank"><i class="fa fa-tags fa-fw"></i>LLVM-NewPassManager</a></li>
@@ -101,15 +103,15 @@
 		<br />
 	</ul>
 </ul>
-	<H2><a name="HEAD_929" href="#TOC_HEAD_929">IR</a></H2><ul><a href="../tags/LLVM-IR.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-IR</a>&nbsp;</ul>
+	<H2><a name="HEAD_929" href="#TOC_HEAD_929">3. IR</a></H2><ul><a href="../tags/LLVM-IR.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-IR</a>&nbsp;</ul>
 <ul>
 	<li><a href="../tags/LLVM-IR.html" target="_blank"><i class="fa fa-tags fa-fw"></i><ruby>LLVM-IR<rt>LLVM Intermediate Representation</rt></ruby></a></li>
 	<li>Machine IR <a name="wd_ln_MIR_0" target="_blank" href="../tags/MIR.html"><i class="fa fa-tags fa-fw"></i><ruby>MIR<rt>Machine IR</rt></ruby></a></li>
 	<li>Generic MIR <a name="wd_ln_gMIR_0" target="_blank" href="../tags/gMIR.html"><i class="fa fa-tags fa-fw"></i><ruby>gMIR<rt>Generic MIR</rt></ruby></a></li>
 	<br />
 </ul>
-	<H2><a name="HEAD_9e6fe" href="#TOC_HEAD_9e6fe">优化</a></H2>
-	<H3><a name="HEAD_429f258" href="#TOC_HEAD_429f258">LLVM <a><b>数据流优化</b></a></a></H3>
+	<H2><a name="HEAD_9e6fe" href="#TOC_HEAD_9e6fe">4. 优化</a></H2>
+	<H3><a name="HEAD_429f258" href="#TOC_HEAD_429f258">4.1. LLVM <a><b>数据流优化</b></a></a></H3>
 <ul>
 	<li>标量优化 (scalar目录)</li>
 	<br />
@@ -129,9 +131,9 @@
 	<li><a name="HEAD_HIDDEN_bcb4dfde">refer &quot;2021&ndash;09&ndash;26 LLVM数据流分析的理论 知乎.html&quot;</li>
 	<br />
 </ul>
-	<H3><a name="HEAD_3c6a630" href="#TOC_HEAD_3c6a630">Alias</a> <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></H3><ul><a href="../tags/alias-analysis.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>alias-analysis</a>&nbsp;</ul>
-	<H2><a name="HEAD_aa8a1" href="#TOC_HEAD_aa8a1">后端</a></H2>
-	<H3><a name="HEAD_d26b3" href="#TOC_HEAD_d26b3">概念</a></H3>
+	<H3><a name="HEAD_3c6a630" href="#TOC_HEAD_3c6a630">4.2. Alias</a> <a name="MARK_1" href="#TOC_MARK_1"><strong><font color="red">@TODO</font></strong></a></H3><ul><a href="../tags/alias-analysis.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>alias-analysis</a>&nbsp;</ul>
+	<H2><a name="HEAD_aa8a1" href="#TOC_HEAD_aa8a1">5. 后端</a></H2>
+	<H3><a name="HEAD_d26b3" href="#TOC_HEAD_d26b3">5.1. 概念</a></H3>
 <ul>
 	<li><a><b>Lowering</b></a></li>
 	<ul>
@@ -139,7 +141,7 @@
 		<br />
 	</ul>
 </ul>
-	<H3><a name="HEAD_180e1dfc" href="#TOC_HEAD_180e1dfc">TableGen <a name="wd_ln_TableGen_0" target="_blank" href="../tags/TableGen.html"><i class="fa fa-tags fa-fw"></i>TableGen</a></a></H3>
+	<H3><a name="HEAD_180e1dfc" href="#TOC_HEAD_180e1dfc">5.2. TableGen <a name="wd_ln_TableGen_0" target="_blank" href="../tags/TableGen.html"><i class="fa fa-tags fa-fw"></i>TableGen</a></a></H3>
 <blockquote>
 	<p>
 	来描述目标平台
@@ -147,19 +149,19 @@
 	<p>
 	</p>
 </blockquote>
-	<H3><a name="HEAD_73e01476" href="#TOC_HEAD_73e01476">MC 层 <a name="wd_ln_LLVM-MC_0" target="_blank" href="../tags/LLVM-MC.html"><i class="fa fa-tags fa-fw"></i>LLVM-MC</a></a></H3>
-<ul>
-	<li><a name="HEAD_HIDDEN_901c4af8">LLVM&ndash;MC (machine code) 层位于LLVM的底层，主要功能是负责汇编 (assembly)、反汇编 (disassembly)、以及生成二进制文件 &nbsp;<a href="../tags/LLVM-MC.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-MC</a></li>
-	<br />
-	<li>按照输入不同主要分为两条路径</li>
-	<ul>
-		<li>输入为汇编文件，经过Assembly Parser将汇编文件中的指令解析成Operand，然后通过MCTargetAsmParser将Operand转换成对应的MCInst,最终进入到MCStreamer,通过Instruction Encoder生成二进制文件。</li>
-		<li><a name="HEAD_HIDDEN_234eb661">输入为二进制文件，经过Instruction Decoder，将二进制代码反汇编生成MCInst, 最终进入到MCStreamer按照需要生成汇编文件。  &nbsp;<a href="../tags/disassembly.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>disassembly</a></li>
-		<br />
-	</ul>
-</ul>
-	<H2><a name="HEAD_3f2c8b7d" href="#TOC_HEAD_3f2c8b7d"><a><b>指令选择</b></a></a></H2>
-	<H3><a name="HEAD_c511a148" href="#TOC_HEAD_c511a148"><a href="../tags/SDAGISel.html" target="_blank"><i class="fa fa-tags fa-fw"></i>SDAGISel</a></a></H3>
+	<H3><a name="HEAD_3f2c8b7d" href="#TOC_HEAD_3f2c8b7d">5.3. <a><b>指令选择</b></a></a></H3>
+﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+<!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
+    <span style="float:left">Table of Contents</span>
+</p>
+<br> -->
+<menu>
+	<li><a name="TOC_HEAD_c511a148" href="#HEAD_c511a148">5.3.1. <a href="../tags/SDAGISel.html" target="_blank"><i class="fa fa-tags fa-fw"></i>SDAGISel</a></a></li>
+	<li><a name="TOC_HEAD_ed8ecdd4" href="#HEAD_ed8ecdd4">5.3.2. <a href="../tags/GlobalISel.html" target="_blank"><i class="fa fa-tags fa-fw"></i>GlobalISel</a></a></li>
+</menu>
+
+</div>
+	<H4><a name="HEAD_c511a148" href="#TOC_HEAD_c511a148">5.3.1. <a href="../tags/SDAGISel.html" target="_blank"><i class="fa fa-tags fa-fw"></i>SDAGISel</a></a></H4>
 <blockquote>
 	<p>
 	基本步骤 source ==&gt; LLVM IR ==&gt; SelectionDAG ==&gt; MachineInstr DAG (MI) ==&gt; MCInst ==&gt; ASM
@@ -203,24 +205,43 @@
 		</ul>
 	</ul>
 </ol>
-	<H3><a name="HEAD_ed8ecdd4" href="#TOC_HEAD_ed8ecdd4"><a href="../tags/GlobalISel.html" target="_blank"><i class="fa fa-tags fa-fw"></i>GlobalISel</a></a></H3>
+	<H4><a name="HEAD_ed8ecdd4" href="#TOC_HEAD_ed8ecdd4">5.3.2. <a href="../tags/GlobalISel.html" target="_blank"><i class="fa fa-tags fa-fw"></i>GlobalISel</a></a></H4>
+	<H3><a name="HEAD_3d4855c0" href="#TOC_HEAD_3d4855c0">5.4. <a><b>指令调度</b></a></a> <a name="MARK_2" href="#TOC_MARK_2"><strong><font color="red">@TODO</font></strong></a></H3><ul></ul>
+	<H3><a name="HEAD_90f97d1b" href="#TOC_HEAD_90f97d1b">5.5. <a><b>寄存器分配</b></a></a> <a name="MARK_3" href="#TOC_MARK_3"><strong><font color="red">@TODO</font></strong></a></H3><ul></ul>
+<ul>
+	<li>可以抽象成图着色问题 图中的每个节点代表某个变量的活跃期或生存期 两节点之间的边表示这两个变量活跃期因为生命期（lifetime）重叠导致互相冲突或干涉 控制流图（CFG）</li>
+	<br />
+	<li><a name="HEAD_HIDDEN_45732213">refer &ndash; &quot;2019&ndash;04&ndash;06 LLVM寄存器分配 知乎.html&quot;</li>
+	<br />
+</ul>
+	<H3><a name="HEAD_73e01476" href="#TOC_HEAD_73e01476">5.6. MC 层 <a name="wd_ln_LLVM-MC_0" target="_blank" href="../tags/LLVM-MC.html"><i class="fa fa-tags fa-fw"></i>LLVM-MC</a></a></H3>
 ﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
 <!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
     <span style="float:left">Table of Contents</span>
 </p>
 <br> -->
 <menu>
-	<li><a name="TOC_HEAD_78eeb848" href="#HEAD_78eeb848">How <a name="wd_ln_disassembly_0" target="_blank" href="../tags/disassembly.html"><i class="fa fa-tags fa-fw"></i>disassembly</a> works</a></li>
+	<li><a name="TOC_HEAD_78eeb848" href="#HEAD_78eeb848">5.6.1. How <a name="wd_ln_disassembly_0" target="_blank" href="../tags/disassembly.html"><i class="fa fa-tags fa-fw"></i>disassembly</a> works</a></li>
 </menu>
 
 </div>
-	<H4><a name="HEAD_78eeb848" href="#TOC_HEAD_78eeb848">How <a name="wd_ln_disassembly_0" target="_blank" href="../tags/disassembly.html"><i class="fa fa-tags fa-fw"></i>disassembly</a> works</a></H4>
+<ul>
+	<li><a name="HEAD_HIDDEN_901c4af8">LLVM&ndash;MC (machine code) 层位于LLVM的底层，主要功能是负责汇编 (assembly)、反汇编 (disassembly)、以及生成二进制文件 &nbsp;<a href="../tags/LLVM-MC.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-MC</a></li>
+	<br />
+	<li>按照输入不同主要分为两条路径</li>
+	<ul>
+		<li>输入为汇编文件，经过Assembly Parser将汇编文件中的指令解析成Operand，然后通过MCTargetAsmParser将Operand转换成对应的MCInst,最终进入到MCStreamer,通过Instruction Encoder生成二进制文件。</li>
+		<li><a name="HEAD_HIDDEN_234eb661">输入为二进制文件，经过Instruction Decoder，将二进制代码反汇编生成MCInst, 最终进入到MCStreamer按照需要生成汇编文件。  &nbsp;<a href="../tags/disassembly.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>disassembly</a></li>
+		<br />
+	</ul>
+</ul>
+	<H4><a name="HEAD_78eeb848" href="#TOC_HEAD_78eeb848">5.6.1. How <a name="wd_ln_disassembly_0" target="_blank" href="../tags/disassembly.html"><i class="fa fa-tags fa-fw"></i>disassembly</a> works</a></H4>
 <ul>
 	<li>LLVM MC: 输入为二进制文件，经过Instruction Decoder，将二进制代码反汇编生成MCInst, 最终进入到MCStreamer按照需要生成汇编文件</li>
 	<li>GUN: <a href="../tags/objdump.html" target="_blank"><i class="fa fa-tags fa-fw"></i>objdump</a> gdb 也是使用它进行反汇编</li>
 	<br />
 </ul>
-	<H2><a name="HEAD_20220d" href="#TOC_HEAD_20220d">Code</a></H2>
+	<H2><a name="HEAD_20220d" href="#TOC_HEAD_20220d">6. Code</a></H2>
 <table id="mdt_t">
 	<tr id="mdt_hd">
 		<td id="mdt_td_l">LLVM Class</td>
@@ -252,7 +273,7 @@
 	</tr>
 </table>
 <br>
-	<H2><a name="HEAD_91ac9013" href="#TOC_HEAD_91ac9013">Refers</a></H2>
+	<H2><a name="HEAD_91ac9013" href="#TOC_HEAD_91ac9013">7. Refers</a></H2>
 <ul>
 	<li><a name="HEAD_HIDDEN_6ec9c597"><a href="topic-cpu0.html" target="_blank">LLVM: cpu0</a></li>
 	<li><a name="HEAD_HIDDEN_459d3465">&quot;2023&ndash;02&ndash;20 LLVM MC 简介 知乎.html&quot;</li>
@@ -274,12 +295,12 @@
 	<li><a name="HEAD_HIDDEN_fd913829"><a href="https://www.llvm.org/docs/CMake.html" target="_blank">LLVM &ndash; Building LLVM with CMake</a> &nbsp;<a href="../tags/CMake.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>CMake</a>&nbsp;<a href="../tags/LLVM.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM</a></li>
 	<br />
 </ul>
-	<H1><a name="HEAD_1fbcc874" href="#TOC_HEAD_1fbcc874">Coverage: 14%</a></H1>
+	<H1><a name="HEAD_1fbcc874" href="#TOC_HEAD_1fbcc874">8. Coverage: 14%</a></H1>
 <ul>
 	<li><strong>Domain:</strong> <a href="../" target="_blank">LLVM</a></li>
 	<br />
 </ul>
-	<H2><a name="HEAD_b3031ebe" href="#TOC_HEAD_b3031ebe">Nodes: 70/76</a></H2>
+	<H2><a name="HEAD_b303931e" href="#TOC_HEAD_b303931e">8.1. Nodes: 71/77</a></H2>
 <table id="mdt_t">
 	<tr id="mdt_hd"><td id="mdt_td_l">Nodes</td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l">ADCE.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/llvm/lib/Transforms/Scalar/ADCE.cpp" title="https://github.com/to0d/llvm-project/tree/main/llvm/lib/Transforms/Scalar/ADCE.cpp" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
@@ -347,14 +368,15 @@
 	<tr id="mdt_tr1"><td id="mdt_td_l">TargetList.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Target/TargetList.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Target/TargetList.cpp" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="42b0b74be3901532a5c7c77630d990f9.html" target="_blank">Triple.h</a>&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/llvm/include/llvm/TargetParser/Triple.h" title="https://github.com/to0d/llvm-project/tree/main/llvm/include/llvm/TargetParser/Triple.h" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l">TripleTest.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/llvm/unittests/TargetParser/TripleTest.cpp" title="https://github.com/to0d/llvm-project/tree/main/llvm/unittests/TargetParser/TripleTest.cpp" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l">UserSettingsController.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Core/UserSettingsController.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Core/UserSettingsController.cpp" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l">ValueTypes.td</td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="4e7f6e727490fd301bb03df420553664.html" target="_blank">X86TargetTransformInfo.cpp</a>&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/llvm/lib/Target/X86/X86TargetTransformInfo.cpp" title="https://github.com/to0d/llvm-project/tree/main/llvm/lib/Target/X86/X86TargetTransformInfo.cpp" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l">lldb&ndash;gdb&ndash;remote.txt</td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="d3bc431ace1be02db6e0b02d47d6dd10.html" target="_blank">mlir&ndash;tblgen.cpp</a>&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/mlir/tools/mlir-tblgen/mlir-tblgen.cpp" title="https://github.com/to0d/llvm-project/tree/main/mlir/tools/mlir-tblgen/mlir-tblgen.cpp" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">TypeBasedAliasAnalysis.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/llvm/lib/Analysis/TypeBasedAliasAnalysis.cpp" title="https://github.com/to0d/llvm-project/tree/main/llvm/lib/Analysis/TypeBasedAliasAnalysis.cpp" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l">UserSettingsController.cpp&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/lldb/source/Core/UserSettingsController.cpp" title="https://github.com/to0d/llvm-project/tree/main/lldb/source/Core/UserSettingsController.cpp" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">ValueTypes.td</td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="4e7f6e727490fd301bb03df420553664.html" target="_blank">X86TargetTransformInfo.cpp</a>&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/llvm/lib/Target/X86/X86TargetTransformInfo.cpp" title="https://github.com/to0d/llvm-project/tree/main/llvm/lib/Target/X86/X86TargetTransformInfo.cpp" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l">lldb&ndash;gdb&ndash;remote.txt</td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="d3bc431ace1be02db6e0b02d47d6dd10.html" target="_blank">mlir&ndash;tblgen.cpp</a>&nbsp;<a href="https://github.com/to0d/llvm-project/tree/main/mlir/tools/mlir-tblgen/mlir-tblgen.cpp" title="https://github.com/to0d/llvm-project/tree/main/mlir/tools/mlir-tblgen/mlir-tblgen.cpp" target="_blank"><font color="red"><i>link</i></font></a></td></tr>
 </table>
 <br>
-	<H2><a name="HEAD_dad5099b" href="#TOC_HEAD_dad5099b">Tags: 103/126</a></H2>
+	<H2><a name="HEAD_daff5020" href="#TOC_HEAD_daff5020">8.2. Tags: 106/128</a></H2>
 <table id="mdt_t">
 	<tr id="mdt_hd"><td id="mdt_td_l">Tags</td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/AST.html" target="_blank">AST</a></td></tr>
@@ -372,29 +394,31 @@
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Cxx-Code.html" target="_blank">Cxx-Code</a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Exception.html" target="_blank">Exception</a></td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/GitHub.html" target="_blank">GitHub</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/HelloPass.html" target="_blank">HelloPass</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/IPO.html" target="_blank">IPO</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/IR.html" target="_blank">IR</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Install.html" target="_blank">Install</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLDB-Code.html" target="_blank">LLDB-Code</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLDB-Plugin.html" target="_blank">LLDB-Plugin</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLDB-cli.html" target="_blank">LLDB-cli</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLDB-cli-option.html" target="_blank">LLDB-cli-option</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLDB-target.html" target="_blank">LLDB-target</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLT.html" target="_blank">LLT</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM.html" target="_blank">LLVM</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-ArchType.html" target="_blank">LLVM-ArchType</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-Assembler.html" target="_blank">LLVM-Assembler</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-Attribute.html" target="_blank">LLVM-Attribute</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-Build.html" target="_blank">LLVM-Build</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-Code.html" target="_blank">LLVM-Code</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-Debug.html" target="_blank">LLVM-Debug</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-IBMi.html" target="_blank">LLVM-IBMi</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-Instruction.html" target="_blank">LLVM-Instruction</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-Intrinsics.html" target="_blank">LLVM-Intrinsics</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-Legalizer.html" target="_blank">LLVM-Legalizer</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-MBB.html" target="_blank">LLVM-MBB</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-Macro.html" target="_blank">LLVM-Macro</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/GlobalVariable.html" target="_blank">GlobalVariable</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/HelloPass.html" target="_blank">HelloPass</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/IPO.html" target="_blank">IPO</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/IR.html" target="_blank">IR</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Install.html" target="_blank">Install</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLDB-Code.html" target="_blank">LLDB-Code</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLDB-Plugin.html" target="_blank">LLDB-Plugin</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLDB-cli.html" target="_blank">LLDB-cli</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLDB-cli-option.html" target="_blank">LLDB-cli-option</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLDB-target.html" target="_blank">LLDB-target</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLT.html" target="_blank">LLT</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM.html" target="_blank">LLVM</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-ArchType.html" target="_blank">LLVM-ArchType</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-Assembler.html" target="_blank">LLVM-Assembler</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-Attribute.html" target="_blank">LLVM-Attribute</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-Build.html" target="_blank">LLVM-Build</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-Code.html" target="_blank">LLVM-Code</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-Debug.html" target="_blank">LLVM-Debug</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-IBMi.html" target="_blank">LLVM-IBMi</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-Instruction.html" target="_blank">LLVM-Instruction</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-Intrinsics.html" target="_blank">LLVM-Intrinsics</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-Legalizer.html" target="_blank">LLVM-Legalizer</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-MBB.html" target="_blank">LLVM-MBB</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-Macro.html" target="_blank">LLVM-Macro</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-MemorySSA.html" target="_blank">LLVM-MemorySSA</a></td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-OSType.html" target="_blank">LLVM-OSType</a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/LLVM-ObjectFormatType.html" target="_blank">LLVM-ObjectFormatType</a></td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/LLVM-Pass.html" target="_blank">LLVM-Pass</a></td></tr>
@@ -416,95 +440,96 @@
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/RSP.html" target="_blank">RSP</a></td></tr>
 	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Reference.html" target="_blank">Reference</a></td></tr>
 	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Relocation.html" target="_blank">Relocation</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Tool.html" target="_blank">Tool</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Topic.html" target="_blank">Topic</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/WSL.html" target="_blank">WSL</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/alias-analysis.html" target="_blank">alias-analysis</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/assignment-tracking.html" target="_blank">assignment-tracking</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/clang-tblgen.html" target="_blank">clang-tblgen</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/goto.html" target="_blank">goto</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-alloca.html" target="_blank">li-alloca</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-br.html" target="_blank">li-br</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-call.html" target="_blank">li-call</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-callbr.html" target="_blank">li-callbr</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-catchret.html" target="_blank">li-catchret</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-catchswitch.html" target="_blank">li-catchswitch</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-cleanupret.html" target="_blank">li-cleanupret</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-extractvalue.html" target="_blank">li-extractvalue</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-fneg.html" target="_blank">li-fneg</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-getelementptr.html" target="_blank">li-getelementptr</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-icmp.html" target="_blank">li-icmp</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-insertvalue.html" target="_blank">li-insertvalue</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-invoke.html" target="_blank">li-invoke</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-phi.html" target="_blank">li-phi</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-resume.html" target="_blank">li-resume</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-select.html" target="_blank">li-select</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-sext.html" target="_blank">li-sext</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-switch.html" target="_blank">li-switch</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-trunc.html" target="_blank">li-trunc</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-unreachable.html" target="_blank">li-unreachable</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-zext.html" target="_blank">li-zext</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/lldb-target-create.html" target="_blank">lldb-target-create</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/lldb-target-list.html" target="_blank">lldb-target-list</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/lldb-tblgen.html" target="_blank">lldb-tblgen</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/llvm-as.html" target="_blank">llvm-as</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/llvm-dis.html" target="_blank">llvm-dis</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/llvm-lit.html" target="_blank">llvm-lit</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/llvm-llc.html" target="_blank">llvm-llc</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/llvm-lli.html" target="_blank">llvm-lli</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/llvm-nm.html" target="_blank">llvm-nm</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/llvm-opt.html" target="_blank">llvm-opt</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/llvm-tblgen.html" target="_blank">llvm-tblgen</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/mlir-tblgen.html" target="_blank">mlir-tblgen</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/ninja.html" target="_blank">ninja</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/9e6fe.html" target="_blank">优化</a></td></tr>
-	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/697520ae.html" target="_blank">公共子表式消除</a></td></tr>
-	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/14d8ef8.html" target="_blank">向量化</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/TBAA.html" target="_blank">TBAA</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/Tool.html" target="_blank">Tool</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/Topic.html" target="_blank">Topic</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/WSL.html" target="_blank">WSL</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/alias-analysis.html" target="_blank">alias-analysis</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/assignment-tracking.html" target="_blank">assignment-tracking</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/clang-tblgen.html" target="_blank">clang-tblgen</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/goto.html" target="_blank">goto</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-alloca.html" target="_blank">li-alloca</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-br.html" target="_blank">li-br</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-call.html" target="_blank">li-call</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-callbr.html" target="_blank">li-callbr</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-catchret.html" target="_blank">li-catchret</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-catchswitch.html" target="_blank">li-catchswitch</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-cleanupret.html" target="_blank">li-cleanupret</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-extractvalue.html" target="_blank">li-extractvalue</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-fneg.html" target="_blank">li-fneg</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-getelementptr.html" target="_blank">li-getelementptr</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-icmp.html" target="_blank">li-icmp</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-insertvalue.html" target="_blank">li-insertvalue</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-invoke.html" target="_blank">li-invoke</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-phi.html" target="_blank">li-phi</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-resume.html" target="_blank">li-resume</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-select.html" target="_blank">li-select</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-sext.html" target="_blank">li-sext</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-switch.html" target="_blank">li-switch</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-trunc.html" target="_blank">li-trunc</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/li-unreachable.html" target="_blank">li-unreachable</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/li-zext.html" target="_blank">li-zext</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/lldb-target-create.html" target="_blank">lldb-target-create</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/lldb-target-list.html" target="_blank">lldb-target-list</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/lldb-tblgen.html" target="_blank">lldb-tblgen</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/llvm-as.html" target="_blank">llvm-as</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/llvm-dis.html" target="_blank">llvm-dis</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/llvm-lit.html" target="_blank">llvm-lit</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/llvm-llc.html" target="_blank">llvm-llc</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/llvm-lli.html" target="_blank">llvm-lli</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/llvm-nm.html" target="_blank">llvm-nm</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/llvm-opt.html" target="_blank">llvm-opt</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/llvm-tblgen.html" target="_blank">llvm-tblgen</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/mlir-tblgen.html" target="_blank">mlir-tblgen</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/ninja.html" target="_blank">ninja</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/9e6fe.html" target="_blank">优化</a></td></tr>
+	<tr id="mdt_tr1"><td id="mdt_td_l"><a href="../tags/697520ae.html" target="_blank">公共子表式消除</a></td></tr>
+	<tr id="mdt_tr2"><td id="mdt_td_l"><a href="../tags/14d8ef8.html" target="_blank">向量化</a></td></tr>
 </table>
 <br>
 	<hr/>
-	<H1><a name="HEAD_9fbf438f" href="#TOC_HEAD_9fbf438f">Index (11)</a></H1>
-	<H2><a name="wd_def_disassembly" href="#TOC_wd_def_disassembly">disassembly (1)</a></H2>
+	<H1><a name="HEAD_9fbf438f" href="#TOC_HEAD_9fbf438f">9. Index (11)</a></H1>
+	<H2><a name="wd_def_disassembly" href="#TOC_wd_def_disassembly">9.1. disassembly (1)</a></H2>
 	<ul>
 		<li><a href="#wd_ln_disassembly_0" >How disassembly works</a>
 	</ul>
-	<H2><a name="wd_def_gMIR" href="#TOC_wd_def_gMIR">gMIR (1)</a></H2>
+	<H2><a name="wd_def_gMIR" href="#TOC_wd_def_gMIR">9.2. gMIR (1)</a></H2>
 	<ul>
 		<li><a href="#wd_ln_gMIR_0" >Generic MIR gMIR</a>
 	</ul>
-	<H2><a name="wd_def_llvm-DenseMap" href="#TOC_wd_def_llvm-DenseMap">llvm&ndash;DenseMap (1)</a></H2>
+	<H2><a name="wd_def_llvm-DenseMap" href="#TOC_wd_def_llvm-DenseMap">9.3. llvm&ndash;DenseMap (1)</a></H2>
 	<ul>
 		<li><a href="#wd_ln_llvm-DenseMap_0" >llvm-DenseMap</a>
 	</ul>
-	<H2><a name="wd_def_llvm-ilist" href="#TOC_wd_def_llvm-ilist">llvm&ndash;ilist (1)</a></H2>
+	<H2><a name="wd_def_llvm-ilist" href="#TOC_wd_def_llvm-ilist">9.4. llvm&ndash;ilist (1)</a></H2>
 	<ul>
 		<li><a href="#wd_ln_llvm-ilist_0" >llvm-ilist</a>
 	</ul>
-	<H2><a name="wd_def_LLVM-MC" href="#TOC_wd_def_LLVM-MC">LLVM&ndash;MC (1)</a></H2>
+	<H2><a name="wd_def_LLVM-MC" href="#TOC_wd_def_LLVM-MC">9.5. LLVM&ndash;MC (1)</a></H2>
 	<ul>
 		<li><a href="#wd_ln_LLVM-MC_0" >MC 层 LLVM-MC</a>
 	</ul>
-	<H2><a name="wd_def_llvm-Optional" href="#TOC_wd_def_llvm-Optional">llvm&ndash;Optional (1)</a></H2>
+	<H2><a name="wd_def_llvm-Optional" href="#TOC_wd_def_llvm-Optional">9.6. llvm&ndash;Optional (1)</a></H2>
 	<ul>
 		<li><a href="#wd_ln_llvm-Optional_0" >llvm-Optional</a>
 	</ul>
-	<H2><a name="wd_def_llvm-SmallVector" href="#TOC_wd_def_llvm-SmallVector">llvm&ndash;SmallVector (1)</a></H2>
+	<H2><a name="wd_def_llvm-SmallVector" href="#TOC_wd_def_llvm-SmallVector">9.7. llvm&ndash;SmallVector (1)</a></H2>
 	<ul>
 		<li><a href="#wd_ln_llvm-SmallVector_0" >llvm-SmallVector</a>
 	</ul>
-	<H2><a name="wd_def_llvm-StringRef" href="#TOC_wd_def_llvm-StringRef">llvm&ndash;StringRef (1)</a></H2>
+	<H2><a name="wd_def_llvm-StringRef" href="#TOC_wd_def_llvm-StringRef">9.8. llvm&ndash;StringRef (1)</a></H2>
 	<ul>
 		<li><a href="#wd_ln_llvm-StringRef_0" >llvm-StringRef</a>
 	</ul>
-	<H2><a name="wd_def_llvm-StringSwitch" href="#TOC_wd_def_llvm-StringSwitch">llvm&ndash;StringSwitch (1)</a></H2>
+	<H2><a name="wd_def_llvm-StringSwitch" href="#TOC_wd_def_llvm-StringSwitch">9.9. llvm&ndash;StringSwitch (1)</a></H2>
 	<ul>
 		<li><a href="#wd_ln_llvm-StringSwitch_0" >llvm-StringSwitch</a>
 	</ul>
-	<H2><a name="wd_def_MIR" href="#TOC_wd_def_MIR">MIR (1)</a></H2>
+	<H2><a name="wd_def_MIR" href="#TOC_wd_def_MIR">9.10. MIR (1)</a></H2>
 	<ul>
 		<li><a href="#wd_ln_MIR_0" >Machine IR MIR</a>
 	</ul>
-	<H2><a name="wd_def_TableGen" href="#TOC_wd_def_TableGen">TableGen (1)</a></H2>
+	<H2><a name="wd_def_TableGen" href="#TOC_wd_def_TableGen">9.11. TableGen (1)</a></H2>
 	<ul>
 		<li><a href="#wd_ln_TableGen_0" >TableGen TableGen</a>
 	</ul>
@@ -544,57 +569,55 @@ imageObj.src = 'files/fab8587d9b55e4b08731759f2be9288e.jpg';
     
     <div id="in-nav">
     <font size="2">
-    <b><a href="#HEAD_todo"><font color="red">TODO: 1</font></a></b><br>﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
+    <b><a href="#HEAD_todo"><font color="red">TODO: 3</font></a></b><br>﻿<div style="border:1px solid rgb(204,204,204); background-color:rgb(238,238,238); padding:4px 20px">
 <!-- <p style="margin-top:0px; margin-bottom:0px; padding-top:0px; padding-bottom:0px;">
     <span style="float:left">Table of Contents</span>
 </p>
 <br> -->
-	<b><a name="TOC_HEAD_5ca16872" href="#HEAD_5ca16872">Beginner</a></b><br>
+	<b><a name="TOC_HEAD_5ca16872" href="#HEAD_5ca16872">1. Beginner</a></b><br>
 	<menu>
-		<li><a name="TOC_HEAD_da8cf547" href="#HEAD_da8cf547">Operation</a></li>
+		<li><a name="TOC_HEAD_da8cf547" href="#HEAD_da8cf547">1.1. Operation</a></li>
 	</menu>
-	<b><a name="TOC_HEAD_8e109c9f" href="#HEAD_8e109c9f">Passes</a></b><br>
+	<b><a name="TOC_HEAD_8e109c9f" href="#HEAD_8e109c9f">2. Passes</a></b><br>
 	<menu>
-		<li><a name="TOC_HEAD_8e109c9f_0" href="#HEAD_8e109c9f_0">Passes </a></li>
-		<li><a name="TOC_HEAD_f132663c" href="#HEAD_f132663c">PassManager </a></li>
+		<li><a name="TOC_HEAD_8e109c9f_0" href="#HEAD_8e109c9f_0">2.1. Passes </a></li>
+		<li><a name="TOC_HEAD_f132663c" href="#HEAD_f132663c">2.2. PassManager </a></li>
 	</menu>
-	<b><a name="TOC_HEAD_929" href="#HEAD_929">IR </a></b><br>
-	<b><a name="TOC_HEAD_9e6fe" href="#HEAD_9e6fe">优化</a></b><br>
+	<b><a name="TOC_HEAD_929" href="#HEAD_929">3. IR </a></b><br>
+	<b><a name="TOC_HEAD_9e6fe" href="#HEAD_9e6fe">4. 优化</a></b><br>
 	<menu>
-		<li><a name="TOC_HEAD_429f258" href="#HEAD_429f258">LLVM <a><b>数据流优化</b></a></a></li>
-		<li><a name="TOC_HEAD_3c6a630" href="#HEAD_3c6a630">Alias &nbsp;<font color="red">@TODO</font></a></li>
+		<li><a name="TOC_HEAD_429f258" href="#HEAD_429f258">4.1. LLVM <a><b>数据流优化</b></a></a></li>
+		<li><a name="TOC_HEAD_3c6a630" href="#HEAD_3c6a630">4.2. Alias &nbsp;<font color="red">@TODO</font></a></li>
 	</menu>
-	<b><a name="TOC_HEAD_aa8a1" href="#HEAD_aa8a1">后端</a></b><br>
+	<b><a name="TOC_HEAD_aa8a1" href="#HEAD_aa8a1">5. 后端</a></b><br>
 	<menu>
-		<li><a name="TOC_HEAD_d26b3" href="#HEAD_d26b3">概念</a></li>
-		<li><a name="TOC_HEAD_180e1dfc" href="#HEAD_180e1dfc">TableGen <a name="wd_ln_TableGen_0" target="_blank" href="../tags/TableGen.html"><i class="fa fa-tags fa-fw"></i>TableGen</a></a></li>
-		<li><a name="TOC_HEAD_73e01476" href="#HEAD_73e01476">MC 层 <a name="wd_ln_LLVM-MC_0" target="_blank" href="../tags/LLVM-MC.html"><i class="fa fa-tags fa-fw"></i>LLVM-MC</a></a></li>
+		<li><a name="TOC_HEAD_d26b3" href="#HEAD_d26b3">5.1. 概念</a></li>
+		<li><a name="TOC_HEAD_180e1dfc" href="#HEAD_180e1dfc">5.2. TableGen <a name="wd_ln_TableGen_0" target="_blank" href="../tags/TableGen.html"><i class="fa fa-tags fa-fw"></i>TableGen</a></a></li>
+		<li><a name="TOC_HEAD_3f2c8b7d" href="#HEAD_3f2c8b7d">5.3. <a><b>指令选择</b></a></a></li>
+		<li><a name="TOC_HEAD_3d4855c0" href="#HEAD_3d4855c0">5.4. <a><b>指令调度</b></a> &nbsp;<font color="red">@TODO</font></a></li>
+		<li><a name="TOC_HEAD_90f97d1b" href="#HEAD_90f97d1b">5.5. <a><b>寄存器分配</b></a> &nbsp;<font color="red">@TODO</font></a></li>
+		<li><a name="TOC_HEAD_73e01476" href="#HEAD_73e01476">5.6. MC 层 <a name="wd_ln_LLVM-MC_0" target="_blank" href="../tags/LLVM-MC.html"><i class="fa fa-tags fa-fw"></i>LLVM-MC</a></a></li>
 	</menu>
-	<b><a name="TOC_HEAD_3f2c8b7d" href="#HEAD_3f2c8b7d"><a><b>指令选择</b></a></a></b><br>
+	<b><a name="TOC_HEAD_20220d" href="#HEAD_20220d">6. Code</a></b><br>
+	<b><a name="TOC_HEAD_91ac9013" href="#HEAD_91ac9013">7. Refers</a></b><br>
+	<b><a name="TOC_HEAD_1fbcc874" href="#HEAD_1fbcc874">8. Coverage: 14%</a></b><br>
 	<menu>
-		<li><a name="TOC_HEAD_c511a148" href="#HEAD_c511a148"><a href="../tags/SDAGISel.html" target="_blank"><i class="fa fa-tags fa-fw"></i>SDAGISel</a></a></li>
-		<li><a name="TOC_HEAD_ed8ecdd4" href="#HEAD_ed8ecdd4"><a href="../tags/GlobalISel.html" target="_blank"><i class="fa fa-tags fa-fw"></i>GlobalISel</a></a></li>
+		<li><a name="TOC_HEAD_b303931e" href="#HEAD_b303931e">8.1. Nodes: 71/77</a></li>
+		<li><a name="TOC_HEAD_daff5020" href="#HEAD_daff5020">8.2. Tags: 106/128</a></li>
 	</menu>
-	<b><a name="TOC_HEAD_20220d" href="#HEAD_20220d">Code</a></b><br>
-	<b><a name="TOC_HEAD_91ac9013" href="#HEAD_91ac9013">Refers</a></b><br>
-	<b><a name="TOC_HEAD_1fbcc874" href="#HEAD_1fbcc874">Coverage: 14%</a></b><br>
+	<b><a name="TOC_HEAD_9fbf438f" href="#HEAD_9fbf438f">9. Index (11)</a></b><br>
 	<menu>
-		<li><a name="TOC_HEAD_b3031ebe" href="#HEAD_b3031ebe">Nodes: 70/76</a></li>
-		<li><a name="TOC_HEAD_dad5099b" href="#HEAD_dad5099b">Tags: 103/126</a></li>
-	</menu>
-	<b><a name="TOC_HEAD_9fbf438f" href="#HEAD_9fbf438f">Index (11)</a></b><br>
-	<menu>
-		<li><a name="TOC_wd_def_disassembly" href="#wd_def_disassembly">disassembly (1) </a></li>
-		<li><a name="TOC_wd_def_gMIR" href="#wd_def_gMIR">gMIR (1) </a></li>
-		<li><a name="TOC_wd_def_llvm-DenseMap" href="#wd_def_llvm-DenseMap">llvm&ndash;DenseMap (1) </a></li>
-		<li><a name="TOC_wd_def_llvm-ilist" href="#wd_def_llvm-ilist">llvm&ndash;ilist (1) </a></li>
-		<li><a name="TOC_wd_def_LLVM-MC" href="#wd_def_LLVM-MC">LLVM&ndash;MC (1) </a></li>
-		<li><a name="TOC_wd_def_llvm-Optional" href="#wd_def_llvm-Optional">llvm&ndash;Optional (1) </a></li>
-		<li><a name="TOC_wd_def_llvm-SmallVector" href="#wd_def_llvm-SmallVector">llvm&ndash;SmallVector (1) </a></li>
-		<li><a name="TOC_wd_def_llvm-StringRef" href="#wd_def_llvm-StringRef">llvm&ndash;StringRef (1) </a></li>
-		<li><a name="TOC_wd_def_llvm-StringSwitch" href="#wd_def_llvm-StringSwitch">llvm&ndash;StringSwitch (1) </a></li>
-		<li><a name="TOC_wd_def_MIR" href="#wd_def_MIR">MIR (1) </a></li>
-		<li><a name="TOC_wd_def_TableGen" href="#wd_def_TableGen">TableGen (1) </a></li>
+		<li><a name="TOC_wd_def_disassembly" href="#wd_def_disassembly">9.1. disassembly (1) </a></li>
+		<li><a name="TOC_wd_def_gMIR" href="#wd_def_gMIR">9.2. gMIR (1) </a></li>
+		<li><a name="TOC_wd_def_llvm-DenseMap" href="#wd_def_llvm-DenseMap">9.3. llvm&ndash;DenseMap (1) </a></li>
+		<li><a name="TOC_wd_def_llvm-ilist" href="#wd_def_llvm-ilist">9.4. llvm&ndash;ilist (1) </a></li>
+		<li><a name="TOC_wd_def_LLVM-MC" href="#wd_def_LLVM-MC">9.5. LLVM&ndash;MC (1) </a></li>
+		<li><a name="TOC_wd_def_llvm-Optional" href="#wd_def_llvm-Optional">9.6. llvm&ndash;Optional (1) </a></li>
+		<li><a name="TOC_wd_def_llvm-SmallVector" href="#wd_def_llvm-SmallVector">9.7. llvm&ndash;SmallVector (1) </a></li>
+		<li><a name="TOC_wd_def_llvm-StringRef" href="#wd_def_llvm-StringRef">9.8. llvm&ndash;StringRef (1) </a></li>
+		<li><a name="TOC_wd_def_llvm-StringSwitch" href="#wd_def_llvm-StringSwitch">9.9. llvm&ndash;StringSwitch (1) </a></li>
+		<li><a name="TOC_wd_def_MIR" href="#wd_def_MIR">9.10. MIR (1) </a></li>
+		<li><a name="TOC_wd_def_TableGen" href="#wd_def_TableGen">9.11. TableGen (1) </a></li>
 	</menu>
 
 </div>

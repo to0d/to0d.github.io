@@ -1,0 +1,40 @@
+﻿<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>TC231224A.sh</title>
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/inote_md.css">
+		<link rel="stylesheet" href="css/inote_md_tb1.css">
+    </head>
+<body style="word-wrap:break-word" bgcolor="#CCE8CF">
+    <div id="in-main">
+        <div class="in-header">
+            <h1>TC231224A.sh</h1>
+            <h3>Expland inline function in LLVM IR</h3>
+            <ul id="in-tl"><li><strong>HEAD TAGS: </strong> <a href="../tags/LLVM-IR.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>LLVM-IR</a>&nbsp;<a href="../tags/inline.html" target="_blank" id="inlntag"><i class="fa fa-tags fa-fw"></i>inline</a>&nbsp;</li><li><strong>BLOCK TAGS: </strong> </li></ul>
+            <div id="in-ttb"></div>
+            <hr/>
+        </div>
+    
+    	<hr/>
+<pre><code>#/bin/sh
+
+echo "****** test test_c.ll ******"
+clang -emit-llvm test.c -S -o test_c.ll -Wno-undefined-inline
+cat test_c.ll | grep -e define -e call
+echo ""
+
+echo "****** test test_cpp.ll ******"
+clang++ -emit-llvm test.c -S -o test_cpp.ll -Wno-undefined-inline -Wno-deprecated
+cat test_cpp.ll | grep -e define -e call
+echo ""
+
+echo "output: done!"</code></pre>
+    
+    <hr>
+    <font color="#000080" size="1">&reg; UNI TOOL</font><br>
+    <script language="javascript" src="js/note-toggle.js"></script>
+    <script language="javascript" src="js/note-open.js"></script>
+    </div>
+</body>
+</html>
